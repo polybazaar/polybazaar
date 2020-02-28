@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "661988135004",
+    "firebase_url": "https://polybazaar-epfl.firebaseio.com",
+    "project_id": "polybazaar-epfl",
+    "storage_bucket": "polybazaar-epfl.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661988135004:android:aaa98bfba227b91cf2d699",
+        "android_client_info": {
+          "package_name": "ch.epfl.polybazaar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "661988135004-1uc075i53bsbmcolak2gf95s407g632j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDNpHoBcq6qA4dapQuLMkg4foDzCDs8IQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "661988135004-1uc075i53bsbmcolak2gf95s407g632j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
