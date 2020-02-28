@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "661988135004-70vcp4nm4drpdljhbk8hnd5q74ic6b50.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.polybazaar",
+            "certificate_hash": "6caf823b59fc5f305ef5d5947cd62190fbceaeaf"
+          }
+        },
+        {
           "client_id": "661988135004-1uc075i53bsbmcolak2gf95s407g632j.apps.googleusercontent.com",
           "client_type": 3
         }
