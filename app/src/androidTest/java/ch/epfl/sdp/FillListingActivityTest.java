@@ -77,21 +77,32 @@ public class FillListingActivityTest {
     @Test
     public void testUploadPictureCorrectly(){
         result = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
-        Intents.init();
-        intending(expectedIntent).respondWith(result);
-
-        onView(withId(R.id.uploadImage)).perform(click());
-
-        intended(expectedIntent);
-        Intents.release();
-
+        uploadImage();
         onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(imageUri.hashCode()))));
     }
 
     @Test
     public void testUploadPictureFailsWhenUserCancels(){
         result = new Instrumentation.ActivityResult( Activity.RESULT_CANCELED, galleryIntent);
+        uploadImage();
+        onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
+    }
 
+    @Test
+    public void testUploadPictureFailsWhenDataIsNull(){
+        result = new Instrumentation.ActivityResult( Activity.RESULT_OK, null);
+        uploadImage();
+        onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
+    }
+
+    @Test
+    public void testUploadPictureFailsWhenDataIsNullAndUserCancels(){
+        result = new Instrumentation.ActivityResult( Activity.RESULT_CANCELED, null);
+        uploadImage();
+        onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
+    }
+
+    private void uploadImage(){
         Intents.init();
         intending(expectedIntent).respondWith(result);
 
@@ -99,7 +110,6 @@ public class FillListingActivityTest {
 
         intended(expectedIntent);
         Intents.release();
-        onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
     }
 
 
