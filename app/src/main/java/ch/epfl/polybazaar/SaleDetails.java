@@ -28,7 +28,8 @@ public class SaleDetails extends AppCompatActivity {
         description_txt.setText("Never used");
 
         TextView price_txt = (TextView)findViewById(R.id.price);
-        price_txt.setText("12.-");
+        price_txt.setTextSize(20);
+        price_txt.setText("18.-");
 
         Button ret = (Button) findViewById(R.id.ret_but);
         Button get_seller = (Button) findViewById(R.id.contact_sel);
