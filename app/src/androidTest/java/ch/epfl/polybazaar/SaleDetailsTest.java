@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,9 +27,11 @@ public class SaleDetailsTest {
     @Test
     public void testOnCreate() {
         Intent intent = new Intent();
-        intent.putExtra("title", "Algebre Linéaire by David C. Lay" );
-        intent.putExtra("description", "Never used");
-        intent.putExtra("price", "18 CHF");
+        Bundle b = new Bundle();
+        b.putString("title", "Algebre Linéaire by David C. Lay" );
+        b.putString("description", "Never used");
+        b.putString("price", "18 CHF");
+        intent.putExtras(b);
 
         activityRule.launchActivity(intent);
         TextView text_title = (TextView)activityRule.getActivity().findViewById(R.id.title);
@@ -41,8 +42,6 @@ public class SaleDetailsTest {
 
         TextView text_price = (TextView)activityRule.getActivity().findViewById(R.id.price);
         assertEquals("18 CHF", text_price.getText().toString());
-
-        activityRule.finishActivity();
     }
 
     @Test
@@ -58,8 +57,6 @@ public class SaleDetailsTest {
         }
         
         assertEquals(true, exceptionThrown);
-
-        activityRule.finishActivity();
     }
 }
 
