@@ -22,8 +22,8 @@ public class SaleDetails extends AppCompatActivity {
             throw new NullPointerException();
 
         //Set the image
-        ImageView image = (ImageView)findViewById(R.id.imageView2);
-        image.setImageResource(R.drawable.algebre_lin); //need to change this
+        //ImageView image = (ImageView)findViewById(R.id.imageView2);
+        //image.setImageResource(R.drawable.algebre_lin); //need to change this
 
         //Set the title
         TextView title_txt = (TextView)findViewById(R.id.title);
