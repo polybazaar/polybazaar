@@ -27,21 +27,20 @@ public class SaleDetails extends AppCompatActivity {
 
         //Set the title
         TextView title_txt = (TextView)findViewById(R.id.title);
-        title_txt.setText(b.getString("title"));
+        title_txt.setText(b.getString("title", "No Title"));
 
         //Set the description
         TextView description_txt = (TextView)findViewById(R.id.description);
-        description_txt.setText(b.getString("description"));
+        description_txt.setText(b.getString("description", "No description"));
 
         //Set the price
         TextView price_txt = (TextView)findViewById(R.id.price);
         price_txt.setTextSize(20);
-        price_txt.setText(b.getString("price"));
+        price_txt.setText(b.getString("price", "No Price"));
 
 
-
-        Button ret = (Button) findViewById(R.id.ret_but);
-        Button get_seller = (Button) findViewById(R.id.contact_sel);
+        //Button ret = (Button) findViewById(R.id.ret_but);
+        //Button get_seller = (Button) findViewById(R.id.contact_sel);
 
         //Return button action
         /*ret.setOnClickListener(new View.OnClickListener() {
