@@ -13,51 +13,51 @@ import android.widget.TextView;
 public class SaleDetails extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) throws NullPointerException{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_details);
 
+        Bundle b = getIntent().getExtras();
+        if(b == null)
+            throw new NullPointerException();
+
+        //Set the image
         ImageView image = (ImageView)findViewById(R.id.imageView2);
-        image.setImageResource(R.drawable.algebre_lin);
+        image.setImageResource(R.drawable.algebre_lin); //need to change this
 
-
+        //Set the title
         TextView title_txt = (TextView)findViewById(R.id.title);
-        title_txt.setText("Algèbre Linéaire by David C. Lay");
+        title_txt.setText(b.getString("title"));
 
+        //Set the description
         TextView description_txt = (TextView)findViewById(R.id.description);
-        description_txt.setText("Never used");
+        description_txt.setText(b.getString("description"));
 
+        //Set the price
         TextView price_txt = (TextView)findViewById(R.id.price);
         price_txt.setTextSize(20);
-        price_txt.setText("18.-");
+        price_txt.setText(b.getString("price"));
+
+
 
         Button ret = (Button) findViewById(R.id.ret_but);
         Button get_seller = (Button) findViewById(R.id.contact_sel);
 
-        ret.setOnClickListener(new View.OnClickListener() {
+        //Return button action
+        /*ret.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //Intent myIntent = new Intent(view.getContext(), SalesOverview.class);
                 //startActivityForResult(myIntent, 0);
-                
-
-            }
-        });
-
-        get_seller.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                
-
-            }
-        });
-
-
-
-        /*
-        ret.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                //Intent myIntent = new Intent(view.getContext(), ???.class); //create a class to display info? Or put a TextView at the place of the button?
-                //startActivityForResult(myIntent, 0);
             }
         });*/
+
+        //Get seller action
+        /*get_seller.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                
+
+            }
+        });*/
+
     }
 }
