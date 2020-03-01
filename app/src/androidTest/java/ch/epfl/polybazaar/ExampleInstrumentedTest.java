@@ -1,4 +1,4 @@
-package ch.epfl.sdp;
+package ch.epfl.polybazaar;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("ch.epfl.sdp", appContext.getPackageName());
+        assertEquals("ch.epfl.polybazaar", appContext.getPackageName());
     }
 }

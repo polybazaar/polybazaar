@@ -1,4 +1,4 @@
-package ch.epfl.sdp;
+package ch.epfl.polybazaar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
