@@ -23,8 +23,6 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
-
     private FirebaseAuth mAuth;
 
     private FirebaseFirestore db;
@@ -36,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
     }
