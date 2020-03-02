@@ -12,22 +12,47 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import static ch.epfl.polybazaar.Utilities.isValidUser;
 
-public abstract class UserDatabase {
+public class UserDatabase {
 
     private static final String TAG = "User.class";
+
+    private Observable watched = new Observable();
+
+    private boolean success = false;
+
+    private User fetchedUser = null;
+
+    public static UserDatabase getInstance() {
+        return getInstance();
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public User getFetchedUser() {
+        return fetchedUser;
+    }
 
     /**
      * Add an user to the database, using its email as unique identifier (key)
      * @param user the user
      * @param fb the Firestore database instance
-     * @return true if successful
+     * @param o the observer, will be notified when request completes
      */
-    public static boolean storeNewUser(User user, FirebaseFirestore fb) {
+    public void storeNewUser(User user, FirebaseFirestore fb, Observer o) {
+        watched.addObserver(o);
         // email already used:
         if (isValidUser(fetchUser(user.getEmail(), fb))) {
-            return false;
+            success = false;
+            this.notify();
+            watched.deleteObserver(o);
+            return;
         }
         // new user:
         Task setUser = fb.collection("users").document(user.getEmail()).set(user);
@@ -35,18 +60,20 @@ public abstract class UserDatabase {
             @Override
             public void onSuccess(Void nothing) {
                 Log.d(TAG, "successfully added new user");
+                success = true;
+                watched.notifyObservers();
             }
         })
         .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "error adding new user", e);
+                success = false;
+                watched.notifyObservers();
             }
         });
-        if (setUser.isSuccessful()) {
-            return  true;
-        }
-        return false;
+        watched.deleteObserver(o);
+        return;
     }
 
     /**
@@ -55,7 +82,7 @@ public abstract class UserDatabase {
      * @param fb the Firestore database to fetch it from
      * @return the user data, null if unsuccessfull
      */
-    public static User fetchUser(String email, FirebaseFirestore fb) {
+    public User fetchUser(String email, FirebaseFirestore fb) {
         DocumentReference docRef = fb.collection("user").document(email);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
