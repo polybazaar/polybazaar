@@ -19,22 +19,23 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class UserDatabaseTest {
     private FirebaseFirestore fb = FirebaseFirestore.getInstance();
-    private UserDatabase udb = UserDatabase.getInstance();
-    private Observer o = new Observer() {
-        @Override
-        public void update(Observable o, Object arg) {
+    private UserDatabase udb = new UserDatabase();
 
-        }
-    };
 
    // @Before
     @Test
-    public void databaseInit() {
+    public void databaseInit() throws InterruptedException {
         Calendar cal = Calendar.getInstance();
         cal.set(1923, 12, 11);
         User micheal = new User("Micheal", "Jaqueson", cal, "mj@epfl.ch");
         cal.set(2001, 03, 30);
         User william = new User("William", "Shakespeare", cal, "ws@epfl.ch");
+        Observer o = new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                assertThat(udb.isSuccess(), is(true));
+            }
+        };
         udb.storeNewUser(micheal, fb, o);
         udb.storeNewUser(william, fb, o);
     }

@@ -27,9 +27,7 @@ public class UserDatabase {
 
     private User fetchedUser = null;
 
-    public static UserDatabase getInstance() {
-        return getInstance();
-    }
+    public UserDatabase(){};
 
     public boolean isSuccess() {
         return success;
