@@ -39,14 +39,20 @@ public class UserDatabaseTest {
         udb.storeNewUser(micheal, fb, o);
         udb.storeNewUser(william, fb, o);
     }
-/*
+
     //@After
     @Test
     public void databaseClean() {
-        assertThat(UserDatabase.deleteUser("mj@epfl.ch", fb), is(true));
-        assertThat(UserDatabase.deleteUser("ws@epfl.ch", fb), is(true));
+        Observer o = new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                assertThat(udb.isSuccess(), is(true));
+            }
+        };
+        udb.deleteUser("mj@epfl.ch", fb, o);
+        udb.deleteUser("ws@epfl.ch", fb, o);
     }
-*/
+
 /*
     @Test
     public void setNewUserAlreadyPresent() {
