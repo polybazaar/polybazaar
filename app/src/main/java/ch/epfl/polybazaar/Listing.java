@@ -1,4 +1,4 @@
-package ch.epfl.sdp;
+package ch.epfl.polybazaar;
 
 /**
  * A listing represents an object that is listed for sale on the app
