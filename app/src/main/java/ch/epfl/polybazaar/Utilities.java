@@ -15,8 +15,19 @@ public abstract class Utilities {
     }
 
     public static boolean emailIsValid(String email) {
-        // TODO : implement
+        // TODO : implement, check that ends with "@epfl.ch"
         return  true;
+    }
+
+    public static boolean isValidUser(User user) {
+        if (user != null
+        && nameIsValid(user.getFirstName())
+        && nameIsValid(user.getLastName())
+        && dateIsValid(user.getDateOfBirth())
+        && emailIsValid(user.getEmail())) {
+            return true;
+        }
+        return false;
     }
 
 }

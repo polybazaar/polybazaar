@@ -11,8 +11,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
 
@@ -21,36 +19,57 @@ import static ch.epfl.polybazaar.Utilities.*;
 public class User {
 
     private static final String TAG = "User.class";
+
     private String firstName;
     private String lastName;
     private Date dateOfBirth;
     private String email;
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * User Constructor
+     * @param firstName first name
+     * @param lastName last name
+     * @param dateOfBirth date of birth
+     * @param email email address, unique identifier (key)
+     * @throws IllegalArgumentException
+     */
     public User(String firstName, String lastName, Date dateOfBirth, String email) throws IllegalArgumentException {
         if (nameIsValid(firstName)) {
             this.firstName = firstName;
         } else {
             throw new IllegalArgumentException("first name has invalid format");
         }
-        ;
         if (nameIsValid(lastName)) {
             this.lastName = lastName;
         } else {
             throw new IllegalArgumentException("last name has invalid format");
         }
-        ;
         if (dateIsValid(dateOfBirth)) {
             this.dateOfBirth = dateOfBirth;
         } else {
             throw new IllegalArgumentException("date of birth has invalid format");
         }
-        ;
         if (emailIsValid(email)) {
             this.email = email;
         } else {
             throw new IllegalArgumentException("email has invalid format");
         }
-        ;
     }
 
     /**
@@ -58,25 +77,30 @@ public class User {
      * @param user the user
      * @param fb the Firestore database instance
      * @return true if successful
-     * @throws FirebaseFirestoreException
      */
-    public boolean storeNewUser(User user, FirebaseFirestore fb) throws FirebaseFirestoreException {
-        try {
-            fb.collection("users").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    return;
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    return;
-                }
-            });
-        } catch (Exception e) {
-            throw new FirebaseFirestoreException("failed to store user", FirebaseFirestoreException.Code.UNKNOWN);
+    public boolean storeNewUser(User user, FirebaseFirestore fb) {
+        // email already used:
+        if (isValidUser(fetchUser(user.email, fb))) {
+            return false;
         }
-        return true;
+        // new user:
+        Task setUser = fb.collection("users").document(user.email).set(user);
+        setUser.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void nothing) {
+                Log.d(TAG, "successfully added new user");
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "error adding new user", e);
+            }
+        });
+        if (setUser.isSuccessful()) {
+            return  true;
+        }
+        return false;
     }
 
     /**
@@ -98,7 +122,7 @@ public class User {
                         Log.d(TAG, "failed to fetch user data");
                     }
                 } else {
-                    Log.d(TAG, "database request failed with ", task.getException());
+                    Log.d(TAG, "database request failed with", task.getException());
                 }
             }
         });
