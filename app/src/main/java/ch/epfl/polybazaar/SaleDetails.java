@@ -1,14 +1,12 @@
 package ch.epfl.polybazaar;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SaleDetails extends AppCompatActivity {
 
@@ -20,10 +18,6 @@ public class SaleDetails extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         if(b == null)
             throw new NullPointerException();
-
-        //Set the image
-        //ImageView image = (ImageView)findViewById(R.id.imageView2);
-        //image.setImageResource(R.drawable.algebre_lin); //need to change this
 
         //Set the title
         TextView title_txt = (TextView)findViewById(R.id.title);
@@ -39,24 +33,15 @@ public class SaleDetails extends AppCompatActivity {
         price_txt.setText(b.getString("price", "No Price"));
 
 
-        //Button ret = (Button) findViewById(R.id.ret_but);
-        //Button get_seller = (Button) findViewById(R.id.contact_sel);
 
-        //Return button action
-        /*ret.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                //Intent myIntent = new Intent(view.getContext(), SalesOverview.class);
-                //startActivityForResult(myIntent, 0);
-            }
-        });*/
+        Button get_seller = findViewById(R.id.contact_sel);
 
         //Get seller action
-        /*get_seller.setOnClickListener(new View.OnClickListener() {
+        get_seller.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                
-
+                Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG).show();
             }
-        });*/
+        });
 
     }
 }
