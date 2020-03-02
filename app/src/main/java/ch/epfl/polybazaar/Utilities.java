@@ -1,6 +1,6 @@
 package ch.epfl.polybazaar;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public abstract class Utilities {
 
@@ -9,7 +9,7 @@ public abstract class Utilities {
         return  true;
     }
 
-    public static boolean dateIsValid(Date date) {
+    public static boolean dateIsValid(Calendar date) {
         // TODO : implement
         return  true;
     }
