@@ -9,8 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="ch.epfl.polybazaar.SaleDetails"></activity>
-        <activity android:name="ch.epfl.polybazaar.MainActivity">
+        <activity   android:name=".SalesOverview"
+                    android:exported="true"
+            ></activity>
+        <activity android:name=".SaleDetails" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
