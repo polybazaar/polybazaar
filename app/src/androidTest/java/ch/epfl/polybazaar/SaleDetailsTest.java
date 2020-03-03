@@ -2,6 +2,7 @@ package ch.epfl.polybazaar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.test.espresso.action.ViewActions;
@@ -15,11 +16,13 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 
@@ -69,7 +72,7 @@ public class SaleDetailsTest {
     }
 
     @Test
-    public void contactTheSellerNotImplementedYet() {
+    public void contactTheSellerNotImplementedYet() throws Throwable {
         Intent intent = new Intent();
         intent.putExtra("title", "Algebre Linéaire by David C. Lay" );
         intent.putExtra("description", "Never used");
@@ -77,8 +80,14 @@ public class SaleDetailsTest {
 
         activityRule.launchActivity(intent);
 
-        onView(withId(R.id.contact_sel))
-                .perform(click());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Button but = activityRule.getActivity().findViewById(R.id.contact_sel);
+                but.performClick();
+            }
+        });
+
 
 
         onView(withText("This functionality is not implemented yet"))
