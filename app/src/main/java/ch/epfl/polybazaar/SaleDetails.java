@@ -19,7 +19,7 @@ public class SaleDetails extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         if(b == null)
-            throw new NullPointerException();
+            b = new Bundle();
 
         //set image
         ImageView image = findViewById(R.id.imageView2);

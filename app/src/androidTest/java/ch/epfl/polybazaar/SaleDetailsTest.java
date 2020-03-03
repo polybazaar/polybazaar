@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
@@ -52,19 +53,9 @@ public class SaleDetailsTest {
         assertEquals("18 CHF", text_price.getText().toString());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testOnCreateThrowAnException() {
-        Intent intent = new Intent();
-
-        Bundle b = new Bundle();
-        activityRule.getActivity().onCreate(b);
-    }
-
     @Test
     public void testDefaultValues() {
         Intent intent = new Intent();
-        Bundle b = new Bundle();
-        intent.putExtras(b);
 
         activityRule.launchActivity(intent);
         TextView text_title = (TextView)activityRule.getActivity().findViewById(R.id.title);
@@ -87,8 +78,7 @@ public class SaleDetailsTest {
         activityRule.launchActivity(intent);
 
         onView(withId(R.id.contact_sel))
-                .perform(ViewActions.doubleClick())
-                .perform(closeSoftKeyboard());
+                .perform(click());
 
 
         onView(withText("This functionality is not implemented yet"))
