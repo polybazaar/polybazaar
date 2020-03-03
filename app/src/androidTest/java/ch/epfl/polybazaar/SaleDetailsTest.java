@@ -1,7 +1,6 @@
 package ch.epfl.polybazaar;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -34,11 +33,10 @@ public class SaleDetailsTest {
     @Test
     public void testOnCreate() {
         Intent intent = new Intent();
-        Bundle b = new Bundle();
-        b.putString("title", "Algebre Linéaire by David C. Lay" );
-        b.putString("description", "Never used");
-        b.putString("price", "18 CHF");
-        intent.putExtras(b);
+        intent.putExtra("image",R.drawable.algebre_lin);
+        intent.putExtra("title", "Algebre Linéaire by David C. Lay" );
+        intent.putExtra("description", "Never used");
+        intent.putExtra("price", "18 CHF");
 
         activityRule.launchActivity(intent);
         TextView text_title = (TextView)activityRule.getActivity().findViewById(R.id.title);

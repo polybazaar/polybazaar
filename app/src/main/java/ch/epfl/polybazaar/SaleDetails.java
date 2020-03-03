@@ -23,8 +23,10 @@ public class SaleDetails extends AppCompatActivity {
 
         //set image
         ImageView image = findViewById(R.id.imageView2);
-        int pic = b.getInt("image");
-        image.setImageResource(pic);
+        int pic = b.getInt("image", -1);
+        if(pic != -1) {
+            image.setImageResource(pic);
+        }
 
         //Set the title
         TextView title_txt = (TextView)findViewById(R.id.title);
