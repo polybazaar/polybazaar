@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:text="Description"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/editText3"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionSelector"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,10 +65,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.101"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionSelector" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/descriptionSelector"
         android:layout_width="338dp"
         android:layout_height="135dp"
         android:ems="10"
@@ -111,7 +111,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.052"
         app:layout_constraintStart_toEndOf="@+id/priceView"
-        app:layout_constraintTop_toBottomOf="@+id/editText3"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionSelector"
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
