@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -51,33 +52,26 @@ public class SaleDetailsTest {
         assertEquals("18 CHF", text_price.getText().toString());
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testOnCreateThrowAnException() {
         Intent intent = new Intent();
-        boolean exceptionThrown = false;
 
-        try {
-            Bundle b = new Bundle();
-            activityRule.getActivity().onCreate(b);
-        }catch (NullPointerException e) {
-            exceptionThrown = true;
-        }
-        
-        assertEquals(true, exceptionThrown);
+        Bundle b = new Bundle();
+        activityRule.getActivity().onCreate(b);
     }
 
     @Test
     public void contactTheSellerNotImplementedYet() {
         Intent intent = new Intent();
-        Bundle b = new Bundle();
-        b.putString("title", "Algebre Linéaire by David C. Lay" );
-        b.putString("description", "Never used");
-        b.putString("price", "18 CHF");
-        intent.putExtras(b);
+        intent.putExtra("title", "Algebre Linéaire by David C. Lay" );
+        intent.putExtra("description", "Never used");
+        intent.putExtra("price", "18 CHF");
 
         activityRule.launchActivity(intent);
 
-        onView(withId(R.id.contact_sel)).perform(ViewActions.click());
+        onView(withId(R.id.contact_sel))
+                .noActivity()
+                .perform(ViewActions.click());
 
 
         onView(withText("This functionality is not implemented yet"))

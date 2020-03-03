@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -39,7 +40,9 @@ public class SaleDetails extends AppCompatActivity {
         //Get seller action
         get_seller.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG).show();
+                Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.show();
             }
         });
 

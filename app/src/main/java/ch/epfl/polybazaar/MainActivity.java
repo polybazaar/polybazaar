@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MainActivity.this, SaleDetails.class);
         intent.putExtra("image_link",R.drawable.algebre_lin);
-        intent.putExtra("title", "A title");
-        intent.putExtra("description", "A description");
-        intent.putExtra("price", "CHF 100.-");
+        intent.putExtra("title", "Algebre Linéaire by David C. Lay");
+        intent.putExtra("description", "Never used, but trust me, this book is useful");
+        intent.putExtra("price", "CHF 35.-");
         startActivity(intent);
 
         // Initialize Firebase Auth
