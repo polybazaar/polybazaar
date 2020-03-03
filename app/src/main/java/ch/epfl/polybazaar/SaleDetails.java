@@ -40,7 +40,6 @@ public class SaleDetails extends AppCompatActivity {
         price_txt.setText(b.getString("price", "No price"));
 
 
-
         Button get_seller = findViewById(R.id.contact_sel);
 
         //Get seller action
