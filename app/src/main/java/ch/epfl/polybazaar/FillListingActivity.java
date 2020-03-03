@@ -19,16 +19,17 @@ import android.widget.Toast;
 
 public class FillListingActivity extends AppCompatActivity {
 
-    private static final int RESULT_LOAD_IMAGE = 1;
+    public static final int RESULT_LOAD_IMAGE = 1;
+    public static final String INCORRECT_FIELDS_TEXT = "One or more required fields are incorrect or uncompleted";
+
     private Button uploadImage;
     private Button submitListing;
     private ImageView pictureView;
     private Switch freeSwitch;
-    private double oldPrice;
-
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
+    private String oldPrice;
 
 
     @Override
@@ -38,10 +39,8 @@ public class FillListingActivity extends AppCompatActivity {
 
         pictureView = findViewById(R.id.picturePreview);
         freeSwitch = findViewById(R.id.freeSwitch);
-
         uploadImage = findViewById(R.id.uploadImage);
         submitListing = findViewById(R.id.submitListing);
-
         titleSelector = findViewById(R.id.titleSelector);
         descriptionSelector = findViewById(R.id.descriptionSelector);
         priceSelector = findViewById(R.id.priceSelector);
@@ -62,13 +61,13 @@ public class FillListingActivity extends AppCompatActivity {
         submitListing.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString());
                 Context context = getApplicationContext();
-                CharSequence text = "New listing object created";
                 int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+                if(!checkFields()) {
+                    Toast incorrectFieldsToast = Toast.makeText(context, INCORRECT_FIELDS_TEXT, duration);
+                    incorrectFieldsToast.show();
+                }
+                Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString());
             }
         });
     }
@@ -96,17 +95,33 @@ public class FillListingActivity extends AppCompatActivity {
     private void freezePriceSelector(boolean isChecked){
         if(isChecked){
             if(priceSelector.getText().length() >0) {
-                oldPrice = Double.parseDouble(priceSelector.getText().toString());
+                oldPrice = priceSelector.getText().toString();
             }
             priceSelector.setFocusable(false);
             priceSelector.setText(Double.toString(0.00));
         }
         else{
             priceSelector.setFocusableInTouchMode(true);
-            priceSelector.setText(Double.toString(oldPrice));
+            priceSelector.setText(oldPrice);
         }
     }
 
+    private boolean checkFields(){
+        return checkTitle() && checkPrice();
+    }
+
+    private boolean checkPrice() {
+        try {
+            return Double.parseDouble(priceSelector.getText().toString())>=0.0;
+        }
+        catch(Exception e){
+            return false;
+        }
+    }
+
+    private boolean checkTitle() {
+        return !titleSelector.getText().toString().isEmpty();
+    }
 
 
 }
