@@ -36,19 +36,11 @@ public class SalesOverviewTest {
         assertEquals("CHF 13", text_price.getText().toString());
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testOnCreateThrowAnException() {
         Intent intent = new Intent();
-        boolean exceptionThrown = false;
-
-        try {
-            Bundle b = new Bundle();
-            activityRule.getActivity().onCreate(b);
-        }catch (NullPointerException e) {
-            exceptionThrown = true;
-        }
-
-        assertEquals(true, exceptionThrown);
+        Bundle b = new Bundle();
+        activityRule.getActivity().onCreate(b);
     }
 
 }
