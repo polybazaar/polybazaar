@@ -21,13 +21,17 @@ public class UserDatabase {
 
     private static final String TAG = "User.class";
 
-    private Observable watched = new Observable();
+    private Observable watched;
 
-    private boolean success = false;
+    private boolean success;
 
-    private User fetchedUser = null;
+    private User fetchedUser;
 
-    public UserDatabase(){};
+    public UserDatabase(){
+        watched = new Observable();
+        success = false;
+        fetchedUser = null;
+    };
 
     public boolean isSuccess() {
         return success;
@@ -55,7 +59,7 @@ public class UserDatabase {
             public void onSuccess(Void nothing) {
                 Log.d(TAG, "successfully added new user");
                 success = true;
-                watched.notifyObservers();
+                watched.notifyObservers(success);
             }
         })
         .addOnFailureListener(new OnFailureListener() {
@@ -63,7 +67,7 @@ public class UserDatabase {
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "error adding new user", e);
                 success = false;
-                watched.notifyObservers();
+                watched.notifyObservers(success);
             }
         });
         watched.deleteObserver(o);
@@ -78,6 +82,7 @@ public class UserDatabase {
      */
     public void fetchUser(String email, FirebaseFirestore fb, Observer o) {
         success = false;
+        fetchedUser = null;
         watched.addObserver(o);
         DocumentReference docRef = fb.collection("user").document(email);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -89,16 +94,18 @@ public class UserDatabase {
                         Log.d(TAG, "successfully retrieved user data");
                         success = true;
                         fetchedUser = document.toObject(User.class);
-                        watched.notifyObservers();
+                        watched.notifyObservers(fetchedUser);
                     } else {
                         Log.d(TAG, "failed to fetch user data");
                         success = false;
-                        watched.notifyObservers();
+                        fetchedUser = null;
+                        watched.notifyObservers(fetchedUser);
                     }
                 } else {
                     Log.d(TAG, "database request failed with", task.getException());
                     success = false;
-                    watched.notifyObservers();
+                    fetchedUser = null;
+                    watched.notifyObservers(fetchedUser);
                 }
             }
         });
@@ -119,7 +126,7 @@ public class UserDatabase {
             public void onSuccess(Void aVoid) {
                 Log.d(TAG, "user successfully deleted!");
                 success = true;
-                watched.notifyObservers();
+                watched.notifyObservers(success);
             }
         })
         .addOnFailureListener(new OnFailureListener() {
@@ -127,7 +134,7 @@ public class UserDatabase {
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "error deleting user", e);
                 success = false;
-                watched.notifyObservers();
+                watched.notifyObservers(success);
             }
         });
         watched.deleteObserver(o);

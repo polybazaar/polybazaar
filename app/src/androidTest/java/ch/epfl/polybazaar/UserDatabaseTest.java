@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Calendar;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,10 +22,16 @@ public class UserDatabaseTest {
     private FirebaseFirestore fb = FirebaseFirestore.getInstance();
     private UserDatabase udb = new UserDatabase();
 
+    private void runLong() {
+        double x = 1.0;
+        for (long i = 0 ; i <999999999 ; ++i) {
+            x = x *1.000001*1.0000002;
+        }
+    }
 
    // @Before
     @Test
-    public void databaseInit() throws InterruptedException {
+    public void databaseInit() throws InterruptedException, ExecutionException {
         Calendar cal = Calendar.getInstance();
         cal.set(1923, 12, 11);
         User micheal = new User("Micheal", "Jaqueson", cal, "mj@epfl.ch");
@@ -34,10 +41,17 @@ public class UserDatabaseTest {
             @Override
             public void update(Observable o, Object arg) {
                 assertThat(udb.isSuccess(), is(true));
+                assertThat(udb.isSuccess(), is(false));    // to delete
             }
         };
         udb.storeNewUser(micheal, fb, o);
+        runLong();
+        runLong();
+        runLong();
         udb.storeNewUser(william, fb, o);
+        runLong();
+        runLong();
+        runLong();
     }
 
     //@After
@@ -47,10 +61,17 @@ public class UserDatabaseTest {
             @Override
             public void update(Observable o, Object arg) {
                 assertThat(udb.isSuccess(), is(true));
+                assertThat(udb.isSuccess(), is(false));  // to delete
             }
         };
         udb.deleteUser("mj@epfl.ch", fb, o);
+        runLong();
+        runLong();
+        runLong();
         udb.deleteUser("ws@epfl.ch", fb, o);
+        runLong();
+        runLong();
+        runLong();
     }
 
 /*
