@@ -28,9 +28,12 @@ public class FillListingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_listing);
+
         pictureView = findViewById(R.id.picturePreview);
         freeSwitch = findViewById(R.id.freeSwitch);
         priceSelector = findViewById(R.id.priceSelector);
+        uploadImage = findViewById(R.id.uploadImage);
+
         freeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -47,7 +50,7 @@ public class FillListingActivity extends AppCompatActivity {
                 }
             }
         });
-        uploadImage = findViewById(R.id.uploadImage);
+
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

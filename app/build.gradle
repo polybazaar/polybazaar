@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
+apply plugin: 'com.google.gms.google-services'
 
 jacoco {
     toolVersion = "0.8.4"
@@ -10,7 +11,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "ch.epfl.sdp"
+        applicationId 'ch.epfl.polybazaar'
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
@@ -36,6 +37,12 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    // Google Services: https://firebase.google.com/docs/android/setup#available-libraries
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'  // Analytics
+    implementation 'com.google.firebase:firebase-auth:19.2.0'       // Authentification
+    implementation 'com.google.firebase:firebase-firestore:21.4.0'  // Cloud Firestore
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
