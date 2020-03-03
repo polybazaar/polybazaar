@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -86,12 +87,13 @@ public class SaleDetailsTest {
         activityRule.launchActivity(intent);
 
         onView(withId(R.id.contact_sel))
-                .perform(ViewActions.click());
+                .perform(ViewActions.doubleClick())
+                .perform(closeSoftKeyboard());
 
 
-        /*onView(withText("This functionality is not implemented yet"))
+        onView(withText("This functionality is not implemented yet"))
                 .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed()));*/
+                .check(matches(isDisplayed()));
 
     }
 }
