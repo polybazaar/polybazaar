@@ -1,4 +1,4 @@
-package ch.epfl.sdp;
+package ch.epfl.polybazaar;
 
 import android.app.Activity;
 import android.app.Instrumentation;

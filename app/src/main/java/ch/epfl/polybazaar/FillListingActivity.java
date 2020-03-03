@@ -1,4 +1,4 @@
-package ch.epfl.sdp;
+package ch.epfl.polybazaar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
