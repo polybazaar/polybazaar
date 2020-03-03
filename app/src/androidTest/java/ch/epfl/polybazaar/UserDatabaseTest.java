@@ -19,18 +19,11 @@ import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class UserDatabaseTest {
+
     private FirebaseFirestore fb = FirebaseFirestore.getInstance();
     private UserDatabase udb = new UserDatabase();
 
-    private void runLong() {
-        double x = 1.0;
-        for (long i = 0 ; i <999999999 ; ++i) {
-            x = x *1.000001*1.0000002;
-        }
-    }
-
-   // @Before
-    @Test
+    @Before
     public void databaseInit() throws InterruptedException, ExecutionException {
         Calendar cal = Calendar.getInstance();
         cal.set(1923, 12, 11);
@@ -41,46 +34,39 @@ public class UserDatabaseTest {
             @Override
             public void update(Observable o, Object arg) {
                 assertThat(udb.isSuccess(), is(true));
-                assertThat(udb.isSuccess(), is(false));    // to delete
+                //assertThat(udb.isSuccess(), is(false));    // to delete
             }
         };
         udb.storeNewUser(micheal, fb, o);
-        runLong();
-        runLong();
-        runLong();
         udb.storeNewUser(william, fb, o);
-        runLong();
-        runLong();
-        runLong();
     }
 
-    //@After
-    @Test
+    @After
     public void databaseClean() {
         Observer o = new Observer() {
             @Override
             public void update(Observable o, Object arg) {
                 assertThat(udb.isSuccess(), is(true));
-                assertThat(udb.isSuccess(), is(false));  // to delete
+                //assertThat(udb.isSuccess(), is(false));  // to delete
             }
         };
         udb.deleteUser("mj@epfl.ch", fb, o);
-        runLong();
-        runLong();
-        runLong();
         udb.deleteUser("ws@epfl.ch", fb, o);
-        runLong();
-        runLong();
-        runLong();
     }
 
-/*
+
     @Test
     public void setNewUserAlreadyPresent() {
         Calendar cal = Calendar.getInstance();
         cal.set(1913, 01, 11);
         User john = new User("John", "Jones", cal, "mj@epfl.ch");
-        assertThat(UserDatabase.storeNewUser(john, fb), is(false));
+        Observer o = new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                assertThat(udb.isSuccess(), is(false));
+            }
+        };
+        udb.storeNewUser(john, fb, o);
     }
 
     @Test
@@ -88,9 +74,15 @@ public class UserDatabaseTest {
         Calendar cal = Calendar.getInstance();
         cal.set(1945, 11, 21);
         User john = new User("John", "Jones", cal, "jj@epfl.ch");
-        assertThat(UserDatabase.storeNewUser(john, fb), is(true));
+        Observer o = new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                assertThat(udb.isSuccess(), is(true));
+            }
+        };
+        udb.storeNewUser(john, fb, o);
         // Clean up:
-        assertThat(UserDatabase.deleteUser("jj@epfl.ch", fb), is(true));
+        udb.deleteUser("jj@epfl.ch", fb, o);
     }
 
     @Test
@@ -98,23 +90,41 @@ public class UserDatabaseTest {
         Calendar cal = Calendar.getInstance();
         cal.set(1945, 11, 21);
         User john = new User("John", "Jones", cal, "jj@mcu.us");
-        assertThat(UserDatabase.storeNewUser(john, fb), is(false));
+        Observer o = new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                assertThat(udb.isSuccess(), is(false));
+            }
+        };
+        udb.storeNewUser(john, fb, o);
     }
 
     @Test
     public void fetchUserNotPresent() {
-        assertNull(UserDatabase.fetchUser("jj@epfl.ch", fb));
+        Observer o = new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                assertNull(udb.getFetchedUser());
+            }
+        };
+        udb.fetchUser("jj@epfl.ch", fb, o);
     }
 
     @Test
     public void fetchUserPresent() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(1923, 12, 11);
-        User user = UserDatabase.fetchUser("mj@epfl.ch", fb);
-        assertThat(user.getEmail(), is("mj@epfl.ch"));
-        assertThat(user.getDateOfBirth(), is(cal));
-        assertThat(user.getFirstName(), is("Micheal"));
-        assertThat(user.getLastName(), is("Jaqueson"));
+        Observer o = new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                User user = udb.getFetchedUser();
+                Calendar cal = Calendar.getInstance();
+                cal.set(1923, 12, 11);
+                assertThat(user.getEmail(), is("mj@epfl.ch"));
+                assertThat(user.getDateOfBirth(), is(cal));
+                assertThat(user.getFirstName(), is("Micheal"));
+                assertThat(user.getLastName(), is("Jaqueson"));
+            }
+        };
+        udb.fetchUser("mj@epfl.ch", fb, o);
     }
-    */
+
 }
