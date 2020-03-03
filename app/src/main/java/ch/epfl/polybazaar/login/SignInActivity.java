@@ -3,6 +3,8 @@ package ch.epfl.polybazaar.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,9 +58,22 @@ public class SignInActivity extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
                             startActivity(intent);
                         } else {
-                            Log.e(TAG, "Unable to sign in!");
+                            showErrorDialog();
                         }
                     }
                 });
+    }
+
+    private void showErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
+        builder.setTitle("Login failed")
+                .setMessage("Please verify your credentials")
+                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
     }
 }
