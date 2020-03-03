@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,11 @@ public class SaleDetails extends AppCompatActivity {
         if(b == null)
             throw new NullPointerException();
 
+        //set image
+        ImageView image = findViewById(R.id.imageView2);
+        int pic = b.getInt("image");
+        image.setImageResource(pic);
+
         //Set the title
         TextView title_txt = (TextView)findViewById(R.id.title);
         title_txt.setText(b.getString("title", "No Title"));
@@ -31,7 +37,7 @@ public class SaleDetails extends AppCompatActivity {
         //Set the price
         TextView price_txt = (TextView)findViewById(R.id.price);
         price_txt.setTextSize(20);
-        price_txt.setText(b.getString("price", "No Price"));
+        price_txt.setText(b.getString("price", "No price"));
 
 
 

@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = new Intent(MainActivity.this, SaleDetails.class);
-        intent.putExtra("image_link",R.drawable.algebre_lin);
+        intent.putExtra("image",R.drawable.algebre_lin);
         intent.putExtra("title", "Algebre Linéaire by David C. Lay");
         intent.putExtra("description", "Never used, but trust me, this book is useful");
         intent.putExtra("price", "CHF 35.-");
