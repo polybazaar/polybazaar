@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.userdatabase;
+package ch.epfl.polybazaar.user;
 
 import java.util.Calendar;
 

@@ -1,12 +1,15 @@
-package ch.epfl.polybazaar.userdatabase;
+package ch.epfl.polybazaar.user;
 
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import ch.epfl.polybazaar.database.GenericCallback;
-import ch.epfl.polybazaar.database.GenericDatabase;
+import ch.epfl.polybazaar.database.generic.GenericDatabase;
+import ch.epfl.polybazaar.database.callback.SuccessCallbackAdapter;
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.database.callback.UserCallbackAdapter;
+import ch.epfl.polybazaar.database.callback.UserCallback;
 
 
 public class UserDatabase {
@@ -15,8 +18,8 @@ public class UserDatabase {
 
     private GenericDatabase db;
 
-    public UserDatabase(boolean useFirestore){
-        db = new GenericDatabase(useFirestore);
+    public UserDatabase(){
+        db = new GenericDatabase();
     };
 
     /**
@@ -25,17 +28,12 @@ public class UserDatabase {
      * @param callback a callback interface implementation
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void storeNewUser(final User user, final UserCallback callback) {
-        final GenericCallback adapterCallback = new GenericCallback() {
+    public void storeNewUser(final User user, final SuccessCallback callback) {
+        final SuccessCallbackAdapter adapterCallback = new SuccessCallbackAdapter(callback);
+        final SuccessCallback intermediateCall = new SuccessCallback() {
             @Override
-            public void onCallback(Object result) {
-                callback.onCallback((boolean)result);
-            }
-        };
-        GenericCallback intermediateCall = new GenericCallback() {
-            @Override
-            public void onCallback(Object target) {
-                if (((boolean)target) == true) {
+            public void onCallback(boolean result) {
+                if (result == true) {
                     Log.w(TAG, "user email already used");
                     adapterCallback.onCallback(false);
                     return;
@@ -45,10 +43,11 @@ public class UserDatabase {
                     adapterCallback.onCallback(false);
                     return;
                 }
-                db.addData("users", user.getEmail(), adapterCallback);
+                db.setData("users", user.getEmail(), user, adapterCallback);
             }
         };
-        db.fetchData("users", user.getEmail(), intermediateCall);
+        final SuccessCallbackAdapter adapterIntermediateCallback = new SuccessCallbackAdapter(intermediateCall);
+        db.fetchData("users", user.getEmail(), adapterIntermediateCallback);
     }
 
     /**
@@ -57,12 +56,7 @@ public class UserDatabase {
      * @param callback a callback interface implementation
      */
     public void fetchUser(final String email, final UserCallback callback) {
-        final GenericCallback adapterCallback = new GenericCallback() {
-            @Override
-            public void onCallback(Object result) {
-                callback.onCallback((User)result);
-            }
-        };
+        final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback);
         db.fetchData("users", email, adapterCallback);
     }
 
@@ -72,13 +66,8 @@ public class UserDatabase {
      * @param callback a callback interface implementation
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void deleteUser(final String email, final UserCallback callback) {
-        final GenericCallback adapterCallback = new GenericCallback() {
-            @Override
-            public void onCallback(Object result) {
-                callback.onCallback((boolean)result);
-            }
-        };
+    public void deleteUser(final String email, final SuccessCallback callback) {
+        final SuccessCallbackAdapter adapterCallback = new SuccessCallbackAdapter(callback);
         db.deleteData("user", email, adapterCallback);
     }
 }

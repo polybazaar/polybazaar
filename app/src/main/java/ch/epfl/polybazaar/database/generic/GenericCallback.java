@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.database;
+package ch.epfl.polybazaar.database.generic;
 
 public interface GenericCallback {
     /**

@@ -2,22 +2,16 @@ package ch.epfl.polybazaar;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.Calendar;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.polybazaar.database.GenericCallback;
-import ch.epfl.polybazaar.userdatabase.User;
-import ch.epfl.polybazaar.userdatabase.UserCallback;
-import ch.epfl.polybazaar.userdatabase.UserDatabase;
+import ch.epfl.polybazaar.user.User;
+import ch.epfl.polybazaar.database.callback.UserCallback;
+import ch.epfl.polybazaar.user.UserDatabase;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -25,16 +19,21 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class UserDatabaseTest {
 
-    private UserDatabase udb = new UserDatabase(false);
+    private UserDatabase udb = new UserDatabase();
+
+    private boolean success;
 
     //@Before
     @Test
-    public void databaseInit() throws InterruptedException, ExecutionException {
+    public void databaseInit() throws InterruptedException {
+        CountDownLatch lock = new CountDownLatch(1);
+
         Calendar cal = Calendar.getInstance();
         cal.set(1923, 12, 11);
-        User micheal = new User("Micheal", "Jaqueson", cal, "mj@epfl.ch");
+        User micheal = new User("Micheal", "Jaqueson", cal, "m.j@epfl.ch");
         cal.set(2001, 03, 30);
-        User william = new User("William", "Shakespeare", cal, "ws@epfl.ch");
+        User william = new User("William", "Shakespeare", cal, "w.s@epfl.ch");
+        success = false;
         UserCallback callback = new UserCallback() {
             @Override
             public void onCallback(User result) {
@@ -43,12 +42,17 @@ public class UserDatabaseTest {
 
             @Override
             public void onCallback(boolean result) {
-                assertThat(result, is(true));
-                assertThat(result, is(false));
+                success = true;
             }
         };
         udb.storeNewUser(micheal, callback);
+        lock.await(2000, TimeUnit.MILLISECONDS);
+        assertThat(success, is(true));
+        success = false;
         udb.storeNewUser(william, callback);
+        lock.await(2000, TimeUnit.MILLISECONDS);
+        assertThat(success, is(true));
+        success = false;
     }
 /*
     @After

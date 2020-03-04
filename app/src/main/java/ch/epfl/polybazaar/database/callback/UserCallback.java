@@ -1,4 +1,6 @@
-package ch.epfl.polybazaar.userdatabase;
+package ch.epfl.polybazaar.database.callback;
+
+import ch.epfl.polybazaar.user.User;
 
 public interface UserCallback {
     /**
@@ -6,5 +8,4 @@ public interface UserCallback {
      * @param result the callback content, can be null
      */
     public void onCallback(User result);
-    public void onCallback(boolean result);
 }

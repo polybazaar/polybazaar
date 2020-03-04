@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Calendar;
 
-import ch.epfl.polybazaar.userdatabase.User;
+import ch.epfl.polybazaar.user.User;
 
 import static ch.epfl.polybazaar.Utilities.*;
 

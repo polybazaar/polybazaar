@@ -2,7 +2,7 @@ package ch.epfl.polybazaar;
 
 import java.util.Calendar;
 
-import ch.epfl.polybazaar.userdatabase.User;
+import ch.epfl.polybazaar.user.User;
 
 public abstract class Utilities {
 

@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.database;
+package ch.epfl.polybazaar;
 
 import android.app.Activity;
 import android.os.Build;
@@ -24,7 +24,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 
-import ch.epfl.polybazaar.userdatabase.User;
+import ch.epfl.polybazaar.user.User;
 
 public class Polystore {
 
