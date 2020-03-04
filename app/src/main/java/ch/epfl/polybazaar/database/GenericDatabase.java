@@ -11,12 +11,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Observer;
-
-import ch.epfl.polybazaar.User;
-import ch.epfl.polybazaar.database.Polystore;
 
 public class GenericDatabase{
 
@@ -110,6 +104,12 @@ public class GenericDatabase{
         });
     }
 
+    /**
+     * deletes data from the database, and calls onCallback when done
+     * @param collectionPath collection name
+     * @param documentPath document name (ID)
+     * @param callback a callback interface implementation
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final GenericCallback callback) {
         Task task = polystore.deleteDocumentTask(collectionPath, documentPath);

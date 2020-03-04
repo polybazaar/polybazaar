@@ -14,6 +14,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.polybazaar.userdatabase.User;
+import ch.epfl.polybazaar.userdatabase.UserDatabase;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 

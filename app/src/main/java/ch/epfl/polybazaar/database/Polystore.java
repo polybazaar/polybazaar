@@ -24,7 +24,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 
-import ch.epfl.polybazaar.User;
+import ch.epfl.polybazaar.userdatabase.User;
 
 public class Polystore {
 

@@ -6,6 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Calendar;
+
+import ch.epfl.polybazaar.userdatabase.User;
+
 import static ch.epfl.polybazaar.Utilities.*;
 
 import static org.hamcrest.Matchers.is;

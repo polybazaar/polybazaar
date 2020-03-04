@@ -2,6 +2,8 @@ package ch.epfl.polybazaar;
 
 import java.util.Calendar;
 
+import ch.epfl.polybazaar.userdatabase.User;
+
 public abstract class Utilities {
 
     public static boolean nameIsValid(String name) {
