@@ -114,11 +114,14 @@ public class FillListingActivityTest {
     }
 
     @Test
-    public void toastAppearsWhenPriceIsIncorrect(){
+    public void toastAppearsWhenPriceIsText(){
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("A book"));
         onView(withId(R.id.submitListing)).perform(scrollTo(), click());
         onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+    }
 
+    @Test
+    public void toastAppearsWhenPriceIsNegative(){
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("-0.10"));
         onView(withId(R.id.submitListing)).perform(scrollTo(), click());
         onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
