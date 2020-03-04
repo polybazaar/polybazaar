@@ -17,29 +17,29 @@ public class SaleDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_details);
 
-        Bundle b = getIntent().getExtras();
-        if(b == null)
-            b = new Bundle();
+        Bundle bundle = getIntent().getExtras();
+        if(bundle == null)
+            bundle = new Bundle();
 
         //set image
         ImageView image = findViewById(R.id.imageView2);
-        int pic = b.getInt("image", -1);
+        int pic = bundle.getInt("image", -1);
         if(pic != -1) {
             image.setImageResource(pic);
         }
 
         //Set the title
         TextView title_txt = (TextView)findViewById(R.id.title);
-        title_txt.setText(b.getString("title", "No Title"));
+        title_txt.setText(bundle.getString("title", "No Title"));
 
         //Set the description
         TextView description_txt = (TextView)findViewById(R.id.description);
-        description_txt.setText(b.getString("description", "No description"));
+        description_txt.setText(bundle.getString("description", "No description"));
 
         //Set the price
         TextView price_txt = (TextView)findViewById(R.id.price);
         price_txt.setTextSize(20);
-        price_txt.setText(b.getString("price", "No price"));
+        price_txt.setText(bundle.getString("price", "No price"));
 
 
         Button get_seller = findViewById(R.id.contact_sel);
