@@ -5,18 +5,16 @@ import java.util.Calendar;
 public abstract class Utilities {
 
     public static boolean nameIsValid(String name) {
-        // TODO : implement
-        return  true;
+        return (name.matches("(\\w+)"));
     }
 
     public static boolean dateIsValid(Calendar date) {
-        // TODO : implement
+        // TODO: implement
         return  true;
     }
 
     public static boolean emailIsValid(String email) {
-        // TODO : implement, check that ends with "@epfl.ch"
-        return  true;
+        return (email.matches("(\\w+)"+"."+"(\\w+)"+"@epfl.ch"));
     }
 
     public static boolean isValidUser(User user) {
