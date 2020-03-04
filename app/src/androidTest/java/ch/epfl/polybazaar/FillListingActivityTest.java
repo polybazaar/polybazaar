@@ -11,12 +11,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.BeforeClass;
@@ -33,9 +28,13 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 
 @RunWith(AndroidJUnit4.class)
@@ -55,12 +54,9 @@ public class FillListingActivityTest {
                 resources.getResourcePackageName(R.mipmap.ic_launcher) + '/' +
                 resources.getResourceTypeName(R.mipmap.ic_launcher) + '/' +
                 resources.getResourceEntryName(R.mipmap.ic_launcher));
-
         galleryIntent = new Intent();
         galleryIntent.setData(imageUri);
-
-        expectedIntent = allOf(hasAction(Intent.ACTION_PICK),
-                hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+        expectedIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
     }
 
     @Test
@@ -69,6 +65,7 @@ public class FillListingActivityTest {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         onView(withId(R.id.priceSelector)).check(matches(withText("0.0")));
     }
+
     @Test
     public void testPriceSelectorRemembersPriceAfterFreeSwitchDisabled() {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123.45"));
@@ -130,14 +127,8 @@ public class FillListingActivityTest {
     private void uploadImage(){
         Intents.init();
         intending(expectedIntent).respondWith(result);
-
         onView(withId(R.id.uploadImage)).perform(click());
-
-
         intended(expectedIntent);
         Intents.release();
     }
-
-
-
 }

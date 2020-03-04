@@ -31,7 +31,6 @@ public class FillListingActivity extends AppCompatActivity {
     private EditText priceSelector;
     private String oldPrice;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +57,7 @@ public class FillListingActivity extends AppCompatActivity {
                 uploadImage();
             }
         });
+
         submitListing.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -70,11 +70,6 @@ public class FillListingActivity extends AppCompatActivity {
                 Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString());
             }
         });
-    }
-
-    public void uploadImage(){
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
     }
 
     @Override
@@ -92,9 +87,14 @@ public class FillListingActivity extends AppCompatActivity {
         }
     }
 
+    private void uploadImage(){
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+    }
+
     private void freezePriceSelector(boolean isChecked){
         if(isChecked){
-            if(priceSelector.getText().length() >0) {
+            if(priceSelector.getText().length() > 0) {
                 oldPrice = priceSelector.getText().toString();
             }
             priceSelector.setFocusable(false);
@@ -112,7 +112,7 @@ public class FillListingActivity extends AppCompatActivity {
 
     private boolean checkPrice() {
         try {
-            return Double.parseDouble(priceSelector.getText().toString())>=0.0;
+            return Double.parseDouble(priceSelector.getText().toString()) >= 0.0;
         }
         catch(Exception e){
             return false;
