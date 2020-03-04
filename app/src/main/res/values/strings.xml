@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">polybazaar</string>
+    <string name="contact_the_seller">Contact the seller</string>
+    <string name="price">Price</string>
+    <string name="description">Description</string>
+    <string name="titre">Titre</string>
 </resources>
