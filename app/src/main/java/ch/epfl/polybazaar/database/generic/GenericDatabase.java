@@ -13,14 +13,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
+
 public class GenericDatabase{
 
     private static final String TAG = "GenericDatabase";
 
-    private FirebaseFirestore polystore;
+    private FirebaseFirestore database;
 
     public GenericDatabase() {
-        polystore = FirebaseFirestore.getInstance();
+        database = FirebaseFirestore.getInstance();
     }
 
     /**
@@ -30,7 +32,7 @@ public class GenericDatabase{
      * @param callback a callback interface implementation
      */
     public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final GenericCallback callback) {
-        Task task = polystore.collection(collectionPath).document(documentPath).get();
+        Task task = database.collection(collectionPath).document(documentPath).get();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -38,7 +40,7 @@ public class GenericDatabase{
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, "successfully retrieved data");
-                        callback.onCallback(document.toObject(Object.class));
+                        callback.onCallback(document);
                     } else {
                         Log.d(TAG, "data does not exist");
                         callback.onCallback(null);
@@ -59,8 +61,8 @@ public class GenericDatabase{
      * @param callback a callback interface implementation
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull final GenericCallback callback) {
-        Task task = polystore.collection(collectionPath).document(documentPath).set(data);
+    public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
+        Task task = database.collection(collectionPath).document(documentPath).set(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void nothing) {
@@ -84,8 +86,8 @@ public class GenericDatabase{
      * @param callback a callback interface implementation
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void addData(@NonNull String collectionPath, @NonNull Object data, @NonNull final GenericCallback callback) {
-        Task task = polystore.collection(collectionPath).add(data);
+    public void addData(@NonNull String collectionPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
+        Task task = database.collection(collectionPath).add(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void nothing) {
@@ -108,8 +110,8 @@ public class GenericDatabase{
      * @param callback a callback interface implementation
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final GenericCallback callback) {
-        Task task = polystore.collection(collectionPath).document(documentPath).delete();
+    public void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final SuccessCallback callback) {
+        Task task = database.collection(collectionPath).document(documentPath).delete();
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void nothing) {

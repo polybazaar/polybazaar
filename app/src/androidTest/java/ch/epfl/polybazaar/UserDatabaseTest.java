@@ -2,13 +2,13 @@ package ch.epfl.polybazaar;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import java.util.Calendar;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.user.User;
 import ch.epfl.polybazaar.database.callback.UserCallback;
 import ch.epfl.polybazaar.user.UserDatabase;
@@ -23,26 +23,27 @@ public class UserDatabaseTest {
 
     private boolean success;
 
+    private User user;
+
     //@Before
     @Test
     public void databaseInit() throws InterruptedException {
         CountDownLatch lock = new CountDownLatch(1);
-
-        Calendar cal = Calendar.getInstance();
-        cal.set(1923, 12, 11);
-        User micheal = new User("Micheal", "Jaqueson", cal, "m.j@epfl.ch");
-        cal.set(2001, 03, 30);
-        User william = new User("William", "Shakespeare", cal, "w.s@epfl.ch");
+        User micheal = new User("Micheal", "Jaqueson", "1999", "m.j@epfl.ch");
+        User william = new User("William", "Shakespeare", "1989", "w.s@epfl.ch");
         success = false;
-        UserCallback callback = new UserCallback() {
-            @Override
-            public void onCallback(User result) {
-
-            }
-
+        user = null;
+        SuccessCallback callback = new SuccessCallback() {
             @Override
             public void onCallback(boolean result) {
-                success = true;
+                success = result;
+            }
+        };
+        /*
+        UserCallback callbackUser = new UserCallback() {
+            @Override
+            public void onCallback(User result) {
+                user = result;
             }
         };
         udb.storeNewUser(micheal, callback);
@@ -50,6 +51,25 @@ public class UserDatabaseTest {
         assertThat(success, is(true));
         success = false;
         udb.storeNewUser(william, callback);
+        lock.await(2000, TimeUnit.MILLISECONDS);
+        assertThat(success, is(true));
+        success = false;
+        udb.fetchUser("m.j@epfl.ch", callbackUser);
+        lock.await(2000, TimeUnit.MILLISECONDS);
+        assertThat(user.getFirstName(), is("Micheal"));
+        assertThat(user.getLastName(), is("Jaqueson"));
+        user = null;
+        udb.fetchUser("w.s@epfl.ch", callbackUser);
+        lock.await(2000, TimeUnit.MILLISECONDS);
+        assertThat(user.getFirstName(), is("William"));
+        assertThat(user.getLastName(), is("Shakespeare"));
+        user = null;
+        */
+        udb.deleteUser("m.j@epfl.ch", callback);
+        lock.await(2000, TimeUnit.MILLISECONDS);
+        assertThat(success, is(true));
+        success = false;
+        udb.deleteUser("w.s@epfl.ch", callback);
         lock.await(2000, TimeUnit.MILLISECONDS);
         assertThat(success, is(true));
         success = false;

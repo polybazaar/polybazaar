@@ -46,7 +46,7 @@ public class Polystore {
         HashMap<String, Object> userCollection = new HashMap<>();
         HashMap<String, Object> listingsCollection = new HashMap<>();
         // Insert new users in the database:
-        userCollection.put("john.doe@epfl.ch", new User("John", "Doe", cal, "john.doe@epfl.ch"));
+        userCollection.put("john.doe@epfl.ch", new User("John", "Doe", "1999", "john.doe@epfl.ch"));
         // Insert new listings in the database:
         listingsCollection.put("john-doe-1", null);
         data = new HashMap<>();

@@ -8,7 +8,7 @@ public class User {
 
     private String firstName;
     private String lastName;
-    private Calendar dateOfBirth;
+    private String dateOfBirth;
     private String email;
 
     public String getFirstName() {
@@ -19,7 +19,7 @@ public class User {
         return lastName;
     }
 
-    public Calendar getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
@@ -35,7 +35,7 @@ public class User {
      * @param email email address, unique identifier (key)
      * @throws IllegalArgumentException
      */
-    public User(String firstName, String lastName, Calendar dateOfBirth, String email) throws IllegalArgumentException {
+    public User(String firstName, String lastName, String dateOfBirth, String email) throws IllegalArgumentException {
         if (nameIsValid(firstName)) {
             this.firstName = firstName;
         } else {

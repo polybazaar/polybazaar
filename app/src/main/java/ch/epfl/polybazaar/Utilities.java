@@ -10,7 +10,7 @@ public abstract class Utilities {
         return (name.matches("[a-zA-Z]+"));
     }
 
-    public static boolean dateIsValid(Calendar date) {
+    public static boolean dateIsValid(String date) {
         // TODO: implement
         return  true;
     }

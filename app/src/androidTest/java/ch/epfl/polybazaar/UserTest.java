@@ -19,57 +19,43 @@ public class UserTest {
 
     @Test
     public void createUserNormal() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(1923, 12, 11);
-        User user = new User("nobody", "noone", cal, "n.n@epfl.ch");
+        User user = new User("nobody", "noone", "1939", "n.n@epfl.ch");
         assertThat(user.getFirstName(), is("nobody"));
         assertThat(user.getLastName(), is("noone"));
-        assertThat(user.getDateOfBirth(), is(cal));
+        assertThat(user.getDateOfBirth(), is("1939"));
         assertThat(user.getEmail(), is("n.n@epfl.ch"));
         assertThat(isValidUser(user), is(true));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidEmail1() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(1923, 12, 11);
-        User user = new User("nobody", "noone", cal, "nn@epfl.ch");
+        User user = new User("nobody", "noone", "1939", "nn@epfl.ch");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidEmail2() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(1923, 12, 11);
-        User user = new User("nobody", "noone", cal, "me.help@efl.ch");
+        User user = new User("nobody", "noone", "1939", "me.help@efl.ch");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidEmail3() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(1923, 12, 11);
-        User user = new User("nobody", "noone", cal, "me.h1lp@epfl.ch");
+        User user = new User("nobody", "noone", "1939", "me.h1lp@epfl.ch");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidEmail4() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(1923, 12, 11);
-        User user = new User("nobody", "noone", cal, "me.helpepfl.ch");
+        User user = new User("nobody", "noone", "1939", "me.helpepfl.ch");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidName() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(1923, 12, 11);
-        User user = new User("no1ody", "noone", cal, "me.help@efl.ch");
+        User user = new User("no1ody", "noone", "1939", "me.help@efl.ch");
         assertThat(isValidUser(user), is(false));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidName2() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(1923, 12, 11);
-        User user = new User("nobody", "n3one", cal, "me.help@efl.ch");
+        User user = new User("nobody", "n3one", "1939", "me.help@efl.ch");
         assertThat(isValidUser(user), is(false));
     }
 }

@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import ch.epfl.polybazaar.database.generic.GenericDatabase;
-import ch.epfl.polybazaar.database.callback.SuccessCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.callback.UserCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.UserCallback;
@@ -29,24 +28,25 @@ public class UserDatabase {
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void storeNewUser(final User user, final SuccessCallback callback) {
-        final SuccessCallbackAdapter adapterCallback = new SuccessCallbackAdapter(callback);
-        final SuccessCallback intermediateCall = new SuccessCallback() {
+        final UserCallback intermediateCall = new UserCallback() {
             @Override
-            public void onCallback(boolean result) {
-                if (result == true) {
-                    Log.w(TAG, "user email already used");
-                    adapterCallback.onCallback(false);
-                    return;
+            public void onCallback(User result) {
+                if (result!=null) {
+                    if (result.getEmail().equals(user.getEmail())) {
+                        Log.w(TAG, "user email already used");
+                        callback.onCallback(false);
+                        return;
+                    }
                 }
                 if (!(user.getEmail().matches("[a-zA-Z]+"+"."+"[a-zA-Z]+"+"@epfl.ch"))) {
                     Log.w(TAG, "user email has invalid format");
-                    adapterCallback.onCallback(false);
+                    callback.onCallback(false);
                     return;
                 }
-                db.setData("users", user.getEmail(), user, adapterCallback);
+                db.setData("users", user.getEmail(), user, callback);
             }
         };
-        final SuccessCallbackAdapter adapterIntermediateCallback = new SuccessCallbackAdapter(intermediateCall);
+        final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall, user.getEmail());
         db.fetchData("users", user.getEmail(), adapterIntermediateCallback);
     }
 
@@ -56,7 +56,7 @@ public class UserDatabase {
      * @param callback a callback interface implementation
      */
     public void fetchUser(final String email, final UserCallback callback) {
-        final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback);
+        final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback, email);
         db.fetchData("users", email, adapterCallback);
     }
 
@@ -67,7 +67,6 @@ public class UserDatabase {
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void deleteUser(final String email, final SuccessCallback callback) {
-        final SuccessCallbackAdapter adapterCallback = new SuccessCallbackAdapter(callback);
-        db.deleteData("user", email, adapterCallback);
+        db.deleteData("user", email, callback);
     }
 }
