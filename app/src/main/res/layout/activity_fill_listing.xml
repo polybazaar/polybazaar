@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,11 +9,7 @@
 
     <ScrollView
         android:layout_width="409dp"
-        android:layout_height="fill_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,7 +19,8 @@
             <ImageView
                 android:id="@+id/picturePreview"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 app:srcCompat="@android:drawable/screen_background_dark" />
 
             <TableRow
@@ -31,8 +28,9 @@
                 android:layout_height="match_parent">
 
                 <Space
-                    android:layout_width="284dp"
-                    android:layout_height="match_parent" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5" />
 
                 <Button
                     android:id="@+id/uploadImage"
@@ -78,7 +76,8 @@
             <EditText
                 android:id="@+id/descriptionSelector"
                 android:layout_width="match_parent"
-                android:layout_height="192dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine" />
@@ -90,15 +89,15 @@
 
                 <TextView
                     android:id="@+id/priceTextView"
-                    android:layout_width="72dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Price"
                     android:textSize="20sp" />
 
                 <Switch
                     android:id="@+id/freeSwitch"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Free"
                     android:textSize="20sp" />
@@ -121,9 +120,9 @@
             <Button
                 android:id="@+id/submitListing"
                 android:layout_width="match_parent"
-                android:layout_height="111dp"
-                android:text="SubmitListing" />
+                android:layout_height="wrap_content"
+                android:text="Submit listing" />
 
         </LinearLayout>
     </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -73,6 +73,7 @@ public class FillListingActivityTest {
     public void testPriceSelectorRemembersPriceAfterFreeSwitchDisabled() {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123.45"));
         onView(withId(R.id.freeSwitch)).perform(click());
+        onView(withId(R.id.priceSelector)).check(matches(withText("0.0")));
         onView(withId(R.id.freeSwitch)).perform(click());
         onView(withId(R.id.priceSelector)).check(matches(withText("123.45")));
     }
