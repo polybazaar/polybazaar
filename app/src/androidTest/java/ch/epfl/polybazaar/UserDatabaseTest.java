@@ -14,7 +14,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.polybazaar.database.GenericCallback;
 import ch.epfl.polybazaar.userdatabase.User;
+import ch.epfl.polybazaar.userdatabase.UserCallback;
 import ch.epfl.polybazaar.userdatabase.UserDatabase;
 
 import static org.hamcrest.Matchers.is;
@@ -23,27 +25,32 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class UserDatabaseTest {
 
-    private FirebaseFirestore fb = FirebaseFirestore.getInstance();
-    private UserDatabase udb = new UserDatabase();
+    private UserDatabase udb = new UserDatabase(false);
 
-    @Before
+    //@Before
+    @Test
     public void databaseInit() throws InterruptedException, ExecutionException {
         Calendar cal = Calendar.getInstance();
         cal.set(1923, 12, 11);
         User micheal = new User("Micheal", "Jaqueson", cal, "mj@epfl.ch");
         cal.set(2001, 03, 30);
         User william = new User("William", "Shakespeare", cal, "ws@epfl.ch");
-        Observer o = new Observer() {
+        UserCallback callback = new UserCallback() {
             @Override
-            public void update(Observable o, Object arg) {
-                assertThat(udb.isSuccess(), is(true));
-                //assertThat(udb.isSuccess(), is(false));    // to delete
+            public void onCallback(User result) {
+
+            }
+
+            @Override
+            public void onCallback(boolean result) {
+                assertThat(result, is(true));
+                assertThat(result, is(false));
             }
         };
-        udb.storeNewUser(micheal, fb, o);
-        udb.storeNewUser(william, fb, o);
+        udb.storeNewUser(micheal, callback);
+        udb.storeNewUser(william, callback);
     }
-
+/*
     @After
     public void databaseClean() {
         Observer o = new Observer() {
@@ -129,5 +136,5 @@ public class UserDatabaseTest {
         };
         udb.fetchUser("mj@epfl.ch", fb, o);
     }
-
+*/
 }
