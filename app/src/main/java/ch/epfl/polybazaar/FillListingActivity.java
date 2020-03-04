@@ -125,7 +125,6 @@ public class FillListingActivity extends AppCompatActivity {
         Context context = getApplicationContext();
         if(!checkFields()) {
             Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
-            incorrectFieldsToast.show();
         }
         Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString());
 
