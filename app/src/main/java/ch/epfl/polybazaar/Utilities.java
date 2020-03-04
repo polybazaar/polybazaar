@@ -5,7 +5,7 @@ import java.util.Calendar;
 public abstract class Utilities {
 
     public static boolean nameIsValid(String name) {
-        return (name.matches("(\\w+)"));
+        return (name.matches("[a-zA-Z]+"));
     }
 
     public static boolean dateIsValid(Calendar date) {
@@ -14,7 +14,7 @@ public abstract class Utilities {
     }
 
     public static boolean emailIsValid(String email) {
-        return (email.matches("(\\w+)"+"."+"(\\w+)"+"@epfl.ch"));
+        return (email.matches("[a-zA-Z]+"+"."+"[a-zA-Z]+"+"@epfl.ch"));
     }
 
     public static boolean isValidUser(User user) {

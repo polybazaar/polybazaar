@@ -22,7 +22,7 @@ public class UserTest {
         assertThat(user.getFirstName(), is("nobody"));
         assertThat(user.getLastName(), is("noone"));
         assertThat(user.getDateOfBirth(), is(cal));
-        assertThat(user.getEmail(), is("nn@epfl.ch"));
+        assertThat(user.getEmail(), is("n.n@epfl.ch"));
         assertThat(isValidUser(user), is(true));
     }
 

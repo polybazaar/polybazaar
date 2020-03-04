@@ -67,7 +67,7 @@ public class UserDatabase extends Observable {
                     } else {
                         // email invalid:
                         // TODO : check if that is a correct regex:
-                        if (!(user.getEmail().matches("(\\w+)"+"."+"(\\w+)"+"@epfl.ch"))) {
+                        if (!(user.getEmail().matches("[a-zA-Z]+"+"."+"[a-zA-Z]+"+"@epfl.ch"))) {
                             Log.w(TAG, "user email has invalid format");
                             success = false;
                             notifyObservers();
