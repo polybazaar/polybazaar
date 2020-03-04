@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.widget.Toast;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -14,6 +15,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,6 +25,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
@@ -36,6 +39,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class FillListingActivityTest {
@@ -86,14 +90,14 @@ public class FillListingActivityTest {
     public void testUploadPictureFailsWhenUserCancels(){
         result = new Instrumentation.ActivityResult( Activity.RESULT_CANCELED, galleryIntent);
         uploadImage();
-        onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
+        checkNoImageUploaded();
     }
 
     @Test
     public void testUploadPictureFailsWhenDataIsNull(){
         result = new Instrumentation.ActivityResult( Activity.RESULT_OK, null);
         uploadImage();
-        onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
+        checkNoImageUploaded();
     }
 
     @Test
@@ -104,24 +108,21 @@ public class FillListingActivityTest {
     }
 
     @Test
-    public void toastAppearsWhenTitleIsEmpty(){
+    public void toastAppearsWhenTitleIsEmpty() {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
-        onView(withId(R.id.submitListing)).perform(scrollTo(), click());
-        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
-    }
+        submitListingAndCheckIncorrectToast();
+        }
 
     @Test
-    public void toastAppearsWhenPriceIsText(){
+    public void toastAppearsWhenPriceIsText() {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("A book"));
-        onView(withId(R.id.submitListing)).perform(scrollTo(), click());
-        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+        submitListingAndCheckIncorrectToast();
     }
 
     @Test
-    public void toastAppearsWhenPriceIsNegative(){
+    public void toastAppearsWhenPriceIsNegative() {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("-0.10"));
-        onView(withId(R.id.submitListing)).perform(scrollTo(), click());
-        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+        submitListingAndCheckIncorrectToast();
     }
 
     private void uploadImage(){
@@ -130,5 +131,14 @@ public class FillListingActivityTest {
         onView(withId(R.id.uploadImage)).perform(click());
         intended(expectedIntent);
         Intents.release();
+    }
+
+    private void submitListingAndCheckIncorrectToast(){
+        onView(withId(R.id.submitListing)).perform(scrollTo(), click());
+        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+    }
+
+    private void checkNoImageUploaded(){
+        onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
     }
 }

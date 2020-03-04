@@ -44,32 +44,7 @@ public class FillListingActivity extends AppCompatActivity {
         descriptionSelector = findViewById(R.id.descriptionSelector);
         priceSelector = findViewById(R.id.priceSelector);
 
-        freeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-               freezePriceSelector(isChecked);
-            }
-        });
-
-        uploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage();
-            }
-        });
-
-        submitListing.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Context context = getApplicationContext();
-                int duration = Toast.LENGTH_SHORT;
-                if(!checkFields()) {
-                    Toast incorrectFieldsToast = Toast.makeText(context, INCORRECT_FIELDS_TEXT, duration);
-                    incorrectFieldsToast.show();
-                }
-                Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString());
-            }
-        });
+        addListeners();
     }
 
     @Override
@@ -85,6 +60,29 @@ public class FillListingActivity extends AppCompatActivity {
             pictureView.setImageURI(selectedImage);
             pictureView.setTag(selectedImage.hashCode());
         }
+    }
+
+    private void addListeners(){
+        freeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                freezePriceSelector(isChecked);
+            }
+        });
+
+        uploadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadImage();
+            }
+        });
+
+        submitListing.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                submit();
+            }
+        });
     }
 
     private void uploadImage(){
@@ -121,6 +119,17 @@ public class FillListingActivity extends AppCompatActivity {
 
     private boolean checkTitle() {
         return !titleSelector.getText().toString().isEmpty();
+    }
+
+    private void submit(){
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        if(!checkFields()) {
+            Toast incorrectFieldsToast = Toast.makeText(context, INCORRECT_FIELDS_TEXT, duration);
+            incorrectFieldsToast.show();
+        }
+        Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString());
+
     }
 
 
