@@ -1,8 +1,7 @@
 package ch.epfl.polybazaar;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Looper;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -12,7 +11,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class SaleDetailsTest {
@@ -27,11 +33,10 @@ public class SaleDetailsTest {
     @Test
     public void testOnCreate() {
         Intent intent = new Intent();
-        Bundle b = new Bundle();
-        b.putString("title", "Algebre Linéaire by David C. Lay" );
-        b.putString("description", "Never used");
-        b.putString("price", "18 CHF");
-        intent.putExtras(b);
+        intent.putExtra("image",R.drawable.algebre_lin);
+        intent.putExtra("title", "Algebre Linéaire by David C. Lay" );
+        intent.putExtra("description", "Never used");
+        intent.putExtra("price", "18 CHF");
 
         activityRule.launchActivity(intent);
         TextView text_title = (TextView)activityRule.getActivity().findViewById(R.id.title);
@@ -45,18 +50,43 @@ public class SaleDetailsTest {
     }
 
     @Test
-    public void testOnCreateThrowAnException() {
+    public void testDefaultValues() {
         Intent intent = new Intent();
-        boolean exceptionThrown = false;
 
-        try {
-            Bundle b = new Bundle();
-            activityRule.getActivity().onCreate(b);
-        }catch (NullPointerException e) {
-            exceptionThrown = true;
-        }
-        
-        assertEquals(true, exceptionThrown);
+        activityRule.launchActivity(intent);
+        TextView text_title = (TextView)activityRule.getActivity().findViewById(R.id.title);
+        assertEquals("No Title", text_title.getText().toString());
+
+        TextView text_descr = (TextView)activityRule.getActivity().findViewById(R.id.description);
+        assertEquals("No description", text_descr.getText().toString());
+
+        TextView text_price = (TextView)activityRule.getActivity().findViewById(R.id.price);
+        assertEquals("No price", text_price.getText().toString());
+    }
+
+    @Test
+    public void contactTheSellerNotImplementedYet() throws Throwable {
+        Intent intent = new Intent();
+        intent.putExtra("title", "Algebre Linéaire by David C. Lay" );
+        intent.putExtra("description", "Never used");
+        intent.putExtra("price", "18 CHF");
+
+        activityRule.launchActivity(intent);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Button but = activityRule.getActivity().findViewById(R.id.contact_sel);
+                but.performClick();
+            }
+        });
+
+
+
+        onView(withText("This functionality is not implemented yet"))
+                .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
+                .check(matches(isDisplayed()));
+
     }
 }
 
