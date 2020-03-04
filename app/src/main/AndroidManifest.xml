@@ -12,7 +12,8 @@
         <activity   android:name=".SalesOverview"
                     android:exported="true"
             ></activity>
-        <activity android:name=".SaleDetails" />
+        <activity   android:name=".SaleDetails"
+                    android:parentActivityName=".SalesOverview"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
