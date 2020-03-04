@@ -9,8 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
-import ch.epfl.polybazaar.user.User;
 import ch.epfl.polybazaar.database.callback.UserCallback;
+import ch.epfl.polybazaar.user.User;
 import ch.epfl.polybazaar.user.UserDatabase;
 
 import static org.hamcrest.Matchers.is;
@@ -39,7 +39,6 @@ public class UserDatabaseTest {
                 success = result;
             }
         };
-        /*
         UserCallback callbackUser = new UserCallback() {
             @Override
             public void onCallback(User result) {
@@ -64,7 +63,7 @@ public class UserDatabaseTest {
         assertThat(user.getFirstName(), is("William"));
         assertThat(user.getLastName(), is("Shakespeare"));
         user = null;
-        */
+        // Access rights seem to prevent deletion:
         udb.deleteUser("m.j@epfl.ch", callback);
         lock.await(2000, TimeUnit.MILLISECONDS);
         assertThat(success, is(true));

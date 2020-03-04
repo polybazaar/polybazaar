@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.Calendar;
 
 import ch.epfl.polybazaar.database.generic.GenericCallback;
 import ch.epfl.polybazaar.user.User;

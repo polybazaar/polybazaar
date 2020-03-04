@@ -1,10 +1,8 @@
 package ch.epfl.polybazaar.database.generic;
 
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -60,7 +58,6 @@ public class GenericDatabase{
      * @param data the data that should be stored (overwritten)
      * @param callback a callback interface implementation
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).set(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -85,7 +82,6 @@ public class GenericDatabase{
      * @param data the data that should be stored (overwritten)
      * @param callback a callback interface implementation
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void addData(@NonNull String collectionPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).add(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -109,19 +105,18 @@ public class GenericDatabase{
      * @param documentPath document name (ID)
      * @param callback a callback interface implementation
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).delete();
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(Void nothing) {
+            public void onSuccess(Void aVoid) {
                 Log.d(TAG, "successfully deleted data");
                 callback.onCallback(true);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "error deleting data", e);
+                Log.w(TAG, "error deleting data");
                 callback.onCallback(false);
             }
         });
