@@ -29,20 +29,21 @@ public class MainActivityTest{
                     MainActivity.class,
                     true,
                     false);
-    @Before
+
     public void init() {
         Intents.init();
         intent = new Intent();
         activityRule.launchActivity(intent);
     }
 
-    @After
+
     public void finalize() {
         Intents.release();;
     }
 
     @Test
     public void testStartSaleOverview() throws Throwable {
+        init();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -51,10 +52,12 @@ public class MainActivityTest{
             }
         });
         intended(hasComponent(SalesOverview.class.getName()));
+        finalize();
     }
 
     @Test
     public void testStartFillListingActivity() throws Throwable {
+        init();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -63,10 +66,12 @@ public class MainActivityTest{
             }
         });
         intended(hasComponent(FillListingActivity.class.getName()));
+        finalize();
     }
 
     @Test
     public void testStartSignIn() throws Throwable {
+        init();
         //TODO uncomment the code below
         /*runOnUiThread(new Runnable() {
             @Override
@@ -90,5 +95,7 @@ public class MainActivityTest{
         onView(withText("This functionality is not implemented yet"))
                 .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
                 .check(matches(isDisplayed()));
+        // Don't remove this line
+        finalize();
     }
 }
