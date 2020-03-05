@@ -28,6 +28,7 @@ import ch.epfl.polybazaar.user.User;
 
 public class Polystore {
 
+    /*
     private boolean useFirestore;
 
     private FirebaseFirestore fb;
@@ -56,23 +57,21 @@ public class Polystore {
         task = null;
     }
 
-    /**
-     * Used after calling getDocumentTask/addDocumentTask to retrieve the task
-     * @return the actual task if not using Firestore
-     */
+
     public Task<Object> getTask() {
         if (useFirestore) return null;
         else {
             return task;
         }
     }
-
+*/
     /**
      * gets the Document Task, null if using Polystore
      * @param collectionPath obvious
      * @param documentPath obvious
      * @return the Document Task, null if using Polystore
      */
+    /*
     public Task<DocumentSnapshot> getDocumentTask(@NonNull final String collectionPath, @NonNull final String documentPath) {
         if (useFirestore) return fb.collection(collectionPath).document(documentPath).get();
         else {
@@ -152,7 +151,7 @@ public class Polystore {
             return null;
         }
     }
-
+*/
     /**
      * gets the Document Task, null if using Polystore
      * @param source cache
@@ -160,6 +159,7 @@ public class Polystore {
      * @param documentPath obvious
      * @return the Document Task, null if using Polystore
      */
+    /*
     @NonNull
     public Task<DocumentSnapshot> getDocumentTask(@NonNull Source source, @NonNull final String collectionPath, @NonNull final String documentPath) {
         if (useFirestore) return fb.collection(collectionPath).document(documentPath).get(source);
@@ -240,13 +240,14 @@ public class Polystore {
             return null;
         }
     }
-
+*/
     /**
      * adds a document
      * @param collectionPath obvious
      * @param data data to add
      * @return the task of adding the document, null if using Polystore
      */
+    /*
     @RequiresApi(api = Build.VERSION_CODES.N)
     @NonNull
     public Task<DocumentReference> addDocumentTask(@NonNull final String collectionPath, @NonNull Object data) {
@@ -331,13 +332,14 @@ public class Polystore {
         }
 
     }
-
+*/
     /**
      * deletes a document
      * @param collectionPath obvious
      * @param documentPath obvious
      * @return the task of deleting the document
      */
+    /*
     @RequiresApi(api = Build.VERSION_CODES.N)
     @NonNull
     public Task<Void> deleteDocumentTask(@NonNull final String collectionPath, @NonNull final String documentPath) {
@@ -418,7 +420,7 @@ public class Polystore {
             };
         }
     }
-
+*/
     /**
      * sets a document
      * @param collectionPath obvious
@@ -426,6 +428,7 @@ public class Polystore {
      * @param data the data to store
      * @return the task of setting the document
      */
+    /*
     @RequiresApi(api = Build.VERSION_CODES.N)
     @NonNull
     public Task<Void> setDocumentTask(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull Object data) {
@@ -633,5 +636,6 @@ public class Polystore {
             return null;
         }
     }
+    */
 
 }
