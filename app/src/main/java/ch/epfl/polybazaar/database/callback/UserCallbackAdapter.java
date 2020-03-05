@@ -12,15 +12,12 @@ public class UserCallbackAdapter implements GenericCallback {
 
     private UserCallback usercallback;
 
-    private String email;
-
     /**
      * The resulting Callback behaves like a GenericCallback
      * @param usercallback the UserCallback to be adapted
      */
-    public UserCallbackAdapter(UserCallback usercallback, @NonNull String email){
+    public UserCallbackAdapter(UserCallback usercallback){
         this.usercallback = usercallback;
-        this.email = email;
     }
 
     @Override

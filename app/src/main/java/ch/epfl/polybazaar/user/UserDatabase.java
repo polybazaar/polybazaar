@@ -46,7 +46,7 @@ public class UserDatabase {
                 db.setData("users", user.getEmail(), user, callback);
             }
         };
-        final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall, user.getEmail());
+        final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall);
         db.fetchData("users", user.getEmail(), adapterIntermediateCallback);
     }
 
@@ -56,7 +56,7 @@ public class UserDatabase {
      * @param callback a callback interface implementation
      */
     public void fetchUser(final String email, final UserCallback callback) {
-        final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback, email);
+        final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback);
         db.fetchData("users", email, adapterCallback);
     }
 
