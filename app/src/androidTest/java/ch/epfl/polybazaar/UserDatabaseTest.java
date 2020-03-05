@@ -16,7 +16,7 @@ import ch.epfl.polybazaar.user.UserDatabase;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
-@RunWith(AndroidJUnit4.class)
+//@RunWith(AndroidJUnit4.class)
 public class UserDatabaseTest {
 /*
     private UserDatabase udb = new UserDatabase();
