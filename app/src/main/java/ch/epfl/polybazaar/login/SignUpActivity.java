@@ -19,21 +19,21 @@ import com.google.firebase.auth.FirebaseUser;
 import ch.epfl.polybazaar.R;
 
 public class SignUpActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
+    private Authenticator mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuthenticator.getInstance();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        AppUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
@@ -66,12 +66,12 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void createUser(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
+        mAuth.createUser(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            AppUser user = mAuth.getCurrentUser();
 
                             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
                             startActivity(intent);

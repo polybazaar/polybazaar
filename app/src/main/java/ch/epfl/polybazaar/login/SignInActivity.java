@@ -21,7 +21,7 @@ import ch.epfl.polybazaar.R;
 
 public class SignInActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+    private Authenticator mAuth;
     private static final String TAG = "SignInActivity";
 
     @Override
@@ -29,13 +29,13 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuthenticator.getInstance();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        AppUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
@@ -55,7 +55,7 @@ public class SignInActivity extends AppCompatActivity {
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
-        mAuth.signInWithEmailAndPassword(email, password)
+        mAuth.signIn(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

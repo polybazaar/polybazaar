@@ -16,21 +16,21 @@ import com.google.firebase.auth.FirebaseUser;
 import ch.epfl.polybazaar.R;
 
 public class EmailVerificationActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
+    private Authenticator mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_verification);
 
-        mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuthenticator.getInstance();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser user = mAuth.getCurrentUser();
+        AppUser user = mAuth.getCurrentUser();
 
         if (user != null && user.isEmailVerified()) {
             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
@@ -39,7 +39,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
     }
 
     public void verify(View view) {
-        FirebaseUser user = mAuth.getCurrentUser();
+        AppUser user = mAuth.getCurrentUser();
 
         if (user != null && !user.isEmailVerified()) {
             user.sendEmailVerification()
@@ -63,7 +63,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
     }
 
     public void reload(View view) {
-        FirebaseUser user = mAuth.getCurrentUser();
+        AppUser user = mAuth.getCurrentUser();
 
         if (user != null) {
             user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
