@@ -59,14 +59,11 @@ public class MainActivity extends AppCompatActivity {
         Button signInBut = findViewById(R.id.sign_in);
         signInBut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
+                Toast toastSignInFail = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG);
+                toastSignInFail.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                toastSignInFail.show();
             }
         });
-
-
-
     }
 
     @Override
