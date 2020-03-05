@@ -33,6 +33,7 @@ public class MainActivityTest{
     public void init() {
         Intents.init();
         intent = new Intent();
+        activityRule.launchActivity(intent);
     }
 
     @After
@@ -42,7 +43,6 @@ public class MainActivityTest{
 
     @Test
     public void testStartSaleOverview() throws Throwable {
-        activityRule.launchActivity(intent);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -55,7 +55,6 @@ public class MainActivityTest{
 
     @Test
     public void testStartFillListingActivity() throws Throwable {
-        activityRule.launchActivity(intent);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -69,8 +68,7 @@ public class MainActivityTest{
     @Test
     public void testStartSignIn() throws Throwable {
         //TODO uncomment the code below
-        /*activityRule.launchActivity(intent);
-        runOnUiThread(new Runnable() {
+        /*runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 activityRule.getActivity().findViewById(R.id.add_listing)
@@ -81,9 +79,6 @@ public class MainActivityTest{
         intended(hasComponent(<yourClass>.class.getName()));*/
 
         //TODO remove code below
-        intent = new Intent();
-
-        activityRule.launchActivity(intent);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
