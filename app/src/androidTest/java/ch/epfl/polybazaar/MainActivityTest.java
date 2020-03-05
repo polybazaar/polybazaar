@@ -5,6 +5,8 @@ import android.content.Intent;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -19,6 +21,7 @@ import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.r
 import static org.hamcrest.core.IsNot.not;
 
 public class MainActivityTest{
+    private Intent intent;
 
     @Rule
     public final ActivityTestRule<MainActivity> activityRule =
@@ -26,12 +29,19 @@ public class MainActivityTest{
                     MainActivity.class,
                     true,
                     false);
+    @Before
+    public void init() {
+        Intents.init();
+        intent = new Intent();
+    }
+
+    @After
+    public void finalize() {
+        Intents.release();;
+    }
 
     @Test
     public void testStartSaleOverview() throws Throwable {
-        Intents.init();
-        Intent intent = new Intent();
-
         activityRule.launchActivity(intent);
         runOnUiThread(new Runnable() {
             @Override
@@ -41,14 +51,10 @@ public class MainActivityTest{
             }
         });
         intended(hasComponent(SalesOverview.class.getName()));
-        Intents.release();
     }
 
     @Test
     public void testStartFillListingActivity() throws Throwable {
-        Intents.init();
-        Intent intent = new Intent();
-
         activityRule.launchActivity(intent);
         runOnUiThread(new Runnable() {
             @Override
@@ -58,16 +64,12 @@ public class MainActivityTest{
             }
         });
         intended(hasComponent(FillListingActivity.class.getName()));
-        Intents.release();
     }
 
     @Test
     public void testStartSignIn() throws Throwable {
         //TODO uncomment the code below
-        /*Intents.init();
-        Intent intent = new Intent();
-
-        activityRule.launchActivity(intent);
+        /*activityRule.launchActivity(intent);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -76,11 +78,10 @@ public class MainActivityTest{
             }
         });
         // TODO complete
-        intended(hasComponent(<yourClass>.class.getName()));
-        Intents.release();*/
+        intended(hasComponent(<yourClass>.class.getName()));*/
 
         //TODO remove code below
-        Intent intent = new Intent();
+        intent = new Intent();
 
         activityRule.launchActivity(intent);
         runOnUiThread(new Runnable() {
