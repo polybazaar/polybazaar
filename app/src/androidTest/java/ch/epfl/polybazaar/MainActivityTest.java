@@ -29,9 +29,9 @@ public class MainActivityTest{
 
     @Test
     public void testStartSaleOverview() throws Throwable {
-
         Intents.init();
         Intent intent = new Intent();
+
         activityRule.launchActivity(intent);
         runOnUiThread(new Runnable() {
             @Override
