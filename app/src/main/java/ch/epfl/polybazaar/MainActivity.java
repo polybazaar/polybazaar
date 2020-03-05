@@ -40,27 +40,33 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        findViewById(R.id.sale_overview).setOnClickListener(new View.OnClickListener() {
+        Button saleOverBut = findViewById(R.id.sale_overview);
+        saleOverBut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent FillListingIntent = new Intent(MainActivity.this, SalesOverview.class);
                 startActivity(FillListingIntent);
             }
         });
 
-        findViewById(R.id.add_listing).setOnClickListener(new View.OnClickListener() {
+        Button addListBut = findViewById(R.id.add_listing);
+        addListBut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent FillListingIntent = new Intent(MainActivity.this, FillListingActivity.class);
                 startActivity(FillListingIntent);
             }
         });
 
-        findViewById(R.id.sign_in).setOnClickListener(new View.OnClickListener() {
+        Button signInBut = findViewById(R.id.sign_in);
+        signInBut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
+                Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
             }
         });
+
+
+
     }
 
     @Override
