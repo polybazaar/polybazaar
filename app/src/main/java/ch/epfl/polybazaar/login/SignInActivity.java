@@ -43,6 +43,11 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
+    public void toSignup(View view) {
+        Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+        startActivity(intent);
+    }
+
     public void submit(View view) {
         EditText emailView = findViewById(R.id.emailInput);
         EditText passwordView = findViewById(R.id.passwordInput);
