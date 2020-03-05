@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -21,6 +22,18 @@ public class SignInSuccessActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null && !currentUser.isEmailVerified()) {
+            Intent intent = new Intent(getApplicationContext(), EmailVerificationActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void signOut(View view) {
