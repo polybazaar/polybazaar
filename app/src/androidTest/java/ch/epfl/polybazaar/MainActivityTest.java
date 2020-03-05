@@ -31,9 +31,9 @@ public class MainActivityTest{
     @Test
     public void testStartSaleOverview() throws Throwable {
         Intents.init();
-        Intent intent = new Intent();
+        Intent intent1 = new Intent();
 
-        activityRule.launchActivity(intent);
+        activityRule.launchActivity(intent1);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -48,9 +48,9 @@ public class MainActivityTest{
     @Test
     public void testStartFillListingActivity() throws Throwable {
         Intents.init();
-        Intent intent = new Intent();
+        Intent intent2 = new Intent();
 
-        activityRule.launchActivity(intent);
+        activityRule.launchActivity(intent2);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
