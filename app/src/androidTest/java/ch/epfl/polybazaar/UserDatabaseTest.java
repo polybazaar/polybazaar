@@ -18,12 +18,14 @@ import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class UserDatabaseTest {
-
+/*
     private UserDatabase udb = new UserDatabase();
 
     private boolean success;
 
     private User user;
+
+
 
     //@Before
     @Test
@@ -73,7 +75,7 @@ public class UserDatabaseTest {
         assertThat(success, is(true));
         success = false;
     }
-/*
+
     @After
     public void databaseClean() {
         Observer o = new Observer() {
