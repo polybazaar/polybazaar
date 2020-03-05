@@ -44,6 +44,7 @@ public class MainActivityTest{
     @Test
     public void testStartSaleOverview() throws Throwable {
         init();
+        //Use runOnUiThread because of the small screen on travis tests
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
