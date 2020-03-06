@@ -10,27 +10,25 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import ch.epfl.polybazaar.R;
 
-public class EmailVerificationActivity extends AppCompatActivity {
-    private Authenticator mAuth;
+public class EmailVerificationActivity extends AppCompatActivity implements AuthenticatorDependent {
+    private Authenticator authenticator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_verification);
 
-        mAuth = FirebaseAuthenticator.getInstance();
+        authenticator = FirebaseAuthenticator.getInstance();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        AppUser user = mAuth.getCurrentUser();
+        AppUser user = authenticator.getCurrentUser();
 
         if (user != null && user.isEmailVerified()) {
             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
@@ -39,7 +37,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
     }
 
     public void verify(View view) {
-        AppUser user = mAuth.getCurrentUser();
+        AppUser user = authenticator.getCurrentUser();
 
         if (user != null && !user.isEmailVerified()) {
             user.sendEmailVerification()
@@ -63,7 +61,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
     }
 
     public void reload(View view) {
-        AppUser user = mAuth.getCurrentUser();
+        AppUser user = authenticator.getCurrentUser();
 
         if (user != null) {
             user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -81,5 +79,10 @@ public class EmailVerificationActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public void setAuthenticator(Authenticator authenticator) {
+        this.authenticator = authenticator;
     }
 }

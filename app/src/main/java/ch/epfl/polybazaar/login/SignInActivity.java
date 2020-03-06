@@ -7,21 +7,17 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import ch.epfl.polybazaar.R;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements AuthenticatorDependent {
 
-    private Authenticator mAuth;
+    private Authenticator authenticator;
     private static final String TAG = "SignInActivity";
 
     @Override
@@ -29,13 +25,13 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        mAuth = FirebaseAuthenticator.getInstance();
+        authenticator = FirebaseAuthenticator.getInstance();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        AppUser currentUser = mAuth.getCurrentUser();
+        AppUser currentUser = authenticator.getCurrentUser();
 
         if (currentUser != null) {
             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
@@ -55,7 +51,7 @@ public class SignInActivity extends AppCompatActivity {
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
-        mAuth.signIn(email, password)
+        authenticator.signIn(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthenticatorResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthenticatorResult> task) {
@@ -80,5 +76,10 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 });
         builder.create().show();
+    }
+
+    @Override
+    public void setAuthenticator(Authenticator authenticator) {
+        this.authenticator = authenticator;
     }
 }

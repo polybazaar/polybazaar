@@ -12,27 +12,25 @@ import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import ch.epfl.polybazaar.R;
 
-public class SignUpActivity extends AppCompatActivity {
-    private Authenticator mAuth;
+public class SignUpActivity extends AppCompatActivity implements AuthenticatorDependent {
+    private Authenticator authenticator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        mAuth = FirebaseAuthenticator.getInstance();
+        authenticator = FirebaseAuthenticator.getInstance();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        AppUser currentUser = mAuth.getCurrentUser();
+        AppUser currentUser = authenticator.getCurrentUser();
 
         if (currentUser != null) {
             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
@@ -65,12 +63,12 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void createUser(String email, String password) {
-        mAuth.createUser(email, password)
+        authenticator.createUser(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthenticatorResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthenticatorResult> task) {
                         if (task.isSuccessful()) {
-                            AppUser user = mAuth.getCurrentUser();
+                            AppUser user = authenticator.getCurrentUser();
 
                             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
                             startActivity(intent);
@@ -100,5 +98,10 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 });
         builder.create().show();
+    }
+
+    @Override
+    public void setAuthenticator(Authenticator authenticator) {
+        this.authenticator = authenticator;
     }
 }
