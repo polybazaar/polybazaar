@@ -27,7 +27,7 @@ public class ListingDatabaseTest {
         Listing inside = new Listing("test", "none", "22CHF", "m.m@epfl.ch");
         callback.onCallback(inside);
         assertThat(listing[0].getTitle(), is("test"));
-        assertThat(listing[0].getUserEmail(), is("me.me@epfl.ch"));
+        assertThat(listing[0].getUserEmail(), is("m.m@epfl.ch"));
         assertThat(listing[0].getDescription(), is("none"));
         assertThat(listing[0].getPrice(), is("22CHF"));
     }
