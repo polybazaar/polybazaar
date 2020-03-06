@@ -20,7 +20,6 @@ public class ListingTest {
         assertEquals("Livre d'algèbre linéaire", listing1.getDescription());
     }
 
-
     @Test
     public void checkPrice() {
         assertEquals("22 CHF", listing1.getPrice());

@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.callback.UserCallback;
 import ch.epfl.polybazaar.database.callback.UserCallbackAdapter;
 import ch.epfl.polybazaar.user.User;
@@ -40,6 +41,18 @@ public class UserDatabaseTest {
             }
         };
         UserCallbackAdapter adapter = new UserCallbackAdapter(callback);
-        User inside = new User("me", "me.me@epfl.ch");
+    }
+
+    @Test
+    public void callSuccessCallback() {
+        final boolean[] res = {false};
+        SuccessCallback callback = new SuccessCallback() {
+            @Override
+            public void onCallback(boolean result) {
+                res[0] = result;
+            }
+        };
+        callback.onCallback(true);
+        assertThat(res[0], is(true));
     }
 }
