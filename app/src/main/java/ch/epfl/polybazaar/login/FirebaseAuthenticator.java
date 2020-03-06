@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar.login;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,13 +25,17 @@ public class FirebaseAuthenticator implements Authenticator {
     }
 
     @Override
-    public Task<AuthResult> signIn(String email, String password) {
-        return fbAuth.signInWithEmailAndPassword(email, password);
+    public Task<AuthenticatorResult> signIn(String email, String password) {
+        Task<AuthResult> task = fbAuth.signInWithEmailAndPassword(email, password);
+        return task.onSuccessTask((t) -> Tasks.call(FirebaseAuthenticatorResult::new));
+
+
     }
 
     @Override
-    public Task<AuthResult> createUser(String email, String password) {
-        return fbAuth.createUserWithEmailAndPassword(email, password);
+    public Task<AuthenticatorResult> createUser(String email, String password) {
+        Task<AuthResult> task = fbAuth.createUserWithEmailAndPassword(email, password);
+        return task.onSuccessTask((t) -> Tasks.call(FirebaseAuthenticatorResult::new));
     }
 
     @Override
