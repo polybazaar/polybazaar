@@ -11,6 +11,18 @@ import ch.epfl.polybazaar.database.callback.UserCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.UserCallback;
 
 
+/**
+ * Usage Example:
+ * private UserDatabase udb = new UserDatabase();
+ * UserCallback callbackUser = new UserCallback() {
+ *             // onCallback is executed once the data request has completed
+ *             @Override
+ *             public void onCallback(User result) {
+ *                 // use result;
+ *             }
+ *         };
+ * udb.fetchUser("jean.chappy@epfl.ch", callbackUser);
+ */
 public class UserDatabase {
 
     private static final String TAG = "UserDatabase";

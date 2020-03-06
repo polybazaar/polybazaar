@@ -26,9 +26,7 @@ public class UserCallbackAdapter implements GenericCallback {
             usercallback.onCallback(null);
             return;
         }
-        User user = new User(result.get("firstName").toString(),
-                result.get("lastName").toString(),
-                result.get("dateOfBirth").toString(),
+        User user = new User(result.get("nickName").toString(),
                 result.get("email").toString());
         usercallback.onCallback(user);
     }

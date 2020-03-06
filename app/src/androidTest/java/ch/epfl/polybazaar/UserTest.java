@@ -18,43 +18,36 @@ public class UserTest {
 
     @Test
     public void createUserNormal() {
-        User user = new User("nobody", "noone", "1939", "n.n@epfl.ch");
-        assertThat(user.getFirstName(), is("nobody"));
-        assertThat(user.getLastName(), is("noone"));
-        assertThat(user.getDateOfBirth(), is("1939"));
+        User user = new User("nobody", "n.n@epfl.ch");
+        assertThat(user.getNickName(), is("nobody"));
         assertThat(user.getEmail(), is("n.n@epfl.ch"));
         assertThat(isValidUser(user), is(true));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidEmail1() {
-        User user = new User("nobody", "noone", "1939", "nn@epfl.ch");
+        User user = new User("nobody", "nn@epfl.ch");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidEmail2() {
-        User user = new User("nobody", "noone", "1939", "me.help@efl.ch");
+        User user = new User("nobody", "me.help@efl.ch");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidEmail3() {
-        User user = new User("nobody", "noone", "1939", "me.h1lp@epfl.ch");
+        User user = new User("nobody", "me.h1lp@epfl.ch");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidEmail4() {
-        User user = new User("nobody", "noone", "1939", "me.helpepfl.ch");
+        User user = new User("nobody",  "me.helpepfl.ch");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidName() {
-        User user = new User("no1ody", "noone", "1939", "me.help@efl.ch");
+        User user = new User("no1ody",  "me.help@efl.ch");
         assertThat(isValidUser(user), is(false));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createUserInvalidName2() {
-        User user = new User("nobody", "n3one", "1939", "me.help@efl.ch");
-        assertThat(isValidUser(user), is(false));
-    }
 }
