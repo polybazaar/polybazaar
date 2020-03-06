@@ -10,9 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-         <activity android:name="ch.epfl.polybazaar.FillListingActivity"></activity>
+         <activity android:name="ch.epfl.polybazaar.FillListingActivity"
+                    android:parentActivityName=".MainActivity"></activity>
         <activity   android:name=".SalesOverview"
                     android:exported="true"
+                    android:parentActivityName=".MainActivity"
             ></activity>
         <activity   android:name=".SaleDetails"
                     android:parentActivityName=".SalesOverview"/>
