@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private Button add_listing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +40,32 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        add_listing = findViewById(R.id.add_listing);
-        add_listing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        Button saleOverBut = findViewById(R.id.sale_overview);
+        saleOverBut.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent FillListingIntent = new Intent(MainActivity.this, SalesOverview.class);
+                startActivity(FillListingIntent);
+            }
+        });
+
+        Button addListBut = findViewById(R.id.add_listing);
+        addListBut.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 Intent FillListingIntent = new Intent(MainActivity.this, FillListingActivity.class);
                 startActivity(FillListingIntent);
             }
         });
+
+        Button signInBut = findViewById(R.id.sign_in);
+        signInBut.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.show();
+            }
+        });
+
+
 
     }
 

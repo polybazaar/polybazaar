@@ -4,4 +4,7 @@
     <string name="price">Price</string>
     <string name="description">Description</string>
     <string name="titre">Titre</string>
+    <string name="sales_overview">Sales overview</string>
+    <string name="add_new_listing">Add new listing</string>
+    <string name="sign_in">Sign in</string>
 </resources>
