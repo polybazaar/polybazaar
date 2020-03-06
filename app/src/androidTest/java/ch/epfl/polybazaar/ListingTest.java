@@ -2,6 +2,8 @@ package ch.epfl.polybazaar;
 
 import org.junit.Test;
 
+import ch.epfl.polybazaar.listing.Listing;
+
 import static org.junit.Assert.assertEquals;
 
 public class ListingTest {

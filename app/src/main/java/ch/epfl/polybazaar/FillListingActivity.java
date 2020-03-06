@@ -17,6 +17,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ch.epfl.polybazaar.listing.Listing;
+
 public class FillListingActivity extends AppCompatActivity {
 
     public static final int RESULT_LOAD_IMAGE = 1;

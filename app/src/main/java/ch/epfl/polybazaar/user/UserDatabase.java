@@ -13,6 +13,7 @@ import ch.epfl.polybazaar.database.callback.UserCallback;
 
 /**
  * Usage Example:
+ *
  * private UserDatabase udb = new UserDatabase();
  * UserCallback callbackUser = new UserCallback() {
  *             // onCallback is executed once the data request has completed
@@ -35,6 +36,7 @@ public class UserDatabase {
 
     /**
      * Add an user to the database, using its email as unique identifier (key)
+     * callback will contain true if successful, false otherwise
      * @param user the user
      * @param callback a callback interface implementation
      */
@@ -64,6 +66,7 @@ public class UserDatabase {
 
     /**
      * Fetch a user from the database
+     *  callback will contain the user
      * @param email the user to fetch's email
      * @param callback a callback interface implementation
      */
@@ -74,6 +77,7 @@ public class UserDatabase {
 
     /**
      * Deletes a user from the database
+     * callback will contain true if successful, false otherwise
      * @param email the users email address
      * @param callback a callback interface implementation
      */
