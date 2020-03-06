@@ -43,32 +43,32 @@ public class ListingDatabase {
      * Fetch a listing from the database
      * callback will contain the listing
      * @param listingID the ID we give the listing
-     * @param callback a callback interface implementation
+     * @param callback a ListingCallback interface implementation
      */
     public void fetchListing(final String listingID, final ListingCallback callback){
         final ListingCallbackAdapter adapterCallback = new ListingCallbackAdapter(callback);
         db.fetchData(listingCollectionName, listingID, adapterCallback);
-
     }
 
     /**
      * Add a listing to the database
      * callback will contain true if successful, false otherwise
      * @param listing the listing
-     * @param callback a callback interface implementation
+     * @param listingID the ID the listing should get
+     * @param callback a SuccessCallback interface implementation
      */
-    public  void storeListing(Listing listing, final SuccessCallback callback){
-        db.setData(listingCollectionName,listing.getTitle(), listing, callback);
+    public  void storeListing(Listing listing, String listingID, final SuccessCallback callback){
+        db.setData(listingCollectionName, listingID, listing, callback);
     }
 
     /**
      * Deletes a listing from the database
      * callback will contain true if successful, false otherwise
      * @param listingID the listing's ID
-     * @param callback a callback interface implementation
+     * @param callback a SuccessCallback interface implementation
      */
     public  void deleteListing(String listingID, SuccessCallback callback){
-        db.deleteData(listingCollectionName,listingID, callback);
+        db.deleteData(listingCollectionName, listingID, callback);
     }
 
 }

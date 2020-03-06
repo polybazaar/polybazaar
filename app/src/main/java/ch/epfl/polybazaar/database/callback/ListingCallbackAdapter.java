@@ -10,16 +10,23 @@ public  class ListingCallbackAdapter implements GenericCallback {
     private ListingCallback listingCallback;
 
     /**
-     * adapt a callback receiving a listing to a callback receiving a DocumentSnapshot
-     * @param listingCallback callback to be adapted
+     * The resulting Callback behaves like a GenericCallback
+     * @param listingCallback the ListingCallback to be adapted
      */
     public ListingCallbackAdapter(ListingCallback listingCallback){
         this.listingCallback = listingCallback;
     }
+
     @Override
     public void onCallback(DocumentSnapshot result) {
+        if (result==null){
+            listingCallback.onCallback(null);
+            return;
+        }
         Listing listing = new Listing(result.get("title").toString(),
-                result.get("description").toString(),result.get("price").toString());
+                result.get("description").toString(),
+                result.get("price").toString(),
+                result.get("userEmail").toString());
         listingCallback.onCallback(listing);
     }
 }

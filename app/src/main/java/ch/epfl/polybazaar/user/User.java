@@ -1,7 +1,5 @@
 package ch.epfl.polybazaar.user;
 
-import java.util.Calendar;
-
 import static ch.epfl.polybazaar.Utilities.*;
 
 public class User {
@@ -27,7 +25,7 @@ public class User {
         if (nameIsValid(nickName)) {
             this.nickName = nickName;
         } else {
-            throw new IllegalArgumentException("first name has invalid format");
+            throw new IllegalArgumentException("nickName has invalid format");
         }
         if (emailIsValid(email)) {
             this.email = email;

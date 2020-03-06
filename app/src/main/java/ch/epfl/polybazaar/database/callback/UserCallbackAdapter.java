@@ -1,34 +1,31 @@
 package ch.epfl.polybazaar.database.callback;
 
-import androidx.annotation.NonNull;
-
 import com.google.firebase.firestore.DocumentSnapshot;
-
 
 import ch.epfl.polybazaar.database.generic.GenericCallback;
 import ch.epfl.polybazaar.user.User;
 
 public class UserCallbackAdapter implements GenericCallback {
 
-    private UserCallback usercallback;
+    private UserCallback userCallback;
 
     /**
      * The resulting Callback behaves like a GenericCallback
-     * @param usercallback the UserCallback to be adapted
+     * @param userCallback the UserCallback to be adapted
      */
-    public UserCallbackAdapter(UserCallback usercallback){
-        this.usercallback = usercallback;
+    public UserCallbackAdapter(UserCallback userCallback){
+        this.userCallback = userCallback;
     }
 
     @Override
     public void onCallback(DocumentSnapshot result) {
         if (result==null){
-            usercallback.onCallback(null);
+            userCallback.onCallback(null);
             return;
         }
         User user = new User(result.get("nickName").toString(),
                 result.get("email").toString());
-        usercallback.onCallback(user);
+        userCallback.onCallback(user);
     }
 
 }

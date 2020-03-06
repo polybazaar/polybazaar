@@ -27,7 +27,7 @@ public class GenericDatabase{
      * fetches the data from the database, and calls onCallback when done
      * @param collectionPath collection name
      * @param documentPath document name (ID)
-     * @param callback a callback interface implementation
+     * @param callback a GenericCallback interface implementation
      */
     public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final GenericCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).get();
@@ -56,7 +56,7 @@ public class GenericDatabase{
      * @param collectionPath collection name
      * @param documentPath document name (ID)
      * @param data the data that should be stored (overwritten)
-     * @param callback a callback interface implementation
+     * @param callback a SuccessCallback interface implementation
      */
     public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).set(data);
@@ -80,7 +80,7 @@ public class GenericDatabase{
      * the document id will be chosen randomly
      * @param collectionPath collection name
      * @param data the data that should be stored (overwritten)
-     * @param callback a callback interface implementation
+     * @param callback a SuccessCallback interface implementation
      */
     public void addData(@NonNull String collectionPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).add(data);
@@ -103,7 +103,7 @@ public class GenericDatabase{
      * deletes data from the database, and calls onCallback when done
      * @param collectionPath collection name
      * @param documentPath document name (ID)
-     * @param callback a callback interface implementation
+     * @param callback a SuccessCallback interface implementation
      */
     public void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).delete();
@@ -118,6 +118,33 @@ public class GenericDatabase{
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "error deleting data");
                 callback.onCallback(false);
+            }
+        });
+    }
+
+    /**
+     * gets all document IDs in a given collection, and calls onCallback when done
+     * @param collectionPath collection name
+     * @param callback a GenericCallback interface implementation
+     */
+    public void getAllDataInCollection(@NonNull String collectionPath, @NonNull final GenericCallback callback) {
+        Task task = database.collection(collectionPath).get();
+        task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "successfully retrieved data");
+                        callback.onCallback(document);
+                    } else {
+                        Log.d(TAG, "data does not exist");
+                        callback.onCallback(null);
+                    }
+                } else {
+                    Log.d(TAG, "failed to fetch data");
+                    callback.onCallback(null);
+                }
             }
         });
     }

@@ -4,7 +4,7 @@ import ch.epfl.polybazaar.user.User;
 
 public interface UserCallback {
     /**
-     * Implement onCallback to receive data from the GenericDatabase
+     * Implement onCallback to receive data from the UserDatabase
      * @param result the callback content, can be null
      */
     public void onCallback(User result);
