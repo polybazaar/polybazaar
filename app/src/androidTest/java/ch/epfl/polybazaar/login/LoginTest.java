@@ -58,15 +58,18 @@ public class LoginTest {
     }
 
     private void fillAndSubmitSignIn(String email, String password) {
-        onView(withId(R.id.emailInput)).perform(typeText(email));
+        onView(withId(R.id.emailInput)).perform(typeText(email))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.passwordInput)).perform(typeText(password))
                 .perform(closeSoftKeyboard());
         onView(withId(R.id.loginButton)).perform(click());
     }
 
     private void fillAndSubmitSignUp(String email, String password, String confirm) {
-        onView(withId(R.id.emailInput)).perform(typeText(email));
-        onView(withId(R.id.passwordInput)).perform(typeText(password));
+        onView(withId(R.id.emailInput)).perform(typeText(email))
+                .perform(closeSoftKeyboard());
+        onView(withId(R.id.passwordInput)).perform(typeText(password))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.confirmPasswordInput)).perform(typeText(confirm))
                 .perform(closeSoftKeyboard());
         onView(withId(R.id.submitButton)).perform(click());
