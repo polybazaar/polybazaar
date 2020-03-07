@@ -8,7 +8,7 @@ import android.view.View;
 
 import ch.epfl.polybazaar.R;
 
-public class SignInSuccessActivity extends AppCompatActivity implements AuthenticatorDependent {
+public class SignInSuccessActivity extends AppCompatActivity {
     private Authenticator authenticator;
 
     @Override
@@ -37,10 +37,5 @@ public class SignInSuccessActivity extends AppCompatActivity implements Authenti
 
         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public void setAuthenticator(Authenticator authenticator) {
-        this.authenticator = authenticator;
     }
 }

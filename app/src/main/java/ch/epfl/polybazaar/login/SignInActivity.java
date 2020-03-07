@@ -15,7 +15,7 @@ import com.google.android.gms.tasks.Task;
 
 import ch.epfl.polybazaar.R;
 
-public class SignInActivity extends AppCompatActivity implements AuthenticatorDependent {
+public class SignInActivity extends AppCompatActivity {
 
     private Authenticator authenticator;
     private static final String TAG = "SignInActivity";
@@ -76,10 +76,5 @@ public class SignInActivity extends AppCompatActivity implements AuthenticatorDe
                     }
                 });
         builder.create().show();
-    }
-
-    @Override
-    public void setAuthenticator(Authenticator authenticator) {
-        this.authenticator = authenticator;
     }
 }

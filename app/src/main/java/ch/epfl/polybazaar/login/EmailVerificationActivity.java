@@ -13,7 +13,7 @@ import com.google.android.gms.tasks.Task;
 
 import ch.epfl.polybazaar.R;
 
-public class EmailVerificationActivity extends AppCompatActivity implements AuthenticatorDependent {
+public class EmailVerificationActivity extends AppCompatActivity {
     private Authenticator authenticator;
 
     @Override
@@ -79,10 +79,5 @@ public class EmailVerificationActivity extends AppCompatActivity implements Auth
                 }
             });
         }
-    }
-
-    @Override
-    public void setAuthenticator(Authenticator authenticator) {
-        this.authenticator = authenticator;
     }
 }
