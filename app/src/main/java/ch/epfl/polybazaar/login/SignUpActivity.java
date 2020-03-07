@@ -23,7 +23,7 @@ public class SignUpActivity extends AppCompatActivity implements AuthenticatorDe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        authenticator = FirebaseAuthenticator.getInstance();
+        authenticator = AuthenticatorFactory.getDependency();
     }
 
     @Override

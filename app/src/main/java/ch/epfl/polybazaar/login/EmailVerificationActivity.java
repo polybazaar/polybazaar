@@ -21,7 +21,7 @@ public class EmailVerificationActivity extends AppCompatActivity implements Auth
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_verification);
 
-        authenticator = FirebaseAuthenticator.getInstance();
+        authenticator = AuthenticatorFactory.getDependency();
     }
 
     @Override

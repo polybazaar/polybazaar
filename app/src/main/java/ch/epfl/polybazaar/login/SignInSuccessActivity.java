@@ -16,7 +16,7 @@ public class SignInSuccessActivity extends AppCompatActivity implements Authenti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in_success);
 
-        authenticator = FirebaseAuthenticator.getInstance();
+        authenticator = AuthenticatorFactory.getDependency();
 
     }
 
