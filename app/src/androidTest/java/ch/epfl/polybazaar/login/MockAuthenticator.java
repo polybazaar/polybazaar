@@ -14,7 +14,12 @@ public class MockAuthenticator implements Authenticator {
     private HashMap<String, MockAppUser> registeredUsers;
 
     private MockAuthenticator() {
+        reset();
+    }
+
+    public void reset() {
         registeredUsers = new HashMap<>();
+        currentUser = null;
     }
 
     public static MockAuthenticator getInstance() {
