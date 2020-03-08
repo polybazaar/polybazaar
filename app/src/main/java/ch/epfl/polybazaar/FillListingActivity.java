@@ -72,6 +72,10 @@ public class FillListingActivity extends AppCompatActivity {
             pictureView.setTag(-1);
         }
         else if (requestCode == RESULT_LOAD_IMAGE){
+            if(data == null){
+                pictureView.setTag(-1);
+                return;
+            }
             Uri selectedImage = data.getData();
             pictureView.setImageURI(selectedImage);
             pictureView.setTag(selectedImage.hashCode());
