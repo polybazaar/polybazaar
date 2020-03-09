@@ -85,7 +85,6 @@ public class FillListingActivity extends AppCompatActivity {
         }
     }
 
-
     private void addListeners(){
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,24 +113,6 @@ public class FillListingActivity extends AppCompatActivity {
                 submit();
             }
         });
-    }
-
-    //Function taken from https://developer.android.com/training/camera/photobasics
-    private  void takePicture(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,"ch.epfl.polybazaar.fileprovider", photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
-            }
-        }
     }
 
     private void uploadImage(){
@@ -191,9 +172,26 @@ public class FillListingActivity extends AppCompatActivity {
                 storageDir      /* directory */
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    //Function taken from https://developer.android.com/training/camera/photobasics
+    private  void takePicture(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,"ch.epfl.polybazaar.fileprovider", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
+            }
+        }
     }
 
 
