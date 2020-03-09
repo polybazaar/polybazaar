@@ -50,7 +50,8 @@ public class FillListingActivityTest {
 
     Instrumentation.ActivityResult galleryResult;
     Instrumentation.ActivityResult cameraResult;
-    static Matcher<Intent> expectedIntent;
+    static Matcher<Intent> expectedGalleryIntent;
+    static Matcher<Intent> expectedCameraIntent;
 
     @Rule
     public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
@@ -143,12 +144,12 @@ public class FillListingActivityTest {
         checkNoImageUploaded();
     }
 
-    @Test
+
     public void cancelTakingPicture() {
         cameraResult = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, cameraIntent);
         closeSoftKeyboard();
         Intents.init();
-        Matcher<Intent> expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intending(expectedCameraIntent).respondWith(cameraResult);
         onView(withId(R.id.camera)).perform(scrollTo(), click());
         intended(expectedCameraIntent);
@@ -158,11 +159,11 @@ public class FillListingActivityTest {
 
     private void uploadImage(){
         closeSoftKeyboard();
-        expectedIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+        expectedGalleryIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
         Intents.init();
-        intending(expectedIntent).respondWith(galleryResult);
+        intending(expectedGalleryIntent).respondWith(galleryResult);
         onView(withId(R.id.uploadImage)).perform(scrollTo(), click());
-        intended(expectedIntent);
+        intended(expectedGalleryIntent);
         Intents.release();
     }
 
