@@ -76,6 +76,13 @@ public class FillListingActivityTest {
          }
 
     @Test
+    public void testNoPictureIsDisplayedWhenNoPictureIsTaken(){
+        cameraResult = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, cameraIntent);
+        takePicture();
+        checkNoImageUploaded();
+    }
+
+    @Test
     public void testFreeSwitchFreezesPriceSelector() {
         onView(withId(R.id.freeSwitch)).perform(scrollTo(), click());
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
@@ -135,13 +142,6 @@ public class FillListingActivityTest {
     public void toastAppearsWhenPriceIsNegative() {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("-0.10"));
         submitListingAndCheckIncorrectToast();
-    }
-
-    @Test
-    public void testNoPictureIsDisplayedWhenNoPictureIsTaken(){
-        cameraResult = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, cameraIntent);
-        takePicture();
-        checkNoImageUploaded();
     }
 
     private void takePicture() {
