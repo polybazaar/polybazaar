@@ -62,10 +62,10 @@ public class SaleDetails extends AppCompatActivity {
 
 
         //Get seller action
-        Button get_seller = findViewById(R.id.contact_sel);
+        Button get_seller = findViewById(R.id.contactSel);
         get_seller.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                findViewById(R.id.contact_sel).setVisibility(View.INVISIBLE);
+                findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
                 userEmailTextView.setVisibility(View.VISIBLE);
             }
         });

@@ -36,7 +36,7 @@ public class MainActivityTest{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityRule.getActivity().findViewById(R.id.sale_overview)
+                activityRule.getActivity().findViewById(R.id.saleOverview)
                         .performClick();
             }
         });
@@ -53,7 +53,7 @@ public class MainActivityTest{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityRule.getActivity().findViewById(R.id.add_listing)
+                activityRule.getActivity().findViewById(R.id.addListing)
                         .performClick();
             }
         });
@@ -70,7 +70,7 @@ public class MainActivityTest{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityRule.getActivity().findViewById(R.id.add_listing)
+                activityRule.getActivity().findViewById(R.id.addListing)
                          .performClick();
             }
         });
@@ -85,7 +85,7 @@ public class MainActivityTest{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityRule.getActivity().findViewById(R.id.sign_in)
+                activityRule.getActivity().findViewById(R.id.signIn)
                         .performClick();
             }
         });

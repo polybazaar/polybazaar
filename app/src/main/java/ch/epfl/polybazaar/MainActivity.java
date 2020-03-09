@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button saleDet = findViewById(R.id.sale_det);
+        Button saleDet = findViewById(R.id.saleDet);
         saleDet.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent fillListingIntent = new Intent(MainActivity.this, SaleDetails.class);
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button saleOverBut = findViewById(R.id.sale_overview);
+        Button saleOverBut = findViewById(R.id.saleOverview);
         saleOverBut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent fillListingIntent = new Intent(MainActivity.this, SalesOverview.class);
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button addListBut = findViewById(R.id.add_listing);
+        Button addListBut = findViewById(R.id.addListing);
         addListBut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent fillListingIntent = new Intent(MainActivity.this, FillListingActivity.class);
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button signInBut = findViewById(R.id.sign_in);
+        Button signInBut = findViewById(R.id.signIn);
         signInBut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG);
