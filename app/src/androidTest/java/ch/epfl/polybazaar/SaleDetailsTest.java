@@ -3,20 +3,18 @@ package ch.epfl.polybazaar;
 import android.content.Intent;
 import android.widget.TextView;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listing.ListingDatabase;
 
+import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static java.util.UUID.randomUUID;
 import static org.junit.Assert.assertEquals;
 
@@ -60,14 +58,13 @@ public class SaleDetailsTest {
         CountDownLatch lock = new CountDownLatch(1);
         final String listingID = randomUUID().toString();
 
-        ListingDatabase ldb = new ListingDatabase("listing");
         SuccessCallback successCallback = new SuccessCallback() {
             @Override
             public void onCallback(boolean result) {
                 assertEquals(true, result);
             }
         };
-        ldb.storeListing(new Listing("A BOOK!!!!!", "A description of this BOOOK!!!!", "Too much", "a.b@epfl.ch"),
+        storeListing(new Listing("A BOOK!!!!!", "A description of this BOOOK!!!!", "Too much", "a.b@epfl.ch"),
                             listingID,
                             successCallback);
         lock.await(2000, TimeUnit.MILLISECONDS);

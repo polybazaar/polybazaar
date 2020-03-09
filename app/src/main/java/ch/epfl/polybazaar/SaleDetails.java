@@ -1,18 +1,16 @@
 package ch.epfl.polybazaar;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listing.ListingDatabase;
+
+import static ch.epfl.polybazaar.listing.ListingDatabase.fetchListing;
 
 public class SaleDetails extends AppCompatActivity {
 
@@ -21,7 +19,9 @@ public class SaleDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_details);
 
-        Listing listing;
+        final TextView userEmailTextView = findViewById(R.id.userEmail);
+        userEmailTextView.setVisibility(View.INVISIBLE);
+
 
         Bundle bundle = getIntent().getExtras();
         if(bundle == null)
@@ -33,7 +33,6 @@ public class SaleDetails extends AppCompatActivity {
             throw new IllegalArgumentException();
         }
 
-        ListingDatabase ldb = new ListingDatabase("listing");
         ListingCallback callbackListing = new ListingCallback() {
             @Override
             public void onCallback(Listing result) {
@@ -53,19 +52,21 @@ public class SaleDetails extends AppCompatActivity {
                 TextView price_txt = (TextView)findViewById(R.id.price);
                 price_txt.setTextSize(20);
                 price_txt.setText(result.getPrice());
+
+                //Set email
+                userEmailTextView.setText(result.getUserEmail());
+                userEmailTextView.setVisibility(View.INVISIBLE);
             }
         };
-        ldb.fetchListing(listingID, callbackListing);
+        fetchListing(listingID, callbackListing);
 
 
         //Get seller action
         Button get_seller = findViewById(R.id.contact_sel);
         get_seller.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                //TODO get the seller information through the listing
-                Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
+                findViewById(R.id.contact_sel).setVisibility(View.INVISIBLE);
+                userEmailTextView.setVisibility(View.VISIBLE);
             }
         });
 
