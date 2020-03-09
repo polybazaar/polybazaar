@@ -22,19 +22,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button saleDet = findViewById(R.id.sale_det);
+        saleDet.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent fillListingIntent = new Intent(MainActivity.this, SaleDetails.class);
+                fillListingIntent.putExtra("listingID", "35120421-4a81-4b78-b91d-23582698fcee");
+                startActivity(fillListingIntent);
+            }
+        });
+
         Button saleOverBut = findViewById(R.id.sale_overview);
         saleOverBut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent FillListingIntent = new Intent(MainActivity.this, SalesOverview.class);
-                startActivity(FillListingIntent);
+                Intent fillListingIntent = new Intent(MainActivity.this, SalesOverview.class);
+                startActivity(fillListingIntent);
             }
         });
 
         Button addListBut = findViewById(R.id.add_listing);
         addListBut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent FillListingIntent = new Intent(MainActivity.this, FillListingActivity.class);
-                startActivity(FillListingIntent);
+                Intent fillListingIntent = new Intent(MainActivity.this, FillListingActivity.class);
+                startActivity(fillListingIntent);
             }
         });
 
