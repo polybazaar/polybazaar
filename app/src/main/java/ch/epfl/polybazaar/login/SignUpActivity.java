@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.Task;
 
 import ch.epfl.polybazaar.R;
 
+import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.*;
+
 public class SignUpActivity extends AppCompatActivity {
     private Authenticator authenticator;
 
@@ -48,15 +50,11 @@ public class SignUpActivity extends AppCompatActivity {
         String confirmPassword = confirmPasswordView.getText().toString();
 
         if (!checkEmail(email)) {
-            showErrorDialog(
-                    "Invalid e-mail",
-                    "Please enter a valid EPFL e-mail address"
-            );
+            makeDialog(SignUpActivity.this, R.string.signup_email_invalid);
+        } else if (!password.equals(confirmPassword)) {
+            makeDialog(SignUpActivity.this, R.string.signup_passwords_not_matching);
         } else if (!checkPassword(password)) {
-            showErrorDialog(
-                    "Invalid password",
-                    "Please make sure that both passwords match"
-            );
+            makeDialog(SignUpActivity.this, R.string.signup_passwords_weak);
         } else {
             createUser(email, password);
         }
@@ -73,7 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
                             startActivity(intent);
                         } else {
-                            showErrorDialog("Sign up failed", "Please try again");
+                            makeDialog(SignUpActivity.this, R.string.signup_error);
                         }
                     }
                 });
@@ -85,18 +83,5 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean checkEmail(String email) {
         return true;
-    }
-
-    private void showErrorDialog(String title, String msg) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
-        builder.setTitle(title)
-                .setMessage(msg)
-                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
     }
 }
