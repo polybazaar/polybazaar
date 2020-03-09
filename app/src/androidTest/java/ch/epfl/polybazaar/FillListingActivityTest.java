@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.ContentResolver;
@@ -14,6 +15,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
@@ -56,6 +58,8 @@ public class FillListingActivityTest {
     @Rule
     public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
 
+    @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+    
     @BeforeClass
     public static void setupStubIntent(){
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
