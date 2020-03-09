@@ -3,4 +3,14 @@
     <string name="email_not_verified">Your e-mail address has not been verified yet</string>
     <string name="verify_email">Verify e-mail address now</string>
     <string name="verification_not_working">Have you already verified your e-mail?</string>
+    <string name="authentication_successful">Authentication was successful!</string>
+    <string name="verify_credentials">Please verify your credentials!</string>
+    <string name="alert_close">Back</string>
+    <string name="signup_error">Please try again</string>
+    <string name="signup_passwords_not_matching">Please make sure that both passwords match</string>
+    <string name="signup_passwords_weak">Please enter a stronger password</string>
+    <string name="signup_email_invalid">Please enter a valid EPFL e-mail address</string>
+    <string name="verification_email_sent">Verification e-mail sent</string>
+    <string name="verification_email_fail">Unable to send verification e-mail</string>
+    <string name="reload_fail">Unable to reload</string>
 </resources>
