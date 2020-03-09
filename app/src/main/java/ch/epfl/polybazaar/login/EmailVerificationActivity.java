@@ -47,12 +47,12 @@ public class EmailVerificationActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Toast.makeText(
                                         EmailVerificationActivity.this,
-                                        "Verification e-mail sent", Toast.LENGTH_LONG
+                                        R.string.verification_email_sent, Toast.LENGTH_LONG
                                 ).show();
                             } else {
                                 Toast.makeText(
                                         EmailVerificationActivity.this,
-                                        "Unable to send verification e-mail", Toast.LENGTH_LONG
+                                        R.string.verification_email_fail, Toast.LENGTH_LONG
                                 ).show();
                             }
                         }
@@ -73,7 +73,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(
                                 EmailVerificationActivity.this,
-                                "Unable to reload", Toast.LENGTH_LONG
+                                R.string.reload_fail, Toast.LENGTH_LONG
                         ).show();
                     }
                 }
