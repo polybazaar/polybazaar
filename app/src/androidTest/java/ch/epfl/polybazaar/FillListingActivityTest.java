@@ -76,13 +76,6 @@ public class FillListingActivityTest {
          }
 
     @Test
-    public void testNoPictureIsDisplayedWhenNoPictureIsTaken(){
-        cameraResult = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, cameraIntent);
-        takePicture();
-        checkNoImageUploaded();
-    }
-
-    @Test
     public void testFreeSwitchFreezesPriceSelector() {
         onView(withId(R.id.freeSwitch)).perform(scrollTo(), click());
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
@@ -144,7 +137,15 @@ public class FillListingActivityTest {
         submitListingAndCheckIncorrectToast();
     }
 
-    private void takePicture() {
+    @Test
+    public void testNoPictureIsDisplayedWhenNoPictureIsTaken(){
+        cancelTakingPicture();
+        checkNoImageUploaded();
+    }
+
+    @Test
+    public void cancelTakingPicture() {
+        cameraResult = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, cameraIntent);
         closeSoftKeyboard();
         Intents.init();
         Matcher<Intent> expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
