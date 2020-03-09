@@ -13,15 +13,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 
-public class GenericDatabase{
+public abstract class GenericDatabase{
 
     private static final String TAG = "GenericDatabase";
 
-    private FirebaseFirestore database;
+    private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-    public GenericDatabase() {
-        database = FirebaseFirestore.getInstance();
-    }
 
     /**
      * fetches the data from the database, and calls onCallback when done
@@ -29,7 +26,7 @@ public class GenericDatabase{
      * @param documentPath document name (ID)
      * @param callback a GenericCallback interface implementation
      */
-    public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final GenericCallback callback) {
+    public static void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final GenericCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).get();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -58,7 +55,7 @@ public class GenericDatabase{
      * @param data the data that should be stored (overwritten)
      * @param callback a SuccessCallback interface implementation
      */
-    public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
+    public static void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).set(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -82,7 +79,7 @@ public class GenericDatabase{
      * @param data the data that should be stored (overwritten)
      * @param callback a SuccessCallback interface implementation
      */
-    public void addData(@NonNull String collectionPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
+    public static void addData(@NonNull String collectionPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).add(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -105,7 +102,7 @@ public class GenericDatabase{
      * @param documentPath document name (ID)
      * @param callback a SuccessCallback interface implementation
      */
-    public void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final SuccessCallback callback) {
+    public static void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).delete();
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -127,7 +124,7 @@ public class GenericDatabase{
      * @param collectionPath collection name
      * @param callback a GenericCallback interface implementation
      */
-    public void getAllDataInCollection(@NonNull String collectionPath, @NonNull final GenericCallback callback) {
+    static public void getAllDataInCollection(@NonNull String collectionPath, @NonNull final GenericCallback callback) {
         Task task = database.collection(collectionPath).get();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

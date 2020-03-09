@@ -5,12 +5,12 @@ import ch.epfl.polybazaar.database.callback.LiteListingCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
 import ch.epfl.polybazaar.database.callback.LiteListingListCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
-import ch.epfl.polybazaar.database.generic.GenericDatabase;
+
+import static ch.epfl.polybazaar.database.generic.GenericDatabase.*;
 
 /**
  * Usage Example:
  *
- * private LiteListingDatabase lldb = new LiteListingDatabase("liteListings");
  * LiteListingCallback callbackLiteListing = new LiteListingCallback() {
  *             // onCallback is executed once the data request has completed
  *             @Override
@@ -18,37 +18,20 @@ import ch.epfl.polybazaar.database.generic.GenericDatabase;
  *                 // use result;
  *             }
  *         };
- * lldb.fetchLiteListing("myFancyLiteListing", callbackLiteListing);
+ * fetchLiteListing("myFancyLiteListing", callbackLiteListing);
  */
-public class LiteListingDatabase {
+public abstract class LiteListingDatabase {
 
-    private GenericDatabase db;
-    private String liteListingCollectionName;
-
-    /**
-     * @param liteListingCollectionName the Firestore collection where liteListings lie
-     */
-    public LiteListingDatabase(String liteListingCollectionName) {
-        this.liteListingCollectionName = liteListingCollectionName;
-        db = new GenericDatabase();
-    }
-
-    /**
-     * set the liteListing collection name
-     * @param name the name of the collection
-     */
-    public void setLiteListingCollectionName(String name) {
-        liteListingCollectionName = name;
-    }
+    private static final String liteListingCollectionName = "liteListings";
 
     /**
      * Fetch all liteListings IDs from the database
      * callback will contain the liteListingList (List of IDs (Strings))
      * @param callback a LiteListingListCallback interface implementation
      */
-    public void fetchLiteListingList(final LiteListingListCallback callback) {
+    public static void fetchLiteListingList(final LiteListingListCallback callback) {
         final LiteListingListCallbackAdapter adapterCallback= new LiteListingListCallbackAdapter(callback);
-        db.getAllDataInCollection(liteListingCollectionName, adapterCallback);
+        getAllDataInCollection(liteListingCollectionName, adapterCallback);
     }
 
     /**
@@ -57,9 +40,9 @@ public class LiteListingDatabase {
      * @param liteListingID the ID we give the listing
      * @param callback a LiteListingCallback interface implementation
      */
-    public void fetchLiteListing(final String liteListingID, final LiteListingCallback callback){
+    public static void fetchLiteListing(final String liteListingID, final LiteListingCallback callback){
         final LiteListingCallbackAdapter adapterCallback = new LiteListingCallbackAdapter(callback);
-        db.fetchData(liteListingCollectionName, liteListingID, adapterCallback);
+        fetchData(liteListingCollectionName, liteListingID, adapterCallback);
     }
 
     /**
@@ -69,8 +52,8 @@ public class LiteListingDatabase {
      * @param liteListing the liteListing
      * @param callback a SuccessCallback interface implementation
      */
-    public void addLiteListing(LiteListing liteListing, final SuccessCallback callback) {
-        db.addData(liteListingCollectionName, liteListing, callback);
+    public static void addLiteListing(LiteListing liteListing, final SuccessCallback callback) {
+        addData(liteListingCollectionName, liteListing, callback);
     }
 
     /**
@@ -79,8 +62,8 @@ public class LiteListingDatabase {
      * @param liteListingID the liteListing's ID
      * @param callback a SuccessCallback interface implementation
      */
-    public void deleteLiteListing(String liteListingID, SuccessCallback callback) {
-        db.deleteData(liteListingCollectionName, liteListingID, callback);
+    public static void deleteLiteListing(String liteListingID, SuccessCallback callback) {
+        deleteData(liteListingCollectionName, liteListingID, callback);
     }
 
 }

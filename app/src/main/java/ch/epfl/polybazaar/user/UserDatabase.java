@@ -2,16 +2,16 @@ package ch.epfl.polybazaar.user;
 
 import android.util.Log;
 
-import ch.epfl.polybazaar.database.generic.GenericDatabase;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.callback.UserCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.UserCallback;
+
+import static ch.epfl.polybazaar.database.generic.GenericDatabase.*;
 
 
 /**
  * Usage Example:
  *
- * private UserDatabase udb = new UserDatabase();
  * UserCallback callbackUser = new UserCallback() {
  *             // onCallback is executed once the data request has completed
  *             @Override
@@ -19,17 +19,13 @@ import ch.epfl.polybazaar.database.callback.UserCallback;
  *                 // use result;
  *             }
  *         };
- * udb.fetchUser("jean.chappy@epfl.ch", callbackUser);
+ * fetchUser("jean.chappy@epfl.ch", callbackUser);
  */
-public class UserDatabase {
+public abstract class UserDatabase {
 
     private static final String TAG = "UserDatabase";
 
-    private GenericDatabase db;
-
-    public UserDatabase(){
-        db = new GenericDatabase();
-    };
+    private static final String userCollectionName = "users";
 
     /**
      * Add an user to the database, using its email as unique identifier (key)
@@ -37,7 +33,7 @@ public class UserDatabase {
      * @param user the user
      * @param callback a SuccessCallback interface implementation
      */
-    public void storeNewUser(final User user, final SuccessCallback callback) {
+    public static void storeNewUser(final User user, final SuccessCallback callback) {
         final UserCallback intermediateCall = new UserCallback() {
             @Override
             public void onCallback(User result) {
@@ -51,11 +47,11 @@ public class UserDatabase {
                     callback.onCallback(false);
                     return;
                 }
-                db.setData("users", user.getEmail(), user, callback);
+                setData(userCollectionName, user.getEmail(), user, callback);
             }
         };
         final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall);
-        db.fetchData("users", user.getEmail(), adapterIntermediateCallback);
+        fetchData(userCollectionName, user.getEmail(), adapterIntermediateCallback);
     }
 
     /**
@@ -64,9 +60,9 @@ public class UserDatabase {
      * @param email the user to fetch's email
      * @param callback a UserCallback interface implementation
      */
-    public void fetchUser(final String email, final UserCallback callback) {
+    public static void fetchUser(final String email, final UserCallback callback) {
         final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback);
-        db.fetchData("users", email, adapterCallback);
+        fetchData(userCollectionName, email, adapterCallback);
     }
 
     /**
@@ -75,7 +71,7 @@ public class UserDatabase {
      * @param email the users email address
      * @param callback a SuccessCallback interface implementation
      */
-    public void deleteUser(final String email, final SuccessCallback callback) {
-        db.deleteData("user", email, callback);
+    public static void deleteUser(final String email, final SuccessCallback callback) {
+        deleteData(userCollectionName, email, callback);
     }
 }
