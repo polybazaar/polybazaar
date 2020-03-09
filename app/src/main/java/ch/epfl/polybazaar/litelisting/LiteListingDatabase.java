@@ -52,7 +52,7 @@ public abstract class LiteListingDatabase {
      * @param liteListing the liteListing
      * @param callback a SuccessCallback interface implementation
      */
-    public static void addLiteListing(LiteListing liteListing, final SuccessCallback callback) {
+    public static void addLiteListing(final LiteListing liteListing, final SuccessCallback callback) {
         addData(liteListingCollectionName, liteListing, callback);
     }
 
@@ -62,7 +62,7 @@ public abstract class LiteListingDatabase {
      * @param liteListingID the liteListing's ID
      * @param callback a SuccessCallback interface implementation
      */
-    public static void deleteLiteListing(String liteListingID, SuccessCallback callback) {
+    public static void deleteLiteListing(final String liteListingID, final SuccessCallback callback) {
         deleteData(liteListingCollectionName, liteListingID, callback);
     }
 

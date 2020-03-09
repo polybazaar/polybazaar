@@ -26,7 +26,7 @@ public abstract class GenericDatabase{
      * @param documentPath document name (ID)
      * @param callback a GenericCallback interface implementation
      */
-    public static void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final GenericCallback callback) {
+    public static void fetchData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final GenericCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).get();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -55,7 +55,7 @@ public abstract class GenericDatabase{
      * @param data the data that should be stored (overwritten)
      * @param callback a SuccessCallback interface implementation
      */
-    public static void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
+    public static void setData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).set(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -79,7 +79,7 @@ public abstract class GenericDatabase{
      * @param data the data that should be stored (overwritten)
      * @param callback a SuccessCallback interface implementation
      */
-    public static void addData(@NonNull String collectionPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
+    public static void addData(@NonNull final String collectionPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).add(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -102,7 +102,7 @@ public abstract class GenericDatabase{
      * @param documentPath document name (ID)
      * @param callback a SuccessCallback interface implementation
      */
-    public static void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final SuccessCallback callback) {
+    public static void deleteData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final SuccessCallback callback) {
         Task task = database.collection(collectionPath).document(documentPath).delete();
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -124,7 +124,7 @@ public abstract class GenericDatabase{
      * @param collectionPath collection name
      * @param callback a GenericCallback interface implementation
      */
-    static public void getAllDataInCollection(@NonNull String collectionPath, @NonNull final GenericCallback callback) {
+    public static void getAllDataInCollection(@NonNull final String collectionPath, @NonNull final GenericCallback callback) {
         Task task = database.collection(collectionPath).get();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

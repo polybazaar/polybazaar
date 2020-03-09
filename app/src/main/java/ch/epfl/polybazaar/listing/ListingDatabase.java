@@ -40,7 +40,7 @@ public abstract class ListingDatabase {
      * @param listingID the ID the listing should get
      * @param callback a SuccessCallback interface implementation
      */
-    public static void storeListing(Listing listing, String listingID, final SuccessCallback callback){
+    public static void storeListing(final Listing listing, final String listingID, final SuccessCallback callback){
         setData(listingCollectionName, listingID, listing, callback);
     }
 
@@ -50,7 +50,7 @@ public abstract class ListingDatabase {
      * @param listingID the listing's ID
      * @param callback a SuccessCallback interface implementation
      */
-    public static void deleteListing(String listingID, SuccessCallback callback){
+    public static void deleteListing(final String listingID, final SuccessCallback callback){
         deleteData(listingCollectionName, listingID, callback);
     }
 
