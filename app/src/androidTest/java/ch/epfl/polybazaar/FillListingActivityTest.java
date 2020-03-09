@@ -22,6 +22,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -144,6 +145,7 @@ public class FillListingActivityTest {
     }
 
     private void takePicture() {
+        closeSoftKeyboard();
         Intents.init();
         Matcher<Intent> expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intending(expectedCameraIntent).respondWith(cameraResult);
@@ -154,6 +156,7 @@ public class FillListingActivityTest {
 
 
     private void uploadImage(){
+        closeSoftKeyboard();
         expectedIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
         Intents.init();
         intending(expectedIntent).respondWith(galleryResult);
