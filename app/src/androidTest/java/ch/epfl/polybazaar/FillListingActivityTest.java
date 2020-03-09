@@ -142,12 +142,12 @@ public class FillListingActivityTest {
         takePicture();
         checkNoImageUploaded();
     }
-    
+
     private void takePicture() {
         Intents.init();
         Matcher<Intent> expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intending(expectedCameraIntent).respondWith(cameraResult);
-        onView(withId(R.id.camera)).perform(click());
+        onView(withId(R.id.camera)).perform(scrollTo(), click());
         intended(expectedCameraIntent);
         Intents.release();
     }
@@ -157,7 +157,7 @@ public class FillListingActivityTest {
         expectedIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
         Intents.init();
         intending(expectedIntent).respondWith(galleryResult);
-        onView(withId(R.id.uploadImage)).perform(click());
+        onView(withId(R.id.uploadImage)).perform(scrollTo(), click());
         intended(expectedIntent);
         Intents.release();
     }
