@@ -1,15 +1,14 @@
 package ch.epfl.polybazaar.database.callback;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import ch.epfl.polybazaar.database.generic.GenericCallback;
-import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.database.generic.QuerySnapshotCallback;
 
-public class LiteListingListCallbackAdapter  implements GenericCallback {
+public class LiteListingListCallbackAdapter implements QuerySnapshotCallback {
 
     private LiteListingListCallback liteListingListCallback;
 
@@ -22,15 +21,14 @@ public class LiteListingListCallbackAdapter  implements GenericCallback {
     }
 
     @Override
-    public void onCallback(DocumentSnapshot result) {
+    public void onCallback(QuerySnapshot result) {
         if (result==null){
             liteListingListCallback.onCallback(null);
             return;
         }
-        Map<String, Object> listMap = result.getData();
         List<String> liteListingList = new ArrayList<>();
-        for (String ID : listMap.keySet()) {
-            liteListingList.add(ID);
+        for (DocumentSnapshot doc : result.getDocuments()) {
+            liteListingList.add(doc.getId());
         }
         liteListingListCallback.onCallback(liteListingList);
     }
