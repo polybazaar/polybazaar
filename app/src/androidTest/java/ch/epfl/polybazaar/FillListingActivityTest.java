@@ -131,13 +131,7 @@ public class FillListingActivityTest {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
         }
-
-    @Test
-    public void toastAppearsWhenPriceIsText() {
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("A book"));
-        submitListingAndCheckIncorrectToast();
-    }
-
+        
     @Test
     public void toastAppearsWhenPriceIsNegative() {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("-0.10"));
