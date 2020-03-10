@@ -24,61 +24,46 @@ public class EmailVerificationActivity extends AppCompatActivity {
         authenticator = AuthenticatorFactory.getDependency();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        AppUser user = authenticator.getCurrentUser();
-
-        if (user != null && user.isEmailVerified()) {
-            Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
-            startActivity(intent);
-        }
-    }
-
     public void verify(View view) {
         AppUser user = authenticator.getCurrentUser();
 
-        if (user != null && !user.isEmailVerified()) {
-            user.sendEmailVerification()
-                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(
-                                        EmailVerificationActivity.this,
-                                        R.string.verification_email_sent, Toast.LENGTH_LONG
-                                ).show();
-                            } else {
-                                Toast.makeText(
-                                        EmailVerificationActivity.this,
-                                        R.string.verification_email_fail, Toast.LENGTH_LONG
-                                ).show();
-                            }
+
+        user.sendEmailVerification()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(
+                                    EmailVerificationActivity.this,
+                                    R.string.verification_email_sent, Toast.LENGTH_LONG
+                            ).show();
+                        } else {
+                            Toast.makeText(
+                                    EmailVerificationActivity.this,
+                                    R.string.verification_email_fail, Toast.LENGTH_LONG
+                            ).show();
                         }
-                    });
-        }
+                    }
+                });
     }
 
     public void reload(View view) {
         AppUser user = authenticator.getCurrentUser();
 
-        if (user != null) {
-            user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(
-                                EmailVerificationActivity.this,
-                                R.string.reload_fail, Toast.LENGTH_LONG
-                        ).show();
-                    }
+        user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(
+                            EmailVerificationActivity.this,
+                            R.string.reload_fail, Toast.LENGTH_LONG
+                    ).show();
                 }
-            });
-        }
+            }
+        });
     }
 
     public void signOut(View view) {

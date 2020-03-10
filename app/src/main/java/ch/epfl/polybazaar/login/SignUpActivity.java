@@ -28,18 +28,6 @@ public class SignUpActivity extends AppCompatActivity {
         authenticator = AuthenticatorFactory.getDependency();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        AppUser currentUser = authenticator.getCurrentUser();
-
-        if (currentUser != null) {
-            Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
-            startActivity(intent);
-        }
-    }
-
     public void submit(View view) {
         EditText emailView = findViewById(R.id.emailInput);
         EditText passwordView = findViewById(R.id.passwordInput);
