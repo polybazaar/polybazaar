@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.widget.Button;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -39,6 +40,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
@@ -59,7 +61,7 @@ public class FillListingActivityTest {
     public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
 
     @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
-    
+
     @BeforeClass
     public static void setupStubIntent(){
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
@@ -143,19 +145,25 @@ public class FillListingActivityTest {
     }
 
     @Test
-    public void testNoPictureIsDisplayedWhenNoPictureIsTaken(){
+    public void testNoPictureIsDisplayedWhenNoPictureIsTaken() throws Throwable {
         cancelTakingPicture();
         checkNoImageUploaded();
     }
 
-
-    public void cancelTakingPicture() {
+    public void cancelTakingPicture() throws Throwable {
         cameraResult = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, cameraIntent);
         closeSoftKeyboard();
         Intents.init();
         expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intending(expectedCameraIntent).respondWith(cameraResult);
-        onView(withId(R.id.camera)).perform(scrollTo(), click());
+        //onView(withId(R.id.camera)).perform(scrollTo(), click());
+        runOnUiThread(new Runnable(){
+            @Override
+                    public void run() {
+                Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.camera);
+                but.performClick();
+            }
+        });
         intended(expectedCameraIntent);
         Intents.release();
     }
