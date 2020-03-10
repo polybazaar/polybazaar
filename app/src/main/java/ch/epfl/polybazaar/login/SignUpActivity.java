@@ -78,10 +78,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private boolean checkPassword(String password) {
-        return true;
+        return password.length() >= 6;
     }
 
     private boolean checkEmail(String email) {
-        return true;
+        return email.endsWith("@epfl.ch");
     }
 }
