@@ -4,5 +4,5 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="title_box_length">120dp</dimen>
     <dimen name="price_box_length">1dp</dimen>
-    <dimen name="overview_text_size">24sp</dimen>
+    <dimen name="overview_text_size">14sp</dimen>
 </resources>
