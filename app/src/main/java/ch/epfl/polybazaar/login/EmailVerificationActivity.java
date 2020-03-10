@@ -24,6 +24,10 @@ public class EmailVerificationActivity extends AppCompatActivity {
         authenticator = AuthenticatorFactory.getDependency();
     }
 
+    /**
+     * Attempts to send a verification email to the user
+     * @param view view that triggers the action
+     */
     public void verify(View view) {
         AppUser user = authenticator.getCurrentUser();
 
@@ -47,6 +51,10 @@ public class EmailVerificationActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Attempts to reload the user so that email verification status can be updated
+     * @param view view that triggers the action
+     */
     public void reload(View view) {
         AppUser user = authenticator.getCurrentUser();
 
@@ -66,6 +74,10 @@ public class EmailVerificationActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Signs the user out of the app
+     * @param view view that triggers the action
+     */
     public void signOut(View view) {
         authenticator.signOut();
 

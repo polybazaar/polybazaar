@@ -1,21 +1,19 @@
 package ch.epfl.polybazaar.login;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import ch.epfl.polybazaar.R;
 
-import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.*;
+import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class SignUpActivity extends AppCompatActivity {
     private Authenticator authenticator;
@@ -28,6 +26,10 @@ public class SignUpActivity extends AppCompatActivity {
         authenticator = AuthenticatorFactory.getDependency();
     }
 
+    /**
+     * Attempts to create an account with the given credentials
+     * @param view view that triggers the action
+     */
     public void submit(View view) {
         EditText emailView = findViewById(R.id.emailInput);
         EditText passwordView = findViewById(R.id.passwordInput);

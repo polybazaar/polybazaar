@@ -6,6 +6,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Adapter for firebase authentication
+ */
 public class FirebaseAuthenticator implements Authenticator {
     private static FirebaseAuthenticator INSTANCE;
     private FirebaseAuth fbAuth = FirebaseAuth.getInstance();

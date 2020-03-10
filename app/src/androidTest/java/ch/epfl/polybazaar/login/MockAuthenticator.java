@@ -4,10 +4,12 @@ import android.accounts.NetworkErrorException;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.HashMap;
 
+/**
+ * Singleton class that can be used to mock an authentication API
+ */
 public class MockAuthenticator implements Authenticator {
     private static MockAuthenticator INSTANCE;
 
@@ -19,11 +21,18 @@ public class MockAuthenticator implements Authenticator {
         reset();
     }
 
+    /**
+     * Resets registered users
+     */
     public void reset() {
         registeredUsers = new HashMap<>();
         currentUser = null;
     }
 
+    /**
+     * Returns the singleton instance
+     * @return instance
+     */
     public static MockAuthenticator getInstance() {
         if (INSTANCE == null)
             INSTANCE = new MockAuthenticator();

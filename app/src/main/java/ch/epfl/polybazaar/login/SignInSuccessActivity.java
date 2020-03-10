@@ -1,10 +1,10 @@
 package ch.epfl.polybazaar.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.polybazaar.R;
 
@@ -32,6 +32,10 @@ public class SignInSuccessActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Signs the user out of the app
+     * @param view view that triggers the action
+     */
     public void signOut(View view) {
         authenticator.signOut();
 

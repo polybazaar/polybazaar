@@ -1,5 +1,8 @@
 package ch.epfl.polybazaar.login;
 
+/**
+ * Singleton class that can be used to mock a device's settings
+ */
 public class MockPhoneSettings {
     private static MockPhoneSettings INSTANCE;
     private boolean airPlaneMode;

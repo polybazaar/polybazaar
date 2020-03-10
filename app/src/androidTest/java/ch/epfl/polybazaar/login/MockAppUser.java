@@ -5,6 +5,9 @@ import android.accounts.NetworkErrorException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
+/**
+ * Mocked app user
+ */
 public class MockAppUser implements AppUser {
     private boolean sentEmail;
     private boolean isVerified;
@@ -16,6 +19,11 @@ public class MockAppUser implements AppUser {
         this.password = password;
     }
 
+    /**
+     * Verify that the specified passwords matches the users's password
+     * @param password password
+     * @return true iff the password matches
+     */
     public boolean checkPassword(String password) {
         return password.equals(this.password);
     }

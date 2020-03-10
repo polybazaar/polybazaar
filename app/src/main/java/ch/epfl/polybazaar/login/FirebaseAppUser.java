@@ -1,9 +1,11 @@
 package ch.epfl.polybazaar.login;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Adapter for firebase app user
+ */
 public class FirebaseAppUser implements AppUser {
     private FirebaseUser fbUser;
 
