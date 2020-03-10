@@ -64,7 +64,7 @@ public class SaleDetailsTest {
                 assertEquals(true, result);
             }
         };
-        storeListing(new Listing("A BOOK!!!!!", "A description of this BOOOK!!!!", "Too much", "a.b@epfl.ch"),
+        storeListing(new Listing("Algebre linéaire by David C. Lay", "Very good book.", "CHF 23.-", "gu.vrut@epfl.ch"),
                             listingID,
                             successCallback);
         lock.await(2000, TimeUnit.MILLISECONDS);
@@ -77,13 +77,13 @@ public class SaleDetailsTest {
         lock.await(2000, TimeUnit.MILLISECONDS);
 
         TextView text_title = (TextView)activityRule.getActivity().findViewById(R.id.title);
-        assertEquals("A BOOK!!!!!", text_title.getText().toString());
+        assertEquals("Algebre linéaire by David C. Lay", text_title.getText().toString());
 
         TextView text_descr = (TextView)activityRule.getActivity().findViewById(R.id.description);
-        assertEquals("A description of this BOOOK!!!!", text_descr.getText().toString());
+        assertEquals("Very good book.", text_descr.getText().toString());
 
         TextView text_price = (TextView)activityRule.getActivity().findViewById(R.id.price);
-        assertEquals("Too much", text_price.getText().toString());
+        assertEquals("CHF 23.-", text_price.getText().toString());
     }
 
 
