@@ -1,11 +1,16 @@
 package ch.epfl.polybazaar;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
 
 import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.listing.Listing;
@@ -20,8 +25,9 @@ public class SaleDetails extends AppCompatActivity {
         setContentView(R.layout.activity_sale_details);
 
         final TextView userEmailTextView = findViewById(R.id.userEmail);
-        userEmailTextView.setVisibility(View.INVISIBLE);
 
+        final ImageView imageLoading = (ImageView) findViewById(R.id.loadingImage);
+        Glide.with(this).load(R.drawable.loading).into(imageLoading);
 
         Bundle bundle = getIntent().getExtras();
         if(bundle == null)
@@ -36,20 +42,33 @@ public class SaleDetails extends AppCompatActivity {
         ListingCallback callbackListing = new ListingCallback() {
             @Override
             public void onCallback(Listing result) {
+                Glide.with(imageLoading).clear(imageLoading);
+
+                if(result == null) {
+                    Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                    return;
+                }
+
                 //set image
-                //ImageView image = findViewById(R.id.imageView2);
-                //image.setImageResource(result.getImage());
+                ImageView image = findViewById(R.id.imageView2);
+                image.setVisibility(View.VISIBLE);
+                image.setImageResource(R.drawable.algebre_lin);
 
                 //Set the title
                 TextView title_txt = (TextView)findViewById(R.id.title);
+                title_txt.setVisibility(View.VISIBLE);
                 title_txt.setText(result.getTitle());
 
                 //Set the description
                 TextView description_txt = (TextView)findViewById(R.id.description);
+                description_txt.setVisibility(View.VISIBLE);
                 description_txt.setText(result.getDescription());
 
                 //Set the price
                 TextView price_txt = (TextView)findViewById(R.id.price);
+                price_txt.setVisibility(View.VISIBLE);
                 price_txt.setTextSize(20);
                 price_txt.setText(result.getPrice());
 
