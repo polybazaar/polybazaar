@@ -46,7 +46,7 @@ public class MockAuthenticator implements Authenticator {
 
     @Override
     public Task<AuthenticatorResult> createUser(String email, String password) {
-        if (email.length() > 10 && password.length() > 5 && registeredUsers.get(email) == null) {
+        if (registeredUsers.get(email) == null) {
             MockAppUser newUser = new MockAppUser(email, password);
             registeredUsers.put(email, newUser);
             currentUser = newUser;
