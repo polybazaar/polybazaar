@@ -131,7 +131,7 @@ public class FillListingActivityTest {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
         }
-        
+
     @Test
     public void toastAppearsWhenPriceIsNegative() {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("-0.10"));
@@ -142,7 +142,11 @@ public class FillListingActivityTest {
     public void testNoPictureIsDisplayedWhenNoPictureIsTaken() throws Throwable {
         cancelTakingPicture();
         checkNoImageUploaded();
+        fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
     }
+
+    @After
+
 
     public void cancelTakingPicture() throws Throwable {
         cameraResult = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, cameraIntent);
@@ -158,6 +162,7 @@ public class FillListingActivityTest {
                 but.performClick();
             }
         });
+        fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         intended(expectedCameraIntent);
         Intents.release();
     }
