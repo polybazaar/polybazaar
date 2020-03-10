@@ -2,10 +2,12 @@ package ch.epfl.polybazaar.database.callback;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import ch.epfl.polybazaar.database.generic.GenericCallback;
+import java.util.Objects;
+
+import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
 import ch.epfl.polybazaar.user.User;
 
-public class UserCallbackAdapter implements GenericCallback {
+public class UserCallbackAdapter implements DocumentSnapshotCallback {
 
     private UserCallback userCallback;
 
@@ -23,8 +25,8 @@ public class UserCallbackAdapter implements GenericCallback {
             userCallback.onCallback(null);
             return;
         }
-        User user = new User(result.get("nickName").toString(),
-                result.get("email").toString());
+        User user = new User(Objects.requireNonNull(result.get("nickName")).toString(),
+                Objects.requireNonNull(result.get("email")).toString());
         userCallback.onCallback(user);
     }
 

@@ -8,20 +8,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 
-public class GenericDatabase{
+public abstract class GenericDatabase{
 
     private static final String TAG = "GenericDatabase";
 
-    private FirebaseFirestore database;
+    private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-    public GenericDatabase() {
-        database = FirebaseFirestore.getInstance();
-    }
 
     /**
      * fetches the data from the database, and calls onCallback when done
@@ -29,13 +28,14 @@ public class GenericDatabase{
      * @param documentPath document name (ID)
      * @param callback a GenericCallback interface implementation
      */
-    public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final GenericCallback callback) {
-        Task task = database.collection(collectionPath).document(documentPath).get();
+    public static void fetchData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final DocumentSnapshotCallback callback) {
+        Task<DocumentSnapshot> task = database.collection(collectionPath).document(documentPath).get();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    assert document != null;
                     if (document.exists()) {
                         Log.d(TAG, "successfully retrieved data");
                         callback.onCallback(document);
@@ -58,8 +58,8 @@ public class GenericDatabase{
      * @param data the data that should be stored (overwritten)
      * @param callback a SuccessCallback interface implementation
      */
-    public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
-        Task task = database.collection(collectionPath).document(documentPath).set(data);
+    public static void setData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
+        Task<Void> task = database.collection(collectionPath).document(documentPath).set(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void nothing) {
@@ -82,11 +82,11 @@ public class GenericDatabase{
      * @param data the data that should be stored (overwritten)
      * @param callback a SuccessCallback interface implementation
      */
-    public void addData(@NonNull String collectionPath, @NonNull Object data, @NonNull final SuccessCallback callback) {
-        Task task = database.collection(collectionPath).add(data);
-        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+    public static void addData(@NonNull final String collectionPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
+        Task<DocumentReference> task = database.collection(collectionPath).add(data);
+        task.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
-            public void onSuccess(Void nothing) {
+            public void onSuccess(DocumentReference nothing) {
                 Log.d(TAG, "successfully stored data");
                 callback.onCallback(true);
             }
@@ -105,11 +105,11 @@ public class GenericDatabase{
      * @param documentPath document name (ID)
      * @param callback a SuccessCallback interface implementation
      */
-    public void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull final SuccessCallback callback) {
-        Task task = database.collection(collectionPath).document(documentPath).delete();
+    public static void deleteData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final SuccessCallback callback) {
+        Task<Void> task = database.collection(collectionPath).document(documentPath).delete();
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onSuccess(Void nothing) {
                 Log.d(TAG, "successfully deleted data");
                 callback.onCallback(true);
             }
@@ -127,14 +127,15 @@ public class GenericDatabase{
      * @param collectionPath collection name
      * @param callback a GenericCallback interface implementation
      */
-    public void getAllDataInCollection(@NonNull String collectionPath, @NonNull final GenericCallback callback) {
-        Task task = database.collection(collectionPath).get();
-        task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    public static void getAllDataInCollection(@NonNull final String collectionPath, @NonNull final QuerySnapshotCallback callback) {
+        Task<QuerySnapshot> task = database.collection(collectionPath).get();
+        task.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
+                    QuerySnapshot document = task.getResult();
+                    assert document != null;
+                    if (!document.isEmpty()) {
                         Log.d(TAG, "successfully retrieved data");
                         callback.onCallback(document);
                     } else {
