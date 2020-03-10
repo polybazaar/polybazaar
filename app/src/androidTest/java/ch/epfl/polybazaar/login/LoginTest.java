@@ -108,6 +108,20 @@ public class LoginTest {
         onView(withText(R.string.email_not_verified));
     }
 
+    @Test
+    public void networkInterruptionFailsProperly() {
+        clickButton(withId(R.id.signUpButton));
+        fillAndSubmitSignUp(EMAIL, PASSWORD, PASSWORD);
+
+        MockPhoneSettings.getInstance().setAirPlaneMode(true);
+
+        clickButton(withId(R.id.sendLinkButton));
+        onView(withText(R.string.verification_email_fail));
+
+        clickButton(withId(R.id.reloadButton));
+        onView(withText(R.string.reload_fail));
+    }
+
     private void createAccountAndBackToLogin(String email, String password) {
         clickButton(withId(R.id.signUpButton));
 
