@@ -2,7 +2,11 @@ package ch.epfl.polybazaar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,22 +20,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
+
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListingList;
 
 public class SalesOverview extends AppCompatActivity {
 
-    private LiteListingDatabase lldb = new LiteListingDatabase("liteListings");
     private List<String> IDList = new ArrayList<String>();
     private Map<String, LiteListing> LiteListingMap = new HashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
-    private final String viewTitle = "title";
-    private final int limit = 20;
+    private String viewTitle = "title";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sales_overview);
+        setContentView(R.layout.activity_sales_overview2);
 
+        createScrollView();
         createLiteListingIDList();
         createLiteListingMap();
 
@@ -46,11 +50,11 @@ public class SalesOverview extends AppCompatActivity {
             @Override
             public void onCallback(List<String> result) {
                 for(String r : result) {
-                    IDList.add(r);
+                    IDList.add(r);      // create deep copy of ID list
                 }
             }
         };
-        lldb.fetchLiteListingList(callbackLiteListingList);
+        fetchLiteListingList(callbackLiteListingList);
     }
 
 
@@ -66,13 +70,33 @@ public class SalesOverview extends AppCompatActivity {
                     i = counter.get();
                     if(counter.compareAndSet(i, i+1)) break;
                 }
-                LiteListingMap.put(viewTitle + Integer.toString(i), result);    // View numbering will start at 1
-                // TextView title = findViewById(R.id.);
+                LiteListingMap.put(viewTitle + i, result);    // TextView numbering will start at 1
+                // viewTitle += i;
+                // TextView viewTitle = (TextView)findViewById(R.id.viewTitle);
+                // see how we can create textviews in java
             }
         };
         for(int i = 0; i < 6; i++) {
-            lldb.fetchLiteListing(IDList.get(i), callbackLiteListing);
+            // fetchLiteListing(IDList.get(i), callbackLiteListing);
         }
+    }
+
+
+    /**
+     * create view skeleton of activity screen:
+     * a general scrollview with a linear layout as single child
+     */
+    public void createScrollView() {
+        ScrollView scroll = new ScrollView(getApplicationContext());
+        scroll.setLayoutParams(new ScrollView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+
+        LinearLayout linearLayout = new LinearLayout(getApplicationContext());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setGravity(Gravity.BOTTOM);
+
+        scroll.addView(linearLayout);
     }
 
 
