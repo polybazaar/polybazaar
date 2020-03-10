@@ -145,8 +145,6 @@ public class FillListingActivityTest {
         fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
     }
 
-    @After
-
 
     public void cancelTakingPicture() throws Throwable {
         cameraResult = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, cameraIntent);
