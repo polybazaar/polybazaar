@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         saleDet.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent fillListingIntent = new Intent(MainActivity.this, SaleDetails.class);
-                fillListingIntent.putExtra("listingID", "35120421-4a81-4b78-b91d-23582698fcee");
+                fillListingIntent.putExtra("listingID", "ccceb203-1b23-44b1-8216-07cdc99d2b4a");
                 startActivity(fillListingIntent);
             }
         });
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         Button signInBut = findViewById(R.id.signIn);
         signInBut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
             }
