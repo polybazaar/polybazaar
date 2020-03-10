@@ -2,10 +2,12 @@ package ch.epfl.polybazaar.database.callback;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import ch.epfl.polybazaar.database.generic.GenericCallback;
+import java.util.Objects;
+
+import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
-public  class LiteListingCallbackAdapter implements GenericCallback {
+public  class LiteListingCallbackAdapter implements DocumentSnapshotCallback {
 
     private LiteListingCallback liteListingCallback;
 
@@ -23,9 +25,9 @@ public  class LiteListingCallbackAdapter implements GenericCallback {
             liteListingCallback.onCallback(null);
             return;
         }
-        LiteListing liteListing = new LiteListing(result.get("listingID").toString(),
-                result.get("title").toString(),
-                result.get("price").toString());
+        LiteListing liteListing = new LiteListing(Objects.requireNonNull(result.get("listingID")).toString(),
+                Objects.requireNonNull(result.get("title")).toString(),
+                Objects.requireNonNull(result.get("price")).toString());
         liteListingCallback.onCallback(liteListing);
     }
 }
