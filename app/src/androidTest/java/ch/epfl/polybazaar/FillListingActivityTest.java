@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -128,13 +129,15 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenTitleIsEmpty() {
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
         }
 
     @Test
-    public void toastAppearsWhenPriceIsNegative() {
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("-0.10"));
+    public void toastAppearsWhenPriceIsEmpty() {
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
     }
 

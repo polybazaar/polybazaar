@@ -139,12 +139,7 @@ public class FillListingActivity extends AppCompatActivity {
     }
 
     private boolean checkPrice() {
-        try {
-            return Double.parseDouble(priceSelector.getText().toString()) >= 0.0;
-        }
-        catch(Exception e){
-            return false;
-        }
+        return !priceSelector.getText().toString().isEmpty();
     }
 
     private boolean checkTitle() {
