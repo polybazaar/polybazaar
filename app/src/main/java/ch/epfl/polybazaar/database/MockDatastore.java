@@ -22,33 +22,40 @@ public class MockDatastore implements Datastore {
         collections.put(collectionName,null);
     }
 
-    public void setData(String collectionName,String dataId,Object data){
+    public void setupMockData(String collectionName,String dataId,Object data){
         Map<String,Object> document = new HashMap<>();
         document.put(dataId,data);
         collections.put(collectionName,document);
     }
-    @Override
-    public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull DocumentSnapshotCallback callback) {
-
-    }
 
     @Override
     public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull DocumentCallback callback) {
+        if (!collections.containsKey(collectionPath)){callback.onCallback(null);}
+        if(!collections.get(collectionPath).containsKey(documentPath)){callback.onCallback(null);}
+        callback.onCallback(collections.get(collectionPath).get(documentPath));
 
     }
 
     @Override
     public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull SuccessCallback callback) {
-
+        if (!collections.containsKey(collectionPath)){callback.onCallback(false);}
+        if(!collections.get(collectionPath).containsKey(documentPath)){callback.onCallback(false);}
     }
 
     @Override
     public void addData(@NonNull String collectionPath, @NonNull Object data, @NonNull SuccessCallback callback) {
-
+        if (!collections.containsKey(collectionPath)){callback.onCallback(false);}
+        String docPath = Integer.toString ((int)(Math.random()*1000));
+        collections.get(collectionPath).put(docPath,data);
+        callback.onCallback(true);
     }
 
     @Override
     public void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull SuccessCallback callback) {
+        if (!collections.containsKey(collectionPath)){callback.onCallback(false);}
+        if(!collections.get(collectionPath).containsKey(documentPath)){callback.onCallback(false);}
+        collections.get(collectionPath).remove(documentPath);
+        callback.onCallback(true);
 
     }
 }

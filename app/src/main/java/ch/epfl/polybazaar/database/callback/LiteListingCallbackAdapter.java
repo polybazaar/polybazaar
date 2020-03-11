@@ -7,7 +7,7 @@ import java.util.Objects;
 import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
-public  class LiteListingCallbackAdapter implements DocumentSnapshotCallback {
+public class LiteListingCallbackAdapter implements DocumentSnapshotCallback {
 
     private LiteListingCallback liteListingCallback;
 
