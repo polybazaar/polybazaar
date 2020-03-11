@@ -16,11 +16,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
 
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListingList;
@@ -28,24 +29,13 @@ import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListin
 public class SalesOverview extends AppCompatActivity {
 
     // TODO: add tests for error cases (ex empty list on database)
-
-    // TODO: test listings, to delete
-    LiteListing l1 = new LiteListing("titre1", "Algebre Linéaire by David C. Lay", "CHF 13");
-    LiteListing l2 = new LiteListing("titre2", "Guitare folk", "CHF 125");
-    LiteListing l3 = new LiteListing("titre3", "Equipement de ski de randonnée", "CHF 300");
-    LiteListing l4 = new LiteListing("titre4", "Fer à repasser", "CHF 5");
-    LiteListing l5 = new LiteListing("titre5", "Livre de cuisine asiatique", "CHF 7");
-    LiteListing l6 = new LiteListing("titre6", "Table de salle à manger", "CHF 70");
-    LiteListing l7 = new LiteListing("titre7", "Vaccin Coronavirus", "CHF 999999");
-    LiteListing l8 = new LiteListing("titre8", "Nintendo Switch neuve", "CHF 250");
-
-
-    private final AtomicInteger counter = new AtomicInteger(0);
+    
     private List<String> IDList;
     private List<LiteListing> liteListingList;
     ScrollView scroll;
     LinearLayout linearLayout;
 
+    // TODO: adapt based on what is expected by SaleDetails class
     // Create an anonymous implementation of OnClickListener
     private View.OnClickListener titleClickListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -77,15 +67,8 @@ public class SalesOverview extends AppCompatActivity {
             constraintLayout.addView(scroll);
         }
 
-        // create list of all LiteListing IDs in database
-        createLiteListingIDList();
-        // create list of all LiteListings in database
-        createLiteListingList();
-
-        // add all LiteListings into activity scrollview
-        for(LiteListing l : liteListingList) {
-            addListingView(l);
-        }
+        // create graphical overview of LiteListings
+        createLiteListingOverview();
     }
 
 
@@ -110,7 +93,7 @@ public class SalesOverview extends AppCompatActivity {
     }
 
     /**
-     * create a TextView displaying the LiteListing title and inserts it into the ScrollView
+     * Create a TextView displaying the LiteListing title and inserts it into the ScrollView
      * @param l The LiteListing whose data need to be displayed
      */
     public void addListingView(LiteListing l) {
@@ -174,15 +157,26 @@ public class SalesOverview extends AppCompatActivity {
 
 
     /**
-     * create a list of LiteListingIDs
+     * Create a graphical overview of LiteListings from database
      */
-    public void createLiteListingIDList() {
+    public void createLiteListingOverview() {
         LiteListingListCallback callbackLiteListingList = new LiteListingListCallback() {
 
             @Override
             public void onCallback(List<String> result) {
                 for(String id : result) {
                     IDList.add(id);      // create deep copy of ID list
+                }
+                LiteListingCallback callbackLiteListing = new LiteListingCallback() {
+                    @Override
+                    public void onCallback(LiteListing result) {
+                        liteListingList.add(result);
+                        addListingView(result);     // add LiteListing fields to graphical TextView
+                    }
+                };
+                int size = IDList.size();
+                for(int i = 0; i < size; i++) {
+                    fetchLiteListing(IDList.get(i), callbackLiteListing);
                 }
             }
         };
@@ -192,6 +186,7 @@ public class SalesOverview extends AppCompatActivity {
     /**
      * create a list of LiteListings
      */
+    // TODO: delete
     public void createLiteListingList() {
         LiteListingCallback callbackLiteListing = new LiteListingCallback() {
             @Override
@@ -204,27 +199,19 @@ public class SalesOverview extends AppCompatActivity {
             fetchLiteListing(IDList.get(i), callbackLiteListing);
         }
     }
-    
 
-    // TODO: delete
-    public void createLiteListingMap() {
-        LiteListingCallback callbackLiteListing = new LiteListingCallback() {
+    /**
+     * Helper function to add a LiteListing to the database
+     * @param l LiteListing to add to database
+     */
+    // TODO: move to test class?
+    public void addLiteListing(LiteListing l) {
+        SuccessCallback callbackLiteListing = new SuccessCallback() {
             @Override
-            public void onCallback(LiteListing result) {
-                int i = 0;
-                while(true) {
-                    i = counter.get();
-                    if(counter.compareAndSet(i, i+1)) break;
-                }
-                // LiteListingMap.put(viewTitle + i, result);    // TextView numbering will start at 1
-                // viewTitle += i;
-                // TextView viewTitle = (TextView)findViewById(R.id.viewTitle);
-                // see how we can create textviews in java
+            public void onCallback(boolean result) {
+                // TODO: what to do with success callback?
             }
         };
-        for(int i = 0; i < 6; i++) {
-            // fetchLiteListing(IDList.get(i), callbackLiteListing);
-        }
+        LiteListingDatabase.addLiteListing(l, callbackLiteListing);
     }
-
 }
