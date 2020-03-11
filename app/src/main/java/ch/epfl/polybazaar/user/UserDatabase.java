@@ -65,7 +65,7 @@ public abstract class UserDatabase {
         fetchData(userCollectionName, email, adapterCallback);
     }
 
-    /**
+     /**
      * Deletes a user from the database
      * callback will contain true if successful, false otherwise
      * @param email the users email address
