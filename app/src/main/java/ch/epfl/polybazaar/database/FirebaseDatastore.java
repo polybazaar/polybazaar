@@ -30,7 +30,7 @@ public abstract class FirebaseDatastore{
      * @param documentPath document name (ID)
      * @param callback a GenericCallback interface implementation
      */
-    public static void fetchData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final DocumentSnapshotCallback callback) {
+    public static void fetchData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final DocumentCallback callback) {
         Task<DocumentSnapshot> task = database.collection(collectionPath).document(documentPath).get();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
