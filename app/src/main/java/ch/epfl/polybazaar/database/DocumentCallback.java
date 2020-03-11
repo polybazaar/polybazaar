@@ -1,4 +1,6 @@
 package ch.epfl.polybazaar.database;
 
-public class DocumentCallback {
+public interface DocumentCallback {
+
+    void onCallback(Object object);
 }
