@@ -128,17 +128,19 @@ public class FillListingActivityTest {
     }
 
     @Test
-    public void toastAppearsWhenTitleIsEmpty() {
+    public void toastAppearsWhenTitleIsEmpty() throws InterruptedException {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
+        Thread.sleep(2000);
         }
 
     @Test
-    public void toastAppearsWhenPriceIsEmpty() {
+    public void toastAppearsWhenPriceIsEmpty() throws InterruptedException {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
+        Thread.sleep(2000);
     }
 
     @Test
