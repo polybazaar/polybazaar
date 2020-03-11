@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         saleDet.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent fillListingIntent = new Intent(MainActivity.this, SaleDetails.class);
-                fillListingIntent.putExtra("listingID", "ccceb203-1b23-44b1-8216-07cdc99d2b4a");
+                //fillListingIntent.putExtra("listingID", "ccceb203-1b23-44b1-8216-07cdc99d2b4a");
                 startActivity(fillListingIntent);
             }
         });

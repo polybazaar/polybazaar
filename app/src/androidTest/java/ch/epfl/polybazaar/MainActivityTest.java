@@ -28,6 +28,23 @@ public class MainActivityTest{
                     false);
 
     @Test
+    public void testSaleDetailsLaunching () throws Throwable {
+        Intents.init();
+        Intent intent = new Intent();
+
+        activityRule.launchActivity(intent);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activityRule.getActivity().findViewById(R.id.saleDet)
+                        .performClick();
+            }
+        });
+        intended(hasComponent(SaleDetails.class.getName()));
+        Intents.release();
+    }
+
+    @Test
     public void testStartSaleOverview() throws Throwable {
         Intents.init();
         Intent intent = new Intent();
