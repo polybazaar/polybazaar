@@ -128,7 +128,7 @@ public class FillListingActivityTest {
     }
 
     @Test
-    public void toastAppearsWhenTitleIsEmpty() throws InterruptedException {
+    public void toastAppearsWhenTitleIsEmpty() throws Throwable {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
@@ -136,7 +136,7 @@ public class FillListingActivityTest {
         }
 
     @Test
-    public void toastAppearsWhenPriceIsEmpty() throws InterruptedException {
+    public void toastAppearsWhenPriceIsEmpty() throws Throwable {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
@@ -181,8 +181,15 @@ public class FillListingActivityTest {
         Intents.release();
     }
 
-    private void submitListingAndCheckIncorrectToast(){
-        onView(withId(R.id.submitListing)).perform(scrollTo(), click());
+    private void submitListingAndCheckIncorrectToast() throws Throwable {
+        runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+                Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing);
+                but.performClick();
+            }
+        });
+
         onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 
