@@ -15,33 +15,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListingList;
 
 public class SalesOverview extends AppCompatActivity {
 
+    // TODO: add tests for error cases (ex empty list on database)
+
     // TODO: test listings, to delete
-    LiteListing l1 = new LiteListing("titre1", "desc1", "price1");
-    LiteListing l2 = new LiteListing("titre2", "desc1", "price1");
-    LiteListing l3 = new LiteListing("titre3", "desc1", "price1");
-    LiteListing l4 = new LiteListing("titre4", "desc1", "price1");
-    LiteListing l5 = new LiteListing("titre5", "desc1", "price1");
-    LiteListing l6 = new LiteListing("titre6", "desc1", "price1");
-    LiteListing l7 = new LiteListing("titre7", "desc1", "price1");
-    LiteListing l8 = new LiteListing("titre8", "desc1", "price1");
+    LiteListing l1 = new LiteListing("titre1", "Algebre Linéaire by David C. Lay", "CHF 13");
+    LiteListing l2 = new LiteListing("titre2", "Guitare folk", "CHF 125");
+    LiteListing l3 = new LiteListing("titre3", "Equipement de ski de randonnée", "CHF 300");
+    LiteListing l4 = new LiteListing("titre4", "Fer à repasser", "CHF 5");
+    LiteListing l5 = new LiteListing("titre5", "Livre de cuisine asiatique", "CHF 7");
+    LiteListing l6 = new LiteListing("titre6", "Table de salle à manger", "CHF 70");
+    LiteListing l7 = new LiteListing("titre7", "Vaccin Coronavirus", "CHF 999999");
+    LiteListing l8 = new LiteListing("titre8", "Nintendo Switch neuve", "CHF 250");
 
 
     private final AtomicInteger counter = new AtomicInteger(0);
     private List<String> IDList;
-    private Map<String, LiteListing> LiteListingMap;
+    private List<LiteListing> liteListingList;
     ScrollView scroll;
     LinearLayout linearLayout;
 
@@ -64,7 +65,7 @@ public class SalesOverview extends AppCompatActivity {
         setContentView(R.layout.activity_sales_overview2);
 
         IDList = new ArrayList<>();
-        LiteListingMap = new HashMap<>();
+        liteListingList = new ArrayList<>();
         scroll = new ScrollView(this);
         linearLayout = new LinearLayout(this);
 
@@ -74,33 +75,16 @@ public class SalesOverview extends AppCompatActivity {
         ConstraintLayout constraintLayout = findViewById(R.id.rootContainer);
         if (constraintLayout != null) {
             constraintLayout.addView(scroll);
+        }
 
-        addListingView(l1);
-        addListingView(l2);
-        addListingView(l3);
-        addListingView(l4);
-        addListingView(l5);
-        addListingView(l6);
-        addListingView(l7);
-        addListingView(l8);
-        addListingView(l1);
-        addListingView(l2);
-        addListingView(l3);
-        addListingView(l4);
-        addListingView(l5);
-        addListingView(l6);
-        addListingView(l7);
-        addListingView(l8);
-        addListingView(l1);
-        addListingView(l2);
-        addListingView(l3);
-        addListingView(l4);
-        addListingView(l5);
-        addListingView(l6);
-        addListingView(l7);
-        addListingView(l8);
+        // create list of all LiteListing IDs in database
+        createLiteListingIDList();
+        // create list of all LiteListings in database
+        createLiteListingList();
 
-
+        // add all LiteListings into activity scrollview
+        for(LiteListing l : liteListingList) {
+            addListingView(l);
         }
     }
 
@@ -197,18 +181,32 @@ public class SalesOverview extends AppCompatActivity {
 
             @Override
             public void onCallback(List<String> result) {
-                for(String r : result) {
-                    IDList.add(r);      // create deep copy of ID list
+                for(String id : result) {
+                    IDList.add(id);      // create deep copy of ID list
                 }
             }
         };
         fetchLiteListingList(callbackLiteListingList);
     }
 
-    // TODO: not finished!
     /**
-     * create a map of <UI View ID, LiteListings>
+     * create a list of LiteListings
      */
+    public void createLiteListingList() {
+        LiteListingCallback callbackLiteListing = new LiteListingCallback() {
+            @Override
+            public void onCallback(LiteListing result) {
+                liteListingList.add(result);
+            }
+        };
+        int size = IDList.size();
+        for(int i = 0; 0 < size; ++i) {
+            fetchLiteListing(IDList.get(i), callbackLiteListing);
+        }
+    }
+    
+
+    // TODO: delete
     public void createLiteListingMap() {
         LiteListingCallback callbackLiteListing = new LiteListingCallback() {
             @Override
