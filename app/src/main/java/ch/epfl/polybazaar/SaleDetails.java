@@ -24,11 +24,30 @@ public class SaleDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_details);
 
-        final TextView userEmailTextView = findViewById(R.id.userEmail);
-
-        final ImageView imageLoading = (ImageView) findViewById(R.id.loadingImage);
+        final ImageView imageLoading = findViewById(R.id.loadingImage);
         Glide.with(this).load(R.drawable.loading).into(imageLoading);
 
+        retrieveListingFromListingID();
+        getSellerInformation();
+    }
+
+    void getSellerInformation() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Button get_seller = findViewById(R.id.contactSel);
+                get_seller.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
+                        findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
+                    }
+                });
+
+            }
+        });
+    }
+
+    void retrieveListingFromListingID() {
         Bundle bundle = getIntent().getExtras();
         if(bundle == null)
             bundle = new Bundle();
@@ -36,58 +55,61 @@ public class SaleDetails extends AppCompatActivity {
         //get the uId of the object
         String listingID = bundle.getString("listingID", "-1");
         if(listingID.equals("-1")) {
-            throw new IllegalArgumentException();
+            fillWithListing(null);
+            return;
         }
 
         ListingCallback callbackListing = new ListingCallback() {
             @Override
             public void onCallback(Listing result) {
-                Glide.with(imageLoading).clear(imageLoading);
+                fillWithListing(result);
+            }
+        };
+        fetchListing(listingID, callbackListing);
+    }
 
-                if(result == null) {
-                    Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                    toast.show();
-                    return;
-                }
+    void fillWithListing(final Listing listing) {
+        if(listing == null) {
+            Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+            toast.show();
+            return;
+        }
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final ImageView imageLoading = findViewById(R.id.loadingImage);
+                //Glide.with(imageLoading).clear(imageLoading);
+                imageLoading.setVisibility(View.INVISIBLE);
 
                 //set image
-                ImageView image = findViewById(R.id.imageView2);
+                ImageView image = findViewById(R.id.saleImage);
                 image.setVisibility(View.VISIBLE);
                 image.setImageResource(R.drawable.algebre_lin);
 
                 //Set the title
-                TextView title_txt = (TextView)findViewById(R.id.title);
+                TextView title_txt = findViewById(R.id.title);
                 title_txt.setVisibility(View.VISIBLE);
-                title_txt.setText(result.getTitle());
+                title_txt.setText(listing.getTitle());
 
                 //Set the description
-                TextView description_txt = (TextView)findViewById(R.id.description);
+                TextView description_txt = findViewById(R.id.description);
                 description_txt.setVisibility(View.VISIBLE);
-                description_txt.setText(result.getDescription());
+                description_txt.setText(listing.getDescription());
 
                 //Set the price
-                TextView price_txt = (TextView)findViewById(R.id.price);
+                TextView price_txt = findViewById(R.id.price);
                 price_txt.setVisibility(View.VISIBLE);
                 price_txt.setTextSize(20);
-                price_txt.setText(result.getPrice());
+                price_txt.setText(listing.getPrice());
 
                 //Set email
-                userEmailTextView.setText(result.getUserEmail());
+                TextView userEmailTextView = findViewById(R.id.userEmail);
+                userEmailTextView.setText(listing.getUserEmail());
                 userEmailTextView.setVisibility(View.INVISIBLE);
-            }
-        };
-        fetchListing(listingID, callbackListing);
 
-
-        //Get seller action
-        Button get_seller = findViewById(R.id.contactSel);
-        get_seller.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
-                userEmailTextView.setVisibility(View.VISIBLE);
             }
         });
-
     }
 }
