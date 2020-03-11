@@ -27,7 +27,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
+
+import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
+import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity {
 
@@ -146,13 +150,23 @@ public class FillListingActivity extends AppCompatActivity {
         return !titleSelector.getText().toString().isEmpty();
     }
 
-    private void submit(){
+    private void submit() {
         Context context = getApplicationContext();
-        if(!checkFields()) {
+        if (!checkFields()) {
             Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
         }
-        Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch");
-
+        else {
+            final String newListingID = randomUUID().toString();
+            SuccessCallback successCallback = new SuccessCallback() {
+                @Override
+                public void onCallback(boolean result) {
+                    Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+                    startActivity(SalesOverviewIntent);
+                }
+            };
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch");
+            storeListing(newListing, newListingID, successCallback);
+        }
     }
 
     //Function taken from https://developer.android.com/training/camera/photobasics
