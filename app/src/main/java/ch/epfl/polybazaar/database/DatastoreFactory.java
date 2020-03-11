@@ -1,7 +1,7 @@
 package ch.epfl.polybazaar.database;
 
 
-public class DatastoreFactory {
+public abstract class DatastoreFactory {
 
     private static Datastore dependency;
 
