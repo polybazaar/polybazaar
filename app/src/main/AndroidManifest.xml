@@ -15,7 +15,14 @@
         <activity
             android:name=".login.SignInActivity"
             android:exported="true" />
-        <activity android:name=".SaleDetails" />
+         <activity android:name="ch.epfl.polybazaar.FillListingActivity"
+                    android:parentActivityName=".MainActivity"></activity>
+        <activity   android:name=".SalesOverview"
+                    android:exported="true"
+                    android:parentActivityName=".MainActivity"
+            ></activity>
+        <activity   android:name=".SaleDetails"
+                    android:parentActivityName=".SalesOverview"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,5 +31,11 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>
