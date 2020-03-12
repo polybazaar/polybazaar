@@ -12,15 +12,22 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+
+import ch.epfl.polybazaar.login.AppUser;
+import ch.epfl.polybazaar.login.Authenticator;
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
+
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
+    private Authenticator authenticator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        authenticator = AuthenticatorFactory.getDependency();
 
         Button saleOverBut = findViewById(R.id.sale_overview);
         saleOverBut.setOnClickListener(new View.OnClickListener() {
@@ -55,5 +62,11 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
+        AppUser user = authenticator.getCurrentUser();
+
+        if (user != null) {
+            Button signInBut = findViewById(R.id.sign_in);
+            signInBut.setVisibility(View.GONE);
+        }
     }
 }
