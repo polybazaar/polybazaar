@@ -17,10 +17,12 @@ import java.util.HashMap;
 import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.login.SignInActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     private Authenticator authenticator;
+    private AppUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,41 +30,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         authenticator = AuthenticatorFactory.getDependency();
+    }
 
-        Button saleOverBut = findViewById(R.id.sale_overview);
-        saleOverBut.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent FillListingIntent = new Intent(MainActivity.this, SalesOverview.class);
-                startActivity(FillListingIntent);
-            }
-        });
+    public void toSalesOverview(View view) {
+        Intent intent = new Intent(MainActivity.this, SalesOverview.class);
+        startActivity(intent);
+    }
 
-        Button addListBut = findViewById(R.id.add_listing);
-        addListBut.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent FillListingIntent = new Intent(MainActivity.this, FillListingActivity.class);
-                startActivity(FillListingIntent);
-            }
-        });
+    public void toNewListing(View view) {
+        if (user == null) {
+            Toast toast = Toast.makeText(MainActivity.this, R.string.sign_in_required, Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            Intent intent = new Intent(MainActivity.this, FillListingActivity.class);
+            startActivity(intent);
+        }
+    }
 
-        Button signInBut = findViewById(R.id.sign_in);
-        signInBut.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
-            }
-        });
-
-
-
+    public void toSignIn(View view) {
+        Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        AppUser user = authenticator.getCurrentUser();
+        user = authenticator.getCurrentUser();
 
         if (user != null) {
             Button signInBut = findViewById(R.id.sign_in);

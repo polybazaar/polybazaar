@@ -20,4 +20,5 @@
     <string name="sales_overview">Sales overview</string>
     <string name="add_new_listing">Add new listing</string>
     <string name="sign_in">Sign in</string>
+    <string name="sign_in_required">You have to sign in to use that functionality</string>
 </resources>
