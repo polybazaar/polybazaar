@@ -99,21 +99,4 @@ public class SalesOverviewTest {
             }
         });
     }
-
-/*
-    @Test
-    public void itemClick() throws Throwable {
-        Intents.init();
-        Intent intent = new Intent();
-        activityRule.launchActivity(intent);
-
-        CountDownLatch lock = new CountDownLatch(1);
-        lock.await(10000, TimeUnit.MILLISECONDS);
-
-        int viewID = activityRule.getActivity().viewIDtoListingIDMap.firstEntry().getKey();
-        onView(withId(viewID)).perform(click());
-
-        intended(hasComponent(SaleDetails.class.getName()));
-        Intents.release();
-    }*/
 }
