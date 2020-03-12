@@ -20,9 +20,7 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
 
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListingList;
@@ -185,21 +183,5 @@ public class SalesOverview extends AppCompatActivity {
             }
         };
         fetchLiteListingList(callbackLiteListingList);
-    }
-
-
-    /**
-     * Helper function to add a LiteListing to the database
-     * @param l LiteListing to add to database
-     */
-    // TODO: move to test class?
-    public void addLiteListing(LiteListing l) {
-        SuccessCallback callbackLiteListing = new SuccessCallback() {
-            @Override
-            public void onCallback(boolean result) {
-                // TODO: what to do with success callback?
-            }
-        };
-        LiteListingDatabase.addLiteListing(l, callbackLiteListing);
     }
 }
