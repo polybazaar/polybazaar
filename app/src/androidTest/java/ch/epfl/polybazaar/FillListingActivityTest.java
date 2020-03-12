@@ -1,16 +1,22 @@
 package ch.epfl.polybazaar;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.widget.Button;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
@@ -19,6 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -33,6 +40,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
@@ -40,12 +48,19 @@ import static org.hamcrest.core.AllOf.allOf;
 @RunWith(AndroidJUnit4.class)
 public class FillListingActivityTest {
     static Uri imageUri;
+    static Bitmap imageBitmap;
     static Intent galleryIntent;
-    Instrumentation.ActivityResult result;
-    static Matcher<Intent> expectedIntent;
+    static Intent cameraIntent;
+
+    Instrumentation.ActivityResult galleryResult;
+    Instrumentation.ActivityResult cameraResult;
+    static Matcher<Intent> expectedGalleryIntent;
+    static Matcher<Intent> expectedCameraIntent;
 
     @Rule
     public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
+
+    @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
     @BeforeClass
     public static void setupStubIntent(){
@@ -54,10 +69,18 @@ public class FillListingActivityTest {
                 resources.getResourcePackageName(R.mipmap.ic_launcher) + '/' +
                 resources.getResourceTypeName(R.mipmap.ic_launcher) + '/' +
                 resources.getResourceEntryName(R.mipmap.ic_launcher));
+
+        imageBitmap = BitmapFactory.decodeResource(
+                InstrumentationRegistry.getInstrumentation().getTargetContext().getResources(),
+                R.mipmap.ic_launcher);
+
         galleryIntent = new Intent();
         galleryIntent.setData(imageUri);
-        expectedIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-    }
+        
+        cameraIntent = new Intent();
+        cameraIntent.putExtra("data", imageBitmap);
+
+         }
 
     @Test
     public void testFreeSwitchFreezesPriceSelector() {
@@ -77,28 +100,28 @@ public class FillListingActivityTest {
 
     @Test
     public void testUploadPictureCorrectly(){
-        result = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
+        galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
         uploadImage();
         onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(imageUri.hashCode()))));
     }
 
     @Test
     public void testUploadPictureFailsWhenUserCancels(){
-        result = new Instrumentation.ActivityResult( Activity.RESULT_CANCELED, galleryIntent);
+        galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_CANCELED, galleryIntent);
         uploadImage();
         checkNoImageUploaded();
     }
 
     @Test
     public void testUploadPictureFailsWhenDataIsNull(){
-        result = new Instrumentation.ActivityResult( Activity.RESULT_OK, null);
+        galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, null);
         uploadImage();
         checkNoImageUploaded();
     }
 
     @Test
     public void testUploadPictureFailsWhenDataIsNullAndUserCancels(){
-        result = new Instrumentation.ActivityResult( Activity.RESULT_CANCELED, null);
+        galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_CANCELED, null);
         uploadImage();
         onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
     }
@@ -110,22 +133,46 @@ public class FillListingActivityTest {
         }
 
     @Test
-    public void toastAppearsWhenPriceIsText() {
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("A book"));
-        submitListingAndCheckIncorrectToast();
-    }
-
-    @Test
     public void toastAppearsWhenPriceIsNegative() {
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("-0.10"));
         submitListingAndCheckIncorrectToast();
     }
 
-    private void uploadImage(){
+    @Test
+    public void testNoPictureIsDisplayedWhenNoPictureIsTaken() throws Throwable {
+        cancelTakingPicture();
+        checkNoImageUploaded();
+        fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+    }
+
+
+    public void cancelTakingPicture() throws Throwable {
+        cameraResult = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, cameraIntent);
+        closeSoftKeyboard();
         Intents.init();
-        intending(expectedIntent).respondWith(result);
-        onView(withId(R.id.uploadImage)).perform(click());
-        intended(expectedIntent);
+        expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        intending(expectedCameraIntent).respondWith(cameraResult);
+        //onView(withId(R.id.camera)).perform(scrollTo(), click());
+        runOnUiThread(new Runnable(){
+            @Override
+                    public void run() {
+                Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.camera);
+                but.performClick();
+            }
+        });
+        fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        intended(expectedCameraIntent);
+        Intents.release();
+    }
+
+
+    private void uploadImage(){
+        closeSoftKeyboard();
+        expectedGalleryIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+        Intents.init();
+        intending(expectedGalleryIntent).respondWith(galleryResult);
+        onView(withId(R.id.uploadImage)).perform(scrollTo(), click());
+        intended(expectedGalleryIntent);
         Intents.release();
     }
 

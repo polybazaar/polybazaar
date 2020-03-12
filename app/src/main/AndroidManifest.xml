@@ -9,7 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".login.EmailVerificationActivity"></activity>
+        <activity android:name=".login.SignUpActivity" />
+        <activity android:name=".login.SignInSuccessActivity" />
+        <activity
+            android:name=".login.SignInActivity"
+            android:exported="true" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="ch.epfl.polybazaar.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
          <activity android:name="ch.epfl.polybazaar.FillListingActivity"
                     android:parentActivityName=".MainActivity"></activity>
         <activity   android:name=".SalesOverview"
@@ -19,7 +33,6 @@
         <activity   android:name=".SaleDetails"
                     android:parentActivityName=".SalesOverview"/>
         <activity android:name=".MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,5 +46,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 
 </manifest>
