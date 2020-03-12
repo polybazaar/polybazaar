@@ -1,14 +1,7 @@
 package ch.epfl.polybazaar;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,6 +15,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -29,8 +26,10 @@ import java.util.Date;
 
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity {
@@ -157,15 +156,16 @@ public class FillListingActivity extends AppCompatActivity {
         }
         else {
             final String newListingID = randomUUID().toString();
-            SuccessCallback successCallback = new SuccessCallback() {
-                @Override
-                public void onCallback(boolean result) {
-                    Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-                    startActivity(SalesOverviewIntent);
-                }
+            SuccessCallback successCallback = result -> {
+                Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+                startActivity(SalesOverviewIntent);
             };
             Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch");
+            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString());
             storeListing(newListing, newListingID, successCallback);
+            addLiteListing(newLiteListing, result -> {
+                //TODO: Check the result to be true
+            });
         }
     }
 
