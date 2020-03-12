@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/add_listing"
+        android:id="@+id/addListing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_new_listing"
@@ -15,11 +15,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sale_overview"
+        app:layout_constraintTop_toBottomOf="@+id/saleOverview"
         app:layout_constraintVertical_bias="0.147" />
 
     <Button
-        android:id="@+id/sale_overview"
+        android:id="@+id/saleOverview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sales_overview"
@@ -31,7 +31,7 @@
         app:layout_constraintVertical_bias="0.342" />
 
     <Button
-        android:id="@+id/sign_in"
+        android:id="@+id/signIn"
         android:layout_width="138dp"
         android:layout_height="45dp"
         android:text="@string/sign_in"
@@ -39,6 +39,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_listing"
+        app:layout_constraintTop_toBottomOf="@+id/addListing"
         app:layout_constraintVertical_bias="0.255" />
+
+    <Button
+        android:id="@+id/saleDet"
+        android:layout_width="132dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="105dp"
+        android:layout_marginEnd="143dp"
+        android:layout_marginBottom="82dp"
+        android:text="Sale Details"
+        app:layout_constraintBottom_toTopOf="@+id/saleOverview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

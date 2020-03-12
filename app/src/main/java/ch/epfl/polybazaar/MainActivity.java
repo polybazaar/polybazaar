@@ -22,29 +22,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button saleOverBut = findViewById(R.id.sale_overview);
-        saleOverBut.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent FillListingIntent = new Intent(MainActivity.this, SalesOverview.class);
-                startActivity(FillListingIntent);
-            }
+        Button saleDet = findViewById(R.id.saleDet);
+        saleDet.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), SaleDetails.class);
+            intent.putExtra("listingID", "06d6f073-30ae-48ac-9530-f30e288b299a");
+            startActivity(intent);
         });
 
-        Button addListBut = findViewById(R.id.add_listing);
-        addListBut.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent FillListingIntent = new Intent(MainActivity.this, FillListingActivity.class);
-                startActivity(FillListingIntent);
-            }
+        Button saleOverBut = findViewById(R.id.saleOverview);
+        saleOverBut.setOnClickListener(view -> {
+            Intent fillListingIntent = new Intent(MainActivity.this, SalesOverview.class);
+            startActivity(fillListingIntent);
         });
 
-        Button signInBut = findViewById(R.id.sign_in);
-        signInBut.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
-            }
+        Button addListBut = findViewById(R.id.addListing);
+        addListBut.setOnClickListener(view -> {
+            Intent fillListingIntent = new Intent(MainActivity.this, FillListingActivity.class);
+            startActivity(fillListingIntent);
+        });
+
+        Button signInBut = findViewById(R.id.signIn);
+        signInBut.setOnClickListener(view -> {
+            Toast toast = Toast.makeText(getApplicationContext(),"This functionality is not implemented yet",Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+            toast.show();
         });
 
 
