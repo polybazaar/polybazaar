@@ -70,7 +70,7 @@ public class MainActivityTest{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityRule.getActivity().findViewById(R.id.add_listing)
+                activityRule.getActivity().findViewById(R.id.addListing)
                          .performClick();
             }
         });
