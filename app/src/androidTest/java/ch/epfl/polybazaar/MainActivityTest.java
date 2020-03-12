@@ -38,6 +38,7 @@ public class MainActivityTest{
             public void run() {
                 activityRule.getActivity().findViewById(R.id.saleDet)
                         .performClick();
+                //The bug is here!
             }
         });
         intended(hasComponent(SaleDetails.class.getName()));
