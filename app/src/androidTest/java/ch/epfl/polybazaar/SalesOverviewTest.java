@@ -8,20 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.junit.Assert.assertEquals;
 
@@ -109,23 +100,13 @@ public class SalesOverviewTest {
         });
     }
 
-
+/*
     @Test
     public void itemClick() throws Throwable {
         Intents.init();
         Intent intent = new Intent();
-        /*final Bundle b = new Bundle();
-        b.putString("title1", "Algebre Linéaire by David C. Lay" );
-        b.putString("price1", "CHF 13");
-        intent.putExtras(b);*/
         activityRule.launchActivity(intent);
 
-        /*runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });*/
         CountDownLatch lock = new CountDownLatch(1);
         lock.await(10000, TimeUnit.MILLISECONDS);
 
@@ -134,5 +115,5 @@ public class SalesOverviewTest {
 
         intended(hasComponent(SaleDetails.class.getName()));
         Intents.release();
-    }
+    }*/
 }
