@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         Button saleDet = findViewById(R.id.saleDet);
         saleDet.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), SaleDetails.class);
+            intent.putExtra("listingID", "06d6f073-30ae-48ac-9530-f30e288b299a");
             startActivity(intent);
         });
 
