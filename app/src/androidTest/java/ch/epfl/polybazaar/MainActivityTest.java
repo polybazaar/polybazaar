@@ -28,6 +28,23 @@ public class MainActivityTest{
                     false);
 
     @Test
+    public void testSaleDetailsLaunching () throws Throwable {
+        Intents.init();
+        Intent intent = new Intent();
+
+        activityRule.launchActivity(intent);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activityRule.getActivity().findViewById(R.id.saleDet)
+                        .performClick();
+            }
+        });
+        intended(hasComponent(SaleDetails.class.getName()));
+        Intents.release();
+    }
+
+    @Test
     public void testStartSaleOverview() throws Throwable {
         Intents.init();
         Intent intent = new Intent();
@@ -36,7 +53,7 @@ public class MainActivityTest{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityRule.getActivity().findViewById(R.id.sale_overview)
+                activityRule.getActivity().findViewById(R.id.saleOverview)
                         .performClick();
             }
         });
@@ -53,7 +70,7 @@ public class MainActivityTest{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityRule.getActivity().findViewById(R.id.add_listing)
+                activityRule.getActivity().findViewById(R.id.addListing)
                         .performClick();
             }
         });
@@ -70,7 +87,7 @@ public class MainActivityTest{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityRule.getActivity().findViewById(R.id.add_listing)
+                activityRule.getActivity().findViewById(R.id.addListing)
                          .performClick();
             }
         });
@@ -85,7 +102,7 @@ public class MainActivityTest{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityRule.getActivity().findViewById(R.id.sign_in)
+                activityRule.getActivity().findViewById(R.id.signIn)
                         .performClick();
             }
         });
