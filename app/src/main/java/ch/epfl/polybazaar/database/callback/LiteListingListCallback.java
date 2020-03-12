@@ -2,8 +2,6 @@ package ch.epfl.polybazaar.database.callback;
 
 import java.util.List;
 
-import ch.epfl.polybazaar.litelisting.LiteListing;
-
 public interface LiteListingListCallback {
     /**
      * Implement onCallback to receive data from the ListingDatabase
