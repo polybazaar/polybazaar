@@ -28,7 +28,6 @@
                     android:clickable="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:onClick="onClick"
                     android:text="Algebre Linéaire by David C. Lay"
                     android:textSize="@dimen/overview_text_size" />
 
@@ -56,7 +55,6 @@
                     android:maxLines="1"
                     android:text="Guitare folk"
                     android:textSize="@dimen/overview_text_size"
-                    android:onClick="onClick"
                     android:clickable="true"/> />
 
                 <TextView
@@ -83,7 +81,6 @@
                     android:maxLines="1"
                     android:text="Equipement de ski de randonnée"
                     android:textSize="@dimen/overview_text_size"
-                    android:onClick="onClick"
                     android:clickable="true"/> />
 
                 <TextView
@@ -109,7 +106,6 @@
                     android:maxLines="1"
                     android:text="Fer à repasser"
                     android:textSize="@dimen/overview_text_size"
-                    android:onClick="onClick"
                     android:clickable="true"/> />
 
                 <TextView
@@ -135,7 +131,6 @@
                     android:maxLines="1"
                     android:text="Livre de cuisine asiatique"
                     android:textSize="@dimen/overview_text_size"
-                    android:onClick="onClick"
                     android:clickable="true"/> />
 
                 <TextView
@@ -161,7 +156,6 @@
                     android:maxLines="1"
                     android:text="Table de salle à manger"
                     android:textSize="@dimen/overview_text_size"
-                    android:onClick="onClick"
                     android:clickable="true"/> />
 
                 <TextView
