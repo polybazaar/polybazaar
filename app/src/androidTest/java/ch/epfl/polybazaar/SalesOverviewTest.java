@@ -15,6 +15,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.junit.Assert.assertEquals;
 
 public class SalesOverviewTest {
@@ -43,7 +44,7 @@ public class SalesOverviewTest {
     }
 
     @Test
-    public void itemClick() {
+    public void itemClick() throws Throwable {
         Intents.init();
         Intent intent = new Intent();
         Bundle b = new Bundle();
@@ -52,7 +53,13 @@ public class SalesOverviewTest {
         intent.putExtras(b);
         activityRule.launchActivity(intent);
 
-        onView(withId(R.id.title1)).perform(click());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activityRule.getActivity().findViewById(R.id.title1)
+                        .performClick();
+            }
+        });
 
         intended(hasComponent(SaleDetails.class.getName()));
         Intents.release();
