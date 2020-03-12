@@ -16,7 +16,6 @@ import org.junit.Test;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.junit.Assert.assertEquals;
 
-// TODO: how to test addListingView? method returns void and has side effects on objects whose reference can't be fetched?
 
 public class SalesOverviewTest {
 
