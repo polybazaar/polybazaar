@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
@@ -29,21 +30,20 @@ import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListin
 public class SalesOverview extends AppCompatActivity {
 
     // TODO: add tests for error cases (ex empty list on database)
-    
+
     private List<String> IDList;
     private List<LiteListing> liteListingList;
+    TreeMap<Integer, String> viewIDtoListingIDMap;
     ScrollView scroll;
     LinearLayout linearLayout;
 
-    // TODO: adapt based on what is expected by SaleDetails class
     // Create an anonymous implementation of OnClickListener
     private View.OnClickListener titleClickListener = new View.OnClickListener() {
         public void onClick(View v) {
-            TextView itemName = findViewById(v.getId());
+            int viewID = v.getId();
+            String listingID = viewIDtoListingIDMap.get(viewID);
             Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-            intent.putExtra("title", itemName.getText().toString());
-            intent.putExtra("description", "Never used");
-            intent.putExtra("price", "18 CHF");
+            intent.putExtra("listingID", listingID);
             startActivity(intent);
         }
     };
@@ -56,10 +56,11 @@ public class SalesOverview extends AppCompatActivity {
 
         IDList = new ArrayList<>();
         liteListingList = new ArrayList<>();
+        viewIDtoListingIDMap = new TreeMap<>();
         scroll = new ScrollView(this);
         linearLayout = new LinearLayout(this);
 
-        SetScrollView();
+        setScrollView();
 
         // attach scrollView to ConstraintLayout
         ConstraintLayout constraintLayout = findViewById(R.id.rootContainer);
@@ -76,7 +77,7 @@ public class SalesOverview extends AppCompatActivity {
      * Set view skeleton of activity screen:
      * a general scrollview with a linear layout as single child
      */
-    public void SetScrollView() {
+    public void setScrollView() {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -98,12 +99,12 @@ public class SalesOverview extends AppCompatActivity {
      */
     public void addListingView(LiteListing l) {
         // create a horizontal linear layout that will display title and price on one line
-        LinearLayout linelinearLayout = new LinearLayout(this);
+        LinearLayout lineLinearLayout = new LinearLayout(this);
         LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        linelinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linelinearLayout.setLayoutParams(linearParams);
+        lineLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        lineLinearLayout.setLayoutParams(linearParams);
 
         // create TextView for listing title
         int boxWidth = (int)(getResources().getDimension(R.dimen.title_box_length));
@@ -117,11 +118,14 @@ public class SalesOverview extends AppCompatActivity {
         TextView priceView = createView(boxWidth, boxHeight, boxWeight, textSize, true, false, l.getPrice());
 
         // add title and price to horizontal layout
-        linelinearLayout.addView(textView);
-        linelinearLayout.addView(priceView);
+        lineLinearLayout.addView(textView);
+        lineLinearLayout.addView(priceView);
 
         // add horizontal layout to vertical layout
-        linearLayout.addView(linelinearLayout);
+        linearLayout.addView(lineLinearLayout);
+
+        // add entry in <ViewID, ListingID> map
+        viewIDtoListingIDMap.put(textView.getId(), l.getListingID());
     }
 
     /**
@@ -183,22 +187,6 @@ public class SalesOverview extends AppCompatActivity {
         fetchLiteListingList(callbackLiteListingList);
     }
 
-    /**
-     * create a list of LiteListings
-     */
-    // TODO: delete
-    public void createLiteListingList() {
-        LiteListingCallback callbackLiteListing = new LiteListingCallback() {
-            @Override
-            public void onCallback(LiteListing result) {
-                liteListingList.add(result);
-            }
-        };
-        int size = IDList.size();
-        for(int i = 0; 0 < size; ++i) {
-            fetchLiteListing(IDList.get(i), callbackLiteListing);
-        }
-    }
 
     /**
      * Helper function to add a LiteListing to the database
