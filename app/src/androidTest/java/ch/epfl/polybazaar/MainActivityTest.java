@@ -85,7 +85,7 @@ public class MainActivityTest{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityRule.getActivity().findViewById(R.id.sign_in)
+                activityRule.getActivity().findViewById(R.id.authenticationButton)
                         .performClick();
             }
         });

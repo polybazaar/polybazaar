@@ -4,15 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
 
 import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
@@ -47,9 +41,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void toSignIn(View view) {
-        Intent intent = new Intent(MainActivity.this, SignInActivity.class);
-        startActivity(intent);
+    public void clickAuthenticationButton(View view) {
+        if (user == null) {
+            Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+            startActivity(intent);
+        } else {
+            authenticator.signOut();
+            user = authenticator.getCurrentUser();
+
+            updateAuthenticationButton();
+        }
     }
 
     @Override
@@ -57,10 +58,15 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         user = authenticator.getCurrentUser();
+        updateAuthenticationButton();
+    }
 
+    private void updateAuthenticationButton() {
+        Button signInBut = findViewById(R.id.authenticationButton);
         if (user != null) {
-            Button signInBut = findViewById(R.id.sign_in);
-            signInBut.setVisibility(View.GONE);
+            signInBut.setText(R.string.sign_out);
+        } else {
+            signInBut.setText(R.string.sign_in);
         }
     }
 }
