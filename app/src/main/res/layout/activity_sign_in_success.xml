@@ -29,4 +29,15 @@
         app:layout_constraintStart_toEndOf="@+id/authenticationSuccessfulText"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/toMainButton"
+        android:layout_width="202dp"
+        android:layout_height="69dp"
+        android:onClick="toMain"
+        android:text="Go to main page"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
