@@ -35,7 +35,6 @@ public class MainActivityTest{
                 protected void beforeActivityLaunched() {
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                 }
-
                 @Override
                 protected void afterActivityFinished() {
                     MockAuthenticator.getInstance().reset();
