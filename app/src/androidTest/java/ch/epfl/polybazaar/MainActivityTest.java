@@ -1,97 +1,86 @@
 package ch.epfl.polybazaar;
 
-import android.content.Intent;
-
-import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.login.MockAuthenticator;
+import ch.epfl.polybazaar.login.SignInActivity;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
+@RunWith(AndroidJUnit4.class)
 public class MainActivityTest{
 
     @Rule
     public final ActivityTestRule<MainActivity> activityRule =
-            new ActivityTestRule<>(
-                    MainActivity.class,
-                    true,
-                    false);
+            new ActivityTestRule<MainActivity>(MainActivity.class){
+                @Override
+                protected void beforeActivityLaunched() {
+                    AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
+                }
+
+                @Override
+                protected void afterActivityFinished() {
+                    MockAuthenticator.getInstance().reset();
+                }
+            };
 
     @Test
-    public void testStartSaleOverview() throws Throwable {
-        Intents.init();
-        Intent intent = new Intent();
+    public void accessesForAuthenticatedUserAreCorrect() {
+        signInAndBack();
+        onView(withId(R.id.add_listing)).perform(click());
+        hasComponent(FillListingActivity.class.getName());
 
-        activityRule.launchActivity(intent);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                activityRule.getActivity().findViewById(R.id.sale_overview)
-                        .performClick();
-            }
-        });
-        intended(hasComponent(SalesOverview.class.getName()));
-        Intents.release();
+        pressBack();
+
+        onView(withText(R.string.sign_out)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.authenticationButton)).perform(click());
+
+        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testStartFillListingActivity() throws Throwable {
-        Intents.init();
-        Intent intent = new Intent();
+    public void accessesForNonAuthenticatedUserAreCorrect() {
+        onView(withId(R.id.sale_overview)).perform(click());
+        hasComponent(SalesOverview.class.getName());
 
-        activityRule.launchActivity(intent);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                activityRule.getActivity().findViewById(R.id.add_listing)
-                        .performClick();
-            }
-        });
-        intended(hasComponent(FillListingActivity.class.getName()));
-        Intents.release();
-    }
+        pressBack();
 
-    @Test
-    public void testStartSignIn() throws Throwable {
-        //TODO uncomment the code below
-        /*Intents.init();
-        Intent intent = new Intent();
-        activityRule.launchActivity(intent);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                activityRule.getActivity().findViewById(R.id.add_listing)
-                         .performClick();
-            }
-        });
-        // TODO complete
-        intended(hasComponent(<yourClass>.class.getName()));
-        Intents.release();*/
-
-        //TODO remove code below
-        Intent intent = new Intent();
-
-        activityRule.launchActivity(intent);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                activityRule.getActivity().findViewById(R.id.authenticationButton)
-                        .performClick();
-            }
-        });
-
-        onView(withText("This functionality is not implemented yet"))
-                .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
+        onView(withId(R.id.add_listing)).perform(click());
+        onView(withText(R.string.sign_in_required))
+                .inRoot(withDecorView(not(is(activityRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
+
+        onView(withId(R.id.authenticationButton)).perform(click());
+        hasComponent(SignInActivity.class.getName());
+
+    }
+
+    private void signInAndBack() {
+        onView(withId(R.id.authenticationButton)).perform(click());
+        onView(withId(R.id.emailInput)).perform(typeText(MockAuthenticator.TEST_USER_EMAIL))
+                .perform(closeSoftKeyboard());
+        onView(withId(R.id.passwordInput)).perform(typeText(MockAuthenticator.TEST_USER_PASSWORD))
+                .perform(closeSoftKeyboard());
+        onView(withId(R.id.loginButton)).perform(click());
+        onView(withId(R.id.toMainButton)).perform(click());
     }
 }
