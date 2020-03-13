@@ -27,7 +27,7 @@ public class SignInSuccessActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         AppUser currentUser = authenticator.getCurrentUser();
 
-        if (!currentUser.isEmailVerified()) {
+        if (currentUser != null && !currentUser.isEmailVerified()) {
             Intent intent = new Intent(getApplicationContext(), EmailVerificationActivity.class);
             startActivity(intent);
         }
