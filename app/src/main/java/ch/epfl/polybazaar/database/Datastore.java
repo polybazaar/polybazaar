@@ -2,12 +2,15 @@ package ch.epfl.polybazaar.database;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
 
 public interface Datastore {
 
     void fetchData(@NonNull final String collectionPath,
-                   @NonNull final String documentPath, @NonNull final DocumentCallback callback);
+                   @NonNull final String documentPath, @NonNull final DataSnapshotCallback callback);
 
     void setData(@NonNull final String collectionPath,
                  @NonNull final String documentPath, @NonNull final Object data, @NonNull final SuccessCallback callback);
