@@ -13,6 +13,9 @@ import java.util.HashMap;
 public class MockAuthenticator implements Authenticator {
     private static MockAuthenticator INSTANCE;
 
+    public final static String TEST_USER_EMAIL = "testuser@epfl.ch";
+    public final static String TEST_USER_PASSWORD = "abcdef";
+
     private AppUser currentUser;
 
     private HashMap<String, MockAppUser> registeredUsers;
@@ -26,6 +29,10 @@ public class MockAuthenticator implements Authenticator {
      */
     public void reset() {
         registeredUsers = new HashMap<>();
+        MockAppUser testUser = new MockAppUser(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        testUser.sendEmailVerification();
+        testUser.reload();
+        registeredUsers.put(TEST_USER_EMAIL, testUser);
         currentUser = null;
     }
 
