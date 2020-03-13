@@ -4,10 +4,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Objects;
 
+import ch.epfl.polybazaar.database.DataSnapshot;
+import ch.epfl.polybazaar.database.DataSnapshotCallback;
 import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
 import ch.epfl.polybazaar.user.User;
 
-public class UserCallbackAdapter implements DocumentSnapshotCallback {
+public class UserCallbackAdapter implements DataSnapshotCallback {
 
     private UserCallback userCallback;
 
@@ -20,7 +22,7 @@ public class UserCallbackAdapter implements DocumentSnapshotCallback {
     }
 
     @Override
-    public void onCallback(DocumentSnapshot result) {
+    public void onCallback(DataSnapshot result) {
         if (result==null){
             userCallback.onCallback(null);
             return;

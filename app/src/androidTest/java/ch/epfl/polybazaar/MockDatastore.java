@@ -1,10 +1,13 @@
-package ch.epfl.polybazaar.database;
+package ch.epfl.polybazaar;
 
 import androidx.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.epfl.polybazaar.database.DataSnapshot;
+import ch.epfl.polybazaar.database.DataSnapshotCallback;
+import ch.epfl.polybazaar.database.Datastore;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
 
@@ -19,7 +22,7 @@ public class MockDatastore implements Datastore {
         collections = new HashMap<>();
     }
     public void addCollection(String collectionName){
-        collections.put(collectionName,null);
+        collections.put(collectionName,new HashMap<>());
     }
 
     public void setupMockData(String collectionName,String dataId,Object data){
@@ -29,17 +32,24 @@ public class MockDatastore implements Datastore {
     }
 
     @Override
-    public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull DocumentCallback callback) {
+    public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull DataSnapshotCallback callback) {
         if (!collections.containsKey(collectionPath)){callback.onCallback(null);}
         if(!collections.get(collectionPath).containsKey(documentPath)){callback.onCallback(null);}
-        callback.onCallback(collections.get(collectionPath).get(documentPath));
-
+        Object data = collections.get(collectionPath).get(documentPath);
+        DataSnapshot snapshot = new DataSnapshot(true,data);
+        callback.onCallback(snapshot);
     }
 
     @Override
     public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull SuccessCallback callback) {
-        if (!collections.containsKey(collectionPath)){callback.onCallback(false);}
-        if(!collections.get(collectionPath).containsKey(documentPath)){callback.onCallback(false);}
+        if (!collections.containsKey(collectionPath)){callback.onCallback(false);return;}
+        if(!collections.get(collectionPath).containsKey(documentPath)){
+           collections.get(collectionPath).put(documentPath,data);
+        }else{
+            collections.get(collectionPath).replace(documentPath,data);
+        }
+        callback.onCallback(true);
+
     }
 
     @Override

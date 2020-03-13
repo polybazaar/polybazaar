@@ -16,6 +16,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
 import ch.epfl.polybazaar.database.generic.QuerySnapshotCallback;
+import ch.epfl.polybazaar.database.DataSnapshot;
 
 public abstract class FirebaseDatastore{
 
@@ -30,17 +31,18 @@ public abstract class FirebaseDatastore{
      * @param documentPath document name (ID)
      * @param callback a GenericCallback interface implementation
      */
-    public static void fetchData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final DocumentCallback callback) {
+    public static void fetchData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final DataSnapshotCallback callback) {
         Task<DocumentSnapshot> task = database.collection(collectionPath).document(documentPath).get();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    DataSnapshot data = new DataSnapshot(true,document.getData());
                     assert document != null;
                     if (document.exists()) {
                         Log.d(TAG, "successfully retrieved data");
-                        callback.onCallback(document);
+                        callback.onCallback(data);
                     } else {
                         Log.d(TAG, "data does not exist");
                         callback.onCallback(null);

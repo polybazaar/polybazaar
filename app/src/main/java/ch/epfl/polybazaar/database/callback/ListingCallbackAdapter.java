@@ -1,13 +1,12 @@
 package ch.epfl.polybazaar.database.callback;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-
 import java.util.Objects;
 
-import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
+import ch.epfl.polybazaar.database.DataSnapshot;
+import ch.epfl.polybazaar.database.DataSnapshotCallback;
 import ch.epfl.polybazaar.listing.Listing;
 
-public  class ListingCallbackAdapter implements DocumentSnapshotCallback {
+public  class ListingCallbackAdapter implements DataSnapshotCallback {
 
     private ListingCallback listingCallback;
 
@@ -20,15 +19,18 @@ public  class ListingCallbackAdapter implements DocumentSnapshotCallback {
     }
 
     @Override
-    public void onCallback(DocumentSnapshot result) {
+    public void onCallback(DataSnapshot result) {
         if (result==null){
             listingCallback.onCallback(null);
             return;
         }
-        Listing listing = new Listing(Objects.requireNonNull(result.get("title")).toString(),
+       /* Listing listing = new Listing(Objects.requireNonNull(result.get("title")).toString(),
                 Objects.requireNonNull(result.get("description")).toString(),
                 Objects.requireNonNull(result.get("price")).toString(),
                 Objects.requireNonNull(result.get("userEmail")).toString());
+
+        */
+        Listing listing = (Listing)result.data();
         listingCallback.onCallback(listing);
     }
 }
