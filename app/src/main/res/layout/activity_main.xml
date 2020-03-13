@@ -28,12 +28,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/welcomeMessage" />
 
     <Button
         android:id="@+id/authenticationButton"
         android:layout_width="138dp"
         android:layout_height="45dp"
+        android:layout_marginBottom="16dp"
         android:onClick="clickAuthenticationButton"
         android:text="@string/sign_in"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -41,5 +42,17 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_listing" />
+
+    <TextView
+        android:id="@+id/welcomeMessage"
+        android:layout_width="167dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/welcome_message"
+        app:layout_constraintBottom_toTopOf="@+id/sale_overview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
