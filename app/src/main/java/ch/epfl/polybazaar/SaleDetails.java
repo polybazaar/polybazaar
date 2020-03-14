@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -32,18 +33,16 @@ public class SaleDetails extends AppCompatActivity {
     }
 
     void getSellerInformation() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Button get_seller = findViewById(R.id.contactSel);
-                get_seller.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
-                        findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
-                    }
-                });
+        runOnUiThread(() -> {
+            Button get_seller = findViewById(R.id.contactSel);
+            get_seller.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    //TODO check that user is connected
+                    findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
+                }
+            });
 
-            }
         });
     }
 
@@ -86,7 +85,12 @@ public class SaleDetails extends AppCompatActivity {
                 //set image
                 ImageView image = findViewById(R.id.saleImage);
                 image.setVisibility(View.VISIBLE);
-                image.setImageResource(R.drawable.algebre_lin);
+                Bitmap bitmapImage = listing.getImage();
+                if(bitmapImage != null) {
+                    image.setImageBitmap(listing.getImage());
+                } else {
+                    //TODO image.set.. no picture
+                }
 
                 //Set the title
                 TextView title_txt = findViewById(R.id.title);

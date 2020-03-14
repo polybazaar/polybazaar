@@ -2,6 +2,7 @@ package ch.epfl.polybazaar.database.callback;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.io.File;
 import java.util.Objects;
 
 import ch.epfl.polybazaar.listing.Listing;
@@ -28,7 +29,8 @@ public  class ListingCallbackAdapter implements DocumentSnapshotCallback {
         Listing listing = new Listing(Objects.requireNonNull(result.get("title")).toString(),
                 Objects.requireNonNull(result.get("description")).toString(),
                 Objects.requireNonNull(result.get("price")).toString(),
-                Objects.requireNonNull(result.get("userEmail")).toString());
+                Objects.requireNonNull(result.get("userEmail")).toString(),
+                (File) result.get("image"));
         listingCallback.onCallback(listing);
     }
 }

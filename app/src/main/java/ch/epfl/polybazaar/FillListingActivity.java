@@ -48,6 +48,7 @@ public class FillListingActivity extends AppCompatActivity {
     private EditText priceSelector;
     private String oldPrice;
     private String currentPhotoPath;
+    private File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +161,7 @@ public class FillListingActivity extends AppCompatActivity {
                 Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
             };
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch");
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", photoFile);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString());
             storeListing(newListing, newListingID, successCallback);
             addLiteListing(newLiteListing, result -> {
@@ -189,7 +190,7 @@ public class FillListingActivity extends AppCompatActivity {
     private  void takePicture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
+            photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
