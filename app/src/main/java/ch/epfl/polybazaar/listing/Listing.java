@@ -26,7 +26,7 @@ public class Listing {
     private String userEmail;
     private String stringImage;
 
-    public Listing(String title, String description, String price, String userEmail, File imageFile) {
+    public Listing(String title, String description, String price, String userEmail, String stringImage) {
         this.title = title;
         this.description = description;
         this.price = price;
@@ -35,16 +35,26 @@ public class Listing {
         } else {
             throw new IllegalArgumentException("userEmail has invalid format");
         }
+        this.stringImage = stringImage;
+    }
 
+    public Listing(String title, String description, String price, String userEmail, File imageFile) {
+        this(title, description, price, userEmail, convertFileToString(imageFile));
+    }
+
+    public static String convertFileToString(File imageFile) {
+        String tempStringImg = "";
         //inspired from https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa/18052269
         if(imageFile != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] b = baos.toByteArray();
-            stringImage = Base64.encodeToString(b, Base64.DEFAULT);
+            tempStringImg = Base64.encodeToString(b, Base64.DEFAULT);
         }
+        return tempStringImg;
     }
+
 
     public String getTitle() {
         return title;
@@ -62,7 +72,7 @@ public class Listing {
         return userEmail;
     }
 
-    public Bitmap getImage() {
+    public Bitmap getBitmapImage() {
         try {
             byte [] encodeByte= Base64.decode(stringImage,Base64.DEFAULT);
             Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);

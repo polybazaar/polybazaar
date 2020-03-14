@@ -85,9 +85,9 @@ public class SaleDetails extends AppCompatActivity {
                 //set image
                 ImageView image = findViewById(R.id.saleImage);
                 image.setVisibility(View.VISIBLE);
-                Bitmap bitmapImage = listing.getImage();
+                Bitmap bitmapImage = listing.getBitmapImage();
                 if(bitmapImage != null) {
-                    image.setImageBitmap(listing.getImage());
+                    image.setImageBitmap(listing.getBitmapImage());
                 } else {
                     //TODO image.set.. no picture
                 }
