@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -57,12 +58,7 @@ public class SaleDetails extends AppCompatActivity {
             return;
         }
 
-        ListingCallback callbackListing = new ListingCallback() {
-            @Override
-            public void onCallback(Listing result) {
-                fillWithListing(result);
-            }
-        };
+        ListingCallback callbackListing = result -> fillWithListing(result);
         fetchListing(listingID, callbackListing);
     }
 
@@ -71,12 +67,10 @@ public class SaleDetails extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
             toast.show();
-            return;
-        }
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+            Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
+            startActivity(intent);
+        } else {
+            runOnUiThread(() -> {
                 final ImageView imageLoading = findViewById(R.id.loadingImage);
                 //Glide.with(imageLoading).clear(imageLoading);
                 imageLoading.setVisibility(View.INVISIBLE);
@@ -85,7 +79,7 @@ public class SaleDetails extends AppCompatActivity {
                 ImageView image = findViewById(R.id.saleImage);
                 image.setVisibility(View.VISIBLE);
                 Bitmap bitmapImage = convertStringToBitmap(listing.getStringImage());
-                if(bitmapImage != null) {
+                if (bitmapImage != null) {
                     image.setImageBitmap(bitmapImage);
                 } else {
                     //TODO image.set.. no picture
@@ -111,8 +105,7 @@ public class SaleDetails extends AppCompatActivity {
                 TextView userEmailTextView = findViewById(R.id.userEmail);
                 userEmailTextView.setText(listing.getUserEmail());
                 userEmailTextView.setVisibility(View.INVISIBLE);
-
-            }
-        });
+            });
+        }
     }
 }

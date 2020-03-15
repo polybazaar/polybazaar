@@ -26,7 +26,7 @@ public  class ListingCallbackAdapter implements DocumentSnapshotCallback {
             return;
         }
         Object image = result.get("stringImage");
-        String stringImage = null;
+        String stringImage = "";
         if (image != null) {
             stringImage = image.toString();
         }
