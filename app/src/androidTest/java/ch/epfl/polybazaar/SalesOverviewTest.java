@@ -13,6 +13,8 @@ import androidx.test.rule.ActivityTestRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import ch.epfl.polybazaar.UI.SalesOverview;
+
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.junit.Assert.assertEquals;
 
@@ -32,7 +34,7 @@ public class SalesOverviewTest {
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
-        ViewGroup.LayoutParams layoutParams = activityRule.getActivity().scroll.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = activityRule.getActivity().getScroll().getLayoutParams();
         assertEquals(layoutParams.width, ViewGroup.LayoutParams.MATCH_PARENT);
         assertEquals(layoutParams.height, ViewGroup.LayoutParams.MATCH_PARENT);
     }
@@ -43,10 +45,10 @@ public class SalesOverviewTest {
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
-        ViewGroup.LayoutParams layoutParams = activityRule.getActivity().linearLayout.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = activityRule.getActivity().getLinearLayout().getLayoutParams();
         assertEquals(layoutParams.width, ViewGroup.LayoutParams.MATCH_PARENT);
         assertEquals(layoutParams.height, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int layoutOrientation = activityRule.getActivity().linearLayout.getOrientation();
+        int layoutOrientation = activityRule.getActivity().getLinearLayout().getOrientation();
         assertEquals(layoutOrientation, LinearLayout.VERTICAL);
     }
 
@@ -56,8 +58,8 @@ public class SalesOverviewTest {
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
-        View testLayout = activityRule.getActivity().scroll.getChildAt(0);
-        assertEquals(activityRule.getActivity().linearLayout, testLayout);
+        View testLayout = activityRule.getActivity().getScroll().getChildAt(0);
+        assertEquals(activityRule.getActivity().getLinearLayout(), testLayout);
     }
 
 
@@ -67,7 +69,7 @@ public class SalesOverviewTest {
         activityRule.launchActivity(intent);
 
         ConstraintLayout constraintLayout = activityRule.getActivity().findViewById(R.id.rootContainer);
-        assertEquals(activityRule.getActivity().scroll, constraintLayout.getChildAt(0));
+        assertEquals(activityRule.getActivity().getScroll(), constraintLayout.getChildAt(0));
     }
 
 

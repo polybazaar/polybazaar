@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar;
+package ch.epfl.polybazaar.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,12 +12,15 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.SaleDetails;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
@@ -31,9 +34,9 @@ public class SalesOverview extends AppCompatActivity {
 
     private List<String> IDList;
     private List<LiteListing> liteListingList;
-    TreeMap<Integer, String> viewIDtoListingIDMap;
-    ScrollView scroll;
-    LinearLayout linearLayout;
+    private TreeMap<Integer, String> viewIDtoListingIDMap;
+    private ScrollView scroll;
+    private LinearLayout linearLayout;
 
     // Create an anonymous implementation of OnClickListener
     private View.OnClickListener titleClickListener = new View.OnClickListener() {
@@ -46,7 +49,6 @@ public class SalesOverview extends AppCompatActivity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,16 +60,53 @@ public class SalesOverview extends AppCompatActivity {
         scroll = new ScrollView(this);
         linearLayout = new LinearLayout(this);
 
-        setScrollView();
+        // Lookup the recyclerview in activity layout
+        RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
 
-        // attach scrollView to ConstraintLayout
-        ConstraintLayout constraintLayout = findViewById(R.id.rootContainer);
-        if (constraintLayout != null) {
-            constraintLayout.addView(scroll);
-        }
+        // TODO: delete
+        // initialize LiteListing list
+        LiteListing liteListing1 = new LiteListing("1", "title1", "price1");
+
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+        liteListingList.add(liteListing1);
+
+
+        // Create adapter passing in the sample LiteListing data
+        LiteListingAdapter adapter = new LiteListingAdapter(liteListingList);
+        // Attach the adapter to the recyclerview to populate items
+        rvLiteListings.setAdapter(adapter);
+        // Set layout manager to position the items
+        rvLiteListings.setLayoutManager(new LinearLayoutManager(this));
 
         // create graphical overview of LiteListings
-        createLiteListingOverview();
+        // createLiteListingOverview();
+    }
+
+
+    public ScrollView getScroll() {
+        return scroll;
+    }
+
+    public LinearLayout getLinearLayout() {
+        return linearLayout;
     }
 
 
@@ -90,6 +129,7 @@ public class SalesOverview extends AppCompatActivity {
 
         scroll.addView(linearLayout);
     }
+
 
     /**
      * Create a TextView displaying the LiteListing title and inserts it into the ScrollView
