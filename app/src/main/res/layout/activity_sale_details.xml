@@ -7,12 +7,13 @@
     tools:context=".SaleDetails">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/saleImage"
         android:layout_width="339dp"
         android:layout_height="251dp"
         android:layout_marginStart="36dp"
         android:layout_marginTop="100dp"
         android:layout_marginEnd="36dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -31,11 +32,12 @@
         android:text="@string/titre"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/saleImage" />
 
     <TextView
         android:id="@+id/description"
@@ -45,6 +47,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="35dp"
         android:text="@string/description"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
@@ -59,13 +62,14 @@
         android:layout_marginBottom="8dp"
         android:text="@string/price"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/contact_sel"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/contactSel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <Button
-        android:id="@+id/contact_sel"
+        android:id="@+id/contactSel"
         android:layout_width="343dp"
         android:layout_height="45dp"
         android:layout_marginStart="36dp"
@@ -73,9 +77,34 @@
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="76dp"
         android:text="@string/contact_the_seller"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price" />
+
+    <TextView
+        android:id="@+id/userEmail"
+        android:layout_width="342dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="33dp"
+        android:layout_marginBottom="35dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contactSel" />
+
+    <ImageView
+        android:id="@+id/loadingImage"
+        android:layout_width="164dp"
+        android:layout_height="94dp"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_background" />
 </androidx.constraintlayout.widget.ConstraintLayout>

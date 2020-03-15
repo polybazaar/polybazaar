@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.widget.Button;
 
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -27,6 +28,7 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -34,6 +36,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -127,15 +130,19 @@ public class FillListingActivityTest {
     }
 
     @Test
-    public void toastAppearsWhenTitleIsEmpty() {
+    public void toastAppearsWhenTitleIsEmpty() throws Throwable {
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
+        Thread.sleep(2000);
         }
 
     @Test
-    public void toastAppearsWhenPriceIsNegative() {
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("-0.10"));
+    public void toastAppearsWhenPriceIsEmpty() throws Throwable {
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
+        Thread.sleep(2000);
     }
 
     @Test
@@ -143,6 +150,21 @@ public class FillListingActivityTest {
         cancelTakingPicture();
         checkNoImageUploaded();
         fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+    }
+
+    @Test
+    public void submittingNewListingRedirectsToSalesOverview() throws Throwable {
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
+        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("That is a title"));
+        closeSoftKeyboard();
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
+        closeSoftKeyboard();
+        Intents.init();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        Thread.sleep(5000);
+        intended(hasComponent(SalesOverview.class.getName()));
+        Intents.release();
     }
 
 
@@ -176,8 +198,15 @@ public class FillListingActivityTest {
         Intents.release();
     }
 
-    private void submitListingAndCheckIncorrectToast(){
-        onView(withId(R.id.submitListing)).perform(scrollTo(), click());
+    private void submitListingAndCheckIncorrectToast() throws Throwable {
+        runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+                Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing);
+                but.performClick();
+            }
+        });
+
         onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 
