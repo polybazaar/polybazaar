@@ -2,11 +2,10 @@ package ch.epfl.polybazaar.database.callback;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.io.File;
 import java.util.Objects;
 
-import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
+import ch.epfl.polybazaar.listing.Listing;
 
 public  class ListingCallbackAdapter implements DocumentSnapshotCallback {
 

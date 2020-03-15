@@ -174,13 +174,10 @@ public class FillListingActivityTest {
         Intents.init();
         expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intending(expectedCameraIntent).respondWith(cameraResult);
-        //onView(withId(R.id.camera)).perform(scrollTo(), click());
-        runOnUiThread(new Runnable(){
-            @Override
-                    public void run() {
-                Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.camera);
-                but.performClick();
-            }
+
+        runOnUiThread(() -> {
+            Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.camera);
+            but.performClick();
         });
         fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         intended(expectedCameraIntent);
