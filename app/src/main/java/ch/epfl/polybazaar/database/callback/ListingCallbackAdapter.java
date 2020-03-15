@@ -30,7 +30,7 @@ public  class ListingCallbackAdapter implements DocumentSnapshotCallback {
                 Objects.requireNonNull(result.get("description")).toString(),
                 Objects.requireNonNull(result.get("price")).toString(),
                 Objects.requireNonNull(result.get("userEmail")).toString(),
-                Objects.requireNonNull(result.get("image")).toString());
+                Objects.requireNonNull(result.get("stringImage")).toString());
         listingCallback.onCallback(listing);
     }
 }

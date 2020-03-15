@@ -4,10 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 
-import static ch.epfl.polybazaar.Utilities.*;
+import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.Utilities.emailIsValid;
 
 /**
  * A listing represents an object that is listed for sale on the app
@@ -18,14 +18,20 @@ import static ch.epfl.polybazaar.Utilities.*;
 
 public class Listing {
 
-    // TODO: add attribute image
-
     private String title;
     private String description;
     private String price;
     private String userEmail;
     private String stringImage;
 
+    /**
+     *
+     * @param title
+     * @param description
+     * @param price
+     * @param userEmail
+     * @param stringImage String format : you can use convertFileToString or convertStringToBitmap to convert into String
+     */
     public Listing(String title, String description, String price, String userEmail, String stringImage) {
         this.title = title;
         this.description = description;
@@ -38,21 +44,8 @@ public class Listing {
         this.stringImage = stringImage;
     }
 
-    public Listing(String title, String description, String price, String userEmail, File imageFile) {
-        this(title, description, price, userEmail, convertFileToString(imageFile));
-    }
-
-    public static String convertFileToString(File imageFile) {
-        String tempStringImg = "";
-        //inspired from https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa/18052269
-        if(imageFile != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] b = baos.toByteArray();
-            tempStringImg = Base64.encodeToString(b, Base64.DEFAULT);
-        }
-        return tempStringImg;
+    public Listing(String title, String description, String price, String userEmail) {
+        this(title, description, price, userEmail, (String) null);
     }
 
 
@@ -72,14 +65,7 @@ public class Listing {
         return userEmail;
     }
 
-    public Bitmap getBitmapImage() {
-        try {
-            byte [] encodeByte= Base64.decode(stringImage,Base64.DEFAULT);
-            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch(Exception e) {
-            e.getMessage();
-            return null;
-        }
+    public String getStringImage() {
+        return stringImage;
     }
 }
