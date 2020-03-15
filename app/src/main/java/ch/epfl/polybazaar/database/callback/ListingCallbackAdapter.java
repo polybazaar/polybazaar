@@ -25,11 +25,16 @@ public  class ListingCallbackAdapter implements DocumentSnapshotCallback {
             listingCallback.onCallback(null);
             return;
         }
+        Object image = result.get("stringImage");
+        String stringImage = null;
+        if (image != null) {
+            stringImage = image.toString();
+        }
         Listing listing = new Listing(Objects.requireNonNull(result.get("title")).toString(),
                 Objects.requireNonNull(result.get("description")).toString(),
                 Objects.requireNonNull(result.get("price")).toString(),
                 Objects.requireNonNull(result.get("userEmail")).toString(),
-                Objects.requireNonNull(result.get("stringImage")).toString());
+                stringImage);
         listingCallback.onCallback(listing);
     }
 }
