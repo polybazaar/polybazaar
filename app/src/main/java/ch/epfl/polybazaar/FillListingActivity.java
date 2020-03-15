@@ -28,6 +28,9 @@ import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
+import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
+import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
+import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static java.util.UUID.randomUUID;
@@ -49,6 +52,7 @@ public class FillListingActivity extends AppCompatActivity {
     private String oldPrice;
     private String currentPhotoPath;
     private File photoFile;
+    private String stringImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +87,14 @@ public class FillListingActivity extends AppCompatActivity {
             Uri selectedImage = data.getData();
             pictureView.setImageURI(selectedImage);
             pictureView.setTag(selectedImage.hashCode());
+
+            stringImage = convertBitmapToString(convertDrawableToBitmap(pictureView.getDrawable()));
+            //stringImage = selectedImage.toString();
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            pictureView.setImageURI(Uri.fromFile(new File(currentPhotoPath)));
+
+           stringImage = convertFileToString(photoFile);
         }
     }
 
@@ -161,7 +170,7 @@ public class FillListingActivity extends AppCompatActivity {
                 Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
             };
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", photoFile);
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString());
             storeListing(newListing, newListingID, successCallback);
             addLiteListing(newLiteListing, result -> {
