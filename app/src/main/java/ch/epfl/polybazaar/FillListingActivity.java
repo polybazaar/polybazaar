@@ -52,7 +52,7 @@ public class FillListingActivity extends AppCompatActivity {
     private String oldPrice;
     private String currentPhotoPath;
     private File photoFile;
-    private String stringImage;
+    private String stringImage = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
