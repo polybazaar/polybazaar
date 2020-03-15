@@ -167,8 +167,8 @@ public class FillListingActivity extends AppCompatActivity {
         else {
             final String newListingID = randomUUID().toString();
             SuccessCallback successCallback = result -> {
-                //Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-                //startActivity(SalesOverviewIntent);
+                Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+                startActivity(SalesOverviewIntent);
             };
             Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString());
@@ -176,8 +176,8 @@ public class FillListingActivity extends AppCompatActivity {
             addLiteListing(newLiteListing, result -> {
                 //TODO: Check the result to be true
             });
-            Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-            startActivity(SalesOverviewIntent);
+            //Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+            //startActivity(SalesOverviewIntent);
         }
     }
 

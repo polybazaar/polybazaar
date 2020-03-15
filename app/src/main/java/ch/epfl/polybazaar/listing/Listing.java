@@ -45,7 +45,7 @@ public class Listing {
     }
 
     public Listing(String title, String description, String price, String userEmail) {
-        this(title, description, price, userEmail, "");
+        this(title, description, price, userEmail, null);
     }
 
 
