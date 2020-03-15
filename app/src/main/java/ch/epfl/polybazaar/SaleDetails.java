@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.listing.Listing;
 
+import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.listing.ListingDatabase.fetchListing;
 
 public class SaleDetails extends AppCompatActivity {
@@ -35,12 +36,10 @@ public class SaleDetails extends AppCompatActivity {
     void getSellerInformation() {
         runOnUiThread(() -> {
             Button get_seller = findViewById(R.id.contactSel);
-            get_seller.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    //TODO check that user is connected
-                    findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
-                }
+            get_seller.setOnClickListener(view -> {
+                //TODO check that user is connected
+                findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
+                findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
             });
 
         });
@@ -85,9 +84,9 @@ public class SaleDetails extends AppCompatActivity {
                 //set image
                 ImageView image = findViewById(R.id.saleImage);
                 image.setVisibility(View.VISIBLE);
-                Bitmap bitmapImage = listing.getBitmapImage();
+                Bitmap bitmapImage = convertStringToBitmap(listing.getStringImage());
                 if(bitmapImage != null) {
-                    image.setImageBitmap(listing.getBitmapImage());
+                    image.setImageBitmap(bitmapImage);
                 } else {
                     //TODO image.set.. no picture
                 }
@@ -106,7 +105,7 @@ public class SaleDetails extends AppCompatActivity {
                 TextView price_txt = findViewById(R.id.price);
                 price_txt.setVisibility(View.VISIBLE);
                 price_txt.setTextSize(20);
-                price_txt.setText(listing.getPrice());
+                price_txt.setText(String.format("CHF %s", listing.getPrice()));
 
                 //Set email
                 TextView userEmailTextView = findViewById(R.id.userEmail);

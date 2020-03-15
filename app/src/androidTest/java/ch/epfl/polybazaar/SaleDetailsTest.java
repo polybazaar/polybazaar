@@ -51,7 +51,7 @@ public class SaleDetailsTest {
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
-        final Listing listing = new Listing("Algebre linéaire by David C. Lay", "Very good book.", "CHF 23.-", "gu.vrut@epfl.ch");
+        final Listing listing = new Listing("Algebre linéaire by David C. Lay", "Very good book.", "23", "gu.vrut@epfl.ch");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -66,7 +66,7 @@ public class SaleDetailsTest {
         assertEquals("Very good book.", textDescr.getText().toString());
 
         TextView textPrice = (TextView)activityRule.getActivity().findViewById(R.id.price);
-        assertEquals("CHF 23.-", textPrice.getText().toString());
+        assertEquals("CHF 23", textPrice.getText().toString());
 
         runOnUiThread(new Runnable() {
             @Override
