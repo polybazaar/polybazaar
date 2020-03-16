@@ -15,7 +15,7 @@ public abstract class CategoryRepository {
      * Computes the number of all categories and sub-categories contained in the repository
      * @return the size of the repository
      */
-    int size(){
+    public static int size(){
         int size = 0;
         for(Category category : categories){
             size += category.size();
@@ -28,7 +28,7 @@ public abstract class CategoryRepository {
      * If the repository is empty, the depth is 0
      * @return the maximum depth of the repository
      */
-    int maxDepth(){
+    public static int maxDepth(){
         int maxDepth = 0;
         for(Category category : categories){
             maxDepth = max(maxDepth, category.maxDepth());
@@ -41,7 +41,7 @@ public abstract class CategoryRepository {
      * @param contained : The element we search to be contained
      * @return true if the given category is contained in the repository
      */
-    boolean contains(Category contained){
+    public static boolean contains(Category contained){
         for(Category category : categories){
             if(category.contains(contained)){
                 return true;
