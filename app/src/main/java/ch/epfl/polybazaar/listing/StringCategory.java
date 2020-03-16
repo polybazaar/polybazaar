@@ -76,7 +76,7 @@ public class StringCategory implements Category {
     }
 
     @Override
-    public void deleteSubCategory(Category subCategory) {
+    public void removeSubCategory(Category subCategory) {
         subCategories.remove(subCategory);
     }
 }

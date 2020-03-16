@@ -21,7 +21,7 @@ public interface Category {
      * Remove a sub-category from the current category
      * @param subCategory : the sub-category to remove
      */
-    void deleteSubCategory(Category subCategory);
+    void removeSubCategory(Category subCategory);
 
     /**
      * @return the list of all sub-categories of the current category
