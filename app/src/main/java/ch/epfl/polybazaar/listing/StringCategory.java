@@ -49,6 +49,26 @@ public class StringCategory implements Category {
         return maxDepth;
     }
 
+    @Override
+    public boolean contains(Category contained) {
+        if(!equals(contained)){
+            if(hasSubCategories()){
+                for(Category subCategory : subCategories){
+                    if(subCategory.contains(contained)){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return true;
+        }
+    }
+
     @NonNull
     @Override
     public String toString(){

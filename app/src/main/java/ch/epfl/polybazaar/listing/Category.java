@@ -53,4 +53,11 @@ public interface Category {
      * @return the maximum depth of the current category
      */
     int maxDepth();
+
+    /**
+     * Checks whether the given Category is anywhere in a sub-category or the current category itself
+     * @param contained : The element we search to be contained
+     * @return true if the given category is contained in the current one
+     */
+    boolean contains(Category contained);
 }
