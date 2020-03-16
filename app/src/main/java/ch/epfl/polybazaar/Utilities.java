@@ -42,7 +42,7 @@ public abstract class Utilities {
         if(imageFile != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
             byte[] b = baos.toByteArray();
             tempStringImg = Base64.encodeToString(b, Base64.DEFAULT);
         }
@@ -76,7 +76,7 @@ public abstract class Utilities {
      */
     public static String convertBitmapToString(Bitmap bitmap){
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,10, baos);
         byte [] b=baos.toByteArray();
         String temp=Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
