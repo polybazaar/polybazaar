@@ -1,5 +1,7 @@
 package ch.epfl.polybazaar;
 
+import android.provider.ContactsContract;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
@@ -79,13 +81,24 @@ public class ListingDatabaseTest {
         Listing testListing = new Listing("testListing","testDescription",
                 "testPrice","test@epfl.ch");
         MockDatastore myDataStore = new MockDatastore();
-        myDataStore.addCollection("testCollection");
-        myDataStore.setupMockData("testCollection","testId",testListing);
+        myDataStore.addCollection("listings");
+        myDataStore.setupMockData("listings","testId",testListing);
         DatastoreFactory.setDependency(myDataStore);
         Datastore db = DatastoreFactory.getDependency();
         ListingDatabase.deleteListing("testId",result -> deleteSuccess= true);
         assertThat(deleteSuccess,is(true));
 
 
+    }
+    Listing wrongListing;
+    @Test
+    public void wrongIdReturnNull(){
+        MockDatastore myDatastore = new MockDatastore();
+        myDatastore.addCollection("listings");
+        DatastoreFactory.setDependency(myDatastore);
+        Datastore db = DatastoreFactory.getDependency();
+
+        ListingDatabase.fetchListing("wrondId",result -> wrongListing = result);
+        assert(wrongListing == null);
     }
 }
