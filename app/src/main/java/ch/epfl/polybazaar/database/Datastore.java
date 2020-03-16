@@ -2,7 +2,14 @@ package ch.epfl.polybazaar.database;
 
 import androidx.annotation.NonNull;
 
+<<<<<<< HEAD
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
+=======
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
+>>>>>>> 997e2eb79f7c4293c72f095d72265156786b5e19
 
 public interface Datastore {
 

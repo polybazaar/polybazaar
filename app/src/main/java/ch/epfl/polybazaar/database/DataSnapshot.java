@@ -1,5 +1,7 @@
 package ch.epfl.polybazaar.database;
 
+
+
 import java.util.Map;
 
 public class DataSnapshot {
@@ -16,8 +18,9 @@ public class DataSnapshot {
         return exists;
     }
     public Object get(String field){
+
         return data instanceof Map  ? ((Map<String,Object>)(data)).get(field) : null;
-        //return data;
+
     }
     public Object data(){
         return data;

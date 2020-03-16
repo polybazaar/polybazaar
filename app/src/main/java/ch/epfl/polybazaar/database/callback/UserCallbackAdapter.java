@@ -4,6 +4,10 @@ import java.util.Objects;
 
 import ch.epfl.polybazaar.database.DataSnapshot;
 import ch.epfl.polybazaar.database.DataSnapshotCallback;
+<<<<<<< HEAD
+=======
+import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
+>>>>>>> 997e2eb79f7c4293c72f095d72265156786b5e19
 import ch.epfl.polybazaar.user.User;
 
 public class UserCallbackAdapter implements DataSnapshotCallback {

@@ -53,8 +53,13 @@ public class ListingDatabaseTest {
         ListingCallbackAdapter adapter = new ListingCallbackAdapter(callback);
     }
 
+<<<<<<< HEAD
     private boolean storeSuccess;
     private Listing receivedListing;
+=======
+    boolean storeSuccess;
+    Listing receivedListing;
+>>>>>>> 997e2eb79f7c4293c72f095d72265156786b5e19
     @Test
     public void storeAndRetrieveListingTest(){
         MockDatastore myDatastore = new MockDatastore();
@@ -75,7 +80,11 @@ public class ListingDatabaseTest {
 
     }
 
+<<<<<<< HEAD
    private boolean deleteSuccess;
+=======
+    boolean deleteSuccess;
+>>>>>>> 997e2eb79f7c4293c72f095d72265156786b5e19
     @Test
     public void deleteListing(){
         Listing testListing = new Listing("testListing","testDescription",
@@ -90,7 +99,11 @@ public class ListingDatabaseTest {
 
 
     }
+<<<<<<< HEAD
     private Listing wrongListing;
+=======
+    Listing wrongListing;
+>>>>>>> 997e2eb79f7c4293c72f095d72265156786b5e19
     @Test
     public void wrongIdReturnNull(){
         MockDatastore myDatastore = new MockDatastore();

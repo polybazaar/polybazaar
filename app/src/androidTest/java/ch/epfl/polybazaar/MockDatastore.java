@@ -15,6 +15,7 @@ public class MockDatastore implements Datastore {
 
     private Map<String,Map<String,Object>> collections;
 
+
     public MockDatastore(){
         collections = new HashMap<>();
     }
@@ -26,9 +27,11 @@ public class MockDatastore implements Datastore {
      * create a new mock empty collection
      * @param collectionName
      */
+
     public void addCollection(String collectionName){
         collections.put(collectionName,new HashMap<>());
     }
+
 
     /**
      * put mock data in one collection
