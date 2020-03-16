@@ -94,15 +94,14 @@ public class ListingDatabaseTest {
     }
 
     private Listing wrongListing;
-    @Test
+    @Test(expected = NullPointerException.class)
     public void wrongIdReturnNull(){
         MockDatastore myDatastore = new MockDatastore();
         myDatastore.addCollection("listings");
         DatastoreFactory.setDependency(myDatastore);
         Datastore db = DatastoreFactory.getDependency();
-
         ListingDatabase.fetchListing("wrondId",result -> wrongListing = result);
-        assert(wrongListing == null);
+
     }
 
 }

@@ -2,6 +2,9 @@ package ch.epfl.polybazaar.user;
 
 import android.util.Log;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ch.epfl.polybazaar.database.Datastore;
 import ch.epfl.polybazaar.database.DatastoreFactory;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
@@ -53,7 +56,10 @@ public abstract class UserDatabase {
                     callback.onCallback(false);
                     return;
                 }
-                db.setData(userCollectionName, user.getEmail(), user, callback);
+                Map<String,Object> data = new HashMap<>();
+                data.put("nickName",user.getNickName());
+                data.put("email",user.getEmail());
+                db.setData(userCollectionName, user.getEmail(),data, callback);
             }
         };
         final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall);

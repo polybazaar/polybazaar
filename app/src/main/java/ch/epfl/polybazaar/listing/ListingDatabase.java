@@ -1,5 +1,8 @@
 package ch.epfl.polybazaar.listing;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ch.epfl.polybazaar.database.Datastore;
 import ch.epfl.polybazaar.database.DatastoreFactory;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
@@ -44,7 +47,12 @@ public abstract class ListingDatabase {
      */
     public static void storeListing(final Listing listing, final String listingID, final SuccessCallback callback){
         db = DatastoreFactory.getDependency();
-        db.setData(listingCollectionName, listingID, listing, callback);
+        Map<String,Object> data = new HashMap<>();
+        data.put("title",listing.getTitle());
+        data.put("description",listing.getDescription());
+        data.put("price",listing.getPrice());
+        data.put("userEmail",listing.getUserEmail());
+        db.setData(listingCollectionName, listingID, data, callback);
     }
 
     /**
