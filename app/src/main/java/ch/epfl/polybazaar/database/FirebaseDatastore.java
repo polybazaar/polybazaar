@@ -19,7 +19,7 @@ import ch.epfl.polybazaar.database.generic.QuerySnapshotCallback;
 import ch.epfl.polybazaar.database.DataSnapshot;
 
 
-abstract class FirebaseDatastore{
+public class FirebaseDatastore implements Datastore{
 
 
 
@@ -34,7 +34,7 @@ abstract class FirebaseDatastore{
      * @param documentPath document name (ID)
      * @param callback a GenericCallback interface implementation
      */
-    public static void fetchData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final DataSnapshotCallback callback) {
+    public void fetchData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final DataSnapshotCallback callback) {
         Task<DocumentSnapshot> task = database.collection(collectionPath).document(documentPath).get();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -65,7 +65,7 @@ abstract class FirebaseDatastore{
      * @param data the data that should be stored (overwritten)
      * @param callback a SuccessCallback interface implementation
      */
-    public static void setData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
+    public void setData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
         Task<Void> task = database.collection(collectionPath).document(documentPath).set(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -89,7 +89,7 @@ abstract class FirebaseDatastore{
      * @param data the data that should be stored (overwritten)
      * @param callback a SuccessCallback interface implementation
      */
-    public static void addData(@NonNull final String collectionPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
+    public void addData(@NonNull final String collectionPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
         Task<DocumentReference> task = database.collection(collectionPath).add(data);
         task.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
@@ -112,7 +112,7 @@ abstract class FirebaseDatastore{
      * @param documentPath document name (ID)
      * @param callback a SuccessCallback interface implementation
      */
-    public static void deleteData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final SuccessCallback callback) {
+    public void deleteData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final SuccessCallback callback) {
         Task<Void> task = database.collection(collectionPath).document(documentPath).delete();
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -134,7 +134,7 @@ abstract class FirebaseDatastore{
      * @param collectionPath collection name
      * @param callback a GenericCallback interface implementation
      */
-    public static void getAllDataInCollection(@NonNull final String collectionPath, @NonNull final QuerySnapshotCallback callback) {
+    public void getAllDataInCollection(@NonNull final String collectionPath, @NonNull final QuerySnapshotCallback callback) {
         Task<QuerySnapshot> task = database.collection(collectionPath).get();
         task.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

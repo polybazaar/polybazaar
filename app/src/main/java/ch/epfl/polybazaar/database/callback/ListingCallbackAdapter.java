@@ -24,13 +24,11 @@ public  class ListingCallbackAdapter implements DataSnapshotCallback {
             listingCallback.onCallback(null);
             return;
         }
-       /* Listing listing = new Listing(Objects.requireNonNull(result.get("title")).toString(),
+        Listing listing = new Listing(Objects.requireNonNull(result.get("title")).toString(),
                 Objects.requireNonNull(result.get("description")).toString(),
                 Objects.requireNonNull(result.get("price")).toString(),
                 Objects.requireNonNull(result.get("userEmail")).toString());
 
-        */
-        Listing listing = (Listing)result.data();
         listingCallback.onCallback(listing);
     }
 }
