@@ -52,17 +52,12 @@ public class StringCategory implements Category {
     @Override
     public boolean contains(Category contained) {
         if(!equals(contained)){
-            if(hasSubCategories()){
-                for(Category subCategory : subCategories){
-                    if(subCategory.contains(contained)){
-                        return true;
-                    }
+            for(Category subCategory : subCategories){
+                if(subCategory.contains(contained)){
+                    return true;
                 }
-                return false;
             }
-            else{
-                return false;
-            }
+            return false;
         }
         else{
             return true;
