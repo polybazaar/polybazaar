@@ -9,11 +9,11 @@ import ch.epfl.polybazaar.database.DataSnapshot;
 import ch.epfl.polybazaar.database.DataSnapshotCallback;
 import ch.epfl.polybazaar.database.Datastore;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
-import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
+
 
 public class MockDatastore implements Datastore {
 
-    Map<String,Map<String,Object>> collections;
+    private Map<String,Map<String,Object>> collections;
 
     public MockDatastore(){
         collections = new HashMap<>();
@@ -21,10 +21,21 @@ public class MockDatastore implements Datastore {
     public void reset(){
         collections = new HashMap<>();
     }
+
+    /**
+     * create a new mock empty collection
+     * @param collectionName
+     */
     public void addCollection(String collectionName){
         collections.put(collectionName,new HashMap<>());
     }
 
+    /**
+     * put mock data in one collection
+     * @param collectionName
+     * @param dataId
+     * @param data
+     */
     public void setupMockData(String collectionName,String dataId,Object data){
         Map<String,Object> document = new HashMap<>();
         document.put(dataId,data);

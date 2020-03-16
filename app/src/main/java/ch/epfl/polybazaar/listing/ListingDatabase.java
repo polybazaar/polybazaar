@@ -6,8 +6,6 @@ import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.database.callback.ListingCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 
-import static ch.epfl.polybazaar.database.generic.GenericDatabase.*;
-
 /**
  * Usage Example:
  *

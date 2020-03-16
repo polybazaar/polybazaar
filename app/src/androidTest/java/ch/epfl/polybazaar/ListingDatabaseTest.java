@@ -53,8 +53,8 @@ public class ListingDatabaseTest {
         ListingCallbackAdapter adapter = new ListingCallbackAdapter(callback);
     }
 
-    boolean storeSuccess;
-    Listing receivedListing;
+    private boolean storeSuccess;
+    private Listing receivedListing;
     @Test
     public void storeAndRetrieveListingTest(){
         MockDatastore myDatastore = new MockDatastore();
@@ -75,7 +75,7 @@ public class ListingDatabaseTest {
 
     }
 
-    boolean deleteSuccess;
+   private boolean deleteSuccess;
     @Test
     public void deleteListing(){
         Listing testListing = new Listing("testListing","testDescription",
@@ -90,7 +90,7 @@ public class ListingDatabaseTest {
 
 
     }
-    Listing wrongListing;
+    private Listing wrongListing;
     @Test
     public void wrongIdReturnNull(){
         MockDatastore myDatastore = new MockDatastore();

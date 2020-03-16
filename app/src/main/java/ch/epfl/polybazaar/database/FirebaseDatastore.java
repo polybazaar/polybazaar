@@ -18,7 +18,8 @@ import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
 import ch.epfl.polybazaar.database.generic.QuerySnapshotCallback;
 import ch.epfl.polybazaar.database.DataSnapshot;
 
-public abstract class FirebaseDatastore{
+@SuppressWarnings("ALL")
+abstract class FirebaseDatastore{
 
     private static final String TAG = "FirebaseDatastore";
 
