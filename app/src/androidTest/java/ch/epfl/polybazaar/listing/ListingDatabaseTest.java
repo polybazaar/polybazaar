@@ -2,6 +2,7 @@ package ch.epfl.polybazaar.listing;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -71,9 +72,9 @@ public class ListingDatabaseTest {
     }
 
     @Test
-    public void wrongIdReturnNull(){
+    public void wrongListingIdReturnNull(){
         useMockDataStore();
-        fetchListing("wrondId", result -> assertNull(result));
+        fetchListing("wrondId", Assert::assertNull);
     }
 
 }

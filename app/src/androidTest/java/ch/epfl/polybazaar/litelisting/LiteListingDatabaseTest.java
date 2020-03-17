@@ -2,6 +2,7 @@ package ch.epfl.polybazaar.litelisting;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -48,7 +49,7 @@ public class LiteListingDatabaseTest {
     private LiteListing receivedListing;
     private String listingID;
     @Test
-    public void storeAndRetrieveListingTest(){
+    public void storeAndRetrieveLiteListingTest(){
         useMockDataStore();
         LiteListing testListing = new LiteListing("listingID","testTitle","testPrice");
         addLiteListing(testListing, result -> assertThat(result, is(true)));
@@ -60,7 +61,7 @@ public class LiteListingDatabaseTest {
     }
 
     @Test
-    public void deleteListingTest(){
+    public void deleteLiteListingTest(){
         useMockDataStore();
         LiteListing testListing = new LiteListing("listingID","testTitle","testPrice");
         addLiteListing(testListing, result -> assertThat(result, is(true)));
@@ -70,8 +71,8 @@ public class LiteListingDatabaseTest {
     }
 
     @Test
-    public void wrongIdReturnNull(){
+    public void wrongLiteListingIdReturnNull(){
         useMockDataStore();
-        fetchLiteListing("wrondId", result -> assertNull(result));
+        fetchLiteListing("wrondId", Assert::assertNull);
     }
 }
