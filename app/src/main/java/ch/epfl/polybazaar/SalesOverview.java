@@ -181,6 +181,6 @@ public class SalesOverview extends AppCompatActivity {
                 }
             }
         };
-        //fetchLiteListingList(callbackLiteListingList);
+        fetchLiteListingList(callbackLiteListingList);
     }
 }
