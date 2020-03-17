@@ -20,7 +20,8 @@ import ch.epfl.polybazaar.database.callback.SuccessCallback;
  */
 public abstract class ListingDatabase {
 
-    private static final String listingCollectionName = "listings";
+    public static final String listingCollectionName = "listings";
+
     private static DataStore db;
 
     /**

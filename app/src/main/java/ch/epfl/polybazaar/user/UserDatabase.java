@@ -27,7 +27,7 @@ public abstract class UserDatabase {
 
     private static final String TAG = "UserDatabase";
 
-    private static final String userCollectionName = "users";
+    public static final String userCollectionName = "users";
 
     private static DataStore db;
 

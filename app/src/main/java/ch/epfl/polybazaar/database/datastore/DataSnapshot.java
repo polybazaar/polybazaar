@@ -1,11 +1,5 @@
 package ch.epfl.polybazaar.database.datastore;
 
-
-
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import java.util.Map;
 
 public interface DataSnapshot {
@@ -16,4 +10,5 @@ public interface DataSnapshot {
 
     public Map<String, Object> data();
 
+    public String getId();
 }

@@ -2,6 +2,10 @@ package ch.epfl.polybazaar.user;
 
 import static ch.epfl.polybazaar.Utilities.*;
 
+
+/**
+ * If you attributes of this class, also change its CallbackAdapter and MockDataSnapshot
+ */
 public class User {
 
     private String nickName;

@@ -1,8 +1,10 @@
-package ch.epfl.polybazaar.database.datastore;
+package ch.epfl.polybazaar.database.datastore.firebase;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Map;
+
+import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 
 public class FirebaseDataSnapshot implements DataSnapshot {
 
@@ -25,5 +27,10 @@ public class FirebaseDataSnapshot implements DataSnapshot {
     @Override
     public Map<String, Object> data() {
         return documentSnapshot.getData();
+    }
+
+    @Override
+    public String getId() {
+        return documentSnapshot.getId();
     }
 }

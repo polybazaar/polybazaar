@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar;
+package ch.epfl.polybazaar.user;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 

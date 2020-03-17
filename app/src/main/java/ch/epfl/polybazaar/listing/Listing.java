@@ -9,6 +9,9 @@ import static ch.epfl.polybazaar.Utilities.*;
  *
  */
 
+/**
+ * If you attributes of this class, also change its CallbackAdapter and MockDataSnapshot
+ */
 public class Listing {
 
     // TODO: add attribute image

@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.database.datastore;
+package ch.epfl.polybazaar.database.datastore.firebase;
 
 import android.util.Log;
 
@@ -11,8 +11,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.database.datastore.CollectionSnapshotCallback;
+import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
+import ch.epfl.polybazaar.database.datastore.DataStore;
 
 
 public class FirebaseDataStore implements DataStore {
@@ -131,8 +135,8 @@ public class FirebaseDataStore implements DataStore {
      * @param collectionPath collection name
      * @param callback a GenericCallback interface implementation
      */
-    /*
-    public void getAllDataInCollection(@NonNull final String collectionPath, @NonNull final QuerySnapshotCallback callback) {
+
+    public void getAllDataInCollection(@NonNull final String collectionPath, @NonNull final CollectionSnapshotCallback callback) {
         Task<QuerySnapshot> task = database.collection(collectionPath).get();
         task.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -142,7 +146,7 @@ public class FirebaseDataStore implements DataStore {
                     assert document != null;
                     if (!document.isEmpty()) {
                         Log.d(TAG, "successfully retrieved data");
-                        callback.onCallback(document);
+                        callback.onCallback(new FirebaseCollectionSnapshot(document));
                     } else {
                         Log.d(TAG, "data does not exist");
                         callback.onCallback(null);
@@ -154,7 +158,7 @@ public class FirebaseDataStore implements DataStore {
             }
         });
     }
-    */
+
 
 
 }

@@ -1,5 +1,7 @@
 package ch.epfl.polybazaar.litelisting;
 
+import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
+import ch.epfl.polybazaar.database.callback.LiteListingListCallbackAdapter;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
@@ -21,20 +23,22 @@ import ch.epfl.polybazaar.database.callback.SuccessCallback;
  */
 public abstract class LiteListingDatabase {
 
-    private static final String liteListingCollectionName = "liteListings";
+    public static final String liteListingCollectionName = "liteListings";
+
     private static DataStore db;
+
     /**
      * Fetch all liteListings IDs from the database
      * callback will contain the liteListingList (List of IDs (Strings))
      * @param callback a LiteListingListCallback interface implementation
      */
-    /*
+
     public static void fetchLiteListingList(final LiteListingListCallback callback) {
         final LiteListingListCallbackAdapter adapterCallback= new LiteListingListCallbackAdapter(callback);
         db = DataStoreFactory.getDependency();
-        //getAllDataInCollection(liteListingCollectionName, adapterCallback);
+        db.getAllDataInCollection(liteListingCollectionName, adapterCallback);
     }
-    */
+
 
     /**
      * Fetch a liteListing from the database given its ID

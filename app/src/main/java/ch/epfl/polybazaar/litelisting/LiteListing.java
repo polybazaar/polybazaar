@@ -1,5 +1,9 @@
 package ch.epfl.polybazaar.litelisting;
 
+
+/**
+ * If you attributes of this class, also change its CallbackAdapter and MockDataSnapshot
+ */
 public class LiteListing {
 
     // TODO: add attribute thumbnail

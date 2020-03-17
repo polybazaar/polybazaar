@@ -1,17 +1,22 @@
-package ch.epfl.polybazaar.database;
+package ch.epfl.polybazaar.database.datastore.mock;
 
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import ch.epfl.polybazaar.database.datastore.DataSnapshot;
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.database.datastore.CollectionSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataStore;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.listing.ListingDatabase;
+import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
+import ch.epfl.polybazaar.user.UserDatabase;
 
 
 public class MockDataStore implements DataStore {
@@ -22,6 +27,9 @@ public class MockDataStore implements DataStore {
 
     public MockDataStore(){
         collections = new HashMap<>();
+        addCollection(ListingDatabase.listingCollectionName);
+        addCollection(UserDatabase.userCollectionName);
+        addCollection(LiteListingDatabase.liteListingCollectionName);
     }
 
     public void reset(){
@@ -48,6 +56,7 @@ public class MockDataStore implements DataStore {
         collections.put(collectionName,document);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull DataSnapshotCallback callback) {
         if (!collections.containsKey(collectionPath)){
@@ -61,11 +70,12 @@ public class MockDataStore implements DataStore {
             return;
         }
         Object data = Objects.requireNonNull(collections.get(collectionPath)).getOrDefault(documentPath, null);
-        MockDataSnapshot snapshot = new MockDataSnapshot(data);
+        MockDataSnapshot snapshot = new MockDataSnapshot(documentPath, data);
         Log.i(TAG, "Document retrieved successfully");
         callback.onCallback(snapshot);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull SuccessCallback callback) {
         if (!collections.containsKey(collectionPath)){
@@ -110,5 +120,16 @@ public class MockDataStore implements DataStore {
         Objects.requireNonNull(collections.get(collectionPath)).remove(documentPath);
         Log.i(TAG, "Document successfully deleted");
         callback.onCallback(true);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void getAllDataInCollection(@NonNull String collectionPath, @NonNull CollectionSnapshotCallback callback) {
+        if (!collections.containsKey(collectionPath)){
+            Log.i(TAG, "Collection does not exist");
+            callback.onCallback(null);
+            return;
+        }
+        callback.onCallback(new MockCollectionSnapshot(collections.getOrDefault(collectionPath, null)));
     }
 }

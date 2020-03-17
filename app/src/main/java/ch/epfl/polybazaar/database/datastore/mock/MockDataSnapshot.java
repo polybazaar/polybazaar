@@ -1,4 +1,8 @@
-package ch.epfl.polybazaar.database;
+package ch.epfl.polybazaar.database.datastore.mock;
+
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +15,8 @@ import ch.epfl.polybazaar.user.User;
 public class MockDataSnapshot implements DataSnapshot {
 
     private Map<String, Object> data;
+
+    private String ID;
 
     private Map<String, Object> getMap(Object o) {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -32,7 +38,8 @@ public class MockDataSnapshot implements DataSnapshot {
         return result;
     }
 
-    public MockDataSnapshot(Object data) {
+    public MockDataSnapshot(String ID, Object data) {
+        this.ID = ID;
         this.data = getMap(data);
     }
 
@@ -41,6 +48,7 @@ public class MockDataSnapshot implements DataSnapshot {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public Object get(String field) {
         return data.getOrDefault(field, null);
@@ -49,5 +57,10 @@ public class MockDataSnapshot implements DataSnapshot {
     @Override
     public Map<String, Object> data() {
         return data;
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 }

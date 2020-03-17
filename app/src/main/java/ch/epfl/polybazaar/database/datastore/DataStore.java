@@ -17,4 +17,6 @@ public interface DataStore {
 
     void deleteData(@NonNull final String collectionPath,
                     @NonNull final String documentPath, @NonNull final SuccessCallback callback);
+
+    void getAllDataInCollection(@NonNull final String collectionPath, @NonNull final CollectionSnapshotCallback callback);
 }
