@@ -33,22 +33,18 @@ public class Listing {
     }
 
     public String getTitle() {
-        if (title == null) return null;
         return title;
     }
 
     public String getDescription() {
-        if (description == null) return null;
         return description;
     }
 
     public String getPrice() {
-        if (price == null) return null;
         return price;
     }
 
     public String getUserEmail() {
-        if (price == null) return null;
         return userEmail;
     }
 

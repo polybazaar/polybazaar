@@ -20,17 +20,14 @@ public class LiteListing {
     }
 
     public String getTitle() {
-        if (title == null) return null;
         return title;
     }
 
     public String getListingID() {
-        if (listingID == null) return null;
         return listingID;
     }
 
     public String getPrice() {
-        if (price == null) return null;
         return price;
     }
 

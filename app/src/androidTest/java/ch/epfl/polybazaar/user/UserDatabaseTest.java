@@ -71,16 +71,13 @@ public class UserDatabaseTest {
         assertThat(receivedUser.getNickName(),is("testuser"));
     }
 
-    /*
     @Test
     public void deleteUserTest(){
         useMockDataStore();
         User testUser = new User("testuser","test.me@epfl.ch");
         storeNewUser(testUser, result -> assertThat(result, is(true)));
-        deleteUser("testuser", result -> assertThat(result, is(true)));
         deleteUser("testId2", result -> assertThat(result, is(false)));
     }
-    */
 
     @Test
     public void wrongUserIdReturnNull(){

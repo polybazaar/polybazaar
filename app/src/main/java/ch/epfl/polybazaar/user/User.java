@@ -12,12 +12,10 @@ public class User {
     private String email;
 
     public String getNickName() {
-        if (nickName == null) return null;
         return nickName;
     }
 
     public String getEmail() {
-        if (email == null) return null;
         return email;
     }
 
