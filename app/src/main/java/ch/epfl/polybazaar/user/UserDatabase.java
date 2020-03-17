@@ -2,11 +2,8 @@ package ch.epfl.polybazaar.user;
 
 import android.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import ch.epfl.polybazaar.database.Datastore;
-import ch.epfl.polybazaar.database.DatastoreFactory;
+import ch.epfl.polybazaar.database.datastore.DataStore;
+import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.callback.UserCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.UserCallback;
@@ -32,7 +29,7 @@ public abstract class UserDatabase {
 
     private static final String userCollectionName = "users";
 
-    private static Datastore db;
+    private static DataStore db;
 
     /**
      * Add an user to the database, using its email as unique identifier (key)
@@ -41,7 +38,7 @@ public abstract class UserDatabase {
      * @param callback a SuccessCallback interface implementation
      */
     public static void storeNewUser(final User user, final SuccessCallback callback) {
-        db = DatastoreFactory.getDependency();
+        db = DataStoreFactory.getDependency();
 
         final UserCallback intermediateCall = new UserCallback() {
             @Override
@@ -56,10 +53,7 @@ public abstract class UserDatabase {
                     callback.onCallback(false);
                     return;
                 }
-                Map<String,Object> data = new HashMap<>();
-                data.put("nickName",user.getNickName());
-                data.put("email",user.getEmail());
-                db.setData(userCollectionName, user.getEmail(),data, callback);
+                db.setData(userCollectionName, user.getEmail(), user, callback);
             }
         };
         final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall);
@@ -73,7 +67,7 @@ public abstract class UserDatabase {
      * @param callback a UserCallback interface implementation
      */
     public static void fetchUser(final String email, final UserCallback callback) {
-        db = DatastoreFactory.getDependency();
+        db = DataStoreFactory.getDependency();
         final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback);
         db.fetchData(userCollectionName, email, adapterCallback);
     }
@@ -85,7 +79,7 @@ public abstract class UserDatabase {
      * @param callback a SuccessCallback interface implementation
      */
     public static void deleteUser(final String email, final SuccessCallback callback) {
-        db = DatastoreFactory.getDependency();
+        db = DataStoreFactory.getDependency();
         db.deleteData(userCollectionName, email, callback);
     }
 }

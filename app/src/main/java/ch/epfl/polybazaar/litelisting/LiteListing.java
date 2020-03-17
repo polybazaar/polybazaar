@@ -16,15 +16,18 @@ public class LiteListing {
     }
 
     public String getTitle() {
-        return this.title;
+        if (title == null) return null;
+        return title;
     }
 
     public String getListingID() {
-        return this.listingID;
+        if (listingID == null) return null;
+        return listingID;
     }
 
     public String getPrice() {
-        return this.price;
+        if (price == null) return null;
+        return price;
     }
 
 

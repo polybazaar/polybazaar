@@ -1,10 +1,7 @@
 package ch.epfl.polybazaar.listing;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import ch.epfl.polybazaar.database.Datastore;
-import ch.epfl.polybazaar.database.DatastoreFactory;
+import ch.epfl.polybazaar.database.datastore.DataStore;
+import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.database.callback.ListingCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
@@ -24,7 +21,7 @@ import ch.epfl.polybazaar.database.callback.SuccessCallback;
 public abstract class ListingDatabase {
 
     private static final String listingCollectionName = "listings";
-    private static Datastore db;
+    private static DataStore db;
 
     /**
      * Fetch a listing from the database
@@ -34,7 +31,7 @@ public abstract class ListingDatabase {
      */
     public static void fetchListing(final String listingID, final ListingCallback callback){
         final ListingCallbackAdapter adapterCallback = new ListingCallbackAdapter(callback);
-        db = DatastoreFactory.getDependency();
+        db = DataStoreFactory.getDependency();
         db.fetchData(listingCollectionName, listingID, adapterCallback);
     }
 
@@ -46,13 +43,8 @@ public abstract class ListingDatabase {
      * @param callback a SuccessCallback interface implementation
      */
     public static void storeListing(final Listing listing, final String listingID, final SuccessCallback callback){
-        db = DatastoreFactory.getDependency();
-        Map<String,Object> data = new HashMap<>();
-        data.put("title",listing.getTitle());
-        data.put("description",listing.getDescription());
-        data.put("price",listing.getPrice());
-        data.put("userEmail",listing.getUserEmail());
-        db.setData(listingCollectionName, listingID, data, callback);
+        db = DataStoreFactory.getDependency();
+        db.setData(listingCollectionName, listingID, listing, callback);
     }
 
     /**
@@ -62,7 +54,7 @@ public abstract class ListingDatabase {
      * @param callback a SuccessCallback interface implementation
      */
     public static void deleteListing(final String listingID, final SuccessCallback callback){
-        db = DatastoreFactory.getDependency();
+        db = DataStoreFactory.getDependency();
         db.deleteData(listingCollectionName, listingID, callback);
     }
 

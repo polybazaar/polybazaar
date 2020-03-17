@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.database;
+package ch.epfl.polybazaar.database.datastore;
 
 import android.util.Log;
 
@@ -11,15 +11,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
-import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
-import ch.epfl.polybazaar.database.generic.QuerySnapshotCallback;
-import ch.epfl.polybazaar.database.DataSnapshot;
 
 
-public class FirebaseDatastore implements Datastore{
+public class FirebaseDataStore implements DataStore {
 
 
 
@@ -41,8 +37,8 @@ public class FirebaseDatastore implements Datastore{
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    DataSnapshot data = new DataSnapshot(true,document.getData());
                     assert document != null;
+                    FirebaseDataSnapshot data = new FirebaseDataSnapshot(document);
                     if (document.exists()) {
                         Log.d(TAG, "successfully retrieved data");
                         callback.onCallback(data);
@@ -129,11 +125,13 @@ public class FirebaseDatastore implements Datastore{
         });
     }
 
+
     /**
      * gets all document IDs in a given collection, and calls onCallback when done
      * @param collectionPath collection name
      * @param callback a GenericCallback interface implementation
      */
+    /*
     public void getAllDataInCollection(@NonNull final String collectionPath, @NonNull final QuerySnapshotCallback callback) {
         Task<QuerySnapshot> task = database.collection(collectionPath).get();
         task.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -156,6 +154,8 @@ public class FirebaseDatastore implements Datastore{
             }
         });
     }
+    */
+
 
 }
 

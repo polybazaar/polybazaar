@@ -1,10 +1,10 @@
-package ch.epfl.polybazaar.database;
+package ch.epfl.polybazaar.database.datastore;
 
 import androidx.annotation.NonNull;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 
 
-public interface Datastore {
+public interface DataStore {
 
     void fetchData(@NonNull final String collectionPath,
                    @NonNull final String documentPath, @NonNull final DataSnapshotCallback callback);

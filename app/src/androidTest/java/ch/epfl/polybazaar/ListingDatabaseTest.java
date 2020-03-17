@@ -1,23 +1,21 @@
 package ch.epfl.polybazaar;
 
-import android.provider.ContactsContract;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.polybazaar.database.Datastore;
-import ch.epfl.polybazaar.database.DatastoreFactory;
+import ch.epfl.polybazaar.database.datastore.DataStore;
+import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
+import ch.epfl.polybazaar.database.MockDataStore;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.database.callback.ListingCallbackAdapter;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listing.ListingDatabase;
+import static ch.epfl.polybazaar.listing.ListingDatabase.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class ListingDatabaseTest {
@@ -58,50 +56,41 @@ public class ListingDatabaseTest {
     private Listing receivedListing;
     @Test
     public void storeAndRetrieveListingTest(){
-        MockDatastore myDatastore = new MockDatastore();
+        MockDataStore myDatastore = new MockDataStore();
         myDatastore.addCollection("listings");
-        DatastoreFactory.setDependency(myDatastore);
-
+        DataStoreFactory.setDependency(myDatastore);
         Listing testListing = new Listing("testListing","testDescription","testPrice","test@epfl.ch");
-        ListingDatabase.storeListing(testListing, "testId", result -> storeSuccess = true);
+        storeListing(testListing, "testId", result -> storeSuccess = result);
         assertThat(storeSuccess,is(true));
-
-        ListingDatabase.fetchListing("testId",result -> receivedListing = result);
+        fetchListing("testId", result -> receivedListing = result);
         assertThat(receivedListing.getTitle(),is("testListing"));
         assertThat(receivedListing.getDescription(),is("testDescription"));
         assertThat(receivedListing.getPrice(),is("testPrice"));
         assertThat(receivedListing.getUserEmail(),is("test@epfl.ch"));
-
-
-
     }
 
-
-   private boolean deleteSuccess;
+    private boolean deleteSuccess;
     @Test
-    public void deleteListing(){
+    public void deleteListingTest(){
         Listing testListing = new Listing("testListing","testDescription",
                 "testPrice","test@epfl.ch");
-        MockDatastore myDataStore = new MockDatastore();
+        MockDataStore myDataStore = new MockDataStore();
         myDataStore.addCollection("listings");
-        myDataStore.setupMockData("listings","testId",testListing);
-        DatastoreFactory.setDependency(myDataStore);
-        Datastore db = DatastoreFactory.getDependency();
-        ListingDatabase.deleteListing("testId",result -> deleteSuccess= true);
+        myDataStore.setupMockData("listings","testId", testListing);
+        DataStoreFactory.setDependency(myDataStore);
+        deleteListing("testId", result -> deleteSuccess = result);
         assertThat(deleteSuccess,is(true));
-
-
     }
 
     private Listing wrongListing;
-    @Test(expected = NullPointerException.class)
+    @Test
     public void wrongIdReturnNull(){
-        MockDatastore myDatastore = new MockDatastore();
+        MockDataStore myDatastore = new MockDataStore();
         myDatastore.addCollection("listings");
-        DatastoreFactory.setDependency(myDatastore);
-        Datastore db = DatastoreFactory.getDependency();
-        ListingDatabase.fetchListing("wrondId",result -> wrongListing = result);
-
+        DataStoreFactory.setDependency(myDatastore);
+        DataStore db = DataStoreFactory.getDependency();
+        fetchListing("wrondId", result -> wrongListing = result);
+        assertNull(wrongListing);
     }
 
 }

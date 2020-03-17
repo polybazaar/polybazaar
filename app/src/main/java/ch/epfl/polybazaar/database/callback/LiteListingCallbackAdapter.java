@@ -1,9 +1,11 @@
 package ch.epfl.polybazaar.database.callback;
 
-import java.util.Objects;
+import android.os.Build;
 
-import ch.epfl.polybazaar.database.DataSnapshot;
-import ch.epfl.polybazaar.database.DataSnapshotCallback;
+import androidx.annotation.RequiresApi;
+
+import ch.epfl.polybazaar.database.datastore.DataSnapshot;
+import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 public class LiteListingCallbackAdapter implements DataSnapshotCallback {
@@ -18,15 +20,16 @@ public class LiteListingCallbackAdapter implements DataSnapshotCallback {
         this.liteListingCallback = liteListingCallback;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCallback(DataSnapshot result) {
         if (result==null){
             liteListingCallback.onCallback(null);
             return;
         }
-        LiteListing liteListing = new LiteListing(Objects.requireNonNull(result.get("listingID")).toString(),
-                Objects.requireNonNull(result.get("title")).toString(),
-                Objects.requireNonNull(result.get("price")).toString());
+        LiteListing liteListing = new LiteListing(String.valueOf(result.get("listingID")),
+                String.valueOf(result.get("title")),
+                String.valueOf(result.get("price")));
         liteListingCallback.onCallback(liteListing);
     }
 }

@@ -1,9 +1,11 @@
 package ch.epfl.polybazaar.database.callback;
 
-import java.util.Objects;
+import android.os.Build;
 
-import ch.epfl.polybazaar.database.DataSnapshot;
-import ch.epfl.polybazaar.database.DataSnapshotCallback;
+import androidx.annotation.RequiresApi;
+
+import ch.epfl.polybazaar.database.datastore.DataSnapshot;
+import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
 import ch.epfl.polybazaar.listing.Listing;
 
 public  class ListingCallbackAdapter implements DataSnapshotCallback {
@@ -18,16 +20,17 @@ public  class ListingCallbackAdapter implements DataSnapshotCallback {
         this.listingCallback = listingCallback;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCallback(DataSnapshot result) {
         if (result==null){
             listingCallback.onCallback(null);
             return;
         }
-        Listing listing = new Listing(Objects.requireNonNull(result.get("title")).toString(),
-                Objects.requireNonNull(result.get("description")).toString(),
-                Objects.requireNonNull(result.get("price")).toString(),
-                Objects.requireNonNull(result.get("userEmail")).toString());
+        Listing listing = new Listing(String.valueOf(result.get("title")),
+                String.valueOf(result.get("description")),
+                String.valueOf(result.get("price")),
+                String.valueOf(result.get("userEmail")));
 
         listingCallback.onCallback(listing);
     }
