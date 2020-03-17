@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar;
+package ch.epfl.polybazaar.litelisting;
 
 import org.junit.Test;
 

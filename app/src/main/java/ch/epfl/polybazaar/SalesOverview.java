@@ -22,8 +22,7 @@ import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListingList;
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.*;
 
 public class SalesOverview extends AppCompatActivity {
 

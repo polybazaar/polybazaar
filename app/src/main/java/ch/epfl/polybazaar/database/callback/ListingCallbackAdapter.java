@@ -1,13 +1,14 @@
 package ch.epfl.polybazaar.database.callback;
 
-import com.google.firebase.firestore.DocumentSnapshot;
+import android.os.Build;
 
-import java.util.Objects;
+import androidx.annotation.RequiresApi;
 
-import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
+import ch.epfl.polybazaar.database.datastore.DataSnapshot;
+import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
 import ch.epfl.polybazaar.listing.Listing;
 
-public  class ListingCallbackAdapter implements DocumentSnapshotCallback {
+public  class ListingCallbackAdapter implements DataSnapshotCallback {
 
     private ListingCallback listingCallback;
 
@@ -19,22 +20,25 @@ public  class ListingCallbackAdapter implements DocumentSnapshotCallback {
         this.listingCallback = listingCallback;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void onCallback(DocumentSnapshot result) {
+    public void onCallback(DataSnapshot result) {
         if (result==null){
             listingCallback.onCallback(null);
             return;
         }
+
         Object image = result.get("stringImage");
         String stringImage = "";
         if (image != null) {
             stringImage = image.toString();
         }
-        Listing listing = new Listing(Objects.requireNonNull(result.get("title")).toString(),
-                Objects.requireNonNull(result.get("description")).toString(),
-                Objects.requireNonNull(result.get("price")).toString(),
-                Objects.requireNonNull(result.get("userEmail")).toString(),
+        Listing listing = new Listing(String.valueOf(result.get("title")),
+                String.valueOf(result.get("description")),
+                String.valueOf(result.get("price")),
+                String.valueOf(result.get("userEmail")),
                 stringImage);
+
         listingCallback.onCallback(listing);
     }
 }

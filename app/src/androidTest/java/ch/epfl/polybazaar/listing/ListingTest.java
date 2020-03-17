@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar;
+package ch.epfl.polybazaar.listing;
 
 import org.junit.Test;
 
@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ListingTest {
 
-    Listing listing1 = new Listing("Livre", "Livre d'algèbre linéaire", "22 CHF", "test.user@epfl.ch");
+    private Listing listing1 = new Listing("Livre", "Livre d'algèbre linéaire", "22 CHF", "test.user@epfl.ch");
 
     @Test
     public void checkTitle() {

@@ -9,6 +9,8 @@ import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Map;
+
 
 import ch.epfl.polybazaar.user.User;
 
@@ -106,6 +108,13 @@ public abstract class Utilities {
         return bitmap;
     }
 
+    public static Object getOrDefaultObj(Map<String, Object> map, String key) {
+        if (!map.containsKey(key)) return null;
+        return map.get(key);
+    }
 
-
+    public static Map<String, Object> getOrDefaultMap(Map<String, Map<String, Object>> map, String key) {
+        if (!map.containsKey(key)) return null;
+        return map.get(key);
+    }
 }

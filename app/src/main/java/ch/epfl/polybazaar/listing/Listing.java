@@ -16,6 +16,9 @@ import static ch.epfl.polybazaar.Utilities.emailIsValid;
  *
  */
 
+/**
+ * If you attributes of this class, also change its CallbackAdapter and MockdataSnapshot
+ */
 public class Listing {
 
     private String title;
