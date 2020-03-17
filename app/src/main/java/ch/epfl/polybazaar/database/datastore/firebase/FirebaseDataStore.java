@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar.database.datastore.firebase;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ public class FirebaseDataStore implements DataStore {
 
     private static final String TAG = "FirebaseDatastore";
 
+    @SuppressLint("StaticFieldLeak")
     private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
 
