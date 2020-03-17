@@ -12,6 +12,7 @@
         android:layout_height="fill_parent">
 
         <LinearLayout
+            android:id="@+id/fillListingLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
