@@ -1,5 +1,7 @@
 package ch.epfl.polybazaar;
 
+import java.util.Map;
+
 import ch.epfl.polybazaar.user.User;
 
 public abstract class Utilities {
@@ -19,6 +21,16 @@ public abstract class Utilities {
             return true;
         }
         return false;
+    }
+
+    public static Object getOrDefaultObj(Map<String, Object> map, String key) {
+        if (!map.containsKey(key)) return null;
+        return map.get(key);
+    }
+
+    public static Map<String, Object> getOrDefaultMap(Map<String, Map<String, Object>> map, String key) {
+        if (!map.containsKey(key)) return null;
+        return map.get(key);
     }
 
 }

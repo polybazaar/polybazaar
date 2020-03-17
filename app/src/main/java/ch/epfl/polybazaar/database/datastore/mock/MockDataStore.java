@@ -4,7 +4,6 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +16,9 @@ import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.listing.ListingDatabase;
 import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
 import ch.epfl.polybazaar.user.UserDatabase;
+
+import static ch.epfl.polybazaar.Utilities.getOrDefaultMap;
+import static ch.epfl.polybazaar.Utilities.getOrDefaultObj;
 
 
 public class MockDataStore implements DataStore {
@@ -68,13 +70,12 @@ public class MockDataStore implements DataStore {
             callback.onCallback(null);
             return;
         }
-        Object data = Objects.requireNonNull(collections.get(collectionPath)).getOrDefault(documentPath, null);
+        Object data = Objects.requireNonNull(getOrDefaultObj(Objects.requireNonNull(collections.get(collectionPath)), documentPath));
         MockDataSnapshot snapshot = new MockDataSnapshot(documentPath, data);
         Log.i(TAG, "Document retrieved successfully");
         callback.onCallback(snapshot);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull SuccessCallback callback) {
         if (!collections.containsKey(collectionPath)){
@@ -128,6 +129,6 @@ public class MockDataStore implements DataStore {
             callback.onCallback(null);
             return;
         }
-        callback.onCallback(new MockCollectionSnapshot(collections.getOrDefault(collectionPath, null)));
+        callback.onCallback(new MockCollectionSnapshot(getOrDefaultMap(collections, collectionPath)));
     }
 }

@@ -1,9 +1,5 @@
 package ch.epfl.polybazaar.database.datastore.mock;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +7,8 @@ import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.user.User;
+
+import static ch.epfl.polybazaar.Utilities.getOrDefaultObj;
 
 public class MockDataSnapshot implements DataSnapshot {
 
@@ -50,7 +48,7 @@ public class MockDataSnapshot implements DataSnapshot {
 
     @Override
     public Object get(String field) {
-        return data.getOrDefault(field, null);
+        return getOrDefaultObj(data, field);
     }
 
     @Override
