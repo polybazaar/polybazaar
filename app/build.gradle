@@ -44,7 +44,7 @@ dependencies {
 
     // Google Services: https://firebase.google.com/docs/android/setup#available-libraries
     implementation 'com.google.firebase:firebase-analytics:17.2.3'  // Analytics
-    implementation 'com.google.firebase:firebase-auth:19.2.0'       // Authentification
+    implementation 'com.google.firebase:firebase-auth:19.3.0'       // Authentification
     implementation 'com.google.firebase:firebase-firestore:21.4.1'  // Cloud Firestore
 
     testImplementation 'junit:junit:4.12'
@@ -72,8 +72,6 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
 
-    // For some reason the .class files were generated at a different location for me
-    // See: https://stackoverflow.com/questions/34624867/where-does-gradle-store-all-compiled-classes-for-an-android-project/
     def debugTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug/classes", excludes: fileFilter)
     def mainSrc = "$project.projectDir/src/main/java"
 

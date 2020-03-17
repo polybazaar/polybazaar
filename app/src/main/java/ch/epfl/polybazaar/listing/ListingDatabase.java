@@ -1,10 +1,10 @@
 package ch.epfl.polybazaar.listing;
 
+import ch.epfl.polybazaar.database.datastore.DataStore;
+import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.database.callback.ListingCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
-
-import static ch.epfl.polybazaar.database.generic.GenericDatabase.*;
 
 /**
  * Usage Example:
@@ -20,7 +20,9 @@ import static ch.epfl.polybazaar.database.generic.GenericDatabase.*;
  */
 public abstract class ListingDatabase {
 
-    private static final String listingCollectionName = "listings";
+    public static final String listingCollectionName = "listings";
+
+    private static DataStore db;
 
     /**
      * Fetch a listing from the database
@@ -30,7 +32,8 @@ public abstract class ListingDatabase {
      */
     public static void fetchListing(final String listingID, final ListingCallback callback){
         final ListingCallbackAdapter adapterCallback = new ListingCallbackAdapter(callback);
-        fetchData(listingCollectionName, listingID, adapterCallback);
+        db = DataStoreFactory.getDependency();
+        db.fetchData(listingCollectionName, listingID, adapterCallback);
     }
 
     /**
@@ -41,7 +44,8 @@ public abstract class ListingDatabase {
      * @param callback a SuccessCallback interface implementation
      */
     public static void storeListing(final Listing listing, final String listingID, final SuccessCallback callback){
-        setData(listingCollectionName, listingID, listing, callback);
+        db = DataStoreFactory.getDependency();
+        db.setData(listingCollectionName, listingID, listing, callback);
     }
 
     /**
@@ -51,7 +55,8 @@ public abstract class ListingDatabase {
      * @param callback a SuccessCallback interface implementation
      */
     public static void deleteListing(final String listingID, final SuccessCallback callback){
-        deleteData(listingCollectionName, listingID, callback);
+        db = DataStoreFactory.getDependency();
+        db.deleteData(listingCollectionName, listingID, callback);
     }
 
 }
