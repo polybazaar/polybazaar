@@ -1,6 +1,5 @@
 package ch.epfl.polybazaar.database.datastore.mock;
 
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -86,7 +85,8 @@ public class MockDataStore implements DataStore {
         if(!Objects.requireNonNull(collections.get(collectionPath)).containsKey(documentPath)){
            Objects.requireNonNull(collections.get(collectionPath)).put(documentPath,data);
         }else{
-            Objects.requireNonNull(collections.get(collectionPath)).replace(documentPath,data);
+            Objects.requireNonNull(collections.get(collectionPath)).remove(documentPath);
+            Objects.requireNonNull(collections.get(collectionPath)).put(documentPath,data);
         }
         Log.i(TAG, "Data successfully set");
         callback.onCallback(true);
