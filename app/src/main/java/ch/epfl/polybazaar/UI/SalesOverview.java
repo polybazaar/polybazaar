@@ -39,6 +39,7 @@ public class SalesOverview extends AppCompatActivity {
     private LinearLayout linearLayout;
     private LiteListingAdapter adapter;
     private EndlessRecyclerViewScrollListener scrollListener;
+    private final int EXTRALOAD = 20;
 
     // Create an anonymous implementation of OnClickListener
     private View.OnClickListener titleClickListener = new View.OnClickListener() {
@@ -64,33 +65,7 @@ public class SalesOverview extends AppCompatActivity {
 
         // Lookup the recyclerview in activity layout
         RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
-
-        // TODO: delete
-        // initialize LiteListing list
-        LiteListing liteListing1 = new LiteListing("1", "title1", "price1");
-
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-        liteListingList.add(liteListing1);
-
-
+        
         // Create adapter passing in the sample LiteListing data
         adapter = new LiteListingAdapter(liteListingList);
         // Attach the adapter to the recyclerview to populate items
@@ -101,10 +76,11 @@ public class SalesOverview extends AppCompatActivity {
 
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+            public void onLoadMore(int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to the bottom of the list
-                loadNextDataFromApi(page);
+                int curSize = adapter.getItemCount();
+                createLiteListingOverview(curSize, view);
+
             }
         };
         // Adds the scroll listener to RecyclerView
@@ -122,17 +98,6 @@ public class SalesOverview extends AppCompatActivity {
 
     public LinearLayout getLinearLayout() {
         return linearLayout;
-    }
-
-
-    // Append the next page of data into the adapter
-    // This method probably sends out a network request and appends new data items to your adapter.
-    public void loadNextDataFromApi(int offset) {
-        // Send an API request to retrieve appropriate paginated data
-        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
-        //  --> Deserialize and construct new model objects from the API response
-        //  --> Append the new data objects to the existing set of items inside the array of items
-        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
     }
 
 
@@ -227,27 +192,40 @@ public class SalesOverview extends AppCompatActivity {
     /**
      * Create a graphical overview of LiteListings from database
      */
-    public void createLiteListingOverview() {
+    public void createLiteListingOverview(int curSize, RecyclerView view) {
         LiteListingListCallback callbackLiteListingList = new LiteListingListCallback() {
 
             @Override
             public void onCallback(List<String> result) {
-                for(String id : result) {
-                    IDList.add(id);      // create deep copy of ID list
+                if(IDList.isEmpty()) {
+                    for (String id : result) {
+                        IDList.add(id);      // create deep copy of ID list if list is empty
+                    }
                 }
                 LiteListingCallback callbackLiteListing = new LiteListingCallback() {
                     @Override
                     public void onCallback(LiteListing result) {
                         liteListingList.add(result);
-                        addListingView(result);     // add LiteListing fields to graphical TextView
+                        // TODO: remove
+                        // addListingView(result);     // add LiteListing fields to graphical TextView
                     }
                 };
                 int size = IDList.size();
-                for(int i = 0; i < size; i++) {
+                int counter = 0;
+                for(int i = curSize; i < (curSize + EXTRALOAD) && i < size; i++) {
                     fetchLiteListing(IDList.get(i), callbackLiteListing);
+                    counter++;
                 }
+                int finalCounter = counter;
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyItemRangeInserted(curSize, finalCounter);
+                    }
+                });
             }
         };
         fetchLiteListingList(callbackLiteListingList);
     }
+
 }
