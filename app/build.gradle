@@ -44,7 +44,7 @@ dependencies {
 
     // Google Services: https://firebase.google.com/docs/android/setup#available-libraries
     implementation 'com.google.firebase:firebase-analytics:17.2.3'  // Analytics
-    implementation 'com.google.firebase:firebase-auth:19.2.0'       // Authentification
+    implementation 'com.google.firebase:firebase-auth:19.3.0'       // Authentification
     implementation 'com.google.firebase:firebase-firestore:21.4.1'  // Cloud Firestore
 
     testImplementation 'junit:junit:4.12'
@@ -71,12 +71,13 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     }
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def debugTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug/classes", excludes: fileFilter)
     def mainSrc = "$project.projectDir/src/main/java"
 
     sourceDirectories = files([mainSrc])
     classDirectories = files([debugTree])
     executionData = fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+            'outputs/code_coverage/debugAndroidTest/connected/*coverage.ec', // <-- This path was false
+            'jacoco/testDebugUnitTest.exec'
     ])
 }
