@@ -37,12 +37,14 @@ public class SalesOverview extends AppCompatActivity {
     private TreeMap<Integer, String> viewIDtoListingIDMap;
     private ScrollView scroll;
     private LinearLayout linearLayout;
+    private LiteListingAdapter adapter;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     // Create an anonymous implementation of OnClickListener
     private View.OnClickListener titleClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             int viewID = v.getId();
-            String listingID = viewIDtoListingIDMap.get(viewID);
+            String listingID = adapter.getListingID(viewID);
             Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
             intent.putExtra("listingID", listingID);
             startActivity(intent);
@@ -90,12 +92,25 @@ public class SalesOverview extends AppCompatActivity {
 
 
         // Create adapter passing in the sample LiteListing data
-        LiteListingAdapter adapter = new LiteListingAdapter(liteListingList);
+        adapter = new LiteListingAdapter(liteListingList);
         // Attach the adapter to the recyclerview to populate items
         rvLiteListings.setAdapter(adapter);
         // Set layout manager to position the items
-        rvLiteListings.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvLiteListings.setLayoutManager(linearLayoutManager);
 
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvLiteListings.addOnScrollListener(scrollListener);
+
+        // Previous version:
         // create graphical overview of LiteListings
         // createLiteListingOverview();
     }
@@ -107,6 +122,17 @@ public class SalesOverview extends AppCompatActivity {
 
     public LinearLayout getLinearLayout() {
         return linearLayout;
+    }
+
+
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
     }
 
 
