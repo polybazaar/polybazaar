@@ -48,7 +48,6 @@ public class MockDataSnapshot implements DataSnapshot {
         return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public Object get(String field) {
         return data.getOrDefault(field, null);

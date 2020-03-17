@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId 'ch.epfl.polybazaar'
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -44,7 +44,7 @@ dependencies {
 
     // Google Services: https://firebase.google.com/docs/android/setup#available-libraries
     implementation 'com.google.firebase:firebase-analytics:17.2.3'  // Analytics
-    implementation 'com.google.firebase:firebase-auth:19.2.0'       // Authentification
+    implementation 'com.google.firebase:firebase-auth:19.3.0'       // Authentification
     implementation 'com.google.firebase:firebase-firestore:21.4.1'  // Cloud Firestore
 
     testImplementation 'junit:junit:4.12'

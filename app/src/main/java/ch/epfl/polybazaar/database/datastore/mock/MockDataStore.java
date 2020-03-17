@@ -56,7 +56,6 @@ public class MockDataStore implements DataStore {
         collections.put(collectionName,document);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull DataSnapshotCallback callback) {
         if (!collections.containsKey(collectionPath)){
@@ -122,7 +121,6 @@ public class MockDataStore implements DataStore {
         callback.onCallback(true);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void getAllDataInCollection(@NonNull String collectionPath, @NonNull CollectionSnapshotCallback callback) {
         if (!collections.containsKey(collectionPath)){
