@@ -25,21 +25,6 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         mLayoutManager = layoutManager;
     }
 
-
-    public int getLastVisibleItem(int[] lastVisibleItemPositions) {
-        int maxSize = 0;
-        for (int i = 0; i < lastVisibleItemPositions.length; i++) {
-            if (i == 0) {
-                maxSize = lastVisibleItemPositions[i];
-            }
-            else if (lastVisibleItemPositions[i] > maxSize) {
-                maxSize = lastVisibleItemPositions[i];
-            }
-        }
-        return maxSize;
-    }
-
-
     @Override
     public void onScrolled(RecyclerView view, int dx, int dy) {
         int lastVisibleItemPosition = 0;
@@ -71,12 +56,6 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
             onLoadMore();
             loading = true;
         }
-    }
-
-    // Call this method whenever performing new searches
-    public void resetState() {
-        this.previousTotalItemCount = 0;
-        this.loading = true;
     }
 
     // Defines the process for actually loading more data based on item count

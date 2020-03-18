@@ -29,10 +29,8 @@ public class LiteListingAdapter extends
         public TextView titleView;
         public TextView priceView;
 
-        /**
-         * Constructor that accepts the entire item row and does the view lookups to find each subview
-         * @param itemView the itemView to be stored
-         */
+
+        // Constructor that accepts the entire item row and does the view lookups to find each subview
         public ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
@@ -47,22 +45,15 @@ public class LiteListingAdapter extends
     private List<LiteListing> liteListingList;
     private TreeMap<Integer, String> viewIDtoListingIDMap;
 
-    /**
-     * Pass in the litelisting array into the constructor
-     * @param liteListingList list of litelistings to be stored in the adapter
-     */
+
+    // Pass in the litelisting array into the constructor
     public LiteListingAdapter(List<LiteListing> liteListingList) {
         this.liteListingList = liteListingList;
         viewIDtoListingIDMap = new TreeMap<>();
     }
 
 
-    /**
-     * Inflating a layout from XML and returning the holder
-     * @param parent
-     * @param viewType
-     * @return
-     */
+    // Inflating a layout from XML and returning the holder
     public LiteListingAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -74,6 +65,7 @@ public class LiteListingAdapter extends
         ViewHolder viewHolder = new ViewHolder(liteListingView);
         return viewHolder;
     }
+
 
     // Populating data into the item through holder
     public void onBindViewHolder(LiteListingAdapter.ViewHolder viewHolder, int position) {
@@ -96,7 +88,11 @@ public class LiteListingAdapter extends
         return liteListingList.size();
     }
 
-    // Returns the listing ID corresponding to the view ID that displays the litelisting title
+    /**
+     * Returns the listing ID corresponding to the view ID that displays the liteListing title
+     * @param viewID ID of the view containing the litelisting title in graphical display
+     * @return the corresponding liteListing ID
+     */
     public String getListingID(Integer viewID) {
         return viewIDtoListingIDMap.get(viewID);
     }
