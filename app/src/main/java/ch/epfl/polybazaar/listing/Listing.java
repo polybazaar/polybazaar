@@ -10,7 +10,7 @@ import static ch.epfl.polybazaar.Utilities.*;
  */
 
 /**
- * If you attributes of this class, also change its CallbackAdapter and MockdataSnapshot
+ * If you attributes of this class, also change its CallbackAdapter and Utilities
  */
 public class Listing {
 

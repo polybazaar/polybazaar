@@ -4,10 +4,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
@@ -16,6 +19,7 @@ import ch.epfl.polybazaar.listing.ListingDatabase;
 import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
 import ch.epfl.polybazaar.user.UserDatabase;
 
+import static ch.epfl.polybazaar.Utilities.getMap;
 import static ch.epfl.polybazaar.Utilities.getOrDefaultMap;
 import static ch.epfl.polybazaar.Utilities.getOrDefaultObj;
 
@@ -130,5 +134,26 @@ public class MockDataStore implements DataStore {
             return;
         }
         callback.onCallback(new MockCollectionSnapshot(getOrDefaultMap(collections, collectionPath)));
+    }
+
+    @Override
+    public void queryStringEquality(@NonNull String collectionPath, @NonNull String field,
+                                    @NonNull String equalTo, @NonNull LiteListingListCallback callback) {
+        if (!collections.containsKey(collectionPath)){
+            Log.i(TAG, "Collection does not exist");
+            callback.onCallback(null);
+            return;
+        }
+        Map<String, Object> collection = collections.get(collectionPath);
+        List<String> list = new ArrayList<>();
+        assert collection != null;
+        for (Map.Entry<String, Object> entry : collection.entrySet()) {
+            Object o = entry.getValue();
+            if (getMap(o).containsKey(field) && getMap(o).get(field) == equalTo) {
+                list.add(entry.getKey());
+            }
+        }
+        Log.i(TAG, "Query successful");
+        callback.onCallback(list);
     }
 }
