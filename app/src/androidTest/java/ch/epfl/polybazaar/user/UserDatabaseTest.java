@@ -98,11 +98,11 @@ public class UserDatabaseTest {
         storeNewUser(testUser3, result -> assertThat(result, is(true)));
         queryUserStringEquality("email", "test.mee@epfl.ch", result -> {
             assertThat(result, hasSize(1));
-            assertThat(result,containsInAnyOrder("test.mee"));
+            assertThat(result,containsInAnyOrder("test.mee@epfl.ch"));
         });
         queryUserStringEquality("nickName", "testUser3", result -> {
             assertThat(result, hasSize(1));
-            assertThat(result,containsInAnyOrder("test.meee"));
+            assertThat(result,containsInAnyOrder("test.meee@epfl.ch"));
         });
         queryUserStringEquality("nickName", "testUser4", result -> {
             assertThat(result, hasSize(0));

@@ -42,21 +42,21 @@ public abstract class UserDatabase {
         final UserCallback intermediateCall = new UserCallback() {
             @Override
             public void onCallback(User result) {
-                if (result!=null && result.getID().equals(user.getID())) {
+                if (result!=null && result.getEmail().equals(user.getEmail())) {
                         Log.w(TAG, "user email already used");
                         callback.onCallback(false);
                         return;
                 }
-                if (!(user.getID().matches("[a-zA-Z]+"+"."+"[a-zA-Z]+"))) {
+                if (!(user.getEmail().matches("[a-zA-Z]+"+"."+"[a-zA-Z]+"+"@epfl.ch"))) {
                     Log.w(TAG, "user email has invalid format");
                     callback.onCallback(false);
                     return;
                 }
-                db.setData(userCollectionName, user.getID(), user, callback);
+                db.setData(userCollectionName, user.getEmail(), user, callback);
             }
         };
         final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall);
-        db.fetchData(userCollectionName, user.getID(), adapterIntermediateCallback);
+        db.fetchData(userCollectionName, user.getEmail(), adapterIntermediateCallback);
     }
 
     /**
@@ -66,10 +66,9 @@ public abstract class UserDatabase {
      * @param callback a UserCallback interface implementation
      */
     public static void fetchUser(final String email, final UserCallback callback) {
-        String newEmail = email.replace("@epfl.ch", "");
         db = DataStoreFactory.getDependency();
         final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback);
-        db.fetchData(userCollectionName, newEmail, adapterCallback);
+        db.fetchData(userCollectionName, email, adapterCallback);
     }
 
      /**
@@ -79,9 +78,8 @@ public abstract class UserDatabase {
      * @param callback a SuccessCallback interface implementation
      */
     public static void deleteUser(final String email, final SuccessCallback callback) {
-        String newEmail = email.replace("@epfl.ch", "");
         db = DataStoreFactory.getDependency();
-        db.deleteData(userCollectionName, newEmail, callback);
+        db.deleteData(userCollectionName, email, callback);
     }
 
     /**
