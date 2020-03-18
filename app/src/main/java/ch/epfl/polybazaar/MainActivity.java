@@ -23,13 +23,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button saleDet = findViewById(R.id.saleDet);
-        saleDet.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), SaleDetails.class);
-            intent.putExtra("listingID", "06d6f073-30ae-48ac-9530-f30e288b299a");
-            startActivity(intent);
-        });
-
         Button saleOverBut = findViewById(R.id.saleOverview);
         saleOverBut.setOnClickListener(view -> {
             Intent fillListingIntent = new Intent(MainActivity.this, SalesOverview.class);
