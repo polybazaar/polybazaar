@@ -26,12 +26,12 @@
         </provider>
          <activity android:name="ch.epfl.polybazaar.FillListingActivity"
                     android:parentActivityName=".MainActivity"></activity>
-        <activity   android:name=".SalesOverview"
+        <activity   android:name=".UI.SalesOverview"
                     android:exported="true"
                     android:parentActivityName=".MainActivity"
             ></activity>
         <activity   android:name=".SaleDetails"
-                    android:parentActivityName=".SalesOverview"/>
+                    android:parentActivityName=".UI.SalesOverview"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
