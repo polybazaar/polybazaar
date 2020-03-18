@@ -12,8 +12,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.Button;
 
+import androidx.core.content.ContextCompat;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -21,6 +21,7 @@ import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
+import org.hamcrest.core.Is;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,9 +45,14 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
+import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
+import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class FillListingActivityTest {
@@ -209,5 +215,15 @@ public class FillListingActivityTest {
 
     private void checkNoImageUploaded(){
         onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
+    }
+
+    @Test
+    public void testUtilitiesConvertAndReverseConversion() {
+        convertStringToBitmap(convertBitmapToString(convertDrawableToBitmap(ContextCompat.getDrawable(fillSaleActivityTestRule.getActivity(), R.drawable.algebre_lin))));
+    }
+
+    @Test
+    public void testUtilitiesConvertFileToString() {
+        assertThat(convertFileToString(null), is(""));
     }
 }

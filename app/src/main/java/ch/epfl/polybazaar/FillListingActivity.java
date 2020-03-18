@@ -111,7 +111,6 @@ public class FillListingActivity extends AppCompatActivity {
             pictureView.setTag(selectedImage.hashCode());
 
             stringImage = convertBitmapToString(convertDrawableToBitmap(pictureView.getDrawable()));
-            //stringImage = selectedImage.toString();
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            pictureView.setImageURI(Uri.fromFile(new File(currentPhotoPath)));

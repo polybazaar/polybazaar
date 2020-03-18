@@ -42,11 +42,9 @@ public abstract class Utilities {
         String tempStringImg = "";
         //inspired from https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa/18052269
         if(imageFile != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
-            byte[] b = baos.toByteArray();
-            tempStringImg = Base64.encodeToString(b, Base64.DEFAULT);
+            BitmapFactory.decodeFile(imageFile.getAbsolutePath()).compress(Bitmap.CompressFormat.JPEG, 10, baos);
+            tempStringImg = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         }
         return tempStringImg;
     }
