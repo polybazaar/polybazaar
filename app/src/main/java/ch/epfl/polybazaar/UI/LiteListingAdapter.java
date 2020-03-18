@@ -21,6 +21,22 @@ import ch.epfl.polybazaar.litelisting.LiteListing;
 public class LiteListingAdapter extends
         RecyclerView.Adapter<LiteListingAdapter.ViewHolder> {
 
+    // Store a member variable for the litelistings and for the map <view ID, listing ID>
+    private List<LiteListing> liteListingList;
+    private TreeMap<Integer, String> viewIDtoListingIDMap;
+
+    // Define listener member variable
+    private OnItemClickListener listener;
+
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     /**
      * Provide a direct reference to each of the views within a data item
      * Used to cache the views within the item layout for fast access
@@ -38,13 +54,20 @@ public class LiteListingAdapter extends
 
             titleView = itemView.findViewById(R.id.liteListingTitle);
             priceView = itemView.findViewById(R.id.liteListingPrice);
+
+            // Setup the click listener
+            titleView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        listener.onItemClick(titleView);
+                    }
+                }
+            });
+
         }
     }
-
-    // Store a member variable for the litelistings and for the map <view ID, listing ID>
-    private List<LiteListing> liteListingList;
-    private TreeMap<Integer, String> viewIDtoListingIDMap;
-
 
     // Pass in the litelisting array into the constructor
     public LiteListingAdapter(List<LiteListing> liteListingList) {
@@ -77,6 +100,8 @@ public class LiteListingAdapter extends
         textView.setText(liteListing.getTitle());
         textView.setId(View.generateViewId());
         viewIDtoListingIDMap.put(textView.getId(), liteListing.getListingID()); // update map <view ID, listing ID>
+
+
 
         TextView priceView = viewHolder.priceView;
         priceView.setText(liteListing.getPrice());

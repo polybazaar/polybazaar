@@ -31,17 +31,6 @@ public class SalesOverview extends AppCompatActivity {
     private final int EXTRALOAD = 20;
     private int positionInIDList = 0;
 
-    // Create an anonymous implementation of OnClickListener
-    private View.OnClickListener titleClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            int viewID = v.getId();
-            String listingID = adapter.getListingID(viewID);
-            Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-            intent.putExtra("listingID", listingID);
-            startActivity(intent);
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +44,18 @@ public class SalesOverview extends AppCompatActivity {
         
         // Create adapter passing in the sample LiteListing data
         adapter = new LiteListingAdapter(liteListingList);
+
+        adapter.setOnItemClickListener(new LiteListingAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view) {
+                int viewID = view.getId();
+                String listingID = adapter.getListingID(viewID);
+                Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
+                intent.putExtra("listingID", listingID);
+                startActivity(intent);
+            }
+        });
+
         // Attach the adapter to the recyclerview to populate items
         rvLiteListings.setAdapter(adapter);
         // Set layout manager to position the items
