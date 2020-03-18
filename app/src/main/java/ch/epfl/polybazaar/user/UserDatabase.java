@@ -88,14 +88,9 @@ public abstract class UserDatabase {
      * Performs a query which returns all user IDs where their field == equalTo
      * @param field the field to be checked for equality
      * @param equalTo what field should be equal to
-     * @param callback a StringListCallback interface implementation
+     * @param callback a StringListCallback interface implementation (contains IDs, not emails!)
      */
     public static void queryUserStringEquality(final String field, final String equalTo, final StringListCallback callback) {
-        /*String newEqualTo = equalTo;
-        if (field.equals("email")) {
-            newEqualTo = equalTo.replace("@epfl.ch", "");
-        }
-        */
         db = DataStoreFactory.getDependency();
         db.queryStringEquality(userCollectionName, field, equalTo, callback);
     }
