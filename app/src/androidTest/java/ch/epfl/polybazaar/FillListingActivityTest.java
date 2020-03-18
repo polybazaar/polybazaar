@@ -12,8 +12,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.Button;
 
+import androidx.core.content.ContextCompat;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -21,6 +21,7 @@ import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,9 +45,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
+import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
+import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class FillListingActivityTest {
@@ -64,6 +71,12 @@ public class FillListingActivityTest {
     public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
 
     @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+
+    @Before
+    public void init() {
+        useMockDataStore();
+    }
+
 
     @BeforeClass
     public static void setupStubIntent(){
@@ -174,13 +187,10 @@ public class FillListingActivityTest {
         Intents.init();
         expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intending(expectedCameraIntent).respondWith(cameraResult);
-        //onView(withId(R.id.camera)).perform(scrollTo(), click());
-        runOnUiThread(new Runnable(){
-            @Override
-                    public void run() {
-                Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.camera);
-                but.performClick();
-            }
+
+        runOnUiThread(() -> {
+            Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.camera);
+            but.performClick();
         });
         fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         intended(expectedCameraIntent);
@@ -212,5 +222,15 @@ public class FillListingActivityTest {
 
     private void checkNoImageUploaded(){
         onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
+    }
+
+    @Test
+    public void testUtilitiesConvertAndReverseConversion() {
+        convertStringToBitmap(convertBitmapToString(convertDrawableToBitmap(ContextCompat.getDrawable(fillSaleActivityTestRule.getActivity(), R.drawable.algebre_lin))));
+    }
+
+    @Test
+    public void testUtilitiesConvertFileToString() {
+        assertThat(convertFileToString(null), is(""));
     }
 }

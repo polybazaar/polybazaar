@@ -23,6 +23,7 @@ public class MockDataSnapshot implements DataSnapshot {
             result.put("price", ((Listing)o).getPrice());
             result.put("title", ((Listing)o).getTitle());
             result.put("userEmail", ((Listing)o).getUserEmail());
+            result.put("stringImage", ((Listing)o).getStringImage());
         } else if (o instanceof LiteListing) {
             result.put("listingID", ((LiteListing)o).getListingID());
             result.put("price", ((LiteListing)o).getPrice());
