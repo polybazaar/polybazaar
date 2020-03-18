@@ -44,30 +44,22 @@ public class SaleDetailsTest {
         activityRule.launchActivity(intent);
 
         final Listing listing = new Listing("Algebre linéaire by David C. Lay", "Very good book.", "23", "gu.vrut@epfl.ch");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                activityRule.getActivity().fillWithListing(listing);
-            }
-        });
+        runOnUiThread(() -> activityRule.getActivity().fillWithListing(listing));
 
-        TextView textTitle = (TextView)activityRule.getActivity().findViewById(R.id.title);
+        TextView textTitle = activityRule.getActivity().findViewById(R.id.title);
         assertEquals("Algebre linéaire by David C. Lay", textTitle.getText().toString());
 
-        TextView textDescr = (TextView)activityRule.getActivity().findViewById(R.id.description);
+        TextView textDescr = activityRule.getActivity().findViewById(R.id.description);
         assertEquals("Very good book.", textDescr.getText().toString());
 
-        TextView textPrice = (TextView)activityRule.getActivity().findViewById(R.id.price);
+        TextView textPrice = activityRule.getActivity().findViewById(R.id.price);
         assertEquals("CHF 23", textPrice.getText().toString());
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Button but = activityRule.getActivity().findViewById(R.id.contactSel);
-                but.performClick();
-                TextView contactSel = (TextView)activityRule.getActivity().findViewById(R.id.userEmail);
-                assertEquals("gu.vrut@epfl.ch", contactSel.getText().toString());
-            }
+        runOnUiThread(() -> {
+            Button but = activityRule.getActivity().findViewById(R.id.contactSel);
+            but.performClick();
+            TextView contactSel = activityRule.getActivity().findViewById(R.id.userEmail);
+            assertEquals("gu.vrut@epfl.ch", contactSel.getText().toString());
         });
     }
 }
