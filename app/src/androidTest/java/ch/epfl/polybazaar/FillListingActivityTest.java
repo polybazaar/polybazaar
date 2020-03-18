@@ -22,6 +22,7 @@ import androidx.test.rule.GrantPermissionRule;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.Is;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,6 +50,7 @@ import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
@@ -70,6 +72,12 @@ public class FillListingActivityTest {
     public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
 
     @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+
+    @Before
+    public void init() {
+        useMockDataStore();
+    }
+
 
     @BeforeClass
     public static void setupStubIntent(){
