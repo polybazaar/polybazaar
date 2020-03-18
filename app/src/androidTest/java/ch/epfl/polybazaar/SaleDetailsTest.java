@@ -31,8 +31,7 @@ public class SaleDetailsTest {
 
     @Test
     public void testNoBundlePassed () {
-        Intent intent = new Intent();
-        activityRule.launchActivity(intent);
+        activityRule.launchActivity(new Intent());
 
         onView(withText("Object not found."))
                 .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
