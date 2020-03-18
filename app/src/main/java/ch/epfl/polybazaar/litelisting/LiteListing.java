@@ -1,5 +1,9 @@
 package ch.epfl.polybazaar.litelisting;
 
+
+/**
+ * If you attributes of this class, also change its CallbackAdapter and MockDataSnapshot
+ */
 public class LiteListing {
 
     // TODO: add attribute thumbnail
@@ -16,15 +20,15 @@ public class LiteListing {
     }
 
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
     public String getListingID() {
-        return this.listingID;
+        return listingID;
     }
 
     public String getPrice() {
-        return this.price;
+        return price;
     }
 
 

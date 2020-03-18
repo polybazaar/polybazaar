@@ -1,13 +1,14 @@
 package ch.epfl.polybazaar.database.callback;
 
-import com.google.firebase.firestore.DocumentSnapshot;
+import android.os.Build;
 
-import java.util.Objects;
+import androidx.annotation.RequiresApi;
 
-import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
+import ch.epfl.polybazaar.database.datastore.DataSnapshot;
+import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
 import ch.epfl.polybazaar.user.User;
 
-public class UserCallbackAdapter implements DocumentSnapshotCallback {
+public class UserCallbackAdapter implements DataSnapshotCallback {
 
     private UserCallback userCallback;
 
@@ -19,14 +20,15 @@ public class UserCallbackAdapter implements DocumentSnapshotCallback {
         this.userCallback = userCallback;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void onCallback(DocumentSnapshot result) {
+    public void onCallback(DataSnapshot result) {
         if (result==null){
             userCallback.onCallback(null);
             return;
         }
-        User user = new User(Objects.requireNonNull(result.get("nickName")).toString(),
-                Objects.requireNonNull(result.get("email")).toString());
+        User user = new User(String.valueOf(result.get("nickName")),
+                String.valueOf(result.get("email")));
         userCallback.onCallback(user);
     }
 

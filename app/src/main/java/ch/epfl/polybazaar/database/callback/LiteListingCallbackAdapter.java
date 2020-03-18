@@ -1,13 +1,14 @@
 package ch.epfl.polybazaar.database.callback;
 
-import com.google.firebase.firestore.DocumentSnapshot;
+import android.os.Build;
 
-import java.util.Objects;
+import androidx.annotation.RequiresApi;
 
-import ch.epfl.polybazaar.database.generic.DocumentSnapshotCallback;
+import ch.epfl.polybazaar.database.datastore.DataSnapshot;
+import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
-public  class LiteListingCallbackAdapter implements DocumentSnapshotCallback {
+public class LiteListingCallbackAdapter implements DataSnapshotCallback {
 
     private LiteListingCallback liteListingCallback;
 
@@ -19,15 +20,16 @@ public  class LiteListingCallbackAdapter implements DocumentSnapshotCallback {
         this.liteListingCallback = liteListingCallback;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void onCallback(DocumentSnapshot result) {
+    public void onCallback(DataSnapshot result) {
         if (result==null){
             liteListingCallback.onCallback(null);
             return;
         }
-        LiteListing liteListing = new LiteListing(Objects.requireNonNull(result.get("listingID")).toString(),
-                Objects.requireNonNull(result.get("title")).toString(),
-                Objects.requireNonNull(result.get("price")).toString());
+        LiteListing liteListing = new LiteListing(String.valueOf(result.get("listingID")),
+                String.valueOf(result.get("title")),
+                String.valueOf(result.get("price")));
         liteListingCallback.onCallback(liteListing);
     }
 }
