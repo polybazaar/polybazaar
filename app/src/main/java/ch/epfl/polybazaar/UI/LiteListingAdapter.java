@@ -45,7 +45,6 @@ public class LiteListingAdapter extends
         public TextView titleView;
         public TextView priceView;
 
-
         // Constructor that accepts the entire item row and does the view lookups to find each subview
         public ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
@@ -65,7 +64,6 @@ public class LiteListingAdapter extends
                     }
                 }
             });
-
         }
     }
 
@@ -100,8 +98,6 @@ public class LiteListingAdapter extends
         textView.setText(liteListing.getTitle());
         textView.setId(View.generateViewId());
         viewIDtoListingIDMap.put(textView.getId(), liteListing.getListingID()); // update map <view ID, listing ID>
-
-
 
         TextView priceView = viewHolder.priceView;
         priceView.setText(liteListing.getPrice());

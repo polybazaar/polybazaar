@@ -74,7 +74,6 @@ public class SalesOverview extends AppCompatActivity {
         };
         // Adds the scroll listener to RecyclerView
         rvLiteListings.addOnScrollListener(scrollListener);
-
     }
 
 
@@ -106,6 +105,10 @@ public class SalesOverview extends AppCompatActivity {
             }
         };
         fetchLiteListingList(callbackLiteListingList);
+    }
+
+    public List getLiteListingList() {
+        return liteListingList;
     }
 
 }
