@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.listing;
+package ch.epfl.polybazaar.category;
 
 import java.util.Arrays;
 import java.util.List;
