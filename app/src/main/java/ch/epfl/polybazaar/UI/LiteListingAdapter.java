@@ -100,7 +100,7 @@ public class LiteListingAdapter extends
         viewIDtoListingIDMap.put(textView.getId(), liteListing.getListingID()); // update map <view ID, listing ID>
 
         TextView priceView = viewHolder.priceView;
-        priceView.setText(liteListing.getPrice());
+        priceView.setText("CHF " + liteListing.getPrice());
         priceView.setId(View.generateViewId());
     }
 
