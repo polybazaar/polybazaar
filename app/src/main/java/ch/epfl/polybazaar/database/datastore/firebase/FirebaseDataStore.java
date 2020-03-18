@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
+import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
@@ -134,7 +134,7 @@ public class FirebaseDataStore implements DataStore {
     }
 
     public void queryStringEquality(@NonNull final String collectionPath, @NonNull final String field,
-                                    @NonNull final String equalTo, @NonNull final LiteListingListCallback callback) {
+                                    @NonNull final String equalTo, @NonNull final StringListCallback callback) {
         Task<QuerySnapshot> task = database.collection(collectionPath).whereEqualTo(field, equalTo).get();
         task.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

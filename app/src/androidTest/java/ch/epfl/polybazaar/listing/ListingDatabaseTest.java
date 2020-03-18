@@ -13,6 +13,8 @@ import static ch.epfl.polybazaar.listing.ListingDatabase.*;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
 
@@ -75,6 +77,21 @@ public class ListingDatabaseTest {
     public void wrongListingIdReturnNull(){
         useMockDataStore();
         fetchListing("wrondId", Assert::assertNull);
+    }
+
+    @Test
+    public void canQueryCorrectly(){
+        useMockDataStore();
+        Listing testListing1 = new Listing("testListing1","testDescription",
+                "22","test@epfl.ch");
+        Listing testListing2 = new Listing("testListing2","testDescription",
+                "testPrice2","test@epfl.ch");
+        Listing testListing3 = new Listing("testListing3","testDescription",
+                "22","test@epfl.ch");
+        storeListing(testListing1, "testId1", result -> assertThat(result, is(true)));
+        storeListing(testListing2, "testId2", result -> assertThat(result, is(true)));
+        storeListing(testListing3, "testId3", result -> assertThat(result, is(true)));
+        queryListingStringEquality("price", "22", result -> assertThat(result, containsInAnyOrder("testId1", "testId3")));
     }
 
 }

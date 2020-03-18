@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.database.callback.LiteListingCallbackAdapter;
 
@@ -74,5 +76,20 @@ public class LiteListingDatabaseTest {
     public void wrongLiteListingIdReturnNull(){
         useMockDataStore();
         fetchLiteListing("wrondId", Assert::assertNull);
+    }
+
+    private List<String> list;
+    @Test
+    public void canQueryCorrectly(){
+        useMockDataStore();
+        LiteListing testListing1 = new LiteListing("listingID1","testTitle1","32");
+        LiteListing testListing2 = new LiteListing("listingID2","testTitle2","22");
+        LiteListing testListing3 = new LiteListing("listingID3","testTitle3","21");
+        addLiteListing(testListing1, result -> assertThat(result, is(true)));
+        addLiteListing(testListing2, result -> assertThat(result, is(true)));
+        addLiteListing(testListing3, result -> assertThat(result, is(true)));
+        queryLiteListingStringEquality("price", "21", result -> list = result);
+        assertThat(list.size(), is(1));
+        fetchLiteListing(list.get(0), result -> assertThat(result.getListingID(), is("listingID3")));
     }
 }

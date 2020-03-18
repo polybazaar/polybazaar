@@ -29,8 +29,10 @@ public abstract class Utilities {
         return result;
     }
 
+    // TODO: can be adjusted
     public static boolean nameIsValid(String name) {
-        return (name.matches("[a-zA-Z]+"));
+        //return (name.matches("[a-zA-Z]+"));
+        return true;
     }
 
     public static boolean emailIsValid(String email) {

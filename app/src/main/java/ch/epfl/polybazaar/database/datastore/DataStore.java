@@ -2,7 +2,7 @@ package ch.epfl.polybazaar.database.datastore;
 
 import androidx.annotation.NonNull;
 
-import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
+import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 
 
@@ -55,12 +55,12 @@ public interface DataStore {
                                 @NonNull final CollectionSnapshotCallback callback);
 
     /**
-     * Performs a query in which returns all document IDs where their field == equalTo
+     * Performs a query which returns all document IDs where their field == equalTo
      * @param collectionPath the path of the collection to perform the query in
      * @param field the field to be checked for equality
      * @param equalTo what field should be equal to
-     * @param callback a LiteListingListCallback interface implementation
+     * @param callback a StringListCallback interface implementation
      */
     void queryStringEquality(@NonNull final String collectionPath, @NonNull final String field,
-                                    @NonNull final String equalTo, @NonNull final LiteListingListCallback callback);
+                                    @NonNull final String equalTo, @NonNull final StringListCallback callback);
 }

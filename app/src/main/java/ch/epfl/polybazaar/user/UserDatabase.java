@@ -2,13 +2,12 @@ package ch.epfl.polybazaar.user;
 
 import android.util.Log;
 
+import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.callback.UserCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.UserCallback;
-
-
 
 
 /**
@@ -43,21 +42,21 @@ public abstract class UserDatabase {
         final UserCallback intermediateCall = new UserCallback() {
             @Override
             public void onCallback(User result) {
-                if (result!=null && result.getEmail().equals(user.getEmail())) {
+                if (result!=null && result.getID().equals(user.getID())) {
                         Log.w(TAG, "user email already used");
                         callback.onCallback(false);
                         return;
                 }
-                if (!(user.getEmail().matches("[a-zA-Z]+"+"."+"[a-zA-Z]+"+"@epfl.ch"))) {
+                if (!(user.getID().matches("[a-zA-Z]+"+"."+"[a-zA-Z]+"))) {
                     Log.w(TAG, "user email has invalid format");
                     callback.onCallback(false);
                     return;
                 }
-                db.setData(userCollectionName, user.getEmail(), user, callback);
+                db.setData(userCollectionName, user.getID(), user, callback);
             }
         };
         final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall);
-        db.fetchData(userCollectionName, user.getEmail(), adapterIntermediateCallback);
+        db.fetchData(userCollectionName, user.getID(), adapterIntermediateCallback);
     }
 
     /**
@@ -67,9 +66,10 @@ public abstract class UserDatabase {
      * @param callback a UserCallback interface implementation
      */
     public static void fetchUser(final String email, final UserCallback callback) {
+        String newEmail = email.replace("@epfl.ch", "");
         db = DataStoreFactory.getDependency();
         final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback);
-        db.fetchData(userCollectionName, email, adapterCallback);
+        db.fetchData(userCollectionName, newEmail, adapterCallback);
     }
 
      /**
@@ -79,7 +79,24 @@ public abstract class UserDatabase {
      * @param callback a SuccessCallback interface implementation
      */
     public static void deleteUser(final String email, final SuccessCallback callback) {
+        String newEmail = email.replace("@epfl.ch", "");
         db = DataStoreFactory.getDependency();
-        db.deleteData(userCollectionName, email, callback);
+        db.deleteData(userCollectionName, newEmail, callback);
+    }
+
+    /**
+     * Performs a query which returns all user IDs where their field == equalTo
+     * @param field the field to be checked for equality
+     * @param equalTo what field should be equal to
+     * @param callback a StringListCallback interface implementation
+     */
+    public static void queryUserStringEquality(final String field, final String equalTo, final StringListCallback callback) {
+        /*String newEqualTo = equalTo;
+        if (field.equals("email")) {
+            newEqualTo = equalTo.replace("@epfl.ch", "");
+        }
+        */
+        db = DataStoreFactory.getDependency();
+        db.queryStringEquality(userCollectionName, field, equalTo, callback);
     }
 }

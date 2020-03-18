@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
+import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
@@ -138,7 +138,7 @@ public class MockDataStore implements DataStore {
 
     @Override
     public void queryStringEquality(@NonNull String collectionPath, @NonNull String field,
-                                    @NonNull String equalTo, @NonNull LiteListingListCallback callback) {
+                                    @NonNull String equalTo, @NonNull StringListCallback callback) {
         if (!collections.containsKey(collectionPath)){
             Log.i(TAG, "Collection does not exist");
             callback.onCallback(null);
@@ -149,7 +149,7 @@ public class MockDataStore implements DataStore {
         assert collection != null;
         for (Map.Entry<String, Object> entry : collection.entrySet()) {
             Object o = entry.getValue();
-            if (getMap(o).containsKey(field) && getMap(o).get(field) == equalTo) {
+            if (getMap(o).containsKey(field) && getMap(o).get(field).equals(equalTo)) {
                 list.add(entry.getKey());
             }
         }

@@ -1,7 +1,7 @@
 package ch.epfl.polybazaar.litelisting;
 
-import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
-import ch.epfl.polybazaar.database.callback.LiteListingListCallbackAdapter;
+import ch.epfl.polybazaar.database.callback.StringListCallback;
+import ch.epfl.polybazaar.database.callback.StringListCallbackAdapter;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
@@ -33,8 +33,8 @@ public abstract class LiteListingDatabase {
      * @param callback a LiteListingListCallback interface implementation
      */
 
-    public static void fetchLiteListingList(final LiteListingListCallback callback) {
-        final LiteListingListCallbackAdapter adapterCallback= new LiteListingListCallbackAdapter(callback);
+    public static void fetchLiteListingList(final StringListCallback callback) {
+        final StringListCallbackAdapter adapterCallback= new StringListCallbackAdapter(callback);
         db = DataStoreFactory.getDependency();
         db.getAllDataInCollection(liteListingCollectionName, adapterCallback);
     }
@@ -73,6 +73,17 @@ public abstract class LiteListingDatabase {
     public static void deleteLiteListing(final String liteListingID, final SuccessCallback callback) {
         db = DataStoreFactory.getDependency();
         db.deleteData(liteListingCollectionName, liteListingID, callback);
+    }
+
+    /**
+     * Performs a query which returns all liteListing IDs where their field == equalTo
+     * @param field the field to be checked for equality
+     * @param equalTo what field should be equal to
+     * @param callback a StringListCallback interface implementation
+     */
+    public static void queryLiteListingStringEquality(final String field, final String equalTo, final StringListCallback callback) {
+        db = DataStoreFactory.getDependency();
+        db.queryStringEquality(liteListingCollectionName, field, equalTo, callback);
     }
 
 }

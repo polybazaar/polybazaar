@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
-import ch.epfl.polybazaar.database.callback.LiteListingListCallback;
+import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.*;
@@ -161,7 +161,7 @@ public class SalesOverview extends AppCompatActivity {
      * Create a graphical overview of LiteListings from database
      */
     public void createLiteListingOverview() {
-        LiteListingListCallback callbackLiteListingList = new LiteListingListCallback() {
+        StringListCallback callbackLiteListingList = new StringListCallback() {
 
             @Override
             public void onCallback(List<String> result) {
