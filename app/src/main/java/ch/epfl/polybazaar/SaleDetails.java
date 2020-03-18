@@ -1,5 +1,7 @@
 package ch.epfl.polybazaar;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.bumptech.glide.Glide;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.listing.Listing;
 
+import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.listing.ListingDatabase.fetchListing;
 
 public class SaleDetails extends AppCompatActivity {
@@ -32,18 +35,14 @@ public class SaleDetails extends AppCompatActivity {
     }
 
     void getSellerInformation() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Button get_seller = findViewById(R.id.contactSel);
-                get_seller.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
-                        findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
-                    }
-                });
+        runOnUiThread(() -> {
+            Button get_seller = findViewById(R.id.contactSel);
+            get_seller.setOnClickListener(view -> {
+                //TODO check that user is connected
+                findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
+                findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
+            });
 
-            }
         });
     }
 
@@ -59,12 +58,7 @@ public class SaleDetails extends AppCompatActivity {
             return;
         }
 
-        ListingCallback callbackListing = new ListingCallback() {
-            @Override
-            public void onCallback(Listing result) {
-                fillWithListing(result);
-            }
-        };
+        ListingCallback callbackListing = result -> fillWithListing(result);
         fetchListing(listingID, callbackListing);
     }
 
@@ -73,12 +67,10 @@ public class SaleDetails extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
             toast.show();
-            return;
-        }
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+            Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
+            startActivity(intent);
+        } else {
+            runOnUiThread(() -> {
                 final ImageView imageLoading = findViewById(R.id.loadingImage);
                 //Glide.with(imageLoading).clear(imageLoading);
                 imageLoading.setVisibility(View.INVISIBLE);
@@ -86,7 +78,12 @@ public class SaleDetails extends AppCompatActivity {
                 //set image
                 ImageView image = findViewById(R.id.saleImage);
                 image.setVisibility(View.VISIBLE);
-                image.setImageResource(R.drawable.algebre_lin);
+                Bitmap bitmapImage = convertStringToBitmap(listing.getStringImage());
+                if (bitmapImage != null) {
+                    image.setImageBitmap(bitmapImage);
+                } else {
+                    //TODO image.set.. no picture
+                }
 
                 //Set the title
                 TextView title_txt = findViewById(R.id.title);
@@ -102,14 +99,13 @@ public class SaleDetails extends AppCompatActivity {
                 TextView price_txt = findViewById(R.id.price);
                 price_txt.setVisibility(View.VISIBLE);
                 price_txt.setTextSize(20);
-                price_txt.setText(listing.getPrice());
+                price_txt.setText(String.format("CHF %s", listing.getPrice()));
 
                 //Set email
                 TextView userEmailTextView = findViewById(R.id.userEmail);
                 userEmailTextView.setText(listing.getUserEmail());
                 userEmailTextView.setVisibility(View.INVISIBLE);
-
-            }
-        });
+            });
+        }
     }
 }
