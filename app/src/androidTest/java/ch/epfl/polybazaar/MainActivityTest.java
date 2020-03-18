@@ -44,7 +44,7 @@ public class MainActivityTest{
     @Test
     public void accessesForAuthenticatedUserAreCorrect() {
         signInAndBack();
-        onView(withId(R.id.add_listing)).perform(click());
+        onView(withId(R.id.addListing)).perform(click());
         hasComponent(FillListingActivity.class.getName());
 
         pressBack();
@@ -58,12 +58,12 @@ public class MainActivityTest{
 
     @Test
     public void accessesForNonAuthenticatedUserAreCorrect() {
-        onView(withId(R.id.sale_overview)).perform(click());
+        onView(withId(R.id.saleOverview)).perform(click());
         hasComponent(SalesOverview.class.getName());
 
         pressBack();
 
-        onView(withId(R.id.add_listing)).perform(click());
+        onView(withId(R.id.addListing)).perform(click());
         onView(withText(R.string.sign_in_required))
                 .inRoot(withDecorView(not(is(activityRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));

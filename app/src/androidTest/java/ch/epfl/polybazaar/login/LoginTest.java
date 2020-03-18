@@ -123,10 +123,15 @@ public class LoginTest {
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
 
+        clickButton(withText(R.string.alert_close));
+
         clickButton(withId(R.id.reloadButton));
+
         onView(withText(R.string.reload_fail))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
+
+        clickButton(withText(R.string.alert_close));
     }
 
     public void createAccountAndBackToLogin(String email, String password) {
