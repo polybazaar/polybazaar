@@ -3,31 +3,48 @@ package ch.epfl.polybazaar;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.listing.Category;
+import ch.epfl.polybazaar.listing.CategoryRepository;
 import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.listing.StringCategory;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
+import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
+import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
+import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static java.util.UUID.randomUUID;
@@ -37,6 +54,7 @@ public class FillListingActivity extends AppCompatActivity {
     public static final int RESULT_LOAD_IMAGE = 1;
     public static final int RESULT_TAKE_PICTURE = 2;
     public static final String INCORRECT_FIELDS_TEXT = "One or more required fields are incorrect or uncompleted";
+    private final String DEFAULT_SPINNER_TEXT = "Select category...";
 
     private Button uploadImage;
     private Button camera;
@@ -46,8 +64,13 @@ public class FillListingActivity extends AppCompatActivity {
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
+    private Spinner categorySelector;
+    private List<Spinner> spinnerList;
+    private LinearLayout linearLayout;
     private String oldPrice;
     private String currentPhotoPath;
+    private File photoFile;
+    private String stringImage = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +85,12 @@ public class FillListingActivity extends AppCompatActivity {
         titleSelector = findViewById(R.id.titleSelector);
         descriptionSelector = findViewById(R.id.descriptionSelector);
         priceSelector = findViewById(R.id.priceSelector);
+        linearLayout = findViewById(R.id.fillListingLinearLayout);
 
+        categorySelector = findViewById(R.id.categorySelector);
+        spinnerList = new ArrayList<>();
+        spinnerList.add(categorySelector);
+        setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
         addListeners();
     }
 
@@ -82,40 +110,64 @@ public class FillListingActivity extends AppCompatActivity {
             Uri selectedImage = data.getData();
             pictureView.setImageURI(selectedImage);
             pictureView.setTag(selectedImage.hashCode());
+
+            stringImage = convertBitmapToString(convertDrawableToBitmap(pictureView.getDrawable()));
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            pictureView.setImageURI(Uri.fromFile(new File(currentPhotoPath)));
+
+           stringImage = convertFileToString(photoFile);
         }
     }
 
     private void addListeners(){
-        camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });
+        camera.setOnClickListener(v -> takePicture());
+        freeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> freezePriceSelector(isChecked));
+        uploadImage.setOnClickListener(v -> uploadImage());
+        submitListing.setOnClickListener(v -> submit());
+    }
 
-        freeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                freezePriceSelector(isChecked);
-            }
-        });
+    private void setupSpinner(Spinner spinner, List<Category> categories){
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-        uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                uploadImage();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                removeSpinnersBelow(spinner);
+                Category selectedCategory = (Category)parent.getItemAtPosition(position);
+                popsUpSubCategorySpinner(selectedCategory);
+                linearLayout.invalidate();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Do nothing
             }
         });
+    }
 
-        submitListing.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                submit();
-            }
-        });
+    private void removeSpinnersBelow(Spinner spinner){
+        if(!spinner.equals(spinnerList.get(spinnerList.size()-1))){
+            int numbersOfSpinnersToRemove = spinnerList.size() - spinnerList.indexOf(spinner) -1;
+            int indexOfFirstSpinnerToRemove = linearLayout.indexOfChild(categorySelector) + spinnerList.indexOf(spinner) + 1;
+            linearLayout.removeViews(indexOfFirstSpinnerToRemove, numbersOfSpinnersToRemove);
+            spinnerList = spinnerList.subList(0, spinnerList.indexOf(spinner)+1);
+        }
+    }
+
+    private void popsUpSubCategorySpinner(Category selectedCategory){
+        if (selectedCategory.hasSubCategories()){
+            Spinner subSpinner = new Spinner(getApplicationContext());
+            spinnerList.add(subSpinner);
+            linearLayout.addView(subSpinner, linearLayout.indexOfChild(categorySelector)+spinnerList.size()-1);
+            setupSpinner(subSpinner, categoriesWithDefaultText(selectedCategory.subCategories()));
+        }
+    }
+
+    private List<Category> categoriesWithDefaultText(List<Category> categories){
+        List<Category> categoriesWithDefText = new ArrayList<>(categories);
+        categoriesWithDefText.add(0, new StringCategory(DEFAULT_SPINNER_TEXT));
+        return categoriesWithDefText;
     }
 
     private void uploadImage(){
@@ -157,15 +209,20 @@ public class FillListingActivity extends AppCompatActivity {
         else {
             final String newListingID = randomUUID().toString();
             SuccessCallback successCallback = result -> {
-                Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-                startActivity(SalesOverviewIntent);
+                if(result) {
+                    Toast toast = Toast.makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                }
             };
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch");
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString());
             storeListing(newListing, newListingID, successCallback);
             addLiteListing(newLiteListing, result -> {
                 //TODO: Check the result to be true
             });
+            Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+            startActivity(SalesOverviewIntent);
         }
     }
 
@@ -189,7 +246,7 @@ public class FillListingActivity extends AppCompatActivity {
     private  void takePicture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
+            photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {

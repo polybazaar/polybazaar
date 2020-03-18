@@ -1,7 +1,5 @@
 package ch.epfl.polybazaar;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +10,8 @@ import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.SignInActivity;
+
+import ch.epfl.polybazaar.UI.SalesOverview;
 
 public class MainActivity extends AppCompatActivity {
 

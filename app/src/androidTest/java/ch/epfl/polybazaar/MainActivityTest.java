@@ -11,6 +11,8 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.login.SignInActivity;
 
+import ch.epfl.polybazaar.UI.SalesOverview;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
