@@ -151,6 +151,7 @@ public class FillListingActivityTest {
     public void toastAppearsWhenTitleIsEmpty() throws Throwable {
         selectCategory("Furniture");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
+        closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
         Thread.sleep(2000);
@@ -160,6 +161,7 @@ public class FillListingActivityTest {
     public void toastAppearsWhenPriceIsEmpty() throws Throwable {
         selectCategory("Furniture");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
         Thread.sleep(2000);
@@ -168,6 +170,7 @@ public class FillListingActivityTest {
     @Test
     public void toastAppearsWhenNoCategoryIsSelected() throws Throwable {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
         Thread.sleep(2000);
@@ -177,6 +180,7 @@ public class FillListingActivityTest {
     public void toastAppearsWhenNoSubCategoryIsSelected() throws Throwable {
         selectCategory("Multimedia");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
         Thread.sleep(2000);
