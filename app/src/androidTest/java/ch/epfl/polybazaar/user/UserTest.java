@@ -47,7 +47,7 @@ public class UserTest {
     @Test(expected = IllegalArgumentException.class)
     public void createUserInvalidName() {
         User user = new User("no1ody",  "me.help@efl.ch");
-        assertThat(isValidUser(user), is(false));
+        assertThat(isValidUser(user), is(true));
     }
 
 }

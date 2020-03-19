@@ -2,7 +2,7 @@ package ch.epfl.polybazaar.litelisting;
 
 
 /**
- * If you attributes of this class, also change its CallbackAdapter and MockDataSnapshot
+ * If you attributes of this class, also change its CallbackAdapter and Utilities
  */
 public class LiteListing {
 

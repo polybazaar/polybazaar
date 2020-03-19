@@ -4,11 +4,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
 
-import ch.epfl.polybazaar.listing.Category;
-import ch.epfl.polybazaar.listing.CategoryRepository;
-import ch.epfl.polybazaar.listing.StringCategory;
+import ch.epfl.polybazaar.category.Category;
+import ch.epfl.polybazaar.category.CategoryRepository;
+import ch.epfl.polybazaar.category.StringCategory;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;

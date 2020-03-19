@@ -13,8 +13,9 @@ import ch.epfl.polybazaar.database.callback.UserCallbackAdapter;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.user.UserDatabase.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class UserDatabaseTest {
@@ -77,11 +78,34 @@ public class UserDatabaseTest {
         User testUser = new User("testuser","test.me@epfl.ch");
         storeNewUser(testUser, result -> assertThat(result, is(true)));
         deleteUser("testId2", result -> assertThat(result, is(false)));
+        deleteUser("test.me@epfl.ch", result -> assertThat(result, is(true)));
     }
 
     @Test
     public void wrongUserIdReturnNull(){
         useMockDataStore();
         fetchUser("wrondId", Assert::assertNull);
+    }
+
+    @Test
+    public void canQueryCorrectly(){
+        useMockDataStore();
+        User testUser1 = new User("testUser1","test.me@epfl.ch");
+        User testUser2 = new User("testUser2","test.mee@epfl.ch");
+        User testUser3 = new User("testUser3","test.meee@epfl.ch");
+        storeNewUser(testUser1, result -> assertThat(result, is(true)));
+        storeNewUser(testUser2, result -> assertThat(result, is(true)));
+        storeNewUser(testUser3, result -> assertThat(result, is(true)));
+        queryUserStringEquality("email", "test.mee@epfl.ch", result -> {
+            assertThat(result, hasSize(1));
+            assertThat(result,containsInAnyOrder("test.mee@epfl.ch"));
+        });
+        queryUserStringEquality("nickName", "testUser3", result -> {
+            assertThat(result, hasSize(1));
+            assertThat(result,containsInAnyOrder("test.meee@epfl.ch"));
+        });
+        queryUserStringEquality("nickName", "testUser4", result -> {
+            assertThat(result, hasSize(0));
+        });
     }
 }

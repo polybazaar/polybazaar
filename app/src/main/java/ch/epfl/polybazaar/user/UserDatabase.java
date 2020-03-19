@@ -2,13 +2,12 @@ package ch.epfl.polybazaar.user;
 
 import android.util.Log;
 
+import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.callback.UserCallbackAdapter;
 import ch.epfl.polybazaar.database.callback.UserCallback;
-
-
 
 
 /**
@@ -81,5 +80,16 @@ public abstract class UserDatabase {
     public static void deleteUser(final String email, final SuccessCallback callback) {
         db = DataStoreFactory.getDependency();
         db.deleteData(userCollectionName, email, callback);
+    }
+
+    /**
+     * Performs a query which returns all user IDs where their field == equalTo
+     * @param field the field to be checked for equality
+     * @param equalTo what field should be equal to
+     * @param callback a StringListCallback interface implementation (contains IDs, not emails!)
+     */
+    public static void queryUserStringEquality(final String field, final String equalTo, final StringListCallback callback) {
+        db = DataStoreFactory.getDependency();
+        db.queryStringEquality(userCollectionName, field, equalTo, callback);
     }
 }
