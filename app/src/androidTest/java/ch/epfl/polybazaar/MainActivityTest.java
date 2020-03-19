@@ -44,13 +44,15 @@ public class MainActivityTest{
             };
 
     @Test
-    public void accessesForAuthenticatedUserAreCorrect() {
+    public void authenticatedUsersCanEnterFillListing() {
         signInAndBack();
         onView(withId(R.id.addListing)).perform(click());
         hasComponent(FillListingActivity.class.getName());
+    }
 
-        pressBack();
-
+    @Test
+    public void authenticatedUsersCanSignOut() {
+        signInAndBack();
         onView(withText(R.string.sign_out)).check(matches(isDisplayed()));
 
         onView(withId(R.id.authenticationButton)).perform(click());
