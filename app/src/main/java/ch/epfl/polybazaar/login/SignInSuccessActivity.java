@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 
 public class SignInSuccessActivity extends AppCompatActivity {
@@ -26,7 +27,7 @@ public class SignInSuccessActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         AppUser currentUser = authenticator.getCurrentUser();
 
-        if (!currentUser.isEmailVerified()) {
+        if (currentUser != null && !currentUser.isEmailVerified()) {
             Intent intent = new Intent(getApplicationContext(), EmailVerificationActivity.class);
             startActivity(intent);
         }
@@ -40,6 +41,15 @@ public class SignInSuccessActivity extends AppCompatActivity {
         authenticator.signOut();
 
         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Change activity to main activity
+     * @param view view that triggers the action
+     */
+    public void toMain(View view) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
 }

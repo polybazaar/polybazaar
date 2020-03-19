@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar.login;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,6 +13,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.widgets.MinimalAlertDialog;
 
 public class EmailVerificationActivity extends AppCompatActivity {
     private Authenticator authenticator;
@@ -42,10 +44,10 @@ public class EmailVerificationActivity extends AppCompatActivity {
                                     R.string.verification_email_sent, Toast.LENGTH_LONG
                             ).show();
                         } else {
-                            Toast.makeText(
+                            MinimalAlertDialog.makeDialog(
                                     EmailVerificationActivity.this,
-                                    R.string.verification_email_fail, Toast.LENGTH_LONG
-                            ).show();
+                                    R.string.verification_email_fail
+                            );
                         }
                     }
                 });
@@ -65,10 +67,10 @@ public class EmailVerificationActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(
+                    MinimalAlertDialog.makeDialog(
                             EmailVerificationActivity.this,
-                            R.string.reload_fail, Toast.LENGTH_LONG
-                    ).show();
+                            R.string.reload_fail
+                    );
                 }
             }
         });
