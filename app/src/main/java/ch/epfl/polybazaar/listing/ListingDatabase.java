@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar.listing;
 
+import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
@@ -57,6 +58,17 @@ public abstract class ListingDatabase {
     public static void deleteListing(final String listingID, final SuccessCallback callback){
         db = DataStoreFactory.getDependency();
         db.deleteData(listingCollectionName, listingID, callback);
+    }
+
+    /**
+     * Performs a query which returns all listing IDs where their field == equalTo
+     * @param field the field to be checked for equality
+     * @param equalTo what field should be equal to
+     * @param callback a StringListCallback interface implementation
+     */
+    public static void queryListingStringEquality(final String field, final String equalTo, final StringListCallback callback) {
+        db = DataStoreFactory.getDependency();
+        db.queryStringEquality(listingCollectionName, field, equalTo, callback);
     }
 
 }
