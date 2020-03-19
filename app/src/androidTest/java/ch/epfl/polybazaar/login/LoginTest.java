@@ -18,9 +18,12 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest {
@@ -38,6 +41,7 @@ public class LoginTest {
                 @Override
                 protected void afterActivityFinished() {
                     MockAuthenticator.getInstance().reset();
+                    MockPhoneSettings.getInstance().setAirPlaneMode(false);
                 }
             };
 
@@ -105,7 +109,7 @@ public class LoginTest {
 
         fillAndSubmitSignIn(EMAIL, PASSWORD);
 
-        onView(withText(R.string.email_not_verified));
+        onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -116,13 +120,22 @@ public class LoginTest {
         MockPhoneSettings.getInstance().setAirPlaneMode(true);
 
         clickButton(withId(R.id.sendLinkButton));
-        onView(withText(R.string.verification_email_fail));
+        onView(withText(R.string.verification_email_fail))
+                .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
+                .check(matches(isDisplayed()));
+
+        clickButton(withText(R.string.alert_close));
 
         clickButton(withId(R.id.reloadButton));
-        onView(withText(R.string.reload_fail));
+
+        onView(withText(R.string.reload_fail))
+                .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
+                .check(matches(isDisplayed()));
+
+        clickButton(withText(R.string.alert_close));
     }
 
-    private void createAccountAndBackToLogin(String email, String password) {
+    public void createAccountAndBackToLogin(String email, String password) {
         clickButton(withId(R.id.signUpButton));
 
         fillAndSubmitSignUp(email, password, password);
