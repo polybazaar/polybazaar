@@ -32,7 +32,7 @@ public class SalesOverviewTest {
     public void init() {
         useMockDataStore();
 
-        LiteListing litelisting1 = new LiteListing("1", "listing1", "CHF 1");
+        LiteListing litelisting1 = new LiteListing("1", "listing1", "CHF 1", "Furniture");
 
         SuccessCallback successCallback = new SuccessCallback() {
             @Override

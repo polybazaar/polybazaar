@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
 import ch.epfl.polybazaar.UI.SalesOverview;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -52,6 +53,8 @@ import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
@@ -146,6 +149,7 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenTitleIsEmpty() throws Throwable {
+        selectCategoryFurniture();
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
@@ -154,11 +158,21 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenPriceIsEmpty() throws Throwable {
+        selectCategoryFurniture();
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
         Thread.sleep(2000);
     }
+
+    @Test
+    public void toastAppearsWhenNoCategoryIsSelected() throws Throwable {
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
+        submitListingAndCheckIncorrectToast();
+        Thread.sleep(2000);
+    }
+
 
     @Test
     public void testNoPictureIsDisplayedWhenNoPictureIsTaken() throws Throwable {
@@ -167,11 +181,14 @@ public class FillListingActivityTest {
         fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
     }
 
+
     @Test
     public void submittingNewListingRedirectsToSalesOverview() throws Throwable {
+        useMockDataStore();
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
-        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("That is a title"));
+        selectCategoryFurniture();
+        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("That is a loooong description    yada yada yada hahahahaha      much long very description"));
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         closeSoftKeyboard();
@@ -180,6 +197,16 @@ public class FillListingActivityTest {
         Thread.sleep(5000);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
+    }
+
+    @Test
+    public void testUtilitiesConvertAndReverseConversion() {
+        convertStringToBitmap(convertBitmapToString(convertDrawableToBitmap(ContextCompat.getDrawable(fillSaleActivityTestRule.getActivity(), R.drawable.algebre_lin))));
+    }
+
+    @Test
+    public void testUtilitiesConvertFileToString() {
+        assertThat(convertFileToString(null), is(""));
     }
 
 
@@ -226,13 +253,9 @@ public class FillListingActivityTest {
         onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
     }
 
-    @Test
-    public void testUtilitiesConvertAndReverseConversion() {
-        convertStringToBitmap(convertBitmapToString(convertDrawableToBitmap(ContextCompat.getDrawable(fillSaleActivityTestRule.getActivity(), R.drawable.algebre_lin))));
+    private void selectCategoryFurniture(){
+        onView(withId(R.id.categorySelector)).perform(click());
+        onData(hasToString("Furniture")).perform(click());
     }
 
-    @Test
-    public void testUtilitiesConvertFileToString() {
-        assertThat(convertFileToString(null), is(""));
-    }
 }

@@ -29,7 +29,8 @@ public class LiteListingCallbackAdapter implements DataSnapshotCallback {
         }
         LiteListing liteListing = new LiteListing(String.valueOf(result.get("listingID")),
                 String.valueOf(result.get("title")),
-                String.valueOf(result.get("price")));
+                String.valueOf(result.get("price")),
+                String.valueOf(result.get("category")));
         liteListingCallback.onCallback(liteListing);
     }
 }

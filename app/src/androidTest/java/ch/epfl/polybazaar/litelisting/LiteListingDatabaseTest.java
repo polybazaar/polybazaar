@@ -29,7 +29,7 @@ public class LiteListingDatabaseTest {
                 listing[0] = result;
             }
         };
-        LiteListing inside = new LiteListing("test", "none", "22CHF");
+        LiteListing inside = new LiteListing("test", "none", "22CHF", "Furniture");
         callback.onCallback(inside);
         assertThat(listing[0].getListingID(), is("test"));
         assertThat(listing[0].getTitle(), is("none"));
@@ -53,7 +53,7 @@ public class LiteListingDatabaseTest {
     @Test
     public void storeAndRetrieveLiteListingTest(){
         useMockDataStore();
-        LiteListing testListing = new LiteListing("listingID","testTitle","testPrice");
+        LiteListing testListing = new LiteListing("listingID","testTitle","testPrice", "Furniture");
         addLiteListing(testListing, result -> assertThat(result, is(true)));
         fetchLiteListingList(result -> listingID = result.get(0));
         fetchLiteListing(listingID, result -> receivedListing = result);
@@ -65,7 +65,7 @@ public class LiteListingDatabaseTest {
     @Test
     public void deleteLiteListingTest(){
         useMockDataStore();
-        LiteListing testListing = new LiteListing("listingID","testTitle","testPrice");
+        LiteListing testListing = new LiteListing("listingID","testTitle","testPrice", "Furniture");
         addLiteListing(testListing, result -> assertThat(result, is(true)));
         fetchLiteListingList(result -> listingID = result.get(0));
         deleteLiteListing(listingID, result -> assertThat(result, is(true)));
@@ -82,9 +82,9 @@ public class LiteListingDatabaseTest {
     @Test
     public void canQueryCorrectly(){
         useMockDataStore();
-        LiteListing testListing1 = new LiteListing("listingID1","testTitle1","32");
-        LiteListing testListing2 = new LiteListing("listingID2","testTitle2","22");
-        LiteListing testListing3 = new LiteListing("listingID3","testTitle3","21");
+        LiteListing testListing1 = new LiteListing("listingID1","testTitle1","32", "Furniture");
+        LiteListing testListing2 = new LiteListing("listingID2","testTitle2","22", "Furniture");
+        LiteListing testListing3 = new LiteListing("listingID3","testTitle3","21", "Furniture");
         addLiteListing(testListing1, result -> assertThat(result, is(true)));
         addLiteListing(testListing2, result -> assertThat(result, is(true)));
         addLiteListing(testListing3, result -> assertThat(result, is(true)));
