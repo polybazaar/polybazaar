@@ -267,7 +267,7 @@ public class FillListingActivityTest {
     }
 
     private void selectCategory(String cat){
-        onView(withId(R.id.categorySelector)).perform(click());
+        onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
         onData(hasToString(cat)).perform(click());
     }
 
