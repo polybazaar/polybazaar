@@ -149,7 +149,7 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenTitleIsEmpty() throws Throwable {
-        selectCategoryFurniture();
+        selectCategory("Furniture");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
@@ -158,7 +158,7 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenPriceIsEmpty() throws Throwable {
-        selectCategoryFurniture();
+        selectCategory("Furniture");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
@@ -167,6 +167,15 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenNoCategoryIsSelected() throws Throwable {
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
+        submitListingAndCheckIncorrectToast();
+        Thread.sleep(2000);
+    }
+
+    @Test
+    public void toastAppearsWhenNoSubCategoryIsSelected() throws Throwable {
+        selectCategory("Multimedia");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
@@ -187,7 +196,7 @@ public class FillListingActivityTest {
         useMockDataStore();
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
-        selectCategoryFurniture();
+        selectCategory("Furniture");
         onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("That is a loooong description    yada yada yada hahahahaha      much long very description"));
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
@@ -253,9 +262,9 @@ public class FillListingActivityTest {
         onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
     }
 
-    private void selectCategoryFurniture(){
+    private void selectCategory(String cat){
         onView(withId(R.id.categorySelector)).perform(click());
-        onData(hasToString("Furniture")).perform(click());
+        onData(hasToString(cat)).perform(click());
     }
 
 }
