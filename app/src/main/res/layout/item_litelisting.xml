@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:id="@+id/liteListingTitle"
+        android:layout_width="@dimen/title_box_length"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/overview_text_size"
+        />
+
+    <TextView
+        android:id="@+id/liteListingPrice"
+        android:layout_width="@dimen/price_box_length"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:textSize="@dimen/overview_text_size" />
+
+</LinearLayout>

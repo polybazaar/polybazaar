@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
@@ -36,6 +38,9 @@ import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
+import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
+import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
+import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static java.util.UUID.randomUUID;
@@ -60,6 +65,8 @@ public class FillListingActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private String oldPrice;
     private String currentPhotoPath;
+    private File photoFile;
+    private String stringImage = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +106,13 @@ public class FillListingActivity extends AppCompatActivity {
             Uri selectedImage = data.getData();
             pictureView.setImageURI(selectedImage);
             pictureView.setTag(selectedImage.hashCode());
+
+            stringImage = convertBitmapToString(convertDrawableToBitmap(pictureView.getDrawable()));
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            pictureView.setImageURI(Uri.fromFile(new File(currentPhotoPath)));
+
+           stringImage = convertFileToString(photoFile);
         }
     }
 
@@ -194,15 +205,20 @@ public class FillListingActivity extends AppCompatActivity {
         else {
             final String newListingID = randomUUID().toString();
             SuccessCallback successCallback = result -> {
-                Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-                startActivity(SalesOverviewIntent);
+                if(result) {
+                    Toast toast = Toast.makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                }
             };
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch");
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString());
             storeListing(newListing, newListingID, successCallback);
             addLiteListing(newLiteListing, result -> {
                 //TODO: Check the result to be true
             });
+            Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+            startActivity(SalesOverviewIntent);
         }
     }
 
@@ -226,7 +242,7 @@ public class FillListingActivity extends AppCompatActivity {
     private  void takePicture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
+            photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {

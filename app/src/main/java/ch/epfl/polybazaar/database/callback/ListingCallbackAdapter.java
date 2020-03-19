@@ -27,10 +27,17 @@ public  class ListingCallbackAdapter implements DataSnapshotCallback {
             listingCallback.onCallback(null);
             return;
         }
+
+        Object image = result.get("stringImage");
+        String stringImage = "";
+        if (image != null) {
+            stringImage = image.toString();
+        }
         Listing listing = new Listing(String.valueOf(result.get("title")),
                 String.valueOf(result.get("description")),
                 String.valueOf(result.get("price")),
-                String.valueOf(result.get("userEmail")));
+                String.valueOf(result.get("userEmail")),
+                stringImage);
 
         listingCallback.onCallback(listing);
     }

@@ -1,16 +1,17 @@
 package ch.epfl.polybazaar;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import ch.epfl.polybazaar.UI.SalesOverview;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,13 +22,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Button saleDet = findViewById(R.id.saleDet);
-        saleDet.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), SaleDetails.class);
-            intent.putExtra("listingID", "06d6f073-30ae-48ac-9530-f30e288b299a");
-            startActivity(intent);
-        });
 
         Button saleOverBut = findViewById(R.id.saleOverview);
         saleOverBut.setOnClickListener(view -> {
