@@ -11,12 +11,13 @@ public class LiteListing {
     private String listingID;
     private String title;
     private String price;
+    private String category;
 
-
-    public LiteListing(String listingID, String title, String price) {
+    public LiteListing(String listingID, String title, String price, String category) {
         this.title = title;
         this.listingID = listingID;
         this.price = price;
+        this.category = category;
     }
 
     public String getTitle() {
@@ -31,5 +32,8 @@ public class LiteListing {
         return price;
     }
 
+    public String getCategory(){
+        return category;
+    }
 
 }

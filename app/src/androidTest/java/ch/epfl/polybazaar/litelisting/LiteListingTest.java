@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 public class LiteListingTest {
 
-    LiteListing listing1 = new LiteListing("someID", "Livre d'algèbre linéaire", "22 CHF");
+    LiteListing listing1 = new LiteListing("someID", "Livre d'algèbre linéaire", "22 CHF", "Furniture");
 
     @Test
     public void checkTitle() {

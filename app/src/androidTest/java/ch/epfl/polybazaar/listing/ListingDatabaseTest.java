@@ -30,7 +30,7 @@ public class ListingDatabaseTest {
                 listing[0] = result;
             }
         };
-        Listing inside = new Listing("test", "none", "22CHF", "m.m@epfl.ch");
+        Listing inside = new Listing("test", "none", "22CHF", "m.m@epfl.ch", "Furniture");
         callback.onCallback(inside);
         assertThat(listing[0].getTitle(), is("test"));
         assertThat(listing[0].getUserEmail(), is("m.m@epfl.ch"));
@@ -54,7 +54,7 @@ public class ListingDatabaseTest {
     @Test
     public void storeAndRetrieveListingTest(){
         useMockDataStore();
-        Listing testListing = new Listing("testListing","testDescription","testPrice","test@epfl.ch");
+        Listing testListing = new Listing("testListing","testDescription","testPrice","test@epfl.ch", "Furniture");
         storeListing(testListing, "testId", result -> assertThat(result, is(true)));
         fetchListing("testId", result -> receivedListing = result);
         assertThat(receivedListing.getTitle(),is("testListing"));
@@ -67,7 +67,7 @@ public class ListingDatabaseTest {
     public void deleteListingTest(){
         useMockDataStore();
         Listing testListing = new Listing("testListing","testDescription",
-                "testPrice","test@epfl.ch");
+                "testPrice","test@epfl.ch", "Furniture");
         storeListing(testListing, "testId", result -> assertThat(result, is(true)));
         deleteListing("testId", result -> assertThat(result, is(true)));
         deleteListing("testId2", result -> assertThat(result, is(false)));
@@ -83,11 +83,11 @@ public class ListingDatabaseTest {
     public void canQueryCorrectly(){
         useMockDataStore();
         Listing testListing1 = new Listing("testListing1","testDescription",
-                "22","test@epfl.ch");
+                "22","test@epfl.ch", "Furniture");
         Listing testListing2 = new Listing("testListing2","testDescription",
-                "testPrice2","test@epfl.ch");
+                "testPrice2","test@epfl.ch", "Furniture");
         Listing testListing3 = new Listing("testListing3","testDescription",
-                "22","test@epfl.ch");
+                "22","test@epfl.ch", "Furniture");
         storeListing(testListing1, "testId1", result -> assertThat(result, is(true)));
         storeListing(testListing2, "testId2", result -> assertThat(result, is(true)));
         storeListing(testListing3, "testId3", result -> assertThat(result, is(true)));

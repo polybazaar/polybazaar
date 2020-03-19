@@ -17,9 +17,9 @@ public class LiteListingAdapterTest {
 
         @Before
         public void init() {
-            LiteListing liteListing1 = new LiteListing("1", "listing1", "CHF 1");
-            LiteListing liteListing2 = new LiteListing("2", "listing2", "CHF 1");
-            LiteListing liteListing3 = new LiteListing("3", "listing3", "CHF 1");
+            LiteListing liteListing1 = new LiteListing("1", "listing1", "CHF 1", "Furniture");
+            LiteListing liteListing2 = new LiteListing("2", "listing2", "CHF 1", "Furniture");
+            LiteListing liteListing3 = new LiteListing("3", "listing3", "CHF 1", "Furniture");
 
             List<LiteListing> liteListingList = new ArrayList<>();
             liteListingList.add(liteListing1);
