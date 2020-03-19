@@ -41,6 +41,7 @@ public class LoginTest {
                 @Override
                 protected void afterActivityFinished() {
                     MockAuthenticator.getInstance().reset();
+                    MockPhoneSettings.getInstance().setAirPlaneMode(false);
                 }
             };
 
