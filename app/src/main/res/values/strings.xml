@@ -24,4 +24,8 @@
     <string name="sign_out">Sign out</string>
     <string name="sign_in_required">You have to sign in to use that functionality</string>
     <string name="welcome_message">Welcome to PolyBazaar!</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="location_permission_denied">Permission Denied</string>
+    <string name="permission_required_toast">Permission Required</string>
+    <string name="permission_rationale_location">Permission Rationale Location</string>
 </resources>
