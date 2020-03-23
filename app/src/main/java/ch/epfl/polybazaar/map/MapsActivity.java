@@ -67,7 +67,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void checkLocationPermissions() {
-        // TODO: permissions dont actually work
+        // TODO: permissions don't actually work
         if (mLocationPermissionGranted) {
             return;
         } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
