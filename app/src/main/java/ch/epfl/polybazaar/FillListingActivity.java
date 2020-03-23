@@ -1,6 +1,8 @@
 package ch.epfl.polybazaar;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,8 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+
+import com.bumptech.glide.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,12 +42,14 @@ import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
+import static ch.epfl.polybazaar.Utilities.isNetworkAvailable;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity {
@@ -208,6 +215,7 @@ public class FillListingActivity extends AppCompatActivity {
         }
         else {
             final String newListingID = randomUUID().toString();
+
             SuccessCallback successCallback = result -> {
                 if(result) {
                     Toast toast = Toast.makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT);
@@ -218,10 +226,28 @@ public class FillListingActivity extends AppCompatActivity {
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
             Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
-            storeListing(newListing, newListingID, successCallback);
-            addLiteListing(newLiteListing, result -> {
-                //TODO: Check the result to be true
-            });
+
+            if(!isNetworkAvailable(context)){
+
+                NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
+                AlertDialog myDialog = new AlertDialog.Builder(context)
+                        .setPositiveButton("send as soon as connection is available", (dialog12, id) -> {
+                            storeListing(newListing, newListingID, successCallback);
+                            addLiteListing(newLiteListing, result -> {
+                                //TODO: Check the result to be true
+                            });
+                        }).setNegativeButton("Cancel", (dialog1, which) -> {
+
+                })
+                        .create();
+
+            }else{
+                storeListing(newListing, newListingID, successCallback);
+                addLiteListing(newLiteListing, result -> {
+                    //TODO: Check the result to be true
+                });
+            }
+
             Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
             startActivity(SalesOverviewIntent);
         }
