@@ -50,6 +50,7 @@ import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static ch.epfl.polybazaar.Utilities.isNetworkAvailable;
+import static ch.epfl.polybazaar.Utilities.checkInternetAvailability;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity {
@@ -226,8 +227,21 @@ public class FillListingActivity extends AppCompatActivity {
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
             Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
+            /*
+            if(Utilities.checkInternetAvailability(context)){
+                NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
+                AlertDialog myDialog = new AlertDialog.Builder(context)
+                        .setPositiveButton("send as soon as connection is available", (dialog12, id) -> {
+                            storeListing(newListing, newListingID, successCallback);
+                            addLiteListing(newLiteListing, result -> {
+                                //TODO: Check the result to be true
+                            });
+                        }).setNegativeButton("Cancel", (dialog1, which) -> {})
+                        .setMessage("No Internet connection found")
+                        .create();
+                myDialog.show();
 
-            if(!isNetworkAvailable(context)){
+            }else{
 
                 NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
                 AlertDialog myDialog = new AlertDialog.Builder(context)
@@ -238,18 +252,45 @@ public class FillListingActivity extends AppCompatActivity {
                             });
                         }).setNegativeButton("Cancel", (dialog1, which) -> {
 
-                })
+                        })
+                        .setMessage("No Internet connection found")
                         .create();
+                myDialog.show();
 
-            }else{
+
                 storeListing(newListing, newListingID, successCallback);
                 addLiteListing(newLiteListing, result -> {
                     //TODO: Check the result to be true
                 });
             }
 
-            Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-            startActivity(SalesOverviewIntent);
+            */
+
+
+            AlertDialog myDialog = new AlertDialog.Builder(context)
+                    .setPositiveButton("send as soon as connection is available", (dialog12, id) -> {
+                        storeListing(newListing, newListingID, successCallback);
+                        addLiteListing(newLiteListing, result -> {
+                            //TODO: Check the result to be true
+                        });
+                    }).setNegativeButton("Cancel", (dialog1, which) -> {
+
+                    })
+                    .setMessage("No Internet connection found")
+                    .create();
+            myDialog.show();
+
+
+            storeListing(newListing, newListingID, successCallback);
+            addLiteListing(newLiteListing, result -> {
+
+            });
+
+
+
+
+            //Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+           // startActivity(SalesOverviewIntent);
         }
     }
 

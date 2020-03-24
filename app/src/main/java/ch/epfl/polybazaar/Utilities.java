@@ -14,6 +14,8 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.util.Base64;
 
@@ -143,6 +145,20 @@ public abstract class Utilities {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public static boolean checkInternetAvailability(Context context){
+        ConnectivityManager cm= (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        Network[] networks = cm.getAllNetworks();
+        boolean hasInternet = false;
+        if(networks.length>0){
+            for(Network network :networks){
+                NetworkCapabilities nc = cm.getNetworkCapabilities(network);
+                if(nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) hasInternet = true;
+            }
+        }
+        return hasInternet;
     }
 }
