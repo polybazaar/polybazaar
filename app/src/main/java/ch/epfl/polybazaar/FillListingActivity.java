@@ -36,12 +36,14 @@ import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.category.StringCategory;
+import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
+import static ch.epfl.polybazaar.listingImage.ListingImageDatabase.storeListingImage;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static java.util.UUID.randomUUID;
 
@@ -217,8 +219,12 @@ public class FillListingActivity extends AppCompatActivity {
             };
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
             Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
+            ListingImage newListingImage = new ListingImage(stringImage, "");
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
             storeListing(newListing, newListingID, successCallback);
+            storeListingImage(newListingImage, newListingID, result -> {
+
+            });
             addLiteListing(newLiteListing, result -> {
                 //TODO: Check the result to be true
             });
