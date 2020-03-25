@@ -245,32 +245,40 @@ public class FillListingActivityTest {
 
 
     @Test
-    public void NoConnectionTest() throws Throwable {
+    public void DialogAppearsWhenNoConnection() throws Throwable {
 
         useMockNetworkState(false);
-        runOnUiThread(new Runnable(){
-            @Override
-            public void run() {
-                Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing);
-                but.performClick();
-            }
-        });
-
         useMockDataStore();
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
-        closeSoftKeyboard();
-        selectCategory("Furniture");
-        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("That is a loooong description    yada yada yada hahahahaha      much long very description"));
-        closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
-        closeSoftKeyboard();
-        Intents.init();
+        fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(5000);
+        Thread.sleep(500);
+        onView(withText("No Internet connection found")).check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void DialogPositiveClickGoesToSalesOverview() throws Throwable {
+        useMockNetworkState(false);
+        useMockDataStore();
+        fillListing();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        Thread.sleep(500);
+        onView(withText("send as soon as connection is available")).perform(click());
+        Thread.sleep(500);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
+    }
 
-        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+    @Test
+    public void DialogNegativeClickGoesToFillListing() throws Throwable {
+        useMockNetworkState(false);
+        useMockDataStore();
+        fillListing();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        Thread.sleep(500);
+        onView(withText("Cancel")).perform(click());
+        Thread.sleep(500);
+        hasComponent(FillListingActivity.class.getName());
     }
 
 
@@ -304,6 +312,17 @@ public class FillListingActivityTest {
     private void selectCategory(String cat){
         onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
         onData(hasToString(cat)).perform(click());
+    }
+    private void fillListing() throws Throwable {
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
+        selectCategory("Furniture");
+        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("description"));
+        closeSoftKeyboard();
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
+        closeSoftKeyboard();
+        Intents.init();
+        //runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
     }
 
 }
