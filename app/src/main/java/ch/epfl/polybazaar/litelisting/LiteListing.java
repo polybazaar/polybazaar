@@ -12,11 +12,18 @@ public class LiteListing {
     private String category;
     private String stringImage;
 
+
     public LiteListing(String listingID, String title, String price, String category) {
         this.title = title;
         this.listingID = listingID;
         this.price = price;
         this.category = category;
+        this.stringImage = "";
+    }
+
+    public LiteListing(String listingID, String title, String price, String category, String stringImage) {
+        this(listingID, title, price, category);
+        this.stringImage = stringImage;
     }
 
     public String getTitle() {
