@@ -16,7 +16,8 @@ import ch.epfl.polybazaar.R;
  */
 public class PermissionDeniedDialog extends DialogFragment {
 
-    private static final String ARGUMENT_FINISH_ACTIVITY = "finish";
+    private static final String FINISH = "FINISH";
+    private static final String MSG = "MSG";
 
     private boolean mFinishActivity = false;
 
@@ -24,10 +25,10 @@ public class PermissionDeniedDialog extends DialogFragment {
      * Creates a new instance of this dialog and optionally finishes the calling Activity
      * when the 'Ok' button is clicked.
      */
-    public static PermissionDeniedDialog newInstance(boolean finishActivity) {
+    public static PermissionDeniedDialog newInstance(String message, boolean finishActivity) {
         Bundle arguments = new Bundle();
-        arguments.putBoolean(ARGUMENT_FINISH_ACTIVITY, finishActivity);
-
+        arguments.putBoolean(FINISH, finishActivity);
+        arguments.putString(MSG, message);
         PermissionDeniedDialog dialog = new PermissionDeniedDialog();
         dialog.setArguments(arguments);
         return dialog;
@@ -36,10 +37,10 @@ public class PermissionDeniedDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         assert getArguments() != null;
-        mFinishActivity = getArguments().getBoolean(ARGUMENT_FINISH_ACTIVITY);
+        mFinishActivity = getArguments().getBoolean(FINISH);
 
         return new AlertDialog.Builder(getActivity())
-                .setMessage(R.string.location_permission_denied)
+                .setMessage(getArguments().getString(MSG))
                 .setPositiveButton(android.R.string.ok, null)
                 .create();
     }

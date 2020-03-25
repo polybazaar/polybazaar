@@ -60,18 +60,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void checkLocationPermissions() {
-        SuccessCallback callback = new SuccessCallback() {
-            @Override
-            public void onCallback(boolean result) {
-                if (result) {
-                    mLocationPermissionGranted = true;
-                    mapInit();
-                } else {
-                    mLocationPermissionGranted = false;
-                }
+        SuccessCallback callback = result -> {
+            if (result) {
+                mLocationPermissionGranted = true;
+                mapInit();
+            } else {
+                mLocationPermissionGranted = false;
             }
         };
-        assertPermission(this, "ACCESS_FINE_LOCATION", "Location is required to show your position on the map", callback);
+        assertPermission(this, "ACCESS_FINE_LOCATION",
+                "Location is required to show your position on the map",
+                "Location will be unavailable",
+                callback);
     }
 
     private void mapInit() {
