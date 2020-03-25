@@ -253,7 +253,8 @@ public class FillListingActivityTest {
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(500);
         onView(withText("No Internet connection found")).check(matches(isDisplayed()));
-
+        Intents.release();
+        useRealNetwork();
     }
 
     @Test
@@ -267,6 +268,7 @@ public class FillListingActivityTest {
         Thread.sleep(500);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
+        useRealNetwork();
     }
 
     @Test
@@ -279,6 +281,8 @@ public class FillListingActivityTest {
         onView(withText("Cancel")).perform(click());
         Thread.sleep(500);
         hasComponent(FillListingActivity.class.getName());
+        Intents.release();
+        useRealNetwork();
     }
 
 
