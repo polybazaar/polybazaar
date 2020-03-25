@@ -2,6 +2,7 @@ package ch.epfl.polybazaar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,11 +32,11 @@ import java.util.Date;
 import java.util.List;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
-import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.category.StringCategory;
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
@@ -109,9 +110,10 @@ public class FillListingActivity extends AppCompatActivity {
             Uri selectedImage = data.getData();
             pictureView.setImageURI(selectedImage);
             pictureView.setTag(selectedImage.hashCode());
-
-            stringImage = convertBitmapToString(convertDrawableToBitmap(pictureView.getDrawable()));
-            stringThumbnail = convertBitmapToStringWithQuality(convertDrawableToBitmap(pictureView.getDrawable()), 0);
+            
+            Bitmap convertedBitmap = convertDrawableToBitmap(pictureView.getDrawable());
+            stringImage = convertBitmapToString(convertedBitmap);
+            stringThumbnail = convertBitmapToStringWithQuality(convertedBitmap, 0);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            pictureView.setImageURI(Uri.fromFile(new File(currentPhotoPath)));
