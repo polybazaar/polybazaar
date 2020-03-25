@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -10,18 +11,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
 
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
 import static ch.epfl.polybazaar.listing.ListingDatabase.fetchListing;
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.deleteLiteListing;
 
 public class SaleDetails extends AppCompatActivity {
+    private Button editButton;
+    private Button deleteButton;
+    private AlertDialog deleteDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -30,6 +38,7 @@ public class SaleDetails extends AppCompatActivity {
 
         final ImageView imageLoading = findViewById(R.id.loadingImage);
         Glide.with(this).load(R.drawable.loading).into(imageLoading);
+
 
         retrieveListingFromListingID();
         getSellerInformation();
@@ -59,7 +68,10 @@ public class SaleDetails extends AppCompatActivity {
             return;
         }
 
-        ListingCallback callbackListing = result -> fillWithListing(result);
+        ListingCallback callbackListing = result -> {
+            fillWithListing(result);
+            createEditAndDeleteActions(listingID);
+        };
         fetchListing(listingID, callbackListing);
     }
 
@@ -113,5 +125,46 @@ public class SaleDetails extends AppCompatActivity {
                 userEmailTextView.setVisibility(View.INVISIBLE);
             });
         }
+    }
+
+    private void createEditAndDeleteActions(String listingID) {
+        editButton = findViewById(R.id.editButton);
+        deleteButton = findViewById(R.id.deleteButton);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetails.this);
+                builder.setTitle("Delete this listing");
+                builder.setMessage("You are about to delete this listing. Are you sure you want to continue?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                deleteCurrentListing(listingID);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                deleteDialog = builder.create();
+                deleteDialog.show();
+            }
+        });
+    }
+
+    private void deleteCurrentListing(String listingID) {
+        SuccessCallback deletionSuccessCallback = result -> {
+            if(result) {
+                Toast toast = Toast.makeText(getApplicationContext(),"Listing successfuly deleted",Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.show();
+            }
+        };
+        deleteListing(listingID, deletionSuccessCallback);
+        deleteLiteListing(listingID, result -> {});
+
+        Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
+        startActivity(SalesOverviewIntent);
     }
 }
