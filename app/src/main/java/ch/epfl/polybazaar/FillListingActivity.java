@@ -110,7 +110,7 @@ public class FillListingActivity extends AppCompatActivity {
             Uri selectedImage = data.getData();
             pictureView.setImageURI(selectedImage);
             pictureView.setTag(selectedImage.hashCode());
-            
+
             Bitmap convertedBitmap = convertDrawableToBitmap(pictureView.getDrawable());
             stringImage = convertBitmapToString(convertedBitmap);
             stringThumbnail = convertBitmapToStringWithQuality(convertedBitmap, 0);
