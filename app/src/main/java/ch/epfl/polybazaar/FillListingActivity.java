@@ -1,8 +1,6 @@
 package ch.epfl.polybazaar;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,11 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-
-import com.bumptech.glide.util.Util;
+import androidx.fragment.app.DialogFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,24 +32,24 @@ import java.util.Date;
 import java.util.List;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
-import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.category.StringCategory;
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
+import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 
+import static ch.epfl.polybazaar.Utilities.checkInternetAvailability;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
-import static ch.epfl.polybazaar.Utilities.isNetworkAvailable;
-import static ch.epfl.polybazaar.Utilities.checkInternetAvailability;
 import static java.util.UUID.randomUUID;
 
-public class FillListingActivity extends AppCompatActivity {
+public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
 
     public static final int RESULT_LOAD_IMAGE = 1;
     public static final int RESULT_TAKE_PICTURE = 2;
@@ -75,6 +71,8 @@ public class FillListingActivity extends AppCompatActivity {
     private String currentPhotoPath;
     private File photoFile;
     private String stringImage = "";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,82 +213,14 @@ public class FillListingActivity extends AppCompatActivity {
             Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
         }
         else {
-            final String newListingID = randomUUID().toString();
-
-            SuccessCallback successCallback = result -> {
-                if(result) {
-                    Toast toast = Toast.makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                    toast.show();
+                if(checkInternetAvailability(context)){
+                    createAndSendListing();
+                    Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+                    startActivity(SalesOverviewIntent);
+                }else{
+                    NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
+                    dialog.show(getSupportFragmentManager(),"noConnectionDialog");
                 }
-            };
-            String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
-            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
-            /*
-            if(Utilities.checkInternetAvailability(context)){
-                NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
-                AlertDialog myDialog = new AlertDialog.Builder(context)
-                        .setPositiveButton("send as soon as connection is available", (dialog12, id) -> {
-                            storeListing(newListing, newListingID, successCallback);
-                            addLiteListing(newLiteListing, result -> {
-                                //TODO: Check the result to be true
-                            });
-                        }).setNegativeButton("Cancel", (dialog1, which) -> {})
-                        .setMessage("No Internet connection found")
-                        .create();
-                myDialog.show();
-
-            }else{
-
-                NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
-                AlertDialog myDialog = new AlertDialog.Builder(context)
-                        .setPositiveButton("send as soon as connection is available", (dialog12, id) -> {
-                            storeListing(newListing, newListingID, successCallback);
-                            addLiteListing(newLiteListing, result -> {
-                                //TODO: Check the result to be true
-                            });
-                        }).setNegativeButton("Cancel", (dialog1, which) -> {
-
-                        })
-                        .setMessage("No Internet connection found")
-                        .create();
-                myDialog.show();
-
-
-                storeListing(newListing, newListingID, successCallback);
-                addLiteListing(newLiteListing, result -> {
-                    //TODO: Check the result to be true
-                });
-            }
-
-            */
-
-
-            AlertDialog myDialog = new AlertDialog.Builder(context)
-                    .setPositiveButton("send as soon as connection is available", (dialog12, id) -> {
-                        storeListing(newListing, newListingID, successCallback);
-                        addLiteListing(newLiteListing, result -> {
-                            //TODO: Check the result to be true
-                        });
-                    }).setNegativeButton("Cancel", (dialog1, which) -> {
-
-                    })
-                    .setMessage("No Internet connection found")
-                    .create();
-            myDialog.show();
-
-
-            storeListing(newListing, newListingID, successCallback);
-            addLiteListing(newLiteListing, result -> {
-
-            });
-
-
-
-
-            //Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-           // startActivity(SalesOverviewIntent);
         }
     }
 
@@ -333,4 +263,36 @@ public class FillListingActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        if(dialog instanceof NoConnectionForListingDialog){
+            createAndSendListing();
+            Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+            startActivity(SalesOverviewIntent);
+
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        if(dialog instanceof NoConnectionForListingDialog){
+            //do nothing
+        }
+
+    }
+    private void createAndSendListing(){
+        SuccessCallback successCallback = result -> {
+            if(result) {
+                Toast toast = Toast.makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.show();
+            }
+        };
+        String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
+        final String newListingID = randomUUID().toString();
+        Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
+        LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
+        storeListing(newListing, newListingID, successCallback);
+        addLiteListing(newLiteListing, result -> {});
+    }
 }
