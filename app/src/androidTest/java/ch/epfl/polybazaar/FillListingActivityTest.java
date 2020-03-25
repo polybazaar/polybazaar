@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.network.InternetChecker;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onData;
@@ -53,6 +54,7 @@ import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.*;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -243,8 +245,32 @@ public class FillListingActivityTest {
 
 
     @Test
-    public void NoConnectionTest(){
+    public void NoConnectionTest() throws Throwable {
 
+        useMockNetworkState(false);
+        runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+                Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing);
+                but.performClick();
+            }
+        });
+
+        useMockDataStore();
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
+        selectCategory("Furniture");
+        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("That is a loooong description    yada yada yada hahahahaha      much long very description"));
+        closeSoftKeyboard();
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
+        closeSoftKeyboard();
+        Intents.init();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        Thread.sleep(5000);
+        intended(hasComponent(SalesOverview.class.getName()));
+        Intents.release();
+
+        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 
 
@@ -257,6 +283,7 @@ public class FillListingActivityTest {
         intended(expectedGalleryIntent);
         Intents.release();
     }
+
 
     private void submitListingAndCheckIncorrectToast() throws Throwable {
         runOnUiThread(new Runnable(){

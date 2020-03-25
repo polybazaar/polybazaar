@@ -38,13 +38,14 @@ import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.network.InternetChecker;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 
-import static ch.epfl.polybazaar.Utilities.checkInternetAvailability;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static java.util.UUID.randomUUID;
@@ -213,7 +214,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
         }
         else {
-                if(checkInternetAvailability(context)){
+                if(isInternetAvailable(context)){
                     createAndSendListing();
                     Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
                     startActivity(SalesOverviewIntent);
