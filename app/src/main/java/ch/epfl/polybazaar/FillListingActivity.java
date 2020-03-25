@@ -41,8 +41,11 @@ import ch.epfl.polybazaar.litelisting.LiteListing;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.deleteLiteListing;
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity {
@@ -67,6 +70,7 @@ public class FillListingActivity extends AppCompatActivity {
     private String currentPhotoPath;
     private File photoFile;
     private String stringImage = "";
+    private Category traversingCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +91,8 @@ public class FillListingActivity extends AppCompatActivity {
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
         setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
-        addListeners();
+        boolean edit = fillFieldsIfEdit();
+        addListeners(edit);
     }
 
     @Override
@@ -116,11 +121,24 @@ public class FillListingActivity extends AppCompatActivity {
         }
     }
 
-    private void addListeners(){
+    private void addListeners(boolean edit){
         camera.setOnClickListener(v -> takePicture());
         freeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> freezePriceSelector(isChecked));
         uploadImage.setOnClickListener(v -> uploadImage());
-        submitListing.setOnClickListener(v -> submit());
+
+        if(!edit){
+            submitListing.setOnClickListener(v -> submit());
+        }
+        else{
+            submitListing.setText("Edit");
+            submitListing.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteOldListingAndSubmitNewOne();
+                }
+            });
+        }
+
     }
 
     private void setupSpinner(Spinner spinner, List<Category> categories){
@@ -157,6 +175,15 @@ public class FillListingActivity extends AppCompatActivity {
             spinnerList.add(subSpinner);
             linearLayout.addView(subSpinner, linearLayout.indexOfChild(categorySelector)+spinnerList.size()-1);
             setupSpinner(subSpinner, categoriesWithDefaultText(selectedCategory.subCategories()));
+
+            Bundle bundle = getIntent().getExtras();
+            if(bundle != null && traversingCategory != null){
+                Category editedCategory = new StringCategory(((Listing)bundle.get("listing")).getCategory());
+                subSpinner.setSelection(traversingCategory.indexOf(traversingCategory.getSubCategoryContaining(editedCategory))+1);
+                traversingCategory = traversingCategory.getSubCategoryContaining(editedCategory);
+            }
+
+
         }
     }
 
@@ -264,6 +291,48 @@ public class FillListingActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    private boolean fillFieldsIfEdit() {
+        Bundle bundle = getIntent().getExtras();
+        if(bundle == null){
+            return false;
+        }
+        String listingID = bundle.getString("listingID", "-1");
+        if (listingID.equals("-1")){
+            return false;
+        }
+        Listing listing = (Listing)bundle.get("listing");
+
+        titleSelector.setText(listing.getTitle());
+        descriptionSelector.setText(listing.getDescription());
+        freeSwitch.setChecked(listing.getPrice().equals("0.0"));
+        priceSelector.setText(listing.getPrice());
+        Category editedCategory = new StringCategory(listing.getCategory());
+        traversingCategory = CategoryRepository.getCategoryContaining(editedCategory);
+        categorySelector.setSelection(CategoryRepository.indexOf(traversingCategory)+1);
+        return true;
+    }
+
+    private void deleteOldListingAndSubmitNewOne() {
+        if (!checkFields()) {
+            Toast.makeText(getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
+        }
+        else{
+            SuccessCallback submitNewListingCallback = result -> submit();
+            Bundle bundle = getIntent().getExtras();
+            if(bundle == null){
+                return;
+            }
+            String listingID = bundle.getString("listingID");
+
+            deleteListing(listingID, result -> {});
+            queryLiteListingStringEquality("listingID", listingID, result -> deleteLiteListing(result.get(0), result1 -> submit()));
+        }
+
+    }
+
+
 
 
 }

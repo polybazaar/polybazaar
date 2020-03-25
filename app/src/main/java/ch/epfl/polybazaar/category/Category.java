@@ -60,4 +60,13 @@ public interface Category {
      * @return true if the given category is contained in the current one
      */
     boolean contains(Category contained);
+
+    /**
+     * @param searched the category we want the index of
+     * @return the index of the position of the searched category in the repository. If not found returns -1
+     */
+    int indexOf(Category searched);
+
+
+    Category getSubCategoryContaining(Category contained);
 }

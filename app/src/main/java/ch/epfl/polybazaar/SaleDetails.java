@@ -74,7 +74,7 @@ public class SaleDetails extends AppCompatActivity {
 
         ListingCallback callbackListing = result -> {
             fillWithListing(result);
-            createEditAndDeleteActions(listingID);
+            createEditAndDeleteActions(result, listingID);
         };
         fetchListing(listingID, callbackListing);
     }
@@ -131,7 +131,7 @@ public class SaleDetails extends AppCompatActivity {
         }
     }
 
-    private void createEditAndDeleteActions(String listingID) {
+    private void createEditAndDeleteActions(Listing listing, String listingID) {
         editButton = findViewById(R.id.editButton);
         deleteButton = findViewById(R.id.deleteButton);
 
@@ -151,12 +151,15 @@ public class SaleDetails extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
+                intent.putExtra("listingID", listingID);
+                intent.putExtra("listing", listing);
+                startActivity(intent);
             }
         });
     }
 
-    private void deleteCurrentListing(String listingID) {
+    public void deleteCurrentListing(String listingID) {
         SuccessCallback deletionSuccessCallback = result -> {
             if(result) {
                 Toast toast = Toast.makeText(getApplicationContext(),"Listing successfuly deleted",Toast.LENGTH_SHORT);
