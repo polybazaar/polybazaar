@@ -56,6 +56,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    testImplementation 'org.mockito:mockito-core:2.+'
+    androidTestImplementation 'org.mockito:mockito-android:2.+'
 }
 
 tasks.withType(Test) {
