@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import java.util.Objects;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
 
 import static ch.epfl.polybazaar.map.Constants.*;
 import static ch.epfl.polybazaar.widgets.permissions.PermissionUtils.*;
@@ -56,30 +57,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         checkLocationPermissions();
-        mapInit();
     }
 
     private void checkLocationPermissions() {
-        if (assertPermission(this, "ACCESS_FINE_LOCATION")) {
-            mLocationPermissionGranted = true;
-            return;
-        } else {
-            this.finish();
-        }/*
-        // TODO: permissions don't actually work
-        if (mLocationPermissionGranted) {
-            return;
-        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
-            return;
-        } else {
-            // Permission to access the location is missing. Show rationale and request permission
-            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, false);
-            mLocationPermissionGranted = false;
-            checkLocationPermissions();
-        }*/
+        SuccessCallback callback = new SuccessCallback() {
+            @Override
+            public void onCallback(boolean result) {
+                if (result) {
+                    mLocationPermissionGranted = true;
+                    mapInit();
+                } else {
+                    mLocationPermissionGranted = false;
+                }
+            }
+        };
+        assertPermission(this, "ACCESS_FINE_LOCATION", "Location is required to show your position on the map", callback);
     }
 
     private void mapInit() {
