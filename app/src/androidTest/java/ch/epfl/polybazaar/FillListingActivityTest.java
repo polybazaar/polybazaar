@@ -239,6 +239,11 @@ public class FillListingActivityTest {
         Intents.release();
     }
 
+    @Test
+    public void NoConnectionTest(){
+      
+    }
+
 
     private void uploadImage(){
         closeSoftKeyboard();
