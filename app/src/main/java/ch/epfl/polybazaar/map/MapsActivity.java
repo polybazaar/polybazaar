@@ -1,11 +1,6 @@
 package ch.epfl.polybazaar.map;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,16 +12,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
 import java.util.Objects;
 
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.widgets.permissions.PermissionUtils;
 
 import static ch.epfl.polybazaar.map.Constants.*;
-import static ch.epfl.polybazaar.widgets.permissions.Permissions.*;
+import static ch.epfl.polybazaar.widgets.permissions.PermissionUtils.*;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
 
@@ -67,6 +60,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void checkLocationPermissions() {
+        if (assertPermission(this, "ACCESS_FINE_LOCATION")) {
+            mLocationPermissionGranted = true;
+            return;
+        } else {
+            this.finish();
+        }/*
         // TODO: permissions don't actually work
         if (mLocationPermissionGranted) {
             return;
@@ -80,21 +79,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Manifest.permission.ACCESS_FINE_LOCATION, false);
             mLocationPermissionGranted = false;
             checkLocationPermissions();
-        }
+        }*/
     }
 
     private void mapInit() {
         if (mMap != null) {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            mMap.getUiSettings().setZoomControlsEnabled(true);
-            mMap.addMarker(new MarkerOptions().position(EPFL_LOCATION).title("EPFL"));
+            mMap.getUiSettings().setZoomControlsEnabled(false);
+            // EPFL Marker
+            //mMap.addMarker(new MarkerOptions().position(EPFL_LOCATION).title("EPFL"));
             goToEPFL();
         }
     }
 
     private void goToEPFL(){
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EPFL_LOCATION, FAR_ZOOM));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EPFL_LOCATION, VILLAGE_ZOOM));
     }
 
     @Override
@@ -118,11 +118,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             // Set the map's camera position to the current location of the device.
                             Location mLastKnownLocation = task.getResult();
                             assert mLastKnownLocation != null;
-                            mMap.getUiSettings().setZoomControlsEnabled(true);
-                            // TODO: why dont that zoom work
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), LOWEST_ZOOM));
+                                            mLastKnownLocation.getLongitude()), STREET_ZOOM));
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -132,7 +130,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
             }
         } catch(SecurityException e)  {
-            Log.e("Exception: %s", Objects.requireNonNull(e.getMessage()));
+            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
     }
 
