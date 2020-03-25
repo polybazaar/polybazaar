@@ -5,6 +5,10 @@ import java.util.Map;
 
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
