@@ -65,15 +65,25 @@ public abstract class Utilities {
      * @return a String
      */
     public static String convertFileToString(File imageFile) {
+        return convertFileToStringWithQuality(imageFile, 10);
+    }
+
+    /**
+     * Convert a File to a String with a specific compression quality
+     * @param imageFile
+     * @return a String
+     */
+    public static String convertFileToStringWithQuality(File imageFile, int quality) {
         String tempStringImg = "";
         //inspired from https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa/18052269
         if(imageFile != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            BitmapFactory.decodeFile(imageFile.getAbsolutePath()).compress(Bitmap.CompressFormat.JPEG, 10, baos);
+            BitmapFactory.decodeFile(imageFile.getAbsolutePath()).compress(Bitmap.CompressFormat.JPEG, quality, baos);
             tempStringImg = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         }
         return tempStringImg;
     }
+
 
     /**
      * Convert a String image to a Bitmap
@@ -100,8 +110,18 @@ public abstract class Utilities {
      * taken from Stackoverflow
      */
     public static String convertBitmapToString(Bitmap bitmap){
+        return convertBitmapToStringWithQuality(bitmap, 10);
+    }
+
+    /**
+     * Convert Bitmap to String with a specific compression quality
+     * @param bitmap
+     * @return a String
+     * taken from Stackoverflow
+     */
+    public static String convertBitmapToStringWithQuality(Bitmap bitmap, int quality){
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,10, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         byte [] b=baos.toByteArray();
         String temp=Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
