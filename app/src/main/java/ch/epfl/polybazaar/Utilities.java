@@ -1,10 +1,5 @@
 package ch.epfl.polybazaar;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.litelisting.LiteListing;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,7 +9,11 @@ import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
+import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.user.User;
 
 public abstract class Utilities {
@@ -30,6 +29,8 @@ public abstract class Utilities {
             result.put("listingID", ((LiteListing)o).getListingID());
             result.put("price", ((LiteListing)o).getPrice());
             result.put("title", ((LiteListing)o).getTitle());
+            result.put("category", ((LiteListing)o).getCategory());
+            result.put("thumbnail", ((LiteListing)o).getStringThumbnail());
         } else if (o instanceof User) {
             result.put("email", ((User)o).getEmail());
             result.put("nickName", ((User)o).getNickName());

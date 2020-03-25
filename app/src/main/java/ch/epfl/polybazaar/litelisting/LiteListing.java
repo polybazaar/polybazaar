@@ -10,7 +10,7 @@ public class LiteListing {
     private String title;
     private String price;
     private String category;
-    private String stringImage;
+    private String stringThumbnail;
 
 
     public LiteListing(String listingID, String title, String price, String category) {
@@ -18,12 +18,12 @@ public class LiteListing {
         this.listingID = listingID;
         this.price = price;
         this.category = category;
-        this.stringImage = "";
+        this.stringThumbnail = "";
     }
 
     public LiteListing(String listingID, String title, String price, String category, String stringImage) {
         this(listingID, title, price, category);
-        this.stringImage = stringImage;
+        this.stringThumbnail = stringImage;
     }
 
     public String getTitle() {
@@ -42,8 +42,8 @@ public class LiteListing {
         return category;
     }
 
-    public String getStringImage() {
-        return stringImage;
+    public String getStringThumbnail() {
+        return stringThumbnail;
     }
 
 }
