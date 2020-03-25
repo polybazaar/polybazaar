@@ -25,7 +25,7 @@ public class LiteListingCallbackAdapter implements DataSnapshotCallback {
     public void onCallback(DataSnapshot result) {
         if (result==null){
             liteListingCallback.onCallback(null);
-            return; 
+            return;
         }
 
         Object image = result.get("stringThumbnail");
