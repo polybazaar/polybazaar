@@ -27,11 +27,17 @@ public class LiteListingCallbackAdapter implements DataSnapshotCallback {
             liteListingCallback.onCallback(null);
             return;
         }
+
+        Object image = result.get("stringThumbnail");
+        String stringThumbnail = "";
+        if (image != null) {
+            stringThumbnail = image.toString();
+        }
         LiteListing liteListing = new LiteListing(String.valueOf(result.get("listingID")),
                 String.valueOf(result.get("title")),
                 String.valueOf(result.get("price")),
-                String.valueOf(result.get("category")));
-                String.valueOf(result.get("thumbnail"));
+                String.valueOf(result.get("category")),
+                stringThumbnail);
         liteListingCallback.onCallback(liteListing);
     }
 }

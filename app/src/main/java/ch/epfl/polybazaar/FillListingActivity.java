@@ -113,13 +113,13 @@ public class FillListingActivity extends AppCompatActivity {
 
             Bitmap convertedBitmap = convertDrawableToBitmap(pictureView.getDrawable());
             stringImage = convertBitmapToString(convertedBitmap);
-            stringThumbnail = convertBitmapToStringWithQuality(convertedBitmap, 0);
+            stringThumbnail = convertBitmapToStringWithQuality(convertedBitmap, 10);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            pictureView.setImageURI(Uri.fromFile(new File(currentPhotoPath)));
 
            stringImage = convertFileToString(photoFile);
-           stringThumbnail = convertFileToStringWithQuality(photoFile, 0);
+           stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
         }
     }
 

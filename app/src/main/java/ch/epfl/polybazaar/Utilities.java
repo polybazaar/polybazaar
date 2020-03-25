@@ -30,7 +30,6 @@ public abstract class Utilities {
             result.put("price", ((LiteListing)o).getPrice());
             result.put("title", ((LiteListing)o).getTitle());
             result.put("category", ((LiteListing)o).getCategory());
-            result.put("thumbnail", ((LiteListing)o).getStringThumbnail());
         } else if (o instanceof User) {
             result.put("email", ((User)o).getEmail());
             result.put("nickName", ((User)o).getNickName());
