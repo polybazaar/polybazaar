@@ -60,7 +60,9 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertThat;
 
+
 @RunWith(AndroidJUnit4.class)
+
 public class FillListingActivityTest {
     static Uri imageUri;
     static Bitmap imageBitmap;
@@ -239,9 +241,10 @@ public class FillListingActivityTest {
         Intents.release();
     }
 
+
     @Test
     public void NoConnectionTest(){
-      
+
     }
 
 
