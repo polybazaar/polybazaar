@@ -21,9 +21,9 @@ public class LiteListing {
         this.stringThumbnail = "";
     }
 
-    public LiteListing(String listingID, String title, String price, String category, String stringImage) {
+    public LiteListing(String listingID, String title, String price, String category, String stringThumbnail) {
         this(listingID, title, price, category);
-        this.stringThumbnail = stringImage;
+        this.stringThumbnail = stringThumbnail;
     }
 
     public String getTitle() {

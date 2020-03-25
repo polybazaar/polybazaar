@@ -39,8 +39,10 @@ import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
+import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static java.util.UUID.randomUUID;
@@ -67,6 +69,7 @@ public class FillListingActivity extends AppCompatActivity {
     private String currentPhotoPath;
     private File photoFile;
     private String stringImage = "";
+    private String stringThumbnail = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,11 +111,13 @@ public class FillListingActivity extends AppCompatActivity {
             pictureView.setTag(selectedImage.hashCode());
 
             stringImage = convertBitmapToString(convertDrawableToBitmap(pictureView.getDrawable()));
+            stringThumbnail = convertBitmapToStringWithQuality(convertDrawableToBitmap(pictureView.getDrawable()), 0);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            pictureView.setImageURI(Uri.fromFile(new File(currentPhotoPath)));
 
            stringImage = convertFileToString(photoFile);
+           stringThumbnail = convertFileToStringWithQuality(photoFile, 0);
         }
     }
 
@@ -217,7 +222,7 @@ public class FillListingActivity extends AppCompatActivity {
             };
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
             Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
-            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
+            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
             storeListing(newListing, newListingID, successCallback);
             addLiteListing(newLiteListing, result -> {
                 //TODO: Check the result to be true
