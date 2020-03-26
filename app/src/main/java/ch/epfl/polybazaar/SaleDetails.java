@@ -91,6 +91,11 @@ public class SaleDetails extends AppCompatActivity {
                 title_txt.setVisibility(View.VISIBLE);
                 title_txt.setText(listing.getTitle());
 
+                //Set the category
+                TextView category_txt = findViewById(R.id.category);
+                category_txt.setVisibility(View.VISIBLE);
+                category_txt.setText("Category: "+listing.getCategory());
+
                 //Set the description
                 TextView description_txt = findViewById(R.id.description);
                 description_txt.setVisibility(View.VISIBLE);

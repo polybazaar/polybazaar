@@ -26,6 +26,7 @@ public class Listing {
     private String price;
     private String userEmail;
     private String stringImage;
+    private String category;
 
     /**
      *
@@ -35,7 +36,7 @@ public class Listing {
      * @param userEmail
      * @param stringImage String format : you can use convertFileToString or convertStringToBitmap to convert into String
      */
-    public Listing(String title, String description, String price, String userEmail, String stringImage) {
+    public Listing(String title, String description, String price, String userEmail, String stringImage, String category) {
         this.title = title;
         this.description = description;
         this.price = price;
@@ -45,10 +46,11 @@ public class Listing {
             throw new IllegalArgumentException("userEmail has invalid format");
         }
         this.stringImage = stringImage;
+        this.category = category;
     }
 
-    public Listing(String title, String description, String price, String userEmail) {
-        this(title, description, price, userEmail, null);
+    public Listing(String title, String description, String price, String userEmail, String category) {
+        this(title, description, price, userEmail, null, category);
     }
 
 
@@ -70,5 +72,9 @@ public class Listing {
 
     public String getStringImage() {
         return stringImage;
+    }
+
+    public String getCategory(){
+        return category;
     }
 }

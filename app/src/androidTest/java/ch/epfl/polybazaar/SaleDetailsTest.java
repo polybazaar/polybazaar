@@ -43,7 +43,7 @@ public class SaleDetailsTest {
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
-        final Listing listing = new Listing("Algebre linéaire by David C. Lay", "Very good book.", "23", "gu.vrut@epfl.ch");
+        final Listing listing = new Listing("Algebre linéaire by David C. Lay", "Very good book.", "23", "gu.vrut@epfl.ch", "Furniture");
         runOnUiThread(() -> activityRule.getActivity().fillWithListing(listing));
 
         TextView textTitle = activityRule.getActivity().findViewById(R.id.title);

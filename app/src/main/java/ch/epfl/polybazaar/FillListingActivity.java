@@ -186,7 +186,11 @@ public class FillListingActivity extends AppCompatActivity {
     }
 
     private boolean checkFields(){
-        return checkTitle() && checkPrice();
+        return checkTitle() && checkPrice() && checkCategory();
+    }
+
+    private boolean checkCategory() {
+        return !spinnerList.get(spinnerList.size()-1).getSelectedItem().toString().equals(DEFAULT_SPINNER_TEXT);
     }
 
     private boolean checkPrice() {
@@ -211,8 +215,9 @@ public class FillListingActivity extends AppCompatActivity {
                     toast.show();
                 }
             };
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage);
-            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString());
+            String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
+            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
             storeListing(newListing, newListingID, successCallback);
             addLiteListing(newLiteListing, result -> {
                 //TODO: Check the result to be true

@@ -9,7 +9,7 @@ import static org.junit.Assert.assertNull;
 
 public class ListingTest {
 
-    private Listing listing1 = new Listing("Livre", "Livre d'algèbre linéaire", "22 CHF", "test.user@epfl.ch");
+    private Listing listing1 = new Listing("Livre", "Livre d'algèbre linéaire", "22 CHF", "test.user@epfl.ch", "Furniture");
 
     @Test
     public void checkTitle() {
@@ -38,6 +38,6 @@ public class ListingTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void checkFalseUserEmail() {
-        new Listing("Livre", "Livre d'algèbre linéaire", "22 CHF", "test.user@gmail.com");
+        new Listing("Livre", "Livre d'algèbre linéaire", "22 CHF", "test.user@gmail.com", "Furniture");
     }
 }
