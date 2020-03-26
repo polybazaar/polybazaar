@@ -1,15 +1,17 @@
 package ch.epfl.polybazaar.UI;
 
+import android.graphics.Bitmap;
+
 public class SliderItem {
 
     //change here for a bitmap
-    private int image;
+    private Bitmap image;
 
-    public SliderItem(int image) {
+    public SliderItem(Bitmap image) {
         this.image = image;
     }
 
-    public int getImage() {
+    public Bitmap getImage() {
         return image;
     }
 

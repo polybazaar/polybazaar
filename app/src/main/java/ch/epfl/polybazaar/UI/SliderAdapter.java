@@ -28,11 +28,11 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderView
     @Override
     public SliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new SliderViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(
-                        R.layout.slide_item_container,
-                        parent,
-                        false
-                )
+            LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.slide_item_container,
+                parent,
+                false
+            )
         );
     }
 
@@ -56,7 +56,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderView
         }
 
         void setImage(SliderItem sliderItem) {
-            imageView.setImageResource(sliderItem.getImage());
+            imageView.setImageBitmap(sliderItem.getImage());
         }
     }
 }
