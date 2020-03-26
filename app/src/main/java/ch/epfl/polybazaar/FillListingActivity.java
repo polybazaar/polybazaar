@@ -68,6 +68,7 @@ public class FillListingActivity extends AppCompatActivity {
     private String oldPrice;
     private String currentPhotoPath;
     private File photoFile;
+    private List<String> listStingImage;
     private String stringImage = "";
 
     @Override
@@ -90,6 +91,8 @@ public class FillListingActivity extends AppCompatActivity {
         spinnerList.add(categorySelector);
         setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
         addListeners();
+
+        listStingImage = new ArrayList<>();
     }
 
     @Override
@@ -116,6 +119,7 @@ public class FillListingActivity extends AppCompatActivity {
 
            stringImage = convertFileToString(photoFile);
         }
+        listStingImage.add(stringImage);
     }
 
     private void addListeners(){
@@ -219,12 +223,22 @@ public class FillListingActivity extends AppCompatActivity {
             };
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
             Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
-            ListingImage newListingImage = new ListingImage(stringImage, "");
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
             storeListing(newListing, newListingID, successCallback);
-            storeListingImage(newListingImage, newListingID, result -> {
 
-            });
+            if(listStingImage.size() > 0) {
+                String currentId = newListingID;
+                String nextId;
+                for(int i = 0; i < (listStingImage.size() - 1); i++) {
+                    nextId = randomUUID().toString();
+                    ListingImage newListingImage = new ListingImage(listStingImage.get(i), nextId);
+                    storeListingImage(newListingImage, currentId, result -> {});
+                    currentId = nextId;
+                }
+                ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
+                storeListingImage(newListingImage, currentId, result -> {});
+            }
+
             addLiteListing(newLiteListing, result -> {
                 //TODO: Check the result to be true
             });
