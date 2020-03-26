@@ -2,6 +2,8 @@ package ch.epfl.polybazaar.login;
 
 import com.google.android.gms.tasks.Task;
 
+import ch.epfl.polybazaar.database.callback.UserCallback;
+
 /**
  * Generic user interface
  */
@@ -24,4 +26,10 @@ public interface AppUser {
      * @return task
      */
     Task<Void> reload();
+
+    /**
+     * Starts fetching the database record corresponding to the user
+     * @param cb callback containing the user record
+     */
+    void getUserData(UserCallback cb);
 }
