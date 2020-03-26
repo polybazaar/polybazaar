@@ -67,6 +67,10 @@ public interface Category {
      */
     int indexOf(Category searched);
 
-
+    /**
+     *
+     * @param contained the sub-category we are looking for
+     * @return the sub-category containing the given sub-category. If not found, returns null
+     */
     Category getSubCategoryContaining(Category contained);
 }

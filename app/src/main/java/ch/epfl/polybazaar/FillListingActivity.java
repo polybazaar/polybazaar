@@ -141,12 +141,7 @@ public class FillListingActivity extends AppCompatActivity {
         }
         else{
             submitListing.setText("Edit");
-            submitListing.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    deleteOldListingAndSubmitNewOne();
-                }
-            });
+            submitListing.setOnClickListener(v -> deleteOldListingAndSubmitNewOne());
         }
 
     }
@@ -323,8 +318,6 @@ public class FillListingActivity extends AppCompatActivity {
         Category editedCategory = new StringCategory(listing.getCategory());
         traversingCategory = CategoryRepository.getCategoryContaining(editedCategory);
         categorySelector.setSelection(CategoryRepository.indexOf(traversingCategory)+1);
-        System.out.println(CategoryRepository.indexOf(traversingCategory)+1);
-        System.out.println(listing.getCategory());
         return true;
     }
 
@@ -333,13 +326,11 @@ public class FillListingActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
         }
         else{
-            SuccessCallback submitNewListingCallback = result -> submit();
             Bundle bundle = getIntent().getExtras();
             if(bundle == null){
                 return;
             }
             String listingID = bundle.getString("listingID");
-
             deleteListing(listingID, result -> {});
             queryLiteListingStringEquality("listingID", listingID, result -> deleteLiteListing(result.get(0), result1 -> submit()));
         }

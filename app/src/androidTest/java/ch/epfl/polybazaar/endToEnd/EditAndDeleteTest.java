@@ -96,7 +96,7 @@ public class EditAndDeleteTest {
     }
 
     private void assertDatabaseHasAtLeastOneEntryWithTitle(String title){
-        //queryLiteListingStringEquality("title", title, result -> assertThat(result, is(not(empty()))));
+        queryLiteListingStringEquality("title", title, result -> assertThat(result, is(not(empty()))));
         queryListingStringEquality("title", title, result -> assertThat(result, is(not(empty()))));
     }
 
