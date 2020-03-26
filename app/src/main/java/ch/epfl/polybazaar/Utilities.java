@@ -1,11 +1,5 @@
 package ch.epfl.polybazaar;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.litelisting.LiteListing;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,11 +7,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
 
-import androidx.annotation.NonNull;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
+import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.listingImage.ListingImage;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.user.User;
 
 public abstract class Utilities {
