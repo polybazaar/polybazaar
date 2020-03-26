@@ -6,18 +6,23 @@ package ch.epfl.polybazaar.litelisting;
  */
 public class LiteListing {
 
-    // TODO: add attribute thumbnail
-
     private String listingID;
     private String title;
     private String price;
     private String category;
+    private String stringThumbnail;
 
-    public LiteListing(String listingID, String title, String price, String category) {
-        this.title = title;
+
+    public LiteListing(String listingID, String title, String price, String category, String stringThumbnail) {
         this.listingID = listingID;
+        this.title = title;
         this.price = price;
         this.category = category;
+        this.stringThumbnail = stringThumbnail;
+    }
+
+    public LiteListing(String listingID, String title, String price, String category) {
+        this(listingID, title, price, category, "");
     }
 
     public String getTitle() {
@@ -34,6 +39,10 @@ public class LiteListing {
 
     public String getCategory(){
         return category;
+    }
+
+    public String getStringThumbnail() {
+        return stringThumbnail;
     }
 
 }

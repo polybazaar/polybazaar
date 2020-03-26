@@ -1,9 +1,11 @@
 package ch.epfl.polybazaar.UI;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,8 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+
+import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 
 
 /**
@@ -44,6 +48,7 @@ public class LiteListingAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView titleView;
         public TextView priceView;
+        public ImageView thumbnail;
 
         // Constructor that accepts the entire item row and does the view lookups to find each subview
         public ViewHolder(View itemView) {
@@ -53,14 +58,26 @@ public class LiteListingAdapter extends
 
             titleView = itemView.findViewById(R.id.liteListingTitle);
             priceView = itemView.findViewById(R.id.liteListingPrice);
+            thumbnail = itemView.findViewById(R.id.liteListingThumbnail);
 
-            // Setup the click listener
+            // Setup the click listener on LiteListing title
             titleView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Triggers click upwards to the adapter on click
                     if (listener != null) {
                         listener.onItemClick(titleView);
+                    }
+                }
+            });
+
+            // Setup the click listener on LiteListing thumbnail
+            thumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        listener.onItemClick(thumbnail);
                     }
                 }
             });
@@ -102,6 +119,17 @@ public class LiteListingAdapter extends
         TextView priceView = viewHolder.priceView;
         priceView.setText("CHF " + liteListing.getPrice());
         priceView.setId(View.generateViewId());
+
+        ImageView thumbnail = viewHolder.thumbnail;
+        String stringThumbnail = liteListing.getStringThumbnail();
+        Bitmap bitmapThumbnail = convertStringToBitmap(stringThumbnail);
+        if(bitmapThumbnail == null) {
+            thumbnail.setImageResource(R.drawable.no_image_thumbnail);
+        } else {
+            thumbnail.setImageBitmap(bitmapThumbnail);
+        }
+        thumbnail.setId(View.generateViewId());
+        viewIDtoListingIDMap.put(thumbnail.getId(), liteListing.getListingID()); // update map <view ID, listing ID> (so that we can also click on the thumbnail)
     }
 
     // Returns the total count of items in the list
