@@ -3,6 +3,7 @@ package ch.epfl.polybazaar;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
@@ -145,6 +146,26 @@ public abstract class Utilities {
         drawable.draw(canvas);
         return bitmap;
     }
+
+    /**
+     * Helper function to resize a bitmap given in argument
+     * @param bitmap original image
+     * @param scaleWidth scale factor for width, should be between 0 and 1
+     * @param scaleHeight scale factor for height, should be between 0 and 1
+     * @return
+     */
+    public static Bitmap resizeBitmap(Bitmap bitmap, float scaleWidth, float scaleHeight) throws IllegalArgumentException{
+
+        if(scaleWidth < 0 || scaleWidth > 1 || scaleHeight < 0 || scaleHeight > 1) {
+            throw new IllegalArgumentException("Scale factors should be between 0 and 1");
+        }
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+    }
+
 
     public static Object getOrDefaultObj(Map<String, Object> map, String key) {
         if (!map.containsKey(key)) return null;

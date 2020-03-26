@@ -44,6 +44,7 @@ import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
+import static ch.epfl.polybazaar.Utilities.resizeBitmap;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static java.util.UUID.randomUUID;
@@ -113,7 +114,8 @@ public class FillListingActivity extends AppCompatActivity {
 
             Bitmap convertedBitmap = convertDrawableToBitmap(pictureView.getDrawable());
             stringImage = convertBitmapToString(convertedBitmap);
-            stringThumbnail = convertBitmapToStringWithQuality(convertedBitmap, 10);
+            Bitmap resizedBitmap = resizeBitmap(convertedBitmap, (float)0.5, (float)0.5);
+            stringThumbnail = convertBitmapToStringWithQuality(resizedBitmap, 10);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            pictureView.setImageURI(Uri.fromFile(new File(currentPhotoPath)));
