@@ -28,6 +28,7 @@ import static org.hamcrest.core.IsNot.not;
 @RunWith(AndroidJUnit4.class)
 public class LoginTest {
     String EMAIL = "otheruser.test@epfl.ch";
+    String NICKNAME = "otheruser";
     String PASSWORD = "abcdef";
 
     @Rule
@@ -53,7 +54,7 @@ public class LoginTest {
 
     @Test
     public void signUpProcessWorks() {
-        createAccountAndBackToLogin(EMAIL, PASSWORD);
+        createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
         fillAndSubmitSignIn(EMAIL, "aaaaaaaa");
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
 
@@ -68,9 +69,9 @@ public class LoginTest {
 
     @Test
     public void signUpWithExistingEmailFails() {
-        createAccountAndBackToLogin(EMAIL, PASSWORD);
+        createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
         clickButton(withId(R.id.signUpButton));
-        fillAndSubmitSignUp(EMAIL, PASSWORD, PASSWORD);
+        fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
 
         onView(withText(R.string.signup_error)).check(matches(isDisplayed()));
     }
@@ -79,7 +80,7 @@ public class LoginTest {
     public void signUpWithNonEpflPasswordFails() {
         String email = "test@gmail.com";
         clickButton(withId(R.id.signUpButton));
-        fillAndSubmitSignUp(email, PASSWORD, PASSWORD);
+        fillAndSubmitSignUp(email, NICKNAME, PASSWORD, PASSWORD);
 
         onView(withText(R.string.signup_email_invalid)).check(matches(isDisplayed()));
     }
@@ -87,7 +88,7 @@ public class LoginTest {
     @Test
     public void signUpWithNonMatchingPasswordFails() {
         clickButton(withId(R.id.signUpButton));
-        fillAndSubmitSignUp(EMAIL, PASSWORD, "random");
+        fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, "random");
 
         onView(withText(R.string.signup_passwords_not_matching)).check(matches(isDisplayed()));
     }
@@ -95,7 +96,7 @@ public class LoginTest {
     @Test
     public void signUpWithBadPassword() {
         clickButton(withId(R.id.signUpButton));
-        fillAndSubmitSignUp(EMAIL, "a", "a");
+        fillAndSubmitSignUp(EMAIL, NICKNAME,"a", "a");
 
         onView(withText(R.string.signup_passwords_weak)).check(matches(isDisplayed()));
     }
@@ -104,7 +105,7 @@ public class LoginTest {
     public void signInWithoutVerificationBlocked() {
         clickButton(withId(R.id.signUpButton));
 
-        fillAndSubmitSignUp(EMAIL, PASSWORD, PASSWORD);
+        fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
         clickButton(withId(R.id.signOutButton));
 
         fillAndSubmitSignIn(EMAIL, PASSWORD);
@@ -115,7 +116,7 @@ public class LoginTest {
     @Test
     public void networkInterruptionFailsProperly() {
         clickButton(withId(R.id.signUpButton));
-        fillAndSubmitSignUp(EMAIL, PASSWORD, PASSWORD);
+        fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
 
         MockPhoneSettings.getInstance().setAirPlaneMode(true);
 
@@ -135,10 +136,10 @@ public class LoginTest {
         clickButton(withText(R.string.alert_close));
     }
 
-    public void createAccountAndBackToLogin(String email, String password) {
+    public void createAccountAndBackToLogin(String email, String nickname, String password) {
         clickButton(withId(R.id.signUpButton));
 
-        fillAndSubmitSignUp(email, password, password);
+        fillAndSubmitSignUp(email, nickname, password, password);
 
         clickButton(withId(R.id.sendLinkButton));
         clickButton(withId(R.id.reloadButton));
@@ -151,8 +152,9 @@ public class LoginTest {
         clickButton(withId(R.id.loginButton));
     }
 
-    private void fillAndSubmitSignUp(String email, String password, String confirm) {
+    private void fillAndSubmitSignUp(String email, String nickname, String password, String confirm) {
         typeInput(withId(R.id.emailInput), email);
+        typeInput(withId(R.id.nicknameInput), nickname);
         typeInput(withId(R.id.passwordInput), password);
         typeInput(withId(R.id.confirmPasswordInput), confirm);
         clickButton(withId(R.id.submitButton));

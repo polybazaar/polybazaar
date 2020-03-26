@@ -14,6 +14,7 @@ public class MockAuthenticator implements Authenticator {
     private static MockAuthenticator INSTANCE;
 
     public final static String TEST_USER_EMAIL = "test.user@epfl.ch";
+    public final static String TEST_USER_NICKNAME = "testuser";
     public final static String TEST_USER_PASSWORD = "abcdef";
 
     private AppUser currentUser;
@@ -29,7 +30,7 @@ public class MockAuthenticator implements Authenticator {
      */
     public void reset() {
         registeredUsers = new HashMap<>();
-        MockAppUser testUser = new MockAppUser(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        MockAppUser testUser = new MockAppUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         testUser.sendEmailVerification();
         testUser.reload();
         registeredUsers.put(TEST_USER_EMAIL, testUser);
@@ -65,12 +66,12 @@ public class MockAuthenticator implements Authenticator {
     }
 
     @Override
-    public Task<AuthenticatorResult> createUser(String email, String password) {
+    public Task<AuthenticatorResult> createUser(String email, String nickname, String password) {
         if (MockPhoneSettings.getInstance().isAirPlaneModeEnabled()) {
             return Tasks.forException(new NetworkErrorException());
         }
         if (registeredUsers.get(email) == null) {
-            MockAppUser newUser = new MockAppUser(email, password);
+            MockAppUser newUser = new MockAppUser(email, nickname, password);
             registeredUsers.put(email, newUser);
             currentUser = newUser;
             return Tasks.call(MockAuthenticatorResult::new);
