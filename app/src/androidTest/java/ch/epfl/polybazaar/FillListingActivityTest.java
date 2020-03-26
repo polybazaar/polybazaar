@@ -2,8 +2,11 @@ package ch.epfl.polybazaar;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Instrumentation;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -13,6 +16,8 @@ import android.provider.MediaStore;
 import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -251,7 +256,8 @@ public class FillListingActivityTest {
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(5000);
-        onView(withText("No Internet connection found")).check(matches(isDisplayed()));
+        assert(fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog").isVisible());
+        //onView(withText("No Internet connection found")).check(matches(isDisplayed()));
         Intents.release();
         useRealNetwork();
     }
@@ -264,7 +270,12 @@ public class FillListingActivityTest {
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(5000);
-        onView(withText("send as soon as connection is available")).perform(click());
+        runOnUiThread(() -> {
+            DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
+            AlertDialog dialog = (AlertDialog) dialogFragment.getDialog();
+            Button posButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            posButton.performClick();
+        });
         Thread.sleep(5000);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
@@ -279,7 +290,14 @@ public class FillListingActivityTest {
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(5000);
-        onView(withText("Cancel")).perform(click());
+        runOnUiThread(() -> {
+
+            DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
+            AlertDialog dialog = (AlertDialog) dialogFragment.getDialog();
+            Button negButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+            negButton.performClick();
+        });
+        //onView(withText("Cancel")).perform(click());
         Thread.sleep(5000);
         hasComponent(FillListingActivity.class.getName());
         Intents.release();
