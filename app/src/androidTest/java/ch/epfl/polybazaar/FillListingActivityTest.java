@@ -215,7 +215,7 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
     }
@@ -255,7 +255,7 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         assert(fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog").isVisible());
         //onView(withText("No Internet connection found")).check(matches(isDisplayed()));
         Intents.release();
@@ -269,14 +269,14 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         runOnUiThread(() -> {
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
             AlertDialog dialog = (AlertDialog) dialogFragment.getDialog();
             Button posButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
             posButton.performClick();
         });
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
         useRealNetwork();
@@ -289,7 +289,7 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         runOnUiThread(() -> {
 
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
@@ -297,8 +297,8 @@ public class FillListingActivityTest {
             Button negButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
             negButton.performClick();
         });
-        //onView(withText("Cancel")).perform(click());
-        Thread.sleep(5000);
+
+        Thread.sleep(1000);
         hasComponent(FillListingActivity.class.getName());
         Intents.release();
         useRealNetwork();

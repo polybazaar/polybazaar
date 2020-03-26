@@ -11,13 +11,13 @@ public class AndroidInternetChecker implements InternetChecker {
         ConnectivityManager cm= (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         Network[] networks = cm.getAllNetworks();
-        boolean hasInternet = false;
+
         if(networks.length>0){
             for(Network network :networks){
                 NetworkCapabilities nc = cm.getNetworkCapabilities(network);
-                if(nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) hasInternet = true;
+                if(nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) return true;
             }
         }
-        return hasInternet;
+        return false;
     }
 }
