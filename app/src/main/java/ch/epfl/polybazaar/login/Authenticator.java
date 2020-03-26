@@ -26,7 +26,7 @@ public interface Authenticator {
      * @param password user's password
      * @return task with the result of the registering attempt
      */
-    Task<AuthenticatorResult> createUser(String email, String password);
+    Task<AuthenticatorResult> createUser(String email, String nickname, String password);
 
     /**
      * Signs the user out of the app
