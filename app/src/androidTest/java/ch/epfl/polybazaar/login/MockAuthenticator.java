@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class MockAuthenticator implements Authenticator {
     private static MockAuthenticator INSTANCE;
 
-    public final static String TEST_USER_EMAIL = "testuser@epfl.ch";
+    public final static String TEST_USER_EMAIL = "test.user@epfl.ch";
     public final static String TEST_USER_PASSWORD = "abcdef";
 
     private AppUser currentUser;

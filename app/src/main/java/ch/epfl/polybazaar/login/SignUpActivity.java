@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.Utilities;
 
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
@@ -39,7 +40,7 @@ public class SignUpActivity extends AppCompatActivity {
         String password = passwordView.getText().toString();
         String confirmPassword = confirmPasswordView.getText().toString();
 
-        if (!checkEmail(email)) {
+        if (!Utilities.emailIsValid(email)) {
             makeDialog(SignUpActivity.this, R.string.signup_email_invalid);
         } else if (!password.equals(confirmPassword)) {
             makeDialog(SignUpActivity.this, R.string.signup_passwords_not_matching);
@@ -69,9 +70,5 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean checkPassword(String password) {
         return password.length() >= 6;
-    }
-
-    private boolean checkEmail(String email) {
-        return email.endsWith("@epfl.ch");
     }
 }
