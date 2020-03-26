@@ -48,7 +48,7 @@ public class SaleDetails extends AppCompatActivity {
         getSellerInformation();
     }
 
-    void getSellerInformation() {
+    private void getSellerInformation() {
         runOnUiThread(() -> {
             Button get_seller = findViewById(R.id.contactSel);
             get_seller.setOnClickListener(view -> {
@@ -60,7 +60,7 @@ public class SaleDetails extends AppCompatActivity {
         });
     }
 
-    void retrieveListingFromListingID() {
+    private void retrieveListingFromListingID() {
         Bundle bundle = getIntent().getExtras();
         if(bundle == null)
             bundle = new Bundle();
@@ -81,7 +81,7 @@ public class SaleDetails extends AppCompatActivity {
      * recursive function to retrieve all images
      * @param listingID
      */
-    void retrieveImages(String listingID) {
+    private void retrieveImages(String listingID) {
         fetchListingImage(listingID, result -> {
             if(result == null) {
                 drawImages();
@@ -136,7 +136,7 @@ public class SaleDetails extends AppCompatActivity {
         });
     }
 
-    void fillWithListing(final Listing listing) {
+    private void fillWithListing(final Listing listing) {
         if(listing == null) {
             Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
