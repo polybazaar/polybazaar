@@ -114,7 +114,7 @@ public class FillListingActivity extends AppCompatActivity {
 
             Bitmap convertedBitmap = convertDrawableToBitmap(pictureView.getDrawable());
             stringImage = convertBitmapToString(convertedBitmap);
-            Bitmap resizedBitmap = resizeBitmap(convertedBitmap, (float)0.5, (float)0.5);
+            Bitmap resizedBitmap = resizeBitmap(convertedBitmap, (float)0.5, (float)0.5); 
             stringThumbnail = convertBitmapToStringWithQuality(resizedBitmap, 10);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
