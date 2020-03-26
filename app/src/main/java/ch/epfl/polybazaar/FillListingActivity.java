@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -233,7 +234,13 @@ public class FillListingActivity extends AppCompatActivity {
                 for(int i = 0; i < (listStingImage.size() - 1); i++) {
                     nextId = randomUUID().toString();
                     ListingImage newListingImage = new ListingImage(listStingImage.get(i), nextId);
-                    storeListingImage(newListingImage, currentId, result -> {});
+                    storeListingImage(newListingImage, currentId, result -> {
+                        if(result) {
+                            Log.d("FirebaseDataStore", "successfully stored data");
+                        } else {
+                            Toast.makeText(getApplicationContext(), "An error occurred.", Toast.LENGTH_LONG).show();
+                        }
+                    });
                     currentId = nextId;
                 }
                 //store the last without refNextImg
