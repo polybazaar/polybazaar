@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.network.InternetChecker;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onData;
@@ -54,9 +53,9 @@ import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
-import static ch.epfl.polybazaar.network.InternetCheckerFactory.*;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.useMockNetworkState;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.useRealNetwork;
 import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
@@ -246,12 +245,12 @@ public class FillListingActivityTest {
 
     @Test
     public void DialogAppearsWhenNoConnection() throws Throwable {
-
+        Intents.init();
         useMockNetworkState(false);
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(500);
+        Thread.sleep(1000);
         onView(withText("No Internet connection found")).check(matches(isDisplayed()));
         Intents.release();
         useRealNetwork();
@@ -259,13 +258,14 @@ public class FillListingActivityTest {
 
     @Test
     public void DialogPositiveClickGoesToSalesOverview() throws Throwable {
+        Intents.init();
         useMockNetworkState(false);
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(500);
+        Thread.sleep(1000);
         onView(withText("send as soon as connection is available")).perform(click());
-        Thread.sleep(500);
+        Thread.sleep(1000);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
         useRealNetwork();
@@ -273,13 +273,14 @@ public class FillListingActivityTest {
 
     @Test
     public void DialogNegativeClickGoesToFillListing() throws Throwable {
+        Intents.init();
         useMockNetworkState(false);
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(500);
+        Thread.sleep(1000);
         onView(withText("Cancel")).perform(click());
-        Thread.sleep(500);
+        Thread.sleep(1000);
         hasComponent(FillListingActivity.class.getName());
         Intents.release();
         useRealNetwork();
@@ -325,8 +326,8 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         closeSoftKeyboard();
-        Intents.init();
-        //runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+
+
     }
 
 }

@@ -1,10 +1,12 @@
 package ch.epfl.polybazaar.network;
 
 import android.content.Context;
-
+/**
+ * class to mock AndroidInternetChecker
+ */
 public class MockInternetChecker implements InternetChecker {
 
-    boolean networkState;
+    private boolean networkState;
 
     public MockInternetChecker(boolean networkState){
         this.networkState = networkState;

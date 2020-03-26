@@ -6,10 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
-
-import ch.epfl.polybazaar.listing.Listing;
 
 public class NoConnectionForListingDialog extends DialogFragment {
 
