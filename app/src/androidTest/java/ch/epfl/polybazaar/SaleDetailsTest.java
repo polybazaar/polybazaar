@@ -99,6 +99,7 @@ public class SaleDetailsTest {
                         assertEquals(true, resultImage2);
                         try {
                             runOnUiThread(() -> {
+                                //recreate to load the new Listing
                                 activityRule.getActivity().recreate();
                             });
                         } catch (Throwable throwable) {
@@ -109,7 +110,6 @@ public class SaleDetailsTest {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-
 
                         TextView textTitle = activityRule.getActivity().findViewById(R.id.title);
                         assertEquals("Title", textTitle.getText().toString());

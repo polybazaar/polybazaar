@@ -226,6 +226,7 @@ public class FillListingActivity extends AppCompatActivity {
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
             storeListing(newListing, newListingID, successCallback);
 
+            //store images (current has a ref to the next)
             if(listStingImage.size() > 0) {
                 String currentId = newListingID;
                 String nextId;
