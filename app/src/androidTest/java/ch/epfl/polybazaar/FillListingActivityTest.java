@@ -250,7 +250,7 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         onView(withText("No Internet connection found")).check(matches(isDisplayed()));
         Intents.release();
         useRealNetwork();
@@ -263,9 +263,9 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         onView(withText("send as soon as connection is available")).perform(click());
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
         useRealNetwork();
@@ -278,9 +278,9 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         onView(withText("Cancel")).perform(click());
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         hasComponent(FillListingActivity.class.getName());
         Intents.release();
         useRealNetwork();
