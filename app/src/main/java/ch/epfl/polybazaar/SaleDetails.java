@@ -1,6 +1,5 @@
 package ch.epfl.polybazaar;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -16,19 +15,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
-import java.util.List;
-
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
-import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
 import static ch.epfl.polybazaar.listing.ListingDatabase.fetchListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.deleteLiteListing;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListingList;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
 
 public class SaleDetails extends AppCompatActivity {
@@ -74,7 +70,10 @@ public class SaleDetails extends AppCompatActivity {
 
         ListingCallback callbackListing = result -> {
             fillWithListing(result);
-            createEditAndDeleteActions(result, listingID);
+            FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
+            if(!(fbAuth.getCurrentUser() == null) && fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
+                createEditAndDeleteActions(result, listingID);
+            }
         };
         fetchListing(listingID, callbackListing);
     }
@@ -135,27 +134,27 @@ public class SaleDetails extends AppCompatActivity {
         editButton = findViewById(R.id.editButton);
         deleteButton = findViewById(R.id.deleteButton);
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetails.this);
-                builder.setTitle("Delete this listing")
-                        .setMessage("You are about to delete this listing. Are you sure you want to continue?")
-                        .setPositiveButton("Yes", (dialog, id) -> deleteCurrentListing(listingID))
-                        .setNegativeButton("No", (dialog, id) -> dialog.cancel());
-                deleteDialog = builder.create();
-                deleteDialog.show();
-            }
+        editButton.setVisibility(View.VISIBLE);
+        deleteButton.setVisibility(View.VISIBLE);
+
+        editButton.setClickable(true);
+        deleteButton.setClickable(true);
+
+        deleteButton.setOnClickListener(v -> { //TODO: This could be refactored to use utility functions from package widget
+            AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetails.this);
+            builder.setTitle("Delete this listing")
+                    .setMessage("You are about to delete this listing. Are you sure you want to continue?")
+                    .setPositiveButton("Yes", (dialog, id) -> deleteCurrentListing(listingID))
+                    .setNegativeButton("No", (dialog, id) -> dialog.cancel());
+            deleteDialog = builder.create();
+            deleteDialog.show();
         });
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
-                intent.putExtra("listingID", listingID);
-                intent.putExtra("listing", listing);
-                startActivity(intent);
-            }
+        editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
+            intent.putExtra("listingID", listingID);
+            intent.putExtra("listing", listing);
+            startActivity(intent);
         });
     }
 

@@ -38,14 +38,15 @@ import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
-import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
+import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.deleteLiteListing;
@@ -252,7 +253,9 @@ public class FillListingActivity extends AppCompatActivity {
                 }
             };
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
+            FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
+            String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, stringImage, category);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
             storeListing(newListing, newListingID, successCallback);
             addLiteListing(newLiteListing, result -> {
@@ -320,6 +323,8 @@ public class FillListingActivity extends AppCompatActivity {
         Category editedCategory = new StringCategory(listing.getCategory());
         traversingCategory = CategoryRepository.getCategoryContaining(editedCategory);
         categorySelector.setSelection(CategoryRepository.indexOf(traversingCategory)+1);
+        System.out.println(CategoryRepository.indexOf(traversingCategory)+1);
+        System.out.println(listing.getCategory());
         return true;
     }
 
