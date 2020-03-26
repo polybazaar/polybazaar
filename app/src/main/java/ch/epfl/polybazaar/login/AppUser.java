@@ -32,4 +32,16 @@ public interface AppUser {
      * @param cb callback containing the user record
      */
     void getUserData(UserCallback cb);
+
+    /**
+     * Gets the user's email address
+     * @return email address
+     */
+    String getEmail();
+
+    /**
+     * Gets the user's nickname
+     * @return nickname
+     */
+    String getNickname();
 }

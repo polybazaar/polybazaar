@@ -36,4 +36,14 @@ public class FirebaseAppUser implements AppUser {
     public void getUserData(UserCallback cb) {
         fetchUser(fbUser.getEmail(), cb);
     }
+
+    @Override
+    public String getEmail() {
+        return fbUser.getEmail();
+    }
+
+    @Override
+    public String getNickname() {
+        return fbUser.getDisplayName();
+    }
 }

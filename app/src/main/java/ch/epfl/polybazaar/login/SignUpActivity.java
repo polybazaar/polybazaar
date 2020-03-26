@@ -35,24 +35,28 @@ public class SignUpActivity extends AppCompatActivity {
         EditText emailView = findViewById(R.id.emailInput);
         EditText passwordView = findViewById(R.id.passwordInput);
         EditText confirmPasswordView = findViewById(R.id.confirmPasswordInput);
+        EditText nicknameView = findViewById(R.id.nicknameInput);
 
         String email = emailView.getText().toString();
+        String nickname = nicknameView.getText().toString();
         String password = passwordView.getText().toString();
         String confirmPassword = confirmPasswordView.getText().toString();
 
         if (!Utilities.emailIsValid(email)) {
             makeDialog(SignUpActivity.this, R.string.signup_email_invalid);
+        } else if (!checkNickname(nickname)) {
+            makeDialog(SignUpActivity.this, R.string.signup_nickname_invalid);
         } else if (!password.equals(confirmPassword)) {
             makeDialog(SignUpActivity.this, R.string.signup_passwords_not_matching);
         } else if (!checkPassword(password)) {
             makeDialog(SignUpActivity.this, R.string.signup_passwords_weak);
         } else {
-            createUser(email, password);
+            createUser(email, nickname, password);
         }
     }
 
-    private void createUser(String email, String password) {
-        authenticator.createUser(email, password)
+    private void createUser(String email, String nickname, String password) {
+        authenticator.createUser(email, nickname, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthenticatorResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthenticatorResult> task) {
@@ -70,5 +74,9 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean checkPassword(String password) {
         return password.length() >= 6;
+    }
+
+    private boolean checkNickname(String nickname) {
+        return nickname.length() >= 6;
     }
 }
