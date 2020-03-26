@@ -222,7 +222,7 @@ public class FillListingActivity extends AppCompatActivity {
                 }
             };
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", "", category);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
             storeListing(newListing, newListingID, successCallback);
 
@@ -235,6 +235,7 @@ public class FillListingActivity extends AppCompatActivity {
                     storeListingImage(newListingImage, currentId, result -> {});
                     currentId = nextId;
                 }
+                //store the last without refNextImg
                 ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
                 storeListingImage(newListingImage, currentId, result -> {});
             }
