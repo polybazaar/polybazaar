@@ -5,6 +5,9 @@ import android.accounts.NetworkErrorException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
+import ch.epfl.polybazaar.database.callback.UserCallback;
+import ch.epfl.polybazaar.user.User;
+
 /**
  * Mocked app user
  */
@@ -12,11 +15,15 @@ public class MockAppUser implements AppUser {
     private boolean sentEmail;
     private boolean isVerified;
     private String email;
+    private String nickname;
     private String password;
+    private User dbUser;
 
-    public MockAppUser(String email, String password) {
+    public MockAppUser(String email, String nickname, String password) {
         this.email = email;
         this.password = password;
+        this.nickname = nickname;
+        this.dbUser = new User(nickname, email);
     }
 
     /**
@@ -56,5 +63,20 @@ public class MockAppUser implements AppUser {
             });
         }
 
+    }
+
+    @Override
+    public void getUserData(UserCallback cb) {
+        cb.onCallback(dbUser);
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
+    public String getNickname() {
+        return nickname;
     }
 }
