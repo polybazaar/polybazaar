@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +36,7 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
+import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
@@ -48,6 +50,7 @@ import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
 import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
+import static ch.epfl.polybazaar.listingImage.ListingImageDatabase.storeListingImage;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.deleteLiteListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
@@ -74,6 +77,7 @@ public class FillListingActivity extends AppCompatActivity {
     private String oldPrice;
     private String currentPhotoPath;
     private File photoFile;
+    private List<String> listStingImage;
     private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
@@ -99,6 +103,7 @@ public class FillListingActivity extends AppCompatActivity {
         setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
+        listStingImage = new ArrayList<>();
     }
 
     @Override
@@ -129,6 +134,7 @@ public class FillListingActivity extends AppCompatActivity {
            stringImage = convertFileToString(photoFile);
            stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
         }
+        listStingImage.add(stringImage);
     }
 
     private void addListeners(boolean edit){
@@ -251,9 +257,34 @@ public class FillListingActivity extends AppCompatActivity {
             FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
             //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
             String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, stringImage, category);
+
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, "", category);
+
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
+
             storeListing(newListing, newListingID, successCallback);
+
+            //store images (current has a ref to the next)
+            if(listStingImage.size() > 0) {
+                String currentId = newListingID;
+                String nextId;
+                for(int i = 0; i < (listStingImage.size() - 1); i++) {
+                    nextId = randomUUID().toString();
+                    ListingImage newListingImage = new ListingImage(listStingImage.get(i), nextId);
+                    storeListingImage(newListingImage, currentId, result -> {
+                        if(result) {
+                            Log.d("FirebaseDataStore", "successfully stored data");
+                        } else {
+                            Toast.makeText(getApplicationContext(), "An error occurred.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    currentId = nextId;
+                }
+                //store the last without refNextImg
+                ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
+                storeListingImage(newListingImage, currentId, result -> {});
+            }
+
             addLiteListing(newLiteListing, result -> {
                 //TODO: Check the result to be true
             });

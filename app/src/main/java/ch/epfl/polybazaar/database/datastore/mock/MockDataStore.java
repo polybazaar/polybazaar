@@ -16,6 +16,7 @@ import ch.epfl.polybazaar.database.datastore.CollectionSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.listing.ListingDatabase;
+import ch.epfl.polybazaar.listingImage.ListingImageDatabase;
 import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
 import ch.epfl.polybazaar.user.UserDatabase;
 
@@ -33,6 +34,7 @@ public class MockDataStore implements DataStore {
     public MockDataStore(){
         collections = new HashMap<>();
         addCollection(ListingDatabase.listingCollectionName);
+        addCollection(ListingImageDatabase.listingImageCollectionName);
         addCollection(UserDatabase.userCollectionName);
         addCollection(LiteListingDatabase.liteListingCollectionName);
     }

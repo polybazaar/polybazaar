@@ -1,7 +1,6 @@
 package ch.epfl.polybazaar;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -12,10 +11,18 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.CompositePageTransformer;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.UI.SliderAdapter;
+import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
@@ -26,16 +33,22 @@ import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
 import static ch.epfl.polybazaar.listing.ListingDatabase.fetchListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.deleteLiteListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
+import static ch.epfl.polybazaar.listingImage.ListingImageDatabase.fetchListingImage;
 
 public class SaleDetails extends AppCompatActivity {
     private Button editButton;
     private Button deleteButton;
     private AlertDialog deleteDialog;
 
+    private ViewPager2 viewPager2;
+    private List<String> listStringImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_details);
+
+        listStringImage = new ArrayList<>();
 
         final ImageView imageLoading = findViewById(R.id.loadingImage);
         Glide.with(this).load(R.drawable.loading).into(imageLoading);
@@ -44,7 +57,7 @@ public class SaleDetails extends AppCompatActivity {
         getSellerInformation();
     }
 
-    void getSellerInformation() {
+    private void getSellerInformation() {
         runOnUiThread(() -> {
             Button get_seller = findViewById(R.id.contactSel);
             get_seller.setOnClickListener(view -> {
@@ -56,7 +69,7 @@ public class SaleDetails extends AppCompatActivity {
         });
     }
 
-    void retrieveListingFromListingID() {
+    private void retrieveListingFromListingID() {
         Bundle bundle = getIntent().getExtras();
         if(bundle == null)
             bundle = new Bundle();
@@ -68,17 +81,83 @@ public class SaleDetails extends AppCompatActivity {
             return;
         }
 
-        ListingCallback callbackListing = result -> {
+
+        retrieveImages(listingID);
+      ListingCallback callbackListing = result -> {
             fillWithListing(result);
             FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
             if(!(fbAuth.getCurrentUser() == null) && fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
                 createEditAndDeleteActions(result, listingID);
             }
         };
+
         fetchListing(listingID, callbackListing);
     }
 
-    void fillWithListing(final Listing listing) {
+    /**
+     * recursive function to retrieve all images
+     * @param listingID
+     */
+    private void retrieveImages(String listingID) {
+        fetchListingImage(listingID, result -> {
+            if(result == null) {
+                drawImages();
+                return;
+            }
+            listStringImage.add(result.getImage());
+            if(result.getRefNextImg().equals("")) {
+                //last image, we can draw
+                drawImages();
+            } else {
+                //we continue to retrieve
+                retrieveImages(result.getRefNextImg());
+            }
+        });
+    }
+
+    private void drawImages() {
+        runOnUiThread (()-> {
+            final ImageView imageLoading = findViewById(R.id.loadingImage);
+            imageLoading.setVisibility(View.INVISIBLE);
+            viewPager2 = findViewById(R.id.viewPagerImageSlider);
+
+            List<SliderItem> sliderItems = new ArrayList<>();
+            for(String strImg: listStringImage) {
+                sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
+            }
+
+            viewPager2.setAdapter(new SliderAdapter(sliderItems, viewPager2));
+
+            viewPager2.setClipToPadding(false);
+            viewPager2.setClipChildren(false);
+            viewPager2.setOffscreenPageLimit(3);
+            viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+
+            CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+            compositePageTransformer.addTransformer((page, position) -> {
+                float r = 1 - Math.abs(position);
+                page.setScaleY(0.85f + r * 0.15f);
+            });
+            viewPager2.setPageTransformer(compositePageTransformer);
+
+            viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    TextView textPageNumber = findViewById(R.id.pageNumber);
+                    textPageNumber.setText(String.format("%s/%s", Integer.toString(viewPager2.getCurrentItem() + 1), Integer.toString(listStringImage.size())));
+                    textPageNumber.setGravity(Gravity.CENTER);
+                }
+
+            });
+        });
+    }
+
+    /**
+     * Fill the UI with the Listing given in parameter
+     * @param listing
+     */
+    public void fillWithListing(final Listing listing) {
         if(listing == null) {
             Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -87,20 +166,6 @@ public class SaleDetails extends AppCompatActivity {
             startActivity(intent);
         } else {
             runOnUiThread(() -> {
-                final ImageView imageLoading = findViewById(R.id.loadingImage);
-                //Glide.with(imageLoading).clear(imageLoading);
-                imageLoading.setVisibility(View.INVISIBLE);
-
-                //set image
-                ImageView image = findViewById(R.id.saleImage);
-                image.setVisibility(View.VISIBLE);
-                Bitmap bitmapImage = convertStringToBitmap(listing.getStringImage());
-                if (bitmapImage != null) {
-                    image.setImageBitmap(bitmapImage);
-                } else {
-                    //TODO image.set.. no picture
-                }
-
                 //Set the title
                 TextView title_txt = findViewById(R.id.title);
                 title_txt.setVisibility(View.VISIBLE);
@@ -109,7 +174,7 @@ public class SaleDetails extends AppCompatActivity {
                 //Set the category
                 TextView category_txt = findViewById(R.id.category);
                 category_txt.setVisibility(View.VISIBLE);
-                category_txt.setText("Category: "+listing.getCategory());
+                category_txt.setText(String.format("Category: %s", listing.getCategory()));
 
                 //Set the description
                 TextView description_txt = findViewById(R.id.description);
@@ -129,6 +194,7 @@ public class SaleDetails extends AppCompatActivity {
             });
         }
     }
+
 
     private void createEditAndDeleteActions(Listing listing, String listingID) {
         editButton = findViewById(R.id.editButton);
@@ -173,5 +239,4 @@ public class SaleDetails extends AppCompatActivity {
         queryLiteListingStringEquality("listingID", listingID, result -> deleteLiteListing(result.get(0), deletionSuccessCallback));
 
     }
-
 }
