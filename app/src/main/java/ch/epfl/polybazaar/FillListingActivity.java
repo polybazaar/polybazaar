@@ -2,10 +2,12 @@ package ch.epfl.polybazaar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,18 +33,27 @@ import java.util.Date;
 import java.util.List;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
-import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.category.StringCategory;
+import ch.epfl.polybazaar.listingImage.ListingImage;
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
+import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
+import static ch.epfl.polybazaar.Utilities.resizeBitmap;
+import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
 import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
+import static ch.epfl.polybazaar.listingImage.ListingImageDatabase.storeListingImage;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.deleteLiteListing;
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity {
@@ -66,7 +77,10 @@ public class FillListingActivity extends AppCompatActivity {
     private String oldPrice;
     private String currentPhotoPath;
     private File photoFile;
+    private List<String> listStingImage;
     private String stringImage = "";
+    private Category traversingCategory;
+    private String stringThumbnail = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +101,9 @@ public class FillListingActivity extends AppCompatActivity {
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
         setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
-        addListeners();
+        boolean edit = fillFieldsIfEdit();
+        addListeners(edit);
+        listStingImage = new ArrayList<>();
     }
 
     @Override
@@ -107,20 +123,33 @@ public class FillListingActivity extends AppCompatActivity {
             pictureView.setImageURI(selectedImage);
             pictureView.setTag(selectedImage.hashCode());
 
-            stringImage = convertBitmapToString(convertDrawableToBitmap(pictureView.getDrawable()));
+            Bitmap convertedBitmap = convertDrawableToBitmap(pictureView.getDrawable());
+            stringImage = convertBitmapToString(convertedBitmap);
+            Bitmap resizedBitmap = resizeBitmap(convertedBitmap, (float)0.5, (float)0.5);
+            stringThumbnail = convertBitmapToStringWithQuality(resizedBitmap, 10);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            pictureView.setImageURI(Uri.fromFile(new File(currentPhotoPath)));
 
            stringImage = convertFileToString(photoFile);
+           stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
         }
+        listStingImage.add(stringImage);
     }
 
-    private void addListeners(){
+    private void addListeners(boolean edit){
         camera.setOnClickListener(v -> takePicture());
         freeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> freezePriceSelector(isChecked));
         uploadImage.setOnClickListener(v -> uploadImage());
-        submitListing.setOnClickListener(v -> submit());
+
+        if(!edit){
+            submitListing.setOnClickListener(v -> submit());
+        }
+        else{
+            submitListing.setText("Edit");
+            submitListing.setOnClickListener(v -> deleteOldListingAndSubmitNewOne());
+        }
+
     }
 
     private void setupSpinner(Spinner spinner, List<Category> categories){
@@ -157,6 +186,15 @@ public class FillListingActivity extends AppCompatActivity {
             spinnerList.add(subSpinner);
             linearLayout.addView(subSpinner, linearLayout.indexOfChild(categorySelector)+spinnerList.size()-1);
             setupSpinner(subSpinner, categoriesWithDefaultText(selectedCategory.subCategories()));
+
+            Bundle bundle = getIntent().getExtras();
+            if(bundle != null && traversingCategory != null){
+                Category editedCategory = new StringCategory(((Listing)bundle.get("listing")).getCategory());
+                subSpinner.setSelection(traversingCategory.indexOf(traversingCategory.getSubCategoryContaining(editedCategory))+1);
+                traversingCategory = traversingCategory.getSubCategoryContaining(editedCategory);
+            }
+
+
         }
     }
 
@@ -216,9 +254,37 @@ public class FillListingActivity extends AppCompatActivity {
                 }
             };
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), "test.user@epfl.ch", stringImage, category);
-            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category);
+            FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
+            //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
+            String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
+
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, "", category);
+
+            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
+
             storeListing(newListing, newListingID, successCallback);
+
+            //store images (current has a ref to the next)
+            if(listStingImage.size() > 0) {
+                String currentId = newListingID;
+                String nextId;
+                for(int i = 0; i < (listStingImage.size() - 1); i++) {
+                    nextId = randomUUID().toString();
+                    ListingImage newListingImage = new ListingImage(listStingImage.get(i), nextId);
+                    storeListingImage(newListingImage, currentId, result -> {
+                        if(result) {
+                            Log.d("FirebaseDataStore", "successfully stored data");
+                        } else {
+                            Toast.makeText(getApplicationContext(), "An error occurred.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    currentId = nextId;
+                }
+                //store the last without refNextImg
+                ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
+                storeListingImage(newListingImage, currentId, result -> {});
+            }
+
             addLiteListing(newLiteListing, result -> {
                 //TODO: Check the result to be true
             });
@@ -264,6 +330,46 @@ public class FillListingActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    private boolean fillFieldsIfEdit() {
+        Bundle bundle = getIntent().getExtras();
+        if(bundle == null){
+            return false;
+        }
+        String listingID = bundle.getString("listingID", "-1");
+        if (listingID.equals("-1")){
+            return false;
+        }
+        Listing listing = (Listing)bundle.get("listing");
+
+        titleSelector.setText(listing.getTitle());
+        descriptionSelector.setText(listing.getDescription());
+        freeSwitch.setChecked(listing.getPrice().equals("0.0"));
+        priceSelector.setText(listing.getPrice());
+        Category editedCategory = new StringCategory(listing.getCategory());
+        traversingCategory = CategoryRepository.getCategoryContaining(editedCategory);
+        categorySelector.setSelection(CategoryRepository.indexOf(traversingCategory)+1);
+        return true;
+    }
+
+    private void deleteOldListingAndSubmitNewOne() {
+        if (!checkFields()) {
+            Toast.makeText(getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Bundle bundle = getIntent().getExtras();
+            if(bundle == null){
+                return;
+            }
+            String listingID = bundle.getString("listingID");
+            deleteListing(listingID, result -> {});
+            queryLiteListingStringEquality("listingID", listingID, result -> deleteLiteListing(result.get(0), result1 -> submit()));
+        }
+
+    }
+
+
 
 
 }
