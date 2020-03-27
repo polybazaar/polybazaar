@@ -64,6 +64,21 @@ public class StringCategory implements Category {
         }
     }
 
+    @Override
+    public int indexOf(Category searched) {
+        return subCategories.indexOf(searched);
+    }
+
+    @Override
+    public Category getSubCategoryContaining(Category contained) {
+        for(Category subCategory : subCategories){
+            if(subCategory.contains(contained)){
+                return subCategory;
+            }
+        }
+        return null;
+    }
+
     @NonNull
     @Override
     public String toString(){

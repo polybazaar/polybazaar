@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -23,13 +24,23 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
+import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.login.Authenticator;
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
 import static ch.epfl.polybazaar.listing.ListingDatabase.fetchListing;
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.deleteLiteListing;
+import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
 import static ch.epfl.polybazaar.listingImage.ListingImageDatabase.fetchListingImage;
 
 public class SaleDetails extends AppCompatActivity {
+    private Button editButton;
+    private Button deleteButton;
+    private AlertDialog deleteDialog;
 
     private ViewPager2 viewPager2;
     private List<String> listStringImage;
@@ -73,7 +84,16 @@ public class SaleDetails extends AppCompatActivity {
         }
 
         retrieveImages(listingID);
-        ListingCallback callbackListing = result -> fillWithListing(result);
+      ListingCallback callbackListing = result -> {
+          Authenticator fbAuth = AuthenticatorFactory.getDependency();
+            if(!(fbAuth.getCurrentUser() == null)){
+                if(fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
+                    createEditAndDeleteActions(result, listingID);
+                }
+            }
+          fillWithListing(result);
+
+        };
         fetchListing(listingID, callbackListing);
     }
 
@@ -178,4 +198,48 @@ public class SaleDetails extends AppCompatActivity {
         }
     }
 
+
+    private void createEditAndDeleteActions(Listing listing, String listingID) {
+        editButton = findViewById(R.id.editButton);
+        deleteButton = findViewById(R.id.deleteButton);
+
+        editButton.setVisibility(View.VISIBLE);
+        deleteButton.setVisibility(View.VISIBLE);
+
+        editButton.setClickable(true);
+        deleteButton.setClickable(true);
+
+        deleteButton.setOnClickListener(v -> { //TODO: This could be refactored to use utility functions from package widget
+            AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetails.this);
+            builder.setTitle("Delete this listing")
+                    .setMessage("You are about to delete this listing. Are you sure you want to continue?")
+                    .setPositiveButton("Yes", (dialog, id) -> deleteCurrentListing(listingID))
+                    .setNegativeButton("No", (dialog, id) -> dialog.cancel());
+            deleteDialog = builder.create();
+            deleteDialog.show();
+        });
+
+        editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
+            intent.putExtra("listingID", listingID);
+            intent.putExtra("listing", listing);
+            startActivity(intent);
+        });
+    }
+
+    public void deleteCurrentListing(String listingID) {
+        SuccessCallback deletionSuccessCallback = result -> {
+            if(result) {
+                Toast toast = Toast.makeText(getApplicationContext(),"Listing successfuly deleted",Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.show();
+                Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
+                startActivity(SalesOverviewIntent);
+            }
+        };
+
+        deleteListing(listingID, result -> {});
+        queryLiteListingStringEquality("listingID", listingID, result -> deleteLiteListing(result.get(0), deletionSuccessCallback));
+
+    }
 }
