@@ -50,6 +50,28 @@ public abstract class CategoryRepository {
         return false;
     }
 
+    /**
+     * @param searched the category we want the index of
+     * @return the index of the position of the searched category in the repository. If not found returns -1
+     */
+    public static int indexOf(Category searched){
+        return categories.indexOf(searched);
+    }
+
+    /**
+     *
+     * @param contained the sub-category we are looking for
+     * @return the category containing the given category. If not found, returns null
+     */
+    public static Category getCategoryContaining(Category contained){
+        for(Category category : categories){
+            if(category.contains(contained)){
+                return category;
+            }
+        }
+        return null;
+    }
+
     private static List<Category> init(){
 
         Category books = new StringCategory("Book");
@@ -61,7 +83,13 @@ public abstract class CategoryRepository {
         multimedia.addSubCategory(new StringCategory("Computer"));
 
         Category videoGames = new StringCategory("Video games");
-        videoGames.addSubCategory(new StringCategory("Nintendo Switch"));
+        Category nintendoSwitch = new StringCategory("Nintendo Switch");
+        nintendoSwitch.addSubCategory(new StringCategory("Games"));
+        nintendoSwitch.addSubCategory(new StringCategory("Console"));
+        nintendoSwitch.addSubCategory(new StringCategory("Controllers"));
+        nintendoSwitch.addSubCategory(new StringCategory("Docks"));
+        nintendoSwitch.addSubCategory(new StringCategory("Accessories"));
+        videoGames.addSubCategory(nintendoSwitch);
         videoGames.addSubCategory(new StringCategory("Playstation 4"));
         videoGames.addSubCategory(new StringCategory("PC"));
         videoGames.addSubCategory(new StringCategory("XBOX One"));

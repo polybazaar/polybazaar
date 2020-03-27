@@ -1,5 +1,5 @@
 package ch.epfl.polybazaar.listing;
-
+import java.io.Serializable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -19,7 +19,7 @@ import static ch.epfl.polybazaar.Utilities.emailIsValid;
 /**
  * If you attributes of this class, also change its CallbackAdapter and Utilities
  */
-public class Listing {
+public class Listing implements Serializable {
 
     private String title;
     private String description;

@@ -1,27 +1,21 @@
 package ch.epfl.polybazaar;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.litelisting.LiteListing;
-
-import android.content.Context;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
+import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.listingImage.ListingImage;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.user.User;
 
 public abstract class Utilities {
@@ -37,9 +31,14 @@ public abstract class Utilities {
             result.put("listingID", ((LiteListing)o).getListingID());
             result.put("price", ((LiteListing)o).getPrice());
             result.put("title", ((LiteListing)o).getTitle());
+            result.put("category", ((LiteListing)o).getCategory());
+            result.put("stringThumbnail", ((LiteListing)o).getStringThumbnail());
         } else if (o instanceof User) {
             result.put("email", ((User)o).getEmail());
             result.put("nickName", ((User)o).getNickName());
+        } else if (o instanceof ListingImage) {
+            result.put("image", ((ListingImage)o).getImage());
+            result.put("refNextImg", ((ListingImage)o).getRefNextImg());
         } else {
             return null;
         }
@@ -71,15 +70,25 @@ public abstract class Utilities {
      * @return a String
      */
     public static String convertFileToString(File imageFile) {
+        return convertFileToStringWithQuality(imageFile, 10);
+    }
+
+    /**
+     * Convert a File to a String with a specific compression quality
+     * @param imageFile
+     * @return a String
+     */
+    public static String convertFileToStringWithQuality(File imageFile, int quality) {
         String tempStringImg = "";
         //inspired from https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa/18052269
         if(imageFile != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            BitmapFactory.decodeFile(imageFile.getAbsolutePath()).compress(Bitmap.CompressFormat.JPEG, 10, baos);
+            BitmapFactory.decodeFile(imageFile.getAbsolutePath()).compress(Bitmap.CompressFormat.JPEG, quality, baos);
             tempStringImg = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         }
         return tempStringImg;
     }
+
 
     /**
      * Convert a String image to a Bitmap
@@ -106,8 +115,18 @@ public abstract class Utilities {
      * taken from Stackoverflow
      */
     public static String convertBitmapToString(Bitmap bitmap){
+        return convertBitmapToStringWithQuality(bitmap, 10);
+    }
+
+    /**
+     * Convert Bitmap to String with a specific compression quality
+     * @param bitmap
+     * @return a String
+     * taken from Stackoverflow
+     */
+    public static String convertBitmapToStringWithQuality(Bitmap bitmap, int quality){
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,10, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         byte [] b=baos.toByteArray();
         String temp=Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
@@ -132,6 +151,26 @@ public abstract class Utilities {
         return bitmap;
     }
 
+    /**
+     * Helper function to resize a bitmap given in argument
+     * @param bitmap original image
+     * @param scaleWidth scale factor for width, should be between 0 and 1
+     * @param scaleHeight scale factor for height, should be between 0 and 1
+     * @return
+     */
+    public static Bitmap resizeBitmap(Bitmap bitmap, float scaleWidth, float scaleHeight) throws IllegalArgumentException{
+
+        if(scaleWidth < 0 || scaleWidth > 1 || scaleHeight < 0 || scaleHeight > 1) {
+            throw new IllegalArgumentException("Scale factors should be between 0 and 1");
+        }
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+    }
+
+
     public static Object getOrDefaultObj(Map<String, Object> map, String key) {
         if (!map.containsKey(key)) return null;
         return map.get(key);
@@ -141,11 +180,4 @@ public abstract class Utilities {
         if (!map.containsKey(key)) return null;
         return map.get(key);
     }
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-
 }
