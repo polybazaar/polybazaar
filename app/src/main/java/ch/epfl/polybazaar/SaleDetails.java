@@ -26,6 +26,8 @@ import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.login.Authenticator;
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
@@ -81,16 +83,17 @@ public class SaleDetails extends AppCompatActivity {
             return;
         }
 
-
         retrieveImages(listingID);
       ListingCallback callbackListing = result -> {
-            fillWithListing(result);
-            FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
-            if(!(fbAuth.getCurrentUser() == null) && fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
-                createEditAndDeleteActions(result, listingID);
+          Authenticator fbAuth = AuthenticatorFactory.getDependency();
+            if(!(fbAuth.getCurrentUser() == null)){
+                if(fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
+                    createEditAndDeleteActions(result, listingID);
+                }
             }
-        };
+          fillWithListing(result);
 
+        };
         fetchListing(listingID, callbackListing);
     }
 
