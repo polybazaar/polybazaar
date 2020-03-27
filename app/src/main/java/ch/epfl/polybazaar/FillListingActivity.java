@@ -249,6 +249,7 @@ public class FillListingActivity extends AppCompatActivity {
             };
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
             FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
+            //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
             String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
             Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, stringImage, category);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
