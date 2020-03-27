@@ -357,12 +357,9 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
             storeListingImage(newListingImage, currentId, result -> {});
         }
-
         addLiteListing(newLiteListing, result -> {
             //TODO: Check the result to be true
         });
-        Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-        startActivity(SalesOverviewIntent);
     }
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
