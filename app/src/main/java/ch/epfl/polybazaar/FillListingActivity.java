@@ -317,7 +317,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         }
 
     }
-    private void createAndSendListing(){
+    private void createAndSendListing() {
+        final String newListingID = randomUUID().toString();
         SuccessCallback successCallback = result -> {
             if(result) {
                 Toast toast = Toast.makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT);
@@ -325,36 +326,43 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 toast.show();
             }
         };
-            String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
-            FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
-            //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
-            String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
+        String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
+        FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
+        //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
+        String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
 
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, "", category);
+        Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, "", category);
 
-            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
+        LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
 
-            storeListing(newListing, newListingID, successCallback);
+        storeListing(newListing, newListingID, successCallback);
 
-            //store images (current has a ref to the next)
-            if(listStingImage.size() > 0) {
-                String currentId = newListingID;
-                String nextId;
-                for(int i = 0; i < (listStingImage.size() - 1); i++) {
-                    nextId = randomUUID().toString();
-                    ListingImage newListingImage = new ListingImage(listStingImage.get(i), nextId);
-                    storeListingImage(newListingImage, currentId, result -> {
-                        if(result) {
-                            Log.d("FirebaseDataStore", "successfully stored data");
-                        } else {
-                            Toast.makeText(getApplicationContext(), "An error occurred.", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    currentId = nextId;
-                }
-                //store the last without refNextImg
-                ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
-                storeListingImage(newListingImage, currentId, result -> {});
+        //store images (current has a ref to the next)
+        if(listStingImage.size() > 0) {
+            String currentId = newListingID;
+            String nextId;
+            for(int i = 0; i < (listStingImage.size() - 1); i++) {
+                nextId = randomUUID().toString();
+                ListingImage newListingImage = new ListingImage(listStingImage.get(i), nextId);
+                storeListingImage(newListingImage, currentId, result -> {
+                    if(result) {
+                        Log.d("FirebaseDataStore", "successfully stored data");
+                    } else {
+                        Toast.makeText(getApplicationContext(), "An error occurred.", Toast.LENGTH_LONG).show();
+                    }
+                });
+                currentId = nextId;
+            }
+            //store the last without refNextImg
+            ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
+            storeListingImage(newListingImage, currentId, result -> {});
+        }
+
+        addLiteListing(newLiteListing, result -> {
+            //TODO: Check the result to be true
+        });
+        Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+        startActivity(SalesOverviewIntent);
     }
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
