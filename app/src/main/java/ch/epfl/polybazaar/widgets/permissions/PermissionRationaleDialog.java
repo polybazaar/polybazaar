@@ -1,14 +1,14 @@
 package ch.epfl.polybazaar.widgets.permissions;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Objects;
@@ -17,12 +17,8 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 
 /**
- * A dialog that explains the use of the location permission and requests the necessary
+ * A dialog that explains the use of the permission and requests the necessary
  * permission.
- * <p>
- * The activity should implement
- * {@link androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback}
- * to handle permit or denial of this permission request.
  */
 public class PermissionRationaleDialog extends DialogFragment {
 
@@ -30,24 +26,30 @@ public class PermissionRationaleDialog extends DialogFragment {
     private static final String MSG = "MSG";
     private static final String DENIED_MSG = "DENIED_MSG";
     private static final String FINISH = "FINISH";
+    private static final String TAG = "PermissionRD";
     private static SuccessCallback cb;
-    private static Activity activity;
 
     private boolean mFinishActivity = false;
 
 
-
-    public static PermissionRationaleDialog newInstance(Activity caller, boolean finishActivity, String permission,
-                                                        String message, String denied_message, @NonNull final SuccessCallback callback) {
+    /**
+     * Create a new Rationale Dialog to request the permission
+     * @param permission the permission in question
+     * @param message the explanation message of why the permission is needed
+     * @param denied_message what to tell the user when he/she denies the permission
+     * @param callback a SuccessCallback implementation
+     * @return the dialog
+     */
+    public static PermissionRationaleDialog newInstance(String permission,
+                                                 String message, String denied_message, @NonNull final SuccessCallback callback) {
         Bundle arguments = new Bundle();
         arguments.putString(PERMISSION, permission);
         arguments.putString(MSG, message);
         arguments.putString(DENIED_MSG, denied_message);
-        arguments.putBoolean(FINISH, finishActivity);
+        arguments.putBoolean(FINISH, false);
         PermissionRationaleDialog dialog = new PermissionRationaleDialog();
         dialog.setArguments(arguments);
         cb = callback;
-        activity = caller;
         return dialog;
     }
 
@@ -60,14 +62,16 @@ public class PermissionRationaleDialog extends DialogFragment {
                 .setMessage(arguments.getString(MSG))
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     // After click on Ok, request the permission.
-                    String[] permission = {"android.permission." + arguments.getString(PERMISSION)};
-                    ActivityCompat.requestPermissions(activity, permission,0);
+
+                    String[] permissions = {"android.permission." + arguments.getString(PERMISSION)};
+                    requestPermissions(permissions, 1);
                     // Do not finish the Activity while requesting permission.
                     mFinishActivity = false;
                 })
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                     assert this.getFragmentManager() != null;
-                    PermissionDeniedDialog.newInstance(arguments.getString(DENIED_MSG), false).show(this.getFragmentManager(), "permission_denied");
+                    PermissionDeniedDialog.newInstance(arguments.getString(DENIED_MSG), false)
+                            .show(this.getFragmentManager(), "permission_denied");
                     cb.onCallback(false);
                 })
                 .create();
@@ -82,6 +86,22 @@ public class PermissionRationaleDialog extends DialogFragment {
                     Toast.LENGTH_SHORT)
                     .show();
             Objects.requireNonNull(getActivity()).finish();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "permission granted");
+            cb.onCallback(true);
+        } else {
+            Log.d(TAG, "permission denied");
+            assert this.getFragmentManager() != null;
+            assert getArguments() != null;
+            PermissionDeniedDialog.newInstance(getArguments().getString(DENIED_MSG), false)
+                    .show(this.getFragmentManager(), "permission_denied");
+            cb.onCallback(false);
         }
     }
 
