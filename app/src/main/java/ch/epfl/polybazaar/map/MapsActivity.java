@@ -19,10 +19,9 @@ import java.util.Objects;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
-import ch.epfl.polybazaar.widgets.permissions.PermissionUtils;
+import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
 import static ch.epfl.polybazaar.map.Constants.*;
-import static ch.epfl.polybazaar.widgets.permissions.PermissionUtils.*;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
 
@@ -32,6 +31,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final String TAG = "MapsActivity";
+    private PermissionRequest perm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +69,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             successCallback.onCallback(result);
         };
-        createPermissionRequest("ACCESS_FINE_LOCATION",
+        perm = new PermissionRequest(this,"ACCESS_FINE_LOCATION",
                 "Location is required to show your position on the map",
                 "Location will be unavailable",
-                callback).assertPermission();
+                callback);
+        perm.assertPermission();
     }
 
     private void mapInit() {
@@ -129,12 +130,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    /*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d("CALLED", "HERE");
+        perm.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
-     */
 
 }

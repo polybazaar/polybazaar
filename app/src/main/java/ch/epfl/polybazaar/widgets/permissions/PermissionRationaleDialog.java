@@ -3,9 +3,7 @@ package ch.epfl.polybazaar.widgets.permissions;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,7 +24,6 @@ public class PermissionRationaleDialog extends DialogFragment {
     private static final String MSG = "MSG";
     private static final String DENIED_MSG = "DENIED_MSG";
     private static final String FINISH = "FINISH";
-    private static final String TAG = "PermissionRD";
     private static SuccessCallback cb;
 
     private boolean mFinishActivity = false;
@@ -88,24 +85,5 @@ public class PermissionRationaleDialog extends DialogFragment {
             Objects.requireNonNull(getActivity()).finish();
         }
     }
-
-    /*
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "permission granted");
-            cb.onCallback(true);
-        } else {
-            Log.d(TAG, "permission denied");
-            assert this.getFragmentManager() != null;
-            assert getArguments() != null;
-            PermissionDeniedDialog.newInstance(getArguments().getString(DENIED_MSG), false)
-                    .show(this.getFragmentManager(), "permission_denied");
-            cb.onCallback(false);
-        }
-    }
-
-     */
 
 }
