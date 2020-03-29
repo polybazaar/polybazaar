@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -59,6 +60,10 @@ public final class PermissionRequest extends Fragment {
             Log.d(TAG, "Permission " + permission + " already granted");
             callback.onCallback(true);
         } else {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(context, "android.permission." + permission)) {
+                callback.onCallback(false);
+                return;
+            }
             Log.d(TAG, "Permission " + permission + " not yet granted");
             requestPermission(permission, message, denied_message, callback);
         }

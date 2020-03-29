@@ -135,4 +135,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         perm.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    // Ensures that settings are updated after resume, optional
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkLocationPermissions(result -> mapInit());
+    }
+
 }
