@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar.map;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.location.Location;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.widgets.permissions.PermissionUtils;
 
 import static ch.epfl.polybazaar.map.Constants.*;
 import static ch.epfl.polybazaar.widgets.permissions.PermissionUtils.*;
@@ -67,10 +69,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             successCallback.onCallback(result);
         };
-        assertPermission(this, "ACCESS_FINE_LOCATION",
+        createPermissionRequest("ACCESS_FINE_LOCATION",
                 "Location is required to show your position on the map",
                 "Location will be unavailable",
-                callback);
+                callback).assertPermission();
     }
 
     private void mapInit() {
@@ -126,5 +128,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
     }
+
+    /*
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d("CALLED", "HERE");
+    }
+
+     */
 
 }

@@ -34,19 +34,20 @@ public class PermissionRationaleDialog extends DialogFragment {
 
     /**
      * Create a new Rationale Dialog to request the permission
+     * @param finish if we should end the parent activity when the permission request is over
      * @param permission the permission in question
      * @param message the explanation message of why the permission is needed
      * @param denied_message what to tell the user when he/she denies the permission
      * @param callback a SuccessCallback implementation
      * @return the dialog
      */
-    public static PermissionRationaleDialog newInstance(String permission,
+    public static PermissionRationaleDialog newInstance(boolean finish, String permission,
                                                  String message, String denied_message, @NonNull final SuccessCallback callback) {
         Bundle arguments = new Bundle();
         arguments.putString(PERMISSION, permission);
         arguments.putString(MSG, message);
         arguments.putString(DENIED_MSG, denied_message);
-        arguments.putBoolean(FINISH, false);
+        arguments.putBoolean(FINISH, finish);
         PermissionRationaleDialog dialog = new PermissionRationaleDialog();
         dialog.setArguments(arguments);
         cb = callback;
@@ -62,7 +63,6 @@ public class PermissionRationaleDialog extends DialogFragment {
                 .setMessage(arguments.getString(MSG))
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     // After click on Ok, request the permission.
-
                     String[] permissions = {"android.permission." + arguments.getString(PERMISSION)};
                     requestPermissions(permissions, 1);
                     // Do not finish the Activity while requesting permission.
@@ -89,6 +89,7 @@ public class PermissionRationaleDialog extends DialogFragment {
         }
     }
 
+    /*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (grantResults.length > 0
@@ -104,5 +105,7 @@ public class PermissionRationaleDialog extends DialogFragment {
             cb.onCallback(false);
         }
     }
+
+     */
 
 }
