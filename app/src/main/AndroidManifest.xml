@@ -8,11 +8,6 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -58,24 +53,30 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+         <activity android:name="ch.epfl.polybazaar.FillListingActivity"
+                    android:parentActivityName=".MainActivity"></activity>
+        <activity   android:name=".UI.SalesOverview"
+                    android:exported="true"
+                    android:parentActivityName=".MainActivity"
+            ></activity>
+        <activity   android:name=".SaleDetails"
+                    android:parentActivityName=".UI.SalesOverview"/>
+<activity android:name=".MainActivity">
+<intent-filter>
+    <action android:name="android.intent.action.MAIN" />
 
-        <activity
-            android:name=".FillListingActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".UI.SalesOverview"
-            android:exported="true"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".SaleDetails"
-            android:parentActivityName=".UI.SalesOverview" />
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+    <category android:name="android.intent.category.LAUNCHER" />
+</intent-filter>
+</activity>
     </application>
 
-</manifest>
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.CAMERA" />
+
+<uses-feature android:name="android.hardware.camera"
+android:required="true" />
+
+    </manifest>

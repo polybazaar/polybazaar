@@ -2,8 +2,11 @@ package ch.epfl.polybazaar;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Instrumentation;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -13,6 +16,8 @@ import android.provider.MediaStore;
 import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -53,14 +58,17 @@ import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.useMockNetworkState;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.useRealNetwork;
 import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertThat;
 
+
 @RunWith(AndroidJUnit4.class)
+
 public class FillListingActivityTest {
     static Uri imageUri;
     static Bitmap imageBitmap;
@@ -207,7 +215,7 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
     }
@@ -240,6 +248,63 @@ public class FillListingActivityTest {
     }
 
 
+    @Test
+    public void DialogAppearsWhenNoConnection() throws Throwable {
+        Intents.init();
+        useMockNetworkState(false);
+        useMockDataStore();
+        fillListing();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        Thread.sleep(1000);
+        assert(fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog").isVisible());
+        //onView(withText("No Internet connection found")).check(matches(isDisplayed()));
+        Intents.release();
+        useRealNetwork();
+    }
+
+    @Test
+    public void DialogPositiveClickGoesToSalesOverview() throws Throwable {
+        Intents.init();
+        useMockNetworkState(false);
+        useMockDataStore();
+        fillListing();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        Thread.sleep(1000);
+        runOnUiThread(() -> {
+            DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
+            AlertDialog dialog = (AlertDialog) dialogFragment.getDialog();
+            Button posButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            posButton.performClick();
+        });
+        Thread.sleep(1000);
+        intended(hasComponent(SalesOverview.class.getName()));
+        Intents.release();
+        useRealNetwork();
+    }
+
+    @Test
+    public void DialogNegativeClickGoesToFillListing() throws Throwable {
+        Intents.init();
+        useMockNetworkState(false);
+        useMockDataStore();
+        fillListing();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        Thread.sleep(1000);
+        runOnUiThread(() -> {
+
+            DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
+            AlertDialog dialog = (AlertDialog) dialogFragment.getDialog();
+            Button negButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+            negButton.performClick();
+        });
+
+        Thread.sleep(1000);
+        hasComponent(FillListingActivity.class.getName());
+        Intents.release();
+        useRealNetwork();
+    }
+
+
     private void uploadImage(){
         closeSoftKeyboard();
         expectedGalleryIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
@@ -249,6 +314,7 @@ public class FillListingActivityTest {
         intended(expectedGalleryIntent);
         Intents.release();
     }
+
 
     private void submitListingAndCheckIncorrectToast() throws Throwable {
         runOnUiThread(new Runnable(){
@@ -269,6 +335,17 @@ public class FillListingActivityTest {
     private void selectCategory(String cat){
         onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
         onData(hasToString(cat)).perform(click());
+    }
+    private void fillListing() throws Throwable {
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
+        selectCategory("Furniture");
+        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("description"));
+        closeSoftKeyboard();
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
+        closeSoftKeyboard();
+
+
     }
 
 }
