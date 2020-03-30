@@ -43,12 +43,6 @@ public class SalesOverviewTest {
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         List<LiteListing> liteListingList =  activityRule.getActivity().getLiteListingList();
         assertEquals(liteListingList.get(0).getListingID(), "1");
         assertEquals(liteListingList.get(0).getTitle(), "listing1");
