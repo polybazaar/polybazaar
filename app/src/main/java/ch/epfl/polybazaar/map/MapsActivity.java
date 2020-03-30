@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
 import java.util.Objects;
@@ -27,11 +29,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
 
-    private boolean mLocationPermissionGranted = false;
+    private final String TAG = "MapsActivity";
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private final String TAG = "MapsActivity";
     private PermissionRequest perm;
+    private boolean mLocationPermissionGranted = false;
+    private boolean MPSet = false;
+    private double MPLat = EPFL_LOCATION.latitude;
+    private double MPLng = EPFL_LOCATION.longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +87,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
             }
+            mMap.setBuildingsEnabled(true);
+            mMap.setIndoorEnabled(true);
+            mMap.setOnMapClickListener(latLng -> {
+                if (MPSet) {
+                    mMap.clear();
+                    MPLat = EPFL_LOCATION.latitude;
+                    MPLng = EPFL_LOCATION.longitude;
+                    MPSet = false;
+                    Toast toast = Toast.makeText(this, "Meeting Point removed", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
+            mMap.setOnMapLongClickListener(latLng -> {
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Meeting Point"));
+                MPLat = latLng.latitude;
+                MPLng = latLng.longitude;
+                MPSet = true;
+                Toast toast = Toast.makeText(this, "Meeting Point defined", Toast.LENGTH_SHORT);
+                toast.show();
+            });
             mMap.getUiSettings().setZoomControlsEnabled(false);
-            // EPFL Marker
-            //mMap.addMarker(new MarkerOptions().position(EPFL_LOCATION).title("EPFL"));
             goToEPFL();
         }
     }
@@ -135,11 +159,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         perm.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    /*
     // Ensures that settings are updated after resume, optional
     @Override
     public void onResume() {
         super.onResume();
         checkLocationPermissions(result -> mapInit());
     }
+     */
 
 }
