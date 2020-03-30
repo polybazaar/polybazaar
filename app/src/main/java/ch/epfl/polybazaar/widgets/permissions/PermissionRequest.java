@@ -39,12 +39,12 @@ public final class PermissionRequest extends Fragment {
      * Creates a new permission request
      * @param context the caller (i.e. this)
      * @param permission the permission you ask for, i.e : "ACCESS_FINE_LOCATION"
-     * @param message message to display in order to explain why th permission is necessary
-     * @param denied_message message to display if the permission is denied
+     * @param message message to display in order to explain why the permission is necessary, if null, no message is displayed
+     * @param denied_message message to display if the permission is denied, if null, no message is displayed
      * @param callback a SuccessCallback implementation
      */
     public PermissionRequest(@NonNull AppCompatActivity context, @NonNull String permission,
-                             @NonNull String message, String denied_message, @NonNull final SuccessCallback callback) {
+                             String message, String denied_message, @NonNull final SuccessCallback callback) {
         this.callback = callback;
         this.denied_message =denied_message;
         this.message = message;
@@ -65,7 +65,12 @@ public final class PermissionRequest extends Fragment {
                 return;
             }
             Log.d(TAG, "Permission " + permission + " not yet granted");
-            requestPermission(permission, message, denied_message, callback);
+            if (message != null) {
+                requestPermission(permission, message, denied_message, callback);
+            } else {
+                String[] permissions = {"android.permission." + permission};
+                ActivityCompat.requestPermissions(context, permissions, 1);
+            }
         }
     }
 
@@ -86,7 +91,9 @@ public final class PermissionRequest extends Fragment {
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             callback.onCallback(true);
         } else {
-            PermissionDeniedDialog.newInstance(denied_message, false).show(context.getSupportFragmentManager(), "permission_denied");
+            if (denied_message != null) {
+                PermissionDeniedDialog.newInstance(denied_message, false).show(context.getSupportFragmentManager(), "permission_denied");
+            }
             callback.onCallback(false);
         }
     }

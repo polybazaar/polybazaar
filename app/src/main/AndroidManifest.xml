@@ -36,7 +36,8 @@
         <activity
             android:name=".map.MapsActivity"
             android:label="@string/title_activity_maps"
-            android:exported="true"></activity>
+            android:exported="true"
+            android:parentActivityName="ch.epfl.polybazaar.FillListingActivity"></activity>
         <activity android:name=".login.EmailVerificationActivity" />
         <activity android:name=".login.SignUpActivity" />
         <activity android:name=".login.SignInSuccessActivity" />

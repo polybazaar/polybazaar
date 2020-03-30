@@ -2,6 +2,8 @@ package ch.epfl.polybazaar.map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,8 +37,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PermissionRequest perm;
     private boolean mLocationPermissionGranted = false;
     private boolean MPSet = false;
-    private double MPLat = EPFL_LOCATION.latitude;
-    private double MPLng = EPFL_LOCATION.longitude;
+
+    // in showMode, the user cannot select a meeting point
+    private boolean showMode = true;
+    private Bundle extras;
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.getBoolean(GIVE_LatLng)) {
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Meeting Point");
+                showMode = true;
+            } else {
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Define Meeting Point");
+                showMode = false;
+            }
+        }
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         checkLocationPermissions(result -> mapInit());
     }
 
@@ -89,27 +109,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             mMap.setBuildingsEnabled(true);
             mMap.setIndoorEnabled(true);
-            mMap.setOnMapClickListener(latLng -> {
-                if (MPSet) {
+            if (!showMode) {
+                // We are not in Show Mode
+                mMap.setOnMapClickListener(latLng -> {
+                    if (MPSet) {
+                        mMap.clear();
+                        extras.putBoolean(VALID, false);
+                        MPSet = false;
+                        Toast toast = Toast.makeText(this, "Meeting Point removed", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
+                mMap.setOnMapLongClickListener(latLng -> {
                     mMap.clear();
-                    MPLat = EPFL_LOCATION.latitude;
-                    MPLng = EPFL_LOCATION.longitude;
-                    MPSet = false;
-                    Toast toast = Toast.makeText(this, "Meeting Point removed", Toast.LENGTH_SHORT);
+                    mMap.addMarker(new MarkerOptions().position(latLng).title("Meeting Point"));
+                    extras.putDouble(LAT, latLng.latitude);
+                    extras.putDouble(LNG, latLng.longitude);
+                    extras.putBoolean(VALID, true);
+                    MPSet = true;
+                    Toast toast = Toast.makeText(this, "Meeting Point defined", Toast.LENGTH_SHORT);
                     toast.show();
-                }
-            });
-            mMap.setOnMapLongClickListener(latLng -> {
+                });
+                goToEPFL();
+            } else {
+                // We are in Show Mode
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Meeting Point"));
-                MPLat = latLng.latitude;
-                MPLng = latLng.longitude;
-                MPSet = true;
-                Toast toast = Toast.makeText(this, "Meeting Point defined", Toast.LENGTH_SHORT);
-                toast.show();
-            });
+                if (extras != null) {
+                    LatLng meetingPoint = new LatLng(extras.getDouble(LAT), extras.getDouble(LNG));
+                    mMap.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, HOUSE_ZOOM));
+                }
+            }
             mMap.getUiSettings().setZoomControlsEnabled(false);
-            goToEPFL();
         }
     }
 
@@ -158,14 +189,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         perm.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
-    /*
-    // Ensures that settings are updated after resume, optional
-    @Override
-    public void onResume() {
-        super.onResume();
-        checkLocationPermissions(result -> mapInit());
-    }
-     */
 
 }

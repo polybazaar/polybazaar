@@ -37,6 +37,7 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
+import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.network.InternetChecker;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
@@ -116,7 +117,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         //Tags are set only for testing purposes using Espresso
         if(resultCode != RESULT_OK){
             pictureView.setTag(-1);

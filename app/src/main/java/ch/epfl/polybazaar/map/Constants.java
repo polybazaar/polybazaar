@@ -2,7 +2,7 @@ package ch.epfl.polybazaar.map;
 
 import com.google.android.gms.maps.model.LatLng;
 
-class Constants {
+final class Constants {
     /**
      * Zoom values range from 1f (minimal/no zoom) to infinity
      */
@@ -13,4 +13,17 @@ class Constants {
     static final float CANTON_ZOOM = 10.5f;
     static final float LOWEST_ZOOM = 1f;
     static final LatLng EPFL_LOCATION = new LatLng(46.5191, 6.5668);
+    /**
+     * the boolean associated to GIVE_LatLng is
+     * true if an external activity gives the map a marker to display and
+     * false if the map gives an external activity a user-chosen location
+     */
+    static final String GIVE_LatLng = "GIVE";
+    /**
+     * the valid boolean indicates if the passed location (from map to
+     * external activity) is valid, i.e. a user-chosen location.
+     */
+    static final String VALID = "VALID";
+    static final String LAT = "LAT";
+    static final String LNG = "LNG";
 }

@@ -67,8 +67,10 @@ public class PermissionRationaleDialog extends DialogFragment {
                 })
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                     assert this.getFragmentManager() != null;
-                    PermissionDeniedDialog.newInstance(arguments.getString(DENIED_MSG), false)
-                            .show(this.getFragmentManager(), "permission_denied");
+                    if (arguments.getString(DENIED_MSG) != null) {
+                        PermissionDeniedDialog.newInstance(arguments.getString(DENIED_MSG), false)
+                                .show(this.getFragmentManager(), "permission_denied");
+                    }
                     cb.onCallback(false);
                 })
                 .create();
