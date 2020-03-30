@@ -70,7 +70,7 @@ public final class User extends Model {
         return favorites;
     }
 
-    public static Task<User> retrieve(String email) {
+    public static Task<User> fetch(String email) {
         return ModelTransaction.fetch(COLLECTION, email, User.class);
     }
 }

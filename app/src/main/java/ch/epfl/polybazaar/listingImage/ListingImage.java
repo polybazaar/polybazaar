@@ -50,7 +50,7 @@ public class ListingImage extends Model {
      * @return successful task containing the model instance if it exists, null otherwise. The task
      * fails if the database is unreachable
      */
-    public static Task<ListingImage> retrieve(String id) {
+    public static Task<ListingImage> fetch(String id) {
         return ModelTransaction.fetch(COLLECTION, id, ListingImage.class);
     }
 }

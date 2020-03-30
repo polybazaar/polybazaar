@@ -78,7 +78,7 @@ public class LiteListing extends Model {
      * @return successful task containing the model instance if it exists, null otherwise. The task
      * fails if the database is unreachable
      */
-    public static Task<LiteListing> retrieve(String id) {
+    public static Task<LiteListing> fetch(String id) {
         return ModelTransaction.fetch(COLLECTION, id, LiteListing.class);
     }
 

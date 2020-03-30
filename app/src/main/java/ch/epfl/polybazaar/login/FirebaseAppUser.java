@@ -32,7 +32,7 @@ public class FirebaseAppUser implements AppUser {
 
     @Override
     public Task<User> getUserData() {
-        return User.retrieve(fbUser.getEmail());
+        return User.fetch(fbUser.getEmail());
     }
 
     @Override

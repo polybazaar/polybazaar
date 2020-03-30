@@ -95,7 +95,7 @@ public class SaleDetails extends AppCompatActivity {
      * @param listingID
      */
     private void retrieveImages(String listingID) {
-        ListingImage.retrieve(listingID).addOnSuccessListener(result -> {
+        ListingImage.fetch(listingID).addOnSuccessListener(result -> {
             if(result == null) {
                 drawImages();
                 return;
