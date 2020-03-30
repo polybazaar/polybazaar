@@ -4,15 +4,22 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshotCallback;
+import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.listing.ListingDatabase;
@@ -30,6 +37,7 @@ public class MockDataStore implements DataStore {
     private Map<String,Map<String,Object>> collections;
 
     private final String TAG = "MockDataStore";
+    private int idCount = 0;
 
     public MockDataStore(){
         collections = new HashMap<>();
@@ -64,7 +72,7 @@ public class MockDataStore implements DataStore {
     }
 
     @Override
-    public void fetchData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull DataSnapshotCallback callback) {
+    public void fetch(@NonNull String collectionPath, @NonNull String documentPath, @NonNull DataSnapshotCallback callback) {
         if (!collections.containsKey(collectionPath)){
             Log.i(TAG, "Collection does not exist");
             callback.onCallback(null);
@@ -157,5 +165,75 @@ public class MockDataStore implements DataStore {
         }
         Log.i(TAG, "Query successful");
         callback.onCallback(list);
+    }
+
+    @Override
+    public Task<DataSnapshot> fetch(String collectionPath, String documentPath) {
+        Map<String, Object> collection = collections.get(collectionPath);
+
+        if (collection == null)
+            return Tasks.forResult(null);
+        else
+            return Tasks.forResult(new MockDataSnapshot(documentPath, collection.get(documentPath)));
+    }
+
+    @Override
+    public Task<Void> setData(String collectionPath, String documentPath, Model data) {
+        Map<String, Object> collection = getOrCreateCollection(collectionPath);
+
+        collection.put(documentPath, data);
+
+        return Tasks.forResult(null);
+    }
+
+    @Override
+    public Task<Void> deleteData(String collectionPath, String documentPath) {
+        Map<String, Object> collection = collections.get(collectionPath);
+        if (collection != null) {
+            collection.remove(documentPath);
+        }
+
+        return Tasks.forResult(null);
+    }
+
+    @Override
+    public Task<String> addData(String collectionPath, Model data) {
+        Map<String, Object> collection = getOrCreateCollection(collectionPath);
+
+        idCount++;
+        String id = Integer.toString(idCount);
+        collection.put(id, data);
+
+        return Tasks.forResult(id);
+    }
+
+    @Override
+    public Task<CollectionSnapshot> fetchAll(String collectionPath) {
+        Map<String, Object> collection = collections.get(collectionPath);
+
+        if (collection == null)
+            return Tasks.forResult(null);
+        else {
+            List<Object> documents = new ArrayList<>(collection.values());
+            return Tasks.forResult(new MockCollectionSnapshot(documents));
+        }
+    }
+
+    @Override
+    public Task<CollectionSnapshot> fetchWithEquals(String collectionPath, String field, String value) {
+        // TODO this does not work
+        return fetchAll(collectionPath);
+    }
+
+    // Gets the requested collection if it already exists, otherwise creates a new one
+    private Map<String, Object> getOrCreateCollection(String collectionPath) {
+        Map<String, Object> collection = collections.get(collectionPath);
+
+        if (collection == null) {
+            collection = new HashMap<>();
+            collections.put(collectionPath, collection);
+        }
+
+        return collection;
     }
 }

@@ -34,7 +34,7 @@ public abstract class ListingDatabase {
     public static void fetchListing(final String listingID, final ListingCallback callback){
         final ListingCallbackAdapter adapterCallback = new ListingCallbackAdapter(callback);
         db = DataStoreFactory.getDependency();
-        db.fetchData(listingCollectionName, listingID, adapterCallback);
+        db.fetch(listingCollectionName, listingID, adapterCallback);
     }
 
     /**

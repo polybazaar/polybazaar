@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,9 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
+import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshotCallback;
+import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 
@@ -35,7 +39,7 @@ public class FirebaseDataStore implements DataStore {
     @SuppressLint("StaticFieldLeak")
     private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-    public void fetchData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final DataSnapshotCallback callback) {
+    public void fetch(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final DataSnapshotCallback callback) {
         Task<DocumentSnapshot> task = database.collection(collectionPath).document(documentPath).get();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -157,6 +161,48 @@ public class FirebaseDataStore implements DataStore {
         });
     }
 
+    @Override
+    public Task<DataSnapshot> fetch(String collectionPath, String documentPath) {
+        return database.collection(collectionPath).document(documentPath)
+                .get().onSuccessTask((documentSnapshot ->
+                        // TODO fromDocumentSnapshot is probably not necessary
+                        Tasks.forResult(new FirebaseDataSnapshot(documentSnapshot))
+                ));
+    }
 
+    @Override
+    public Task<Void> setData(String collectionPath, String documentPath, Model data) {
+        return database.collection(collectionPath).document(documentPath)
+                .set(data);
+    }
+
+    @Override
+    public Task<Void> deleteData(String collectionPath, String documentPath) {
+        return database.collection(collectionPath).document(documentPath).delete();
+    }
+
+    @Override
+    public Task<String> addData(String collectionPath, Model data) {
+        return database.collection(collectionPath)
+                .add(data).onSuccessTask((documentReference ->
+                        Tasks.forResult(documentReference.getId())
+                ));
+    }
+
+    @Override
+    public Task<CollectionSnapshot> fetchAll(String collectionPath) {
+        return database.collection(collectionPath)
+                .get().onSuccessTask((queryDocumentSnapshots ->
+                        Tasks.forResult(new FirebaseCollectionSnapshot(queryDocumentSnapshots))
+                ));
+    }
+
+    @Override
+    public Task<CollectionSnapshot> fetchWithEquals(String collectionPath, String field, String value) {
+        return database.collection(collectionPath).whereEqualTo(field, value)
+                .get().onSuccessTask((queryDocumentSnapshots ->
+                        Tasks.forResult(new FirebaseCollectionSnapshot(queryDocumentSnapshots))
+                ));
+    }
 }
 

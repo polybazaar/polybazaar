@@ -8,6 +8,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+
+import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -25,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         authenticator = AuthenticatorFactory.getDependency();
+
+        LiteListing.retrieveAll().addOnSuccessListener((liteListings -> {
+            return;
+        }));
     }
 
     public void toSalesOverview(View view) {

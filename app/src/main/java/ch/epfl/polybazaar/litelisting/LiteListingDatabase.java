@@ -49,7 +49,7 @@ public abstract class LiteListingDatabase {
     public static void fetchLiteListing(final String liteListingID, final LiteListingCallback callback){
         final LiteListingCallbackAdapter adapterCallback = new LiteListingCallbackAdapter(callback);
         db = DataStoreFactory.getDependency();
-        db.fetchData(liteListingCollectionName, liteListingID, adapterCallback);
+        db.fetch(liteListingCollectionName, liteListingID, adapterCallback);
     }
 
     /**

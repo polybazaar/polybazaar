@@ -8,10 +8,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
@@ -19,6 +24,10 @@ import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.user.User;
 
 public abstract class Utilities {
+
+    public static <S, R> Task<R> taskMap(Task<S> t, Callable<R> transform) {
+        return t.onSuccessTask((s) -> Tasks.call(transform));
+    }
 
     public static Map<String, Object> getMap(Object o) {
         Map<String, Object> result = new HashMap<String, Object>();

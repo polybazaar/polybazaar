@@ -34,13 +34,7 @@ public class SalesOverviewTest {
 
         LiteListing litelisting1 = new LiteListing("1", "listing1", "CHF 1", "Furniture");
 
-        SuccessCallback successCallback = new SuccessCallback() {
-            @Override
-            public void onCallback(boolean result) {
-            }
-        };
-
-        addLiteListing(litelisting1, successCallback);
+        litelisting1.save();
     }
 
 
@@ -48,6 +42,12 @@ public class SalesOverviewTest {
     public void testLiteListingList() {
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         List<LiteListing> liteListingList =  activityRule.getActivity().getLiteListingList();
         assertEquals(liteListingList.get(0).getListingID(), "1");

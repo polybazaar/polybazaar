@@ -2,6 +2,8 @@ package ch.epfl.polybazaar.endToEnd;
 
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.tasks.Tasks;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -107,8 +109,12 @@ public class EditAndDeleteTest {
         final String newListingID = randomUUID().toString();
         Listing testListing = new Listing(title,"testDescription","22",userEmail, "Games");
         LiteListing testLiteListing = new LiteListing(newListingID, title, "22", "Games");
-        storeListing(testListing, newListingID, result -> assertThat(result, is(true)));
-        addLiteListing(testLiteListing, result -> assertThat(result, is(true)));
+        testListing.setId(newListingID);
+        testLiteListing.setId(newListingID);
+
+        Tasks.whenAll(testListing.save(), testLiteListing.save()).addOnFailureListener((v) -> {
+                    throw new AssertionError();
+        });
     }
 
     private void signInWithFromMainActivity(String email, String password){

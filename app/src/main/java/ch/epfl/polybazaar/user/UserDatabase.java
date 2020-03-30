@@ -56,7 +56,7 @@ public abstract class UserDatabase {
             }
         };
         final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall);
-        db.fetchData(userCollectionName, user.getEmail(), adapterIntermediateCallback);
+        db.fetch(userCollectionName, user.getEmail(), adapterIntermediateCallback);
     }
 
     /**
@@ -68,7 +68,7 @@ public abstract class UserDatabase {
     public static void fetchUser(final String email, final UserCallback callback) {
         db = DataStoreFactory.getDependency();
         final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback);
-        db.fetchData(userCollectionName, email, adapterCallback);
+        db.fetch(userCollectionName, email, adapterCallback);
     }
 
      /**
