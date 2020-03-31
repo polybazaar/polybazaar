@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -39,8 +40,14 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
+
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
+
+import ch.epfl.polybazaar.network.InternetChecker;
+import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
+import ch.epfl.polybazaar.widgets.NoticeDialogListener;
+
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
@@ -51,13 +58,14 @@ import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
 
 import static ch.epfl.polybazaar.Utilities.taskMap;
 import static java.util.UUID.randomUUID;
 
-public class FillListingActivity extends AppCompatActivity {
+public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
 
     public static final int RESULT_LOAD_IMAGE = 1;
     public static final int RESULT_TAKE_PICTURE = 2;
@@ -82,6 +90,8 @@ public class FillListingActivity extends AppCompatActivity {
     private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,7 +256,74 @@ public class FillListingActivity extends AppCompatActivity {
             Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
         }
         else {
-            // TODO should not be done this way
+
+                if(isInternetAvailable(context)){
+                    createAndSendListing();
+                    Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+                    startActivity(SalesOverviewIntent);
+                }else{
+                    NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
+                    dialog.show(getSupportFragmentManager(),"noConnectionDialog");
+                }
+        }
+    }
+
+    //Function taken from https://developer.android.com/training/camera/photobasics
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    //Function taken from https://developer.android.com/training/camera/photobasics
+    private  void takePicture(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                try{
+                    Uri photoURI = FileProvider.getUriForFile(this,"ch.epfl.polybazaar.fileprovider", photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                }
+                catch (IllegalArgumentException ex) {
+                }
+                startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
+            }
+        }
+    }
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        if(dialog instanceof NoConnectionForListingDialog){
+            createAndSendListing();
+            Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+            startActivity(SalesOverviewIntent);
+
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        if(dialog instanceof NoConnectionForListingDialog){
+            //do nothing
+        }
+
+    }
+    private void createAndSendListing() {
+           // TODO should not be done this way
             final String newListingID = randomUUID().toString();
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
             FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
@@ -289,51 +366,7 @@ public class FillListingActivity extends AppCompatActivity {
             newLiteListing.save().addOnSuccessListener(result -> {
                 //TODO: Check the result to be true
             });
-
-            Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-            startActivity(SalesOverviewIntent);
-        }
     }
-
-    //Function taken from https://developer.android.com/training/camera/photobasics
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    //Function taken from https://developer.android.com/training/camera/photobasics
-    private  void takePicture(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                try{
-                    Uri photoURI = FileProvider.getUriForFile(this,"ch.epfl.polybazaar.fileprovider", photoFile);
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                }
-                catch (IllegalArgumentException ex) {
-                }
-                startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
-            }
-        }
-    }
-
-
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
         if(bundle == null){
@@ -371,8 +404,4 @@ public class FillListingActivity extends AppCompatActivity {
         }
 
     }
-
-
-
-
 }
