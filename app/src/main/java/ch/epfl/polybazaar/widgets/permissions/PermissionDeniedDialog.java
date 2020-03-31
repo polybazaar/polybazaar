@@ -36,8 +36,11 @@ public class PermissionDeniedDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        assert getArguments() != null;
-        mFinishActivity = getArguments().getBoolean(FINISH);
+        if (getArguments() != null) {
+            mFinishActivity = getArguments().getBoolean(FINISH);
+        } else {
+            mFinishActivity = false;
+        }
 
         return new AlertDialog.Builder(getActivity())
                 .setMessage(getArguments().getString(MSG))

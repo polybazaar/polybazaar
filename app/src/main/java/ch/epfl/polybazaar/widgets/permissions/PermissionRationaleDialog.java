@@ -54,26 +54,35 @@ public class PermissionRationaleDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle arguments = getArguments();
-        assert arguments != null;
-        mFinishActivity = arguments.getBoolean(FINISH);
-        return new AlertDialog.Builder(getActivity())
-                .setMessage(arguments.getString(MSG))
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    // After click on Ok, request the permission.
-                    String[] permissions = {"android.permission." + arguments.getString(PERMISSION)};
-                    requestPermissions(permissions, 1);
-                    // Do not finish the Activity while requesting permission.
-                    mFinishActivity = false;
-                })
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                    assert this.getFragmentManager() != null;
-                    if (arguments.getString(DENIED_MSG) != null) {
-                        PermissionDeniedDialog.newInstance(arguments.getString(DENIED_MSG), false)
-                                .show(this.getFragmentManager(), "permission_denied");
-                    }
-                    cb.onCallback(false);
-                })
-                .create();
+        if (arguments != null) {
+            mFinishActivity = arguments.getBoolean(FINISH);
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage(arguments.getString(MSG))
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        // After click on Ok, request the permission.
+                        String[] permissions = {"android.permission." + arguments.getString(PERMISSION)};
+                        requestPermissions(permissions, 1);
+                        // Do not finish the Activity while requesting permission.
+                        mFinishActivity = false;
+                    })
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        assert this.getFragmentManager() != null;
+                        if (arguments.getString(DENIED_MSG) != null) {
+                            PermissionDeniedDialog.newInstance(arguments.getString(DENIED_MSG), false)
+                                    .show(this.getFragmentManager(), "permission_denied");
+                        }
+                        cb.onCallback(false);
+                    })
+                    .create();
+        } else {
+            return new AlertDialog.Builder(getActivity()).setMessage("ERROR")
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        cb.onCallback(false);
+                    })
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        cb.onCallback(false);
+                    }).create();
+        }
     }
 
     @Override
