@@ -2,13 +2,23 @@ package ch.epfl.polybazaar.widgets.permissions;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.List;
 import java.util.Objects;
 
 import ch.epfl.polybazaar.R;
@@ -54,16 +64,32 @@ public class PermissionRationaleDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle arguments = getArguments();
-        if (arguments != null) {
+        if (arguments != null && getActivity() != null && arguments.getString(PERMISSION)!= null) {
             mFinishActivity = arguments.getBoolean(FINISH);
             return new AlertDialog.Builder(getActivity())
                     .setMessage(arguments.getString(MSG))
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        // After click on Ok, request the permission.
-                        String[] permissions = {"android.permission." + arguments.getString(PERMISSION)};
-                        requestPermissions(permissions, 1);
-                        // Do not finish the Activity while requesting permission.
-                        mFinishActivity = false;
+                        if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Objects.requireNonNull(arguments.getString(PERMISSION)))) {
+                            // Open App Settings
+                            Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri);
+                            intent.addCategory(Intent.CATEGORY_DEFAULT);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            PackageManager packageManager = getActivity().getPackageManager();
+                            List<ResolveInfo> activities = packageManager.queryIntentActivities(intent,
+                                    PackageManager.MATCH_DEFAULT_ONLY);
+                            boolean isIntentSafe = activities.size() > 0;
+                            if (isIntentSafe) {
+                                startActivity(intent);
+                            }
+                            cb.onCallback(false);
+                        } else {
+                            // After click on Ok, request the permission.
+                            String[] permissions = {arguments.getString(PERMISSION)};
+                            requestPermissions(permissions, 1);
+                            // Do not finish the Activity while requesting permission.
+                            mFinishActivity = false;
+                        }
                     })
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                         assert this.getFragmentManager() != null;

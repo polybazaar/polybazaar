@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -41,6 +43,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // in showMode, the user cannot select a meeting point
     private boolean showMode = true;
     private Bundle extras;
+    private ImageView imgMyLocation;
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
@@ -74,15 +77,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.getBoolean(GIVE_LatLng)) {
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Meeting Point");
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle("Meeting Point");
+                }
                 showMode = true;
             } else {
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Define Meeting Point");
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle("Define Meeting Point");
+                }
                 showMode = false;
             }
         }
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        checkLocationPermissions(result -> mapInit());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        mapInit();
     }
 
     private void checkLocationPermissions(SuccessCallback successCallback) {
@@ -103,10 +112,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void mapInit() {
         if (mMap != null) {
-            if (mLocationPermissionGranted) {
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            }
+            imgMyLocation = (ImageView) findViewById(R.id.imgMyLocation);
+            imgMyLocation.setOnClickListener(v -> checkLocationPermissions(result ->  {
+                if (result) {
+                    mMap.setMyLocationEnabled(true);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    getDeviceLocation();
+                }
+            }));
             mMap.setBuildingsEnabled(true);
             mMap.setIndoorEnabled(true);
             if (!showMode) {

@@ -1,5 +1,8 @@
 package ch.epfl.polybazaar.widgets.permissions;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
@@ -8,6 +11,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.net.Uri;
+import android.provider.Settings;
 import android.util.Log;
 
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
@@ -27,7 +32,7 @@ import ch.epfl.polybazaar.database.callback.SuccessCallback;
  */
 public final class PermissionRequest extends Fragment {
 
-    private static final String TAG = "PermissionUtils";
+    private static final String TAG = "PermissionRequest";
 
     private String permission;
     private String message;
@@ -39,16 +44,17 @@ public final class PermissionRequest extends Fragment {
      * Creates a new permission request
      * @param context the caller (i.e. this)
      * @param permission the permission you ask for, i.e : "ACCESS_FINE_LOCATION"
-     * @param message message to display in order to explain why the permission is necessary, if null, no message is displayed
+     * @param message message to display in order to explain why the permission is necessary, if null, no message is displayed,
+     *                the message is shown only for the second request if the user has chosen deny & don't ask again on the first request
      * @param denied_message message to display if the permission is denied, if null, no message is displayed
      * @param callback a SuccessCallback implementation
      */
     public PermissionRequest(@NonNull AppCompatActivity context, @NonNull String permission,
                              String message, String denied_message, @NonNull final SuccessCallback callback) {
         this.callback = callback;
-        this.denied_message =denied_message;
+        this.denied_message = denied_message;
         this.message = message;
-        this.permission = permission;
+        this.permission = "android.permission." + permission;
         this.context = context;
     }
 
@@ -60,22 +66,13 @@ public final class PermissionRequest extends Fragment {
             Log.d(TAG, "Permission " + permission + " already granted");
             callback.onCallback(true);
         } else {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(context, "android.permission." + permission)) {
-                callback.onCallback(false);
-                return;
-            }
             Log.d(TAG, "Permission " + permission + " not yet granted");
-            if (message != null) {
-                requestPermission(permission, message, denied_message, callback);
-            } else {
-                String[] permissions = {"android.permission." + permission};
-                ActivityCompat.requestPermissions(context, permissions, 1);
-            }
+            requestPermission(permission, message, denied_message, callback);
         }
     }
 
     private boolean isPermissionGranted(@NonNull String permission) {
-        return ContextCompat.checkSelfPermission(context, "android.permission." + permission)
+        return ContextCompat.checkSelfPermission(context, permission)
                 == PackageManager.PERMISSION_GRANTED;
     }
 
