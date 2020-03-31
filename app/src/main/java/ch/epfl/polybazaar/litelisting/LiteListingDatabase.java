@@ -61,7 +61,7 @@ public abstract class LiteListingDatabase {
      */
     public static void addLiteListing(final LiteListing liteListing, final SuccessCallback callback) {
         db = DataStoreFactory.getDependency();
-        db.addData(liteListingCollectionName, liteListing, callback);
+        db.add(liteListingCollectionName, liteListing, callback);
     }
 
     /**
@@ -72,7 +72,7 @@ public abstract class LiteListingDatabase {
      */
     public static void deleteLiteListing(final String liteListingID, final SuccessCallback callback) {
         db = DataStoreFactory.getDependency();
-        db.deleteData(liteListingCollectionName, liteListingID, callback);
+        db.delete(liteListingCollectionName, liteListingID, callback);
     }
 
     /**

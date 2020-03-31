@@ -90,7 +90,7 @@ public class MockDataStore implements DataStore {
     }
 
     @Override
-    public void setData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull SuccessCallback callback) {
+    public void set(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull SuccessCallback callback) {
         if (!collections.containsKey(collectionPath)){
             Log.i(TAG, "Collection does not exist");
             callback.onCallback(false);
@@ -107,7 +107,7 @@ public class MockDataStore implements DataStore {
     }
 
     @Override
-    public void addData(@NonNull String collectionPath, @NonNull Object data, @NonNull SuccessCallback callback) {
+    public void add(@NonNull String collectionPath, @NonNull Object data, @NonNull SuccessCallback callback) {
         if (!collections.containsKey(collectionPath)){
             Log.i(TAG, "Collection does not exist");
             callback.onCallback(false);
@@ -120,7 +120,7 @@ public class MockDataStore implements DataStore {
     }
 
     @Override
-    public void deleteData(@NonNull String collectionPath, @NonNull String documentPath, @NonNull SuccessCallback callback) {
+    public void delete(@NonNull String collectionPath, @NonNull String documentPath, @NonNull SuccessCallback callback) {
         if (!collections.containsKey(collectionPath)){
             Log.i(TAG, "Collection does not exist");
             callback.onCallback(false);
@@ -178,7 +178,7 @@ public class MockDataStore implements DataStore {
     }
 
     @Override
-    public Task<Void> setData(String collectionPath, String documentPath, Model data) {
+    public Task<Void> set(String collectionPath, String documentPath, Model data) {
         Map<String, Object> collection = getOrCreateCollection(collectionPath);
 
         collection.put(documentPath, data);
@@ -187,7 +187,7 @@ public class MockDataStore implements DataStore {
     }
 
     @Override
-    public Task<Void> deleteData(String collectionPath, String documentPath) {
+    public Task<Void> delete(String collectionPath, String documentPath) {
         Map<String, Object> collection = collections.get(collectionPath);
         if (collection != null) {
             collection.remove(documentPath);
@@ -197,7 +197,7 @@ public class MockDataStore implements DataStore {
     }
 
     @Override
-    public Task<String> addData(String collectionPath, Model data) {
+    public Task<String> add(String collectionPath, Model data) {
         Map<String, Object> collection = getOrCreateCollection(collectionPath);
 
         idCount++;

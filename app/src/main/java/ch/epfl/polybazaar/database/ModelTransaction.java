@@ -51,7 +51,7 @@ public final class ModelTransaction {
      */
     public static Task<Void> delete(String collectionPath, String documentPath) {
         DataStore db = DataStoreFactory.getDependency();
-        return db.deleteData(collectionPath, documentPath);
+        return db.delete(collectionPath, documentPath);
     }
 
     /**

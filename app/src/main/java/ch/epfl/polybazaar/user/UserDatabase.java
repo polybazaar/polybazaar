@@ -52,7 +52,7 @@ public abstract class UserDatabase {
                     callback.onCallback(false);
                     return;
                 }
-                db.setData(userCollectionName, user.getEmail(), user, callback);
+                db.set(userCollectionName, user.getEmail(), user, callback);
             }
         };
         final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall);
@@ -79,7 +79,7 @@ public abstract class UserDatabase {
      */
     public static void deleteUser(final String email, final SuccessCallback callback) {
         db = DataStoreFactory.getDependency();
-        db.deleteData(userCollectionName, email, callback);
+        db.delete(userCollectionName, email, callback);
     }
 
     /**

@@ -63,7 +63,7 @@ public class FirebaseDataStore implements DataStore {
         });
     }
 
-    public void setData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
+    public void set(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
         Task<Void> task = database.collection(collectionPath).document(documentPath).set(data);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -80,7 +80,7 @@ public class FirebaseDataStore implements DataStore {
         });
     }
 
-    public void addData(@NonNull final String collectionPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
+    public void add(@NonNull final String collectionPath, @NonNull final Object data, @NonNull final SuccessCallback callback) {
         Task<DocumentReference> task = database.collection(collectionPath).add(data);
         task.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
@@ -97,7 +97,7 @@ public class FirebaseDataStore implements DataStore {
         });
     }
 
-    public void deleteData(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final SuccessCallback callback) {
+    public void delete(@NonNull final String collectionPath, @NonNull final String documentPath, @NonNull final SuccessCallback callback) {
         Task<Void> task = database.collection(collectionPath).document(documentPath).delete();
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -171,18 +171,18 @@ public class FirebaseDataStore implements DataStore {
     }
 
     @Override
-    public Task<Void> setData(String collectionPath, String documentPath, Model data) {
+    public Task<Void> set(String collectionPath, String documentPath, Model data) {
         return database.collection(collectionPath).document(documentPath)
                 .set(data);
     }
 
     @Override
-    public Task<Void> deleteData(String collectionPath, String documentPath) {
+    public Task<Void> delete(String collectionPath, String documentPath) {
         return database.collection(collectionPath).document(documentPath).delete();
     }
 
     @Override
-    public Task<String> addData(String collectionPath, Model data) {
+    public Task<String> add(String collectionPath, Model data) {
         return database.collection(collectionPath)
                 .add(data).onSuccessTask((documentReference ->
                         Tasks.forResult(documentReference.getId())

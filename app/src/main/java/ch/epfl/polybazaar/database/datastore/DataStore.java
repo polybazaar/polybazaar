@@ -27,8 +27,8 @@ public interface DataStore {
      * @param data the data that should be stored (overwritten)
      * @param callback a SuccessCallback interface implementation
      */
-    void setData(@NonNull final String collectionPath,
-                 @NonNull final String documentPath, @NonNull final Object data, @NonNull final SuccessCallback callback);
+    void set(@NonNull final String collectionPath,
+             @NonNull final String documentPath, @NonNull final Object data, @NonNull final SuccessCallback callback);
 
     /**
      * stores data on the database, and calls onCallback when done
@@ -37,8 +37,8 @@ public interface DataStore {
      * @param data the data that should be stored (overwritten)
      * @param callback a SuccessCallback interface implementation
      */
-    void addData(@NonNull final String collectionPath,
-                 @NonNull final Object data, @NonNull final SuccessCallback callback);
+    void add(@NonNull final String collectionPath,
+             @NonNull final Object data, @NonNull final SuccessCallback callback);
 
     /**
      * deletes data from the database, and calls onCallback when done
@@ -46,8 +46,8 @@ public interface DataStore {
      * @param documentPath document name (ID)
      * @param callback a SuccessCallback interface implementation
      */
-    void deleteData(@NonNull final String collectionPath,
-                    @NonNull final String documentPath, @NonNull final SuccessCallback callback);
+    void delete(@NonNull final String collectionPath,
+                @NonNull final String documentPath, @NonNull final SuccessCallback callback);
 
     /**
      * gets all document IDs in a given collection, and calls onCallback when done
@@ -82,7 +82,7 @@ public interface DataStore {
      * @param data data to write
      * @return task that fails if the database is unreachable
      */
-    Task<Void> setData(String collectionPath, String documentPath, Model data);
+    Task<Void> set(String collectionPath, String documentPath, Model data);
 
     /**
      * Deletes the requested data
@@ -90,7 +90,7 @@ public interface DataStore {
      * @param documentPath document id
      * @return task that fails if the database is unreachable
      */
-    Task<Void> deleteData(String collectionPath, String documentPath);
+    Task<Void> delete(String collectionPath, String documentPath);
 
     /**
      * Adds the requested data in the database. The id will be chosen automatically
@@ -98,7 +98,7 @@ public interface DataStore {
      * @param data data to write
      * @return task that fails if the database is unreachable
      */
-    Task<String> addData(String collectionPath, Model data);
+    Task<String> add(String collectionPath, Model data);
 
     /**
      * Fetches all the data in a collection

@@ -32,13 +32,13 @@ public abstract class Model {
     public final Task<Void> save() {
         DataStore db = DataStoreFactory.getDependency();
         if (getId() == null) {
-            return db.addData(collectionName(), this)
+            return db.add(collectionName(), this)
                     .onSuccessTask(s -> {
                         setId(s);
                         return Tasks.forResult(null);
                     });
         } else {
-            return db.setData(collectionName(), getId(), this);
+            return db.set(collectionName(), getId(), this);
         }
     }
 

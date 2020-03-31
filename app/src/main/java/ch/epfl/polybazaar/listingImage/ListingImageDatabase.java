@@ -20,11 +20,11 @@ public abstract class ListingImageDatabase {
 
     public static void storeListingImage(final ListingImage listingImage, final String listingImageID, final SuccessCallback callback){
         db = DataStoreFactory.getDependency();
-        db.setData(listingImageCollectionName, listingImageID, listingImage, callback);
+        db.set(listingImageCollectionName, listingImageID, listingImage, callback);
     }
 
     public static void deleteListing(final String listingImageID, final SuccessCallback callback){
         db = DataStoreFactory.getDependency();
-        db.deleteData(listingImageCollectionName, listingImageID, callback);
+        db.delete(listingImageCollectionName, listingImageID, callback);
     }
 }
