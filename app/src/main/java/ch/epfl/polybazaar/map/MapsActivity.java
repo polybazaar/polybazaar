@@ -114,7 +114,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mMap.setOnMapClickListener(latLng -> {
                     if (MPSet) {
                         mMap.clear();
-                        extras.putBoolean(VALID, false);
+                        getIntent().putExtra(VALID, false);
                         MPSet = false;
                         Toast toast = Toast.makeText(this, "Meeting Point removed", Toast.LENGTH_SHORT);
                         toast.show();
@@ -123,9 +123,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mMap.setOnMapLongClickListener(latLng -> {
                     mMap.clear();
                     mMap.addMarker(new MarkerOptions().position(latLng).title("Meeting Point"));
-                    extras.putDouble(LAT, latLng.latitude);
-                    extras.putDouble(LNG, latLng.longitude);
-                    extras.putBoolean(VALID, true);
+                    getIntent().putExtra(LAT, latLng.latitude);
+                    getIntent().putExtra(LNG, latLng.longitude);
+                    getIntent().putExtra(VALID, true);
                     MPSet = true;
                     Toast toast = Toast.makeText(this, "Meeting Point defined", Toast.LENGTH_SHORT);
                     toast.show();
@@ -138,6 +138,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LatLng meetingPoint = new LatLng(extras.getDouble(LAT), extras.getDouble(LNG));
                     mMap.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, HOUSE_ZOOM));
+                } else {
+                    goToEPFL();
                 }
             }
             mMap.getUiSettings().setZoomControlsEnabled(false);
