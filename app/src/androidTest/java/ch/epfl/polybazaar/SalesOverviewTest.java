@@ -34,13 +34,7 @@ public class SalesOverviewTest {
 
         LiteListing litelisting1 = new LiteListing("1", "listing1", "CHF 1", "Furniture");
 
-        SuccessCallback successCallback = new SuccessCallback() {
-            @Override
-            public void onCallback(boolean result) {
-            }
-        };
-
-        addLiteListing(litelisting1, successCallback);
+        litelisting1.save();
     }
 
 

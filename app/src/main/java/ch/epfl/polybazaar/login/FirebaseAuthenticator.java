@@ -8,7 +8,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 import ch.epfl.polybazaar.user.User;
-import ch.epfl.polybazaar.user.UserDatabase;
 
 /**
  * Adapter for firebase authentication
@@ -41,10 +40,10 @@ public class FirebaseAuthenticator implements Authenticator {
 
     @Override
     public Task<AuthenticatorResult> createUser(String email, String nickname, String password) {
-        Task<AuthResult> task = fbAuth.createUserWithEmailAndPassword(email, password);
+        Task<AuthResult> authTask = fbAuth.createUserWithEmailAndPassword(email, password);
 
         // Once the user is created, we immediately change its display name (nickname)
-        Task<AuthenticatorResult> setProfileTask = task.onSuccessTask((creationRes) -> {
+        Task<AuthenticatorResult> setProfileTask = authTask.onSuccessTask((creationRes) -> {
                     FirebaseUser user = creationRes.getUser();
 
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -56,11 +55,10 @@ public class FirebaseAuthenticator implements Authenticator {
                     );
         });
 
-        // TODO check that all actions complete successfully (should be easier with tasks)
-        User user = new User(nickname, email);
-        UserDatabase.storeNewUser(user, result -> {});
-
-        return setProfileTask;
+        return setProfileTask.onSuccessTask(authenticatorResult -> {
+                User dbUser = new User(nickname, email);
+                return dbUser.save().onSuccessTask((v) -> Tasks.forResult(authenticatorResult));
+        });
     }
 
     @Override

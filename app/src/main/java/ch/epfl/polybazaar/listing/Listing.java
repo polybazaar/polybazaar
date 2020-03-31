@@ -1,12 +1,14 @@
 package ch.epfl.polybazaar.listing;
 import java.io.Serializable;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 
-import java.io.File;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentId;
 
-import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import ch.epfl.polybazaar.database.Model;
+import ch.epfl.polybazaar.database.ModelTransaction;
+import ch.epfl.polybazaar.litelisting.LiteListing;
+
 import static ch.epfl.polybazaar.Utilities.emailIsValid;
 
 /**
@@ -15,18 +17,19 @@ import static ch.epfl.polybazaar.Utilities.emailIsValid;
  * @author Armen
  *
  */
-
-/**
- * If you attributes of this class, also change its CallbackAdapter and Utilities
- */
-public class Listing implements Serializable {
-
+public class Listing extends Model implements Serializable {
+    @DocumentId
+    private String id;
     private String title;
     private String description;
     private String price;
     private String userEmail;
     private String stringImage;
     private String category;
+
+    public static final String COLLECTION = "listings";
+
+    public Listing() {}
 
     /**
      *
@@ -76,5 +79,43 @@ public class Listing implements Serializable {
 
     public String getCategory(){
         return category;
+    }
+
+    @Override
+    public String collectionName() {
+        return "listings";
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
+     * Fetches the requested listing
+     * @param id id of the listing
+     * @return successful task containing the model instance if it exists, null otherwise. The task
+     * fails if the database is unreachable
+     */
+    public static Task<Listing> fetch(String id) {
+        return ModelTransaction.fetch(COLLECTION, id, Listing.class);
+    }
+
+    /**
+     * Deletes a listing in its complete and lite form
+     * @param id id of the listing
+     * @return task that completes when both versions have been deleted. The task
+     * fails if the database is unreachable
+     */
+    public static Task<Void> deleteWithLiteVersion(String id) {
+        Task<Void> deleteListing = ModelTransaction.delete(Listing.COLLECTION, id);
+        Task<Void> deleteLiteListing = ModelTransaction.delete(LiteListing.COLLECTION, id);
+
+        return Tasks.whenAll(deleteListing, deleteLiteListing);
     }
 }

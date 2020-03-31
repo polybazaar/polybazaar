@@ -14,11 +14,9 @@ import java.util.List;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.SaleDetails;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
-import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListingList;
 
 public class SalesOverview extends AppCompatActivity {
 
@@ -27,8 +25,7 @@ public class SalesOverview extends AppCompatActivity {
     private List<String> IDList;
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
-    private EndlessRecyclerViewScrollListener scrollListener;
-    private final int EXTRALOAD = 20;
+    private static final int EXTRALOAD = 20;
     private int positionInIDList = 0;
 
     @Override
@@ -65,7 +62,8 @@ public class SalesOverview extends AppCompatActivity {
         // Initial load
         loadLiteListingOverview();
 
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        // Triggered only when new data needs to be appended to the list
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore() {
                 // Triggered only when new data needs to be appended to the list
@@ -81,33 +79,32 @@ public class SalesOverview extends AppCompatActivity {
      * Create a graphical overview of LiteListings from database
      */
     public void loadLiteListingOverview() {
-        StringListCallback callbackLiteListingList = new StringListCallback() {
-
-            @Override
-            public void onCallback(List<String> result) {
-                if(IDList.isEmpty()) {
-                    for (String id : result) {
-                        IDList.add(id);      // create deep copy of ID list if list is empty
-                    }
-                }
-                LiteListingCallback callbackLiteListing = new LiteListingCallback() {
-                    @Override
-                    public void onCallback(LiteListing result) {
-                        liteListingList.add(result);
-                        adapter.notifyItemInserted(liteListingList.size()-1);
-                    }
-                };
-                int size = IDList.size();
-                for(int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-                    fetchLiteListing(IDList.get(i), callbackLiteListing);
-                    positionInIDList++;
+        LiteListing.retrieveAll().addOnSuccessListener(result -> {
+            if(IDList.isEmpty()) {
+                for (LiteListing l : result) {
+                    IDList.add(l.getId());      // create deep copy of ID list if list is empty
                 }
             }
-        };
-        fetchLiteListingList(callbackLiteListingList);
+            LiteListingCallback callbackLiteListing = new LiteListingCallback() {
+                @Override
+                public void onCallback(LiteListing result) {
+                    liteListingList.add(result);
+                    adapter.notifyItemInserted(liteListingList.size()-1);
+                }
+            };
+            int size = IDList.size();
+            for(int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
+                fetchLiteListing(IDList.get(i), callbackLiteListing);
+                positionInIDList++;
+            }
+        });
     }
 
-    public List getLiteListingList() {
+    /**
+     * Returns the list of lite listings shown currently
+     * @return list of lite listings
+     */
+    public List<LiteListing> getLiteListingList() {
         return liteListingList;
     }
 

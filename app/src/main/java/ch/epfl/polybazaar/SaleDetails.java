@@ -23,19 +23,12 @@ import java.util.List;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
-import ch.epfl.polybazaar.database.callback.ListingCallback;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
-import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
-import static ch.epfl.polybazaar.listing.ListingDatabase.fetchListing;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.deleteLiteListing;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
-import static ch.epfl.polybazaar.listingImage.ListingImageDatabase.fetchListingImage;
 
 public class SaleDetails extends AppCompatActivity {
     private Button editButton;
@@ -84,17 +77,17 @@ public class SaleDetails extends AppCompatActivity {
         }
 
         retrieveImages(listingID);
-      ListingCallback callbackListing = result -> {
-          Authenticator fbAuth = AuthenticatorFactory.getDependency();
+
+        Listing.fetch(listingID).addOnSuccessListener(result -> {
+            Authenticator fbAuth = AuthenticatorFactory.getDependency();
             if(!(fbAuth.getCurrentUser() == null)){
                 if(fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
                     createEditAndDeleteActions(result, listingID);
                 }
             }
-          fillWithListing(result);
+            fillWithListing(result);
 
-        };
-        fetchListing(listingID, callbackListing);
+        });
     }
 
     /**
@@ -102,7 +95,7 @@ public class SaleDetails extends AppCompatActivity {
      * @param listingID
      */
     private void retrieveImages(String listingID) {
-        fetchListingImage(listingID, result -> {
+        ListingImage.fetch(listingID).addOnSuccessListener(result -> {
             if(result == null) {
                 drawImages();
                 return;
@@ -227,19 +220,13 @@ public class SaleDetails extends AppCompatActivity {
         });
     }
 
-    public void deleteCurrentListing(String listingID) {
-        SuccessCallback deletionSuccessCallback = result -> {
-            if(result) {
-                Toast toast = Toast.makeText(getApplicationContext(),"Listing successfuly deleted",Toast.LENGTH_SHORT);
+    private void deleteCurrentListing(String listingID) {
+        Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
+                Toast toast = Toast.makeText(getApplicationContext(),"Listing successfuly deleted", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
-            }
-        };
-
-        deleteListing(listingID, result -> {});
-        queryLiteListingStringEquality("listingID", listingID, result -> deleteLiteListing(result.get(0), deletionSuccessCallback));
-
+        });
     }
 }
