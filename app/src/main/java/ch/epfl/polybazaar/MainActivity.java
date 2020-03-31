@@ -31,10 +31,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         authenticator = AuthenticatorFactory.getDependency();
-
-        LiteListing.retrieveAll().addOnSuccessListener((liteListings -> {
-            return;
-        }));
     }
 
     public void toSalesOverview(View view) {
