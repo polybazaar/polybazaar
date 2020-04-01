@@ -56,23 +56,22 @@ public final class PermissionRequest extends Fragment {
      * Asks the necessary permission, if required.
      */
     public void assertPermission() {
-        if (isPermissionGranted(permission)) {
+        if (isPermissionGranted()) {
             Log.d(TAG, "Permission " + permission + " already granted");
             callback.onCallback(true);
         } else {
             Log.d(TAG, "Permission " + permission + " not yet granted");
-            requestPermission(permission, message, denied_message, callback);
+            requestPermission();
         }
     }
 
-    private boolean isPermissionGranted(@NonNull String permission) {
+    private boolean isPermissionGranted() {
         return ContextCompat.checkSelfPermission(context, permission)
                 == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void requestPermission(String permission,
-                                   String message, String denied_message, @NonNull final SuccessCallback callback) {
-        PermissionRationaleDialog.newInstance(false, permission, message, denied_message, callback)
+    private void requestPermission() {
+        PermissionRationaleDialog.newInstance(permission, message, denied_message, callback)
                     .show(context.getSupportFragmentManager(), "dialog");
     }
 
@@ -83,7 +82,7 @@ public final class PermissionRequest extends Fragment {
             callback.onCallback(true);
         } else {
             if (denied_message != null) {
-                PermissionDeniedDialog.newInstance(denied_message, false).show(context.getSupportFragmentManager(), "permission_denied");
+                PermissionDeniedDialog.newInstance(denied_message).show(context.getSupportFragmentManager(), "permission_denied");
             }
             callback.onCallback(false);
         }

@@ -25,9 +25,8 @@ public class PermissionDeniedDialog extends DialogFragment {
      * Creates a new instance of this dialog and optionally finishes the calling Activity
      * when the 'Ok' button is clicked.
      */
-    public static PermissionDeniedDialog newInstance(String message, boolean finishActivity) {
+    public static PermissionDeniedDialog newInstance(String message) {
         Bundle arguments = new Bundle();
-        arguments.putBoolean(FINISH, finishActivity);
         arguments.putString(MSG, message);
         PermissionDeniedDialog dialog = new PermissionDeniedDialog();
         dialog.setArguments(arguments);
@@ -37,24 +36,15 @@ public class PermissionDeniedDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (getArguments() != null) {
-            mFinishActivity = getArguments().getBoolean(FINISH);
-        } else {
-            mFinishActivity = false;
-        }
-
-        return new AlertDialog.Builder(getActivity())
-                .setMessage(getArguments().getString(MSG))
-                .setPositiveButton(android.R.string.ok, null)
-                .create();
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage(getArguments().getString(MSG))
+                    .setPositiveButton(android.R.string.ok, null)
+                    .create();
+        } else return null;
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        if (mFinishActivity) {
-            Toast.makeText(getActivity(), R.string.permission_required_toast,
-                    Toast.LENGTH_SHORT).show();
-            getActivity().finish();
-        }
     }
 }

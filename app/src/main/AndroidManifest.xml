@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.epfl.polybazaar">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -20,7 +29,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity
+            android:name=".widgets.permissions.PermissionsTestActivity"
+            android:exported="true"
+            ></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -35,9 +47,9 @@
 
         <activity
             android:name=".map.MapsActivity"
-            android:label="@string/title_activity_maps"
             android:exported="true"
-            android:parentActivityName="ch.epfl.polybazaar.FillListingActivity"></activity>
+            android:label="@string/title_activity_maps"
+            android:parentActivityName=".FillListingActivity" />
         <activity android:name=".login.EmailVerificationActivity" />
         <activity android:name=".login.SignUpActivity" />
         <activity android:name=".login.SignInSuccessActivity" />
@@ -54,30 +66,24 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-         <activity android:name="ch.epfl.polybazaar.FillListingActivity"
-                    android:parentActivityName=".MainActivity"></activity>
-        <activity   android:name=".UI.SalesOverview"
-                    android:exported="true"
-                    android:parentActivityName=".MainActivity"
-            ></activity>
-        <activity   android:name=".SaleDetails"
-                    android:parentActivityName=".UI.SalesOverview"/>
-<activity android:name=".MainActivity">
-<intent-filter>
-    <action android:name="android.intent.action.MAIN" />
 
-    <category android:name="android.intent.category.LAUNCHER" />
-</intent-filter>
-</activity>
+        <activity
+            android:name=".FillListingActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".UI.SalesOverview"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SaleDetails"
+            android:parentActivityName=".UI.SalesOverview" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.CAMERA" />
-
-<uses-feature android:name="android.hardware.camera"
-android:required="true" />
-
-    </manifest>
+</manifest>
