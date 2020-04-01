@@ -26,6 +26,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -37,10 +40,15 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
-import ch.epfl.polybazaar.map.MapsActivity;
+
+
+import ch.epfl.polybazaar.database.Model;
+import ch.epfl.polybazaar.database.ModelTransaction;
+
 import ch.epfl.polybazaar.network.InternetChecker;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
+
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
@@ -54,12 +62,8 @@ import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
-import static ch.epfl.polybazaar.listing.ListingDatabase.deleteListing;
-import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
-import static ch.epfl.polybazaar.listingImage.ListingImageDatabase.storeListingImage;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.deleteLiteListing;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
+
+import static ch.epfl.polybazaar.Utilities.taskMap;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
@@ -252,6 +256,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
         }
         else {
+
                 if(isInternetAvailable(context)){
                     createAndSendListing();
                     Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
@@ -318,48 +323,49 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     }
     private void createAndSendListing() {
-        final String newListingID = randomUUID().toString();
-        SuccessCallback successCallback = result -> {
-            if(result) {
+           // TODO should not be done this way
+            final String newListingID = randomUUID().toString();
+            String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
+            FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
+            //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
+            String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
+
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, "", category);
+            newListing.setId(newListingID);
+            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
+            newLiteListing.setId(newListingID);
+
+            newListing.save().addOnSuccessListener(result -> {
                 Toast toast = Toast.makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
+            });
+
+            //store images (current has a ref to the next)
+            if(listStingImage.size() > 0) {
+                String currentId = newListingID;
+                String nextId;
+                for(int i = 0; i < (listStingImage.size() - 1); i++) {
+                    nextId = randomUUID().toString();
+                    ListingImage newListingImage = new ListingImage(listStingImage.get(i), nextId);
+
+                    newListingImage.setId(currentId);
+                    newListingImage.save()
+                            .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
+                            .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "An error occurred.", Toast.LENGTH_LONG).show());
+
+                    currentId = nextId;
+                }
+                //store the last without refNextImg
+                ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
+
+                newListingImage.setId(currentId);
+                newListingImage.save();
             }
-        };
-        String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
-        FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
-        //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
-        String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
 
-        Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, "", category);
-
-        LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
-
-        storeListing(newListing, newListingID, successCallback);
-
-        //store images (current has a ref to the next)
-        if(listStingImage.size() > 0) {
-            String currentId = newListingID;
-            String nextId;
-            for(int i = 0; i < (listStingImage.size() - 1); i++) {
-                nextId = randomUUID().toString();
-                ListingImage newListingImage = new ListingImage(listStingImage.get(i), nextId);
-                storeListingImage(newListingImage, currentId, result -> {
-                    if(result) {
-                        Log.d("FirebaseDataStore", "successfully stored data");
-                    } else {
-                        Toast.makeText(getApplicationContext(), "An error occurred.", Toast.LENGTH_LONG).show();
-                    }
-                });
-                currentId = nextId;
-            }
-            //store the last without refNextImg
-            ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
-            storeListingImage(newListingImage, currentId, result -> {});
-        }
-        addLiteListing(newLiteListing, result -> {
-            //TODO: Check the result to be true
-        });
+            newLiteListing.save().addOnSuccessListener(result -> {
+                //TODO: Check the result to be true
+            });
     }
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
@@ -392,8 +398,9 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 return;
             }
             String listingID = bundle.getString("listingID");
-            deleteListing(listingID, result -> {});
-            queryLiteListingStringEquality("listingID", listingID, result -> deleteLiteListing(result.get(0), result1 -> submit()));
+
+            Listing.deleteWithLiteVersion(listingID)
+                    .addOnSuccessListener((v) -> submit());
         }
 
     }

@@ -34,7 +34,7 @@ public abstract class ListingDatabase {
     public static void fetchListing(final String listingID, final ListingCallback callback){
         final ListingCallbackAdapter adapterCallback = new ListingCallbackAdapter(callback);
         db = DataStoreFactory.getDependency();
-        db.fetchData(listingCollectionName, listingID, adapterCallback);
+        db.fetch(listingCollectionName, listingID, adapterCallback);
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class ListingDatabase {
      */
     public static void storeListing(final Listing listing, final String listingID, final SuccessCallback callback){
         db = DataStoreFactory.getDependency();
-        db.setData(listingCollectionName, listingID, listing, callback);
+        db.set(listingCollectionName, listingID, listing, callback);
     }
 
     /**
@@ -57,7 +57,7 @@ public abstract class ListingDatabase {
      */
     public static void deleteListing(final String listingID, final SuccessCallback callback){
         db = DataStoreFactory.getDependency();
-        db.deleteData(listingCollectionName, listingID, callback);
+        db.delete(listingCollectionName, listingID, callback);
     }
 
     /**

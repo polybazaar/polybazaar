@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Map;
 
+import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 
 public class FirebaseDataSnapshot implements DataSnapshot {
@@ -32,5 +33,10 @@ public class FirebaseDataSnapshot implements DataSnapshot {
     @Override
     public String getId() {
         return documentSnapshot.getId();
+    }
+
+    @Override
+    public <T extends Model> T toObject(Class<T> clazz) {
+        return documentSnapshot.toObject(clazz);
     }
 }

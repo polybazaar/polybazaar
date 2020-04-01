@@ -6,6 +6,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 
@@ -24,5 +25,10 @@ public class FirebaseCollectionSnapshot implements CollectionSnapshot {
             list.add(new FirebaseDataSnapshot(doc));
         }
         return list;
+    }
+
+    @Override
+    public <T extends Model> List<T> toObjects(Class<T> clazz) {
+        return querySnapshot.toObjects(clazz);
     }
 }
