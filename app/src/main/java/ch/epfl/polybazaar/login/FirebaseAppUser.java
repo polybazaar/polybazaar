@@ -44,4 +44,11 @@ public class FirebaseAppUser implements AppUser {
     public String getNickname() {
         return fbUser.getDisplayName();
     }
+
+    @Override
+    public Task<Void> updatePassword(String newPassword) {
+        return fbUser.updatePassword(newPassword);
+    }
+
+
 }
