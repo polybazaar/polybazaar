@@ -43,17 +43,13 @@ public class EditAndDeleteTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
+                    useMockDataStore();
                 }
                 @Override
                 protected void afterActivityFinished() {
                     MockAuthenticator.getInstance().reset();
                 }
     };
-
-    @Before
-    public void init() {
-        useMockDataStore();
-    }
 
     @Test
     public void testDeleteWorksForPreviouslyUploadedListing() throws InterruptedException {

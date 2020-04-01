@@ -3,21 +3,16 @@ package ch.epfl.polybazaar;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.login.AuthenticatorResult;
-import ch.epfl.polybazaar.login.SignUpActivity;
 import ch.epfl.polybazaar.user.User;
 
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
@@ -33,7 +28,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private EditText firstNameSelector;
     private EditText lastNameSelector;
     private EditText phoneNumberSelector;
-    private Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +74,12 @@ public class UserProfileActivity extends AppCompatActivity {
         else{
             User editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
             User.editUser(editedUser).addOnSuccessListener(aVoid -> {
-                Toast toast = Toast.makeText(getApplicationContext(),"Profile successfully updated",Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(),R.string.profile_updated,Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
-            });
+            }).addOnSuccessListener(aVoid -> appUser.updateNickname(newNickname));
         }
     }
-
 
     public void editPassword(View view){
         String currentPassword= ((EditText)findViewById(R.id.currentPassword)).getText().toString();
@@ -114,6 +107,5 @@ public class UserProfileActivity extends AppCompatActivity {
                 toast.show();
             });
         }
-
     }
 }

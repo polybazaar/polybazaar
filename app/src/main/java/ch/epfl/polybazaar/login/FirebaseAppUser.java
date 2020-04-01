@@ -2,6 +2,7 @@ package ch.epfl.polybazaar.login;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import ch.epfl.polybazaar.user.User;
 
@@ -43,6 +44,12 @@ public class FirebaseAppUser implements AppUser {
     @Override
     public String getNickname() {
         return fbUser.getDisplayName();
+    }
+
+    @Override
+    public Task<Void> updateNickname(String newNickname) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(newNickname).build();
+        return fbUser.updateProfile(profileUpdates);
     }
 
     @Override

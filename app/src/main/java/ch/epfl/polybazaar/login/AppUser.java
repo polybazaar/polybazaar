@@ -47,6 +47,11 @@ public interface AppUser {
     String getNickname();
 
     /**
+     * Updates the user's nickname
+     */
+    Task<Void> updateNickname(String newNickname);
+
+    /**
      * Updates the user's password
      * @return task
      */

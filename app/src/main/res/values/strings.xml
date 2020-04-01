@@ -30,6 +30,7 @@
     <string name="invalid_last_name">Please enter a valid last name</string>
     <string name="invalid_current_password">The current password is incorrect</string>
     <string name="password_updated">Your password has successfully been updated</string>
+    <string name="profile_updated">Your profile has successfully been updated</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
