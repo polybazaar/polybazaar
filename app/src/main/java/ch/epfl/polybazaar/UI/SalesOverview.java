@@ -2,7 +2,10 @@ package ch.epfl.polybazaar.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +18,9 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.SaleDetails;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.AppUser;
+import ch.epfl.polybazaar.login.Authenticator;
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
 
@@ -27,6 +33,8 @@ public class SalesOverview extends AppCompatActivity {
     private LiteListingAdapter adapter;
     private static final int EXTRALOAD = 20;
     private int positionInIDList = 0;
+    private Authenticator auth;
+    private AppUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +67,6 @@ public class SalesOverview extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvLiteListings.setLayoutManager(linearLayoutManager);
 
-        // Initial load
-        loadLiteListingOverview();
-
         // Triggered only when new data needs to be appended to the list
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
@@ -72,6 +77,24 @@ public class SalesOverview extends AppCompatActivity {
         };
         // Adds the scroll listener to RecyclerView
         rvLiteListings.addOnScrollListener(scrollListener);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // get user info
+        auth = AuthenticatorFactory.getDependency();
+        user = auth.getCurrentUser();
+
+        // prepare top menu
+        TextView favorites = findViewById(R.id.favoritesOverview);
+        favorites.setOnClickListener(v -> {
+            displayFavorites(user);
+        });
+
+        // Initial load
+        loadLiteListingOverview();
     }
 
 
@@ -106,6 +129,32 @@ public class SalesOverview extends AppCompatActivity {
      */
     public List<LiteListing> getLiteListingList() {
         return liteListingList;
+    }
+
+    /**
+     * Displays the favorite listings of a user if he is logged in or an error message if the user
+     * is not logged in or if the favorite list is empty
+     * @param user the logged user (can be null)
+     */
+    public void displayFavorites(AppUser user) {
+        if (user == null) {
+            Toast toast = Toast.makeText(SalesOverview.this, R.string.sign_in_required, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP, 0, 0);
+            toast.show();
+        }
+
+        user.getUserData().addOnSuccessListener(authUser -> {
+            List<String> favoritesIds = authUser.getFavorites();
+
+            if(favoritesIds == null || favoritesIds.isEmpty()) {
+                Toast toast = Toast.makeText(SalesOverview.this, R.string.no_favorites, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP, 0, 0);
+                toast.show();
+            }
+
+
+        });
+
     }
 
 }
