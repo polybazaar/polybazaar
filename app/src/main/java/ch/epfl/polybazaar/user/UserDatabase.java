@@ -52,11 +52,11 @@ public abstract class UserDatabase {
                     callback.onCallback(false);
                     return;
                 }
-                db.setData(userCollectionName, user.getEmail(), user, callback);
+                db.set(userCollectionName, user.getEmail(), user, callback);
             }
         };
         final UserCallbackAdapter adapterIntermediateCallback = new UserCallbackAdapter(intermediateCall);
-        db.fetchData(userCollectionName, user.getEmail(), adapterIntermediateCallback);
+        db.fetch(userCollectionName, user.getEmail(), adapterIntermediateCallback);
     }
 
     /**
@@ -68,7 +68,7 @@ public abstract class UserDatabase {
     public static void fetchUser(final String email, final UserCallback callback) {
         db = DataStoreFactory.getDependency();
         final UserCallbackAdapter adapterCallback = new UserCallbackAdapter(callback);
-        db.fetchData(userCollectionName, email, adapterCallback);
+        db.fetch(userCollectionName, email, adapterCallback);
     }
 
      /**
@@ -79,7 +79,7 @@ public abstract class UserDatabase {
      */
     public static void deleteUser(final String email, final SuccessCallback callback) {
         db = DataStoreFactory.getDependency();
-        db.deleteData(userCollectionName, email, callback);
+        db.delete(userCollectionName, email, callback);
     }
 
     /**

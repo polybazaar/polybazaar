@@ -20,7 +20,7 @@ public class LiteListingCallbackAdapter implements DataSnapshotCallback {
         this.liteListingCallback = liteListingCallback;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    //@RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCallback(DataSnapshot result) {
         if (result==null){

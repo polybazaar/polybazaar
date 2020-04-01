@@ -66,8 +66,8 @@ public class MockAppUser implements AppUser {
     }
 
     @Override
-    public void getUserData(UserCallback cb) {
-        cb.onCallback(dbUser);
+    public Task<User> getUserData() {
+        return Tasks.forResult(dbUser);
     }
 
     @Override

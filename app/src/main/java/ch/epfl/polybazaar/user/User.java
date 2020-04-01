@@ -1,15 +1,26 @@
 package ch.epfl.polybazaar.user;
 
+import com.google.android.gms.tasks.Task;
+
+import java.util.List;
+
+import ch.epfl.polybazaar.database.Model;
+import ch.epfl.polybazaar.database.ModelTransaction;
+
 import static ch.epfl.polybazaar.Utilities.*;
 
 
 /**
  * If you attributes of this class, also change its CallbackAdapter and Utilities
  */
-public class User {
+public final class User extends Model {
 
     private String nickName;
     private String email;
+
+    private static String COLLECTION = "users";
+
+    private List<String> favorites;
 
     public String getNickName() {
         return nickName;
@@ -18,6 +29,8 @@ public class User {
     public String getEmail() {
         return email;
     }
+
+    private User() {}
 
     /**
      * User Constructor
@@ -38,5 +51,26 @@ public class User {
         }
     }
 
+    @Override
+    public String collectionName() {
+        return COLLECTION;
+    }
 
+    @Override
+    public String getId() {
+        return email;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.email = id;
+    }
+
+    public List<String> getFavorites() {
+        return favorites;
+    }
+
+    public static Task<User> fetch(String email) {
+        return ModelTransaction.fetch(COLLECTION, email, User.class);
+    }
 }
