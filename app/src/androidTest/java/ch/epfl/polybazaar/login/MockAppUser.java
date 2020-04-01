@@ -79,4 +79,9 @@ public class MockAppUser implements AppUser {
     public String getNickname() {
         return nickname;
     }
+
+    @Override
+    public Task<Void> updatePassword(String newPassword) {
+        password = newPassword;
+    }
 }
