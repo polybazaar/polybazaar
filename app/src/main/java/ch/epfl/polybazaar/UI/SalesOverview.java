@@ -3,6 +3,9 @@ package ch.epfl.polybazaar.UI;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +16,9 @@ import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.SaleDetails;
+import ch.epfl.polybazaar.category.Category;
+import ch.epfl.polybazaar.category.CategoryRepository;
+import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
@@ -27,6 +33,8 @@ public class SalesOverview extends AppCompatActivity {
     private LiteListingAdapter adapter;
     private static final int EXTRALOAD = 20;
     private int positionInIDList = 0;
+    private Spinner categorySelector;
+    private final String DEFAULT_SPINNER_TEXT = "Select category...";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +43,9 @@ public class SalesOverview extends AppCompatActivity {
 
         IDList = new ArrayList<>();
         liteListingList = new ArrayList<>();
+
+        categorySelector = findViewById(R.id.categorySelector);
+        setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
 
         // Lookup the recyclerview in activity layout
         RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
@@ -108,4 +119,27 @@ public class SalesOverview extends AppCompatActivity {
         return liteListingList;
     }
 
+    private void setupSpinner(Spinner spinner, List<Category> categories){
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Category selectedCategory = (Category)parent.getItemAtPosition(position);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Do nothing
+            }
+        });
+    }
+    private List<Category> categoriesWithDefaultText(List<Category> categories){
+        List<Category> categoriesWithDefText = new ArrayList<>(categories);
+        categoriesWithDefText.add(0, new StringCategory(DEFAULT_SPINNER_TEXT));
+        return categoriesWithDefText;
+    }
+
 }
+
+

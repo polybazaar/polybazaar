@@ -26,9 +26,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -40,29 +37,20 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
-
-import ch.epfl.polybazaar.database.Model;
-import ch.epfl.polybazaar.database.ModelTransaction;
-
-import ch.epfl.polybazaar.network.InternetChecker;
-import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
-import ch.epfl.polybazaar.widgets.NoticeDialogListener;
-
-import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.FirebaseAuthenticator;
+import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
+import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
-import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
-
-import static ch.epfl.polybazaar.Utilities.taskMap;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
