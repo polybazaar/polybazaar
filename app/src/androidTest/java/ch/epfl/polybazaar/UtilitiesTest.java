@@ -34,7 +34,7 @@ public class UtilitiesTest {
     }
 
     @Test
-    public void testUserNotLoggedIn() {
+    public void testGetUserNotLoggedIn() {
         auth.signOut();
         AppUser user = Utilities.getUser();
         assertEquals(null, user);
