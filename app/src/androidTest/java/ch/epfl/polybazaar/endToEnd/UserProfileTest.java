@@ -80,7 +80,6 @@ public class UserProfileTest {
     @Test
     public void testPasswordChangeWorks() throws InterruptedException {
         String newPassword = "mynewpassword";
-
         signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         onView(withId(R.id.profileButton)).perform(click());
         onView(withId(R.id.currentPassword)).perform(scrollTo(), clearText(), typeText(MockAuthenticator.TEST_USER_PASSWORD));
