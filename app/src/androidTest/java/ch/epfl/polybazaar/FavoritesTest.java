@@ -60,7 +60,7 @@ public class FavoritesTest {
                 .check(matches(isDisplayed()));
     }
 
-    
+
 
     private void clickButton(Matcher<View> object) {
         onView(object).perform(click());
