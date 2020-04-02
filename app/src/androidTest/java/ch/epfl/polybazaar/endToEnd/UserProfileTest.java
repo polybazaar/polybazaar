@@ -54,11 +54,6 @@ public class UserProfileTest {
                 }
     };
 
-    @Before
-    public void init() {
-
-    }
-
     @Test
     public void testNameChangesWorks() throws InterruptedException {
         String newNickname = "new Nickname";

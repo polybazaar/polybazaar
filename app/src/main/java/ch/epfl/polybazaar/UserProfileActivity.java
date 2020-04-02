@@ -74,9 +74,7 @@ public class UserProfileActivity extends AppCompatActivity {
         else{
             User editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
             User.editUser(editedUser).addOnSuccessListener(aVoid -> {
-                Toast toast = Toast.makeText(getApplicationContext(),R.string.profile_updated,Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
+                Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
             }).addOnSuccessListener(aVoid -> appUser.updateNickname(newNickname));
         }
     }
@@ -98,13 +96,9 @@ public class UserProfileActivity extends AppCompatActivity {
                 ((EditText)findViewById(R.id.currentPassword)).setText("");
                 ((EditText)findViewById(R.id.newPassword)).setText("");
                 ((EditText)findViewById(R.id.confirmNewPassword)).setText("");
-                Toast toast = Toast.makeText(getApplicationContext(),R.string.password_updated,Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
+                Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
             }).addOnFailureListener(e -> {
-                Toast toast = Toast.makeText(getApplicationContext(),R.string.invalid_current_password,Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
+                Toast.makeText(getApplicationContext(), R.string.invalid_current_password, Toast.LENGTH_SHORT).show();
             });
         }
     }
