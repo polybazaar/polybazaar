@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class PermissionsActivityTest1 {
+public class PermissionsActivityTest {
 
     @Rule
     public ActivityTestRule<PermissionsTestActivity> mActivityTestRule = new ActivityTestRule<>(PermissionsTestActivity.class);
