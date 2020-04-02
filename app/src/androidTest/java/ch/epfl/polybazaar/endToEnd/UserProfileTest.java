@@ -89,7 +89,6 @@ public class UserProfileTest {
         onView(withId(R.id.confirmNewPassword)).perform(scrollTo(), clearText(), typeText(newPassword));
         closeSoftKeyboard();
         onView(withId(R.id.savePassword)).perform(scrollTo(), click());
-
         signedInFlag = false;
         authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true);
         Thread.sleep(1000);
