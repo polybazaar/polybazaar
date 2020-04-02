@@ -43,7 +43,7 @@ public class FavoritesTest {
                 }*/
             };
 
-    @Before
+    @Before 
     public void init() {
         useMockDataStore();
         auth = MockAuthenticator.getInstance();
