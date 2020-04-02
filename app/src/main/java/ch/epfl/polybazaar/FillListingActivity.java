@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -123,7 +124,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //Tags are set only for testing purposes using Espresso
-        if(resultCode != RESULT_OK){
+        if(resultCode != Activity.RESULT_OK){
             pictureView.setTag(-1);
         }
         else if (requestCode == RESULT_LOAD_IMAGE){
@@ -145,12 +146,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
            stringImage = convertFileToString(photoFile);
            stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
-        } else if (requestCode == RESULT_ADD_MP) {
+        }
+        else if (requestCode == RESULT_ADD_MP) {
             Log.d("HERE0: ", lat + "   " + lng);
-            Bundle output = data.getExtras();
-            if (output.getBoolean(VALID)) {
-                lng = output.getDouble(LNG);
-                lat = output.getDouble(LAT);
+            if (data.getBooleanExtra(VALID, false)) {
+                lng = data.getDoubleExtra(LNG, NOLNG);
+                lat = data.getDoubleExtra(LAT, NOLAT);
                 addMP.setText(R.string.changeMP);
             }
             Log.d("HERE1: ", lat + "   " + lng);

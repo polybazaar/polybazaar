@@ -34,4 +34,7 @@
     <string name="changeMP">Change Meeting Point</string>
     <string name="submit_listing">Submit Listing</string>
     <string name="seeMP">See Meeting Point</string>
+    <string name="confirmMP">Validate</string>
+    <string name="MP_removed">Meeting Point removed</string>
+    <string name="MP_set">Meeting Point set</string>
 </resources>

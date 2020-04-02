@@ -23,6 +23,14 @@ android:orientation="vertical" >
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp">
 
+        <Button
+            android:id="@+id/confirmMP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/offset"
+            android:layout_weight="1"
+            android:text="@string/confirmMP" />
+
         <ImageView
             android:id="@+id/imgMyLocation"
             android:layout_width="50dp"
@@ -30,6 +38,7 @@ android:orientation="vertical" >
             android:contentDescription="@string/my_location"
             android:scaleType="fitXY"
             android:src="@drawable/my_location" />
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -1,12 +1,15 @@
 package ch.epfl.polybazaar.map;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -26,7 +29,7 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     /**
      * ===========================================================
@@ -71,11 +74,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PermissionRequest perm;
     private boolean mLocationPermissionGranted = false;
     private boolean MPSet = false;
+    private double showLat;
+    private double showLng;
+    private double chosenLng = NOLNG;
+    private double chosenLat = NOLAT;
 
     // in showMode, the user cannot select a meeting point
     private boolean showMode = true;
-    private Bundle extras;
     private ImageView imgMyLocation;
+    private Button confirmMP;
+    private Intent returnIntent;
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
@@ -107,9 +115,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        extras = getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();
+        returnIntent = new Intent();
         if (extras != null) {
-            extras.putBoolean(VALID, false);
+            returnIntent.putExtra(VALID, false);
             if (extras.getBoolean(GIVE_LatLng)) {
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().setTitle("Meeting Point");
@@ -119,6 +128,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().setTitle("Define Meeting Point");
                 }
+                showLat = extras.getDouble(LAT);
+                showLng = extras.getDouble(LNG);
                 showMode = false;
             }
         }
@@ -154,55 +165,51 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     getDeviceLocation();
                 }
             }));
+            confirmMP = findViewById(R.id.confirmMP);
+            confirmMP.setOnClickListener(v -> {
+                sendResponse();
+            });
             mMap.setBuildingsEnabled(true);
             mMap.setIndoorEnabled(true);
             if (!showMode) {
-                // We are not in Show Mode
-                mMap.setOnMapClickListener(latLng -> {
-                    if (MPSet) {
-                        mMap.clear();
-                        getIntent().putExtra(VALID, false);
-                        MPSet = false;
-                        Toast toast = Toast.makeText(this, "Meeting Point removed", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                });
-                mMap.setOnMapLongClickListener(latLng -> {
-                    mMap.clear();
-                    mMap.addMarker(new MarkerOptions().position(latLng).title("Meeting Point"));
-                    getIntent().putExtra(LAT, latLng.latitude);
-                    getIntent().putExtra(LNG, latLng.longitude);
-                    getIntent().putExtra(VALID, true);
-                    MPSet = true;
-                    Toast toast = Toast.makeText(this, "Meeting Point defined", Toast.LENGTH_SHORT);
-                    toast.show();
-                });
-                goToEPFL();
+                setDefineMode();
             } else {
-                // We are in Show Mode
-                mMap.clear();
-                if (extras != null) {
-                    LatLng meetingPoint = new LatLng(extras.getDouble(LAT), extras.getDouble(LNG));
-                    mMap.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, HOUSE_ZOOM));
-                } else {
-                    goToEPFL();
-                }
+                setShowMode();
             }
             mMap.getUiSettings().setZoomControlsEnabled(false);
         }
     }
 
-    private void goToEPFL(){
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EPFL_LOCATION, VILLAGE_ZOOM));
+    private void setShowMode(){
+        mMap.clear();
+        if (showLat != NOLAT && showLng != NOLNG) {
+            LatLng meetingPoint = new LatLng(showLat, showLng);
+            mMap.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, HOUSE_ZOOM));
+        } else {
+            goToEPFL();
+        }
     }
 
-    @Override
-    public boolean onMyLocationButtonClick() {
-        getDeviceLocation();
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
-        return false;
+    private void setDefineMode(){
+        mMap.setOnMapClickListener(latLng -> {
+            if (MPSet) {
+                mMap.clear();
+                MPSet = false;
+            }
+        });
+        mMap.setOnMapLongClickListener(latLng -> {
+            mMap.clear();
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Meeting Point"));
+            chosenLat = latLng.latitude;
+            chosenLng = latLng.longitude;
+            MPSet = true;
+        });
+        goToEPFL();
+    }
+
+    private void goToEPFL(){
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EPFL_LOCATION, VILLAGE_ZOOM));
     }
 
     private void getDeviceLocation() {
@@ -235,6 +242,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    private void sendResponse() {
+        returnIntent.putExtra(LAT, chosenLat);
+        returnIntent.putExtra(LNG, chosenLng);
+        if (chosenLat != NOLAT && chosenLng != NOLNG && MPSet) {
+            returnIntent.putExtra(VALID, true);
+        } else {
+            returnIntent.putExtra(VALID, false);
+        }
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
