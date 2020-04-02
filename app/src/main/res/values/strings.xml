@@ -25,4 +25,8 @@
     <string name="sign_out">Sign out</string>
     <string name="sign_in_required">You have to sign in to use that functionality</string>
     <string name="welcome_message">Welcome to PolyBazaar!</string>
+    <string name="modify_image">modify image</string>
+    <string name="move_first">Move first</string>
+    <string name="rotate_left">rotate left</string>
+    <string name="delete_image">delete image</string>
 </resources>
