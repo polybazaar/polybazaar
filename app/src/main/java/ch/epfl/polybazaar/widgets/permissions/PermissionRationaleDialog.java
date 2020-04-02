@@ -63,25 +63,19 @@ public class PermissionRationaleDialog extends DialogFragment {
             return new AlertDialog.Builder(getActivity())
                     .setMessage(arguments.getString(MSG))
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Objects.requireNonNull(arguments.getString(PERMISSION)))) {
-                            // Open App Settings
-                            Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri);
-                            intent.addCategory(Intent.CATEGORY_DEFAULT);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            PackageManager packageManager = getActivity().getPackageManager();
-                            List<ResolveInfo> activities = packageManager.queryIntentActivities(intent,
-                                    PackageManager.MATCH_DEFAULT_ONLY);
-                            boolean isIntentSafe = activities.size() > 0;
-                            if (isIntentSafe) {
-                                startActivity(intent);
-                            }
-                            cb.onCallback(false);
-                        } else {
-                            // After click on Ok, request the permission.
-                            String[] permissions = {arguments.getString(PERMISSION)};
-                            requestPermissions(permissions, 1);
+                        // Open App Settings
+                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri);
+                        intent.addCategory(Intent.CATEGORY_DEFAULT);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        PackageManager packageManager = getActivity().getPackageManager();
+                        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent,
+                                PackageManager.MATCH_DEFAULT_ONLY);
+                        boolean isIntentSafe = activities.size() > 0;
+                        if (isIntentSafe) {
+                            startActivity(intent);
                         }
+                        cb.onCallback(false);
                     })
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                         assert this.getFragmentManager() != null;

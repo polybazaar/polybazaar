@@ -21,13 +21,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
-
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,20 +39,15 @@ import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
 
-
-import ch.epfl.polybazaar.database.Model;
-import ch.epfl.polybazaar.database.ModelTransaction;
-
 import ch.epfl.polybazaar.map.MapsActivity;
-import ch.epfl.polybazaar.network.InternetChecker;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.FirebaseAuthenticator;
+import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
@@ -65,7 +58,6 @@ import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvaila
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
 
-import static ch.epfl.polybazaar.Utilities.taskMap;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
@@ -97,6 +89,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private String stringThumbnail = "";
     private double lat = NOLAT;
     private double lng = NOLNG;
+
+    private PermissionRequest cameraPermissionRequest;
 
 
 
@@ -152,19 +146,20 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
            stringImage = convertFileToString(photoFile);
            stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
         } else if (requestCode == RESULT_ADD_MP) {
+            Log.d("HERE0: ", lat + "   " + lng);
             Bundle output = data.getExtras();
             if (output.getBoolean(VALID)) {
                 lng = output.getDouble(LNG);
                 lat = output.getDouble(LAT);
                 addMP.setText(R.string.changeMP);
             }
-            Log.d("HERE: ", lat + "   " + lng);
+            Log.d("HERE1: ", lat + "   " + lng);
         }
         listStingImage.add(stringImage);
     }
 
     private void addListeners(boolean edit){
-        camera.setOnClickListener(v -> takePicture());
+        camera.setOnClickListener(v -> checkCameraPermission());
         freeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> freezePriceSelector(isChecked));
         uploadImage.setOnClickListener(v -> uploadImage());
         addMP.setOnClickListener(v -> {
@@ -303,6 +298,13 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         return image;
     }
 
+    private void checkCameraPermission(){
+        cameraPermissionRequest = new PermissionRequest(this, "CAMERA", "Camera access is required to take pictures", null, result -> {
+            if (result) takePicture();
+        });
+        cameraPermissionRequest.assertPermission();
+    }
+
     //Function taken from https://developer.android.com/training/camera/photobasics
     private  void takePicture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -423,4 +425,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         }
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        cameraPermissionRequest.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 }
