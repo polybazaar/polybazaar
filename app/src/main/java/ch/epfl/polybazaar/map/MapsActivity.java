@@ -42,20 +42,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         static final float CITY_ZOOM = 13f;
         static final float CANTON_ZOOM = 10.5f;
         static final float LOWEST_ZOOM = 1f;
-        static final LatLng EPFL_LOCATION = new LatLng(46.5191, 6.5668);
+        public static final LatLng EPFL_LOCATION = new LatLng(46.5191, 6.5668);
+        public static final double NOLAT = EPFL_LOCATION.latitude;
+        public static final double NOLNG = EPFL_LOCATION.longitude;
         /**
          * the boolean associated to GIVE_LatLng is
          * true if an external activity gives the map a marker to display and
          * false if the map gives an external activity a user-chosen location
          */
-        static final String GIVE_LatLng = "GIVE";
+        public static final String GIVE_LatLng = "GIVE";
         /**
          * the valid boolean indicates if the passed location (from map to
          * external activity) is valid, i.e. a user-chosen location.
          */
-        static final String VALID = "VALID";
-        static final String LAT = "LAT";
-        static final String LNG = "LNG";
+        public static final String VALID = "VALID";
+        public static final String LAT = "LAT";
+        public static final String LNG = "LNG";
     /**
      * ===========================================================
      * ===========================================================
@@ -71,7 +73,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean MPSet = false;
 
     // in showMode, the user cannot select a meeting point
-    private boolean showMode = false;
+    private boolean showMode = true;
     private Bundle extras;
     private ImageView imgMyLocation;
 
@@ -107,6 +109,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         extras = getIntent().getExtras();
         if (extras != null) {
+            extras.putBoolean(VALID, false);
             if (extras.getBoolean(GIVE_LatLng)) {
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().setTitle("Meeting Point");
@@ -231,6 +234,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

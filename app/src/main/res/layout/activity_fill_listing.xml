@@ -9,7 +9,8 @@
 
     <ScrollView
         android:layout_width="409dp"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:layout_margin="@dimen/general_margin">
 
         <LinearLayout
             android:id="@+id/fillListingLinearLayout"
@@ -111,6 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/offset"
                     android:text="Free"
                     android:textSize="20sp" />
 
@@ -130,10 +132,17 @@
                 android:inputType="numberDecimal" />
 
             <Button
+                android:id="@+id/addMP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/addMP" />
+
+            <Button
                 android:id="@+id/submitListing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Submit listing" />
+                android:text="@string/submit_listing" />
 
         </LinearLayout>
     </ScrollView>

@@ -8,7 +8,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/general_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,13 +93,18 @@
 
             <Button
                 android:id="@+id/contactSel"
-                android:layout_width="343dp"
-                android:layout_height="45dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="76dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/contact_the_seller" />
+
+            <Button
+                android:id="@+id/viewMP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/seeMP" />
 
             <TextView
                 android:id="@+id/userEmail"
@@ -119,6 +125,8 @@
                 android:layout_marginTop="218dp"
                 android:alpha="0.7"
                 android:background="@drawable/rounded_corner" />
+
+
 
         </LinearLayout>
     </ScrollView>

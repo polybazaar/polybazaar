@@ -30,4 +30,8 @@
     <string name="permission_required_toast">Permission Required</string>
     <string name="permission_rationale_location">Permission Rationale Location</string>
     <string name="my_location">Find my location</string>
+    <string name="addMP">Define Meeting Point</string>
+    <string name="changeMP">Change Meeting Point</string>
+    <string name="submit_listing">Submit Listing</string>
+    <string name="seeMP">See Meeting Point</string>
 </resources>

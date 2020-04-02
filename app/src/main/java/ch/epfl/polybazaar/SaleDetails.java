@@ -27,13 +27,22 @@ import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.map.MapsActivity;
 
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LatLng;
+import static ch.epfl.polybazaar.map.MapsActivity.LAT;
+import static ch.epfl.polybazaar.map.MapsActivity.LNG;
+import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
+import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 
 public class SaleDetails extends AppCompatActivity {
     private Button editButton;
     private Button deleteButton;
     private AlertDialog deleteDialog;
+
+    private double mpLat;
+    private double mpLng;
 
     private ViewPager2 viewPager2;
     private List<String> listStringImage;
@@ -43,6 +52,8 @@ public class SaleDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_details);
 
+        findViewById(R.id.viewMP).setVisibility(View.INVISIBLE);
+
         listStringImage = new ArrayList<>();
 
         final ImageView imageLoading = findViewById(R.id.loadingImage);
@@ -50,6 +61,7 @@ public class SaleDetails extends AppCompatActivity {
 
         retrieveListingFromListingID();
         getSellerInformation();
+        viewMP();
     }
 
     private void getSellerInformation() {
@@ -59,6 +71,24 @@ public class SaleDetails extends AppCompatActivity {
                 //TODO check that user is connected
                 findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
                 findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
+                if (mpLat != NOLAT && mpLng != NOLNG) {
+                    findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
+                }
+            });
+
+        });
+    }
+
+    private void viewMP() {
+        runOnUiThread(() -> {
+            Button viewMP = findViewById(R.id.viewMP);
+            viewMP.setOnClickListener(view -> {
+                //TODO check that user is connected
+                Intent viewMPIntent = new Intent(this, MapsActivity.class);
+                viewMPIntent.putExtra(GIVE_LatLng, true);
+                viewMPIntent.putExtra(LAT, mpLat);
+                viewMPIntent.putExtra(LNG, mpLng);
+                startActivity(viewMPIntent);
             });
 
         });
@@ -187,6 +217,10 @@ public class SaleDetails extends AppCompatActivity {
                 TextView userEmailTextView = findViewById(R.id.userEmail);
                 userEmailTextView.setText(listing.getUserEmail());
                 userEmailTextView.setVisibility(View.INVISIBLE);
+
+                //Set Meeting Point
+                mpLat = listing.getMPLatitude();
+                mpLng = listing.getMPLongitude();
             });
         }
     }

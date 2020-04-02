@@ -45,6 +45,7 @@ import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
+import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.network.InternetChecker;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
@@ -59,6 +60,7 @@ import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.map.MapsActivity.*;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
@@ -70,12 +72,14 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     public static final int RESULT_LOAD_IMAGE = 1;
     public static final int RESULT_TAKE_PICTURE = 2;
+    public static final int RESULT_ADD_MP = 3;
     public static final String INCORRECT_FIELDS_TEXT = "One or more required fields are incorrect or uncompleted";
     private final String DEFAULT_SPINNER_TEXT = "Select category...";
 
     private Button uploadImage;
     private Button camera;
     private Button submitListing;
+    private Button addMP;
     private ImageView pictureView;
     private Switch freeSwitch;
     private TextView titleSelector;
@@ -91,6 +95,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
+    private double lat = NOLAT;
+    private double lng = NOLNG;
 
 
 
@@ -108,6 +114,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         descriptionSelector = findViewById(R.id.descriptionSelector);
         priceSelector = findViewById(R.id.priceSelector);
         linearLayout = findViewById(R.id.fillListingLinearLayout);
+        addMP = findViewById(R.id.addMP);
 
         categorySelector = findViewById(R.id.categorySelector);
         spinnerList = new ArrayList<>();
@@ -144,6 +151,14 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
            stringImage = convertFileToString(photoFile);
            stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
+        } else if (requestCode == RESULT_ADD_MP) {
+            Bundle output = data.getExtras();
+            if (output.getBoolean(VALID)) {
+                lng = output.getDouble(LNG);
+                lat = output.getDouble(LAT);
+                addMP.setText(R.string.changeMP);
+            }
+            Log.d("HERE: ", lat + "   " + lng);
         }
         listStingImage.add(stringImage);
     }
@@ -152,6 +167,11 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         camera.setOnClickListener(v -> takePicture());
         freeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> freezePriceSelector(isChecked));
         uploadImage.setOnClickListener(v -> uploadImage());
+        addMP.setOnClickListener(v -> {
+            Intent defineMP = new Intent(this, MapsActivity.class);
+            defineMP.putExtra(GIVE_LatLng, false);
+            startActivityForResult(defineMP, RESULT_ADD_MP);
+        });
 
         if(!edit){
             submitListing.setOnClickListener(v -> submit());
@@ -256,7 +276,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
         }
         else {
-
                 if(isInternetAvailable(context)){
                     createAndSendListing();
                     Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
@@ -330,7 +349,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
             String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
 
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, "", category);
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, "", category, lat, lng);
             newListing.setId(newListingID);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
             newLiteListing.setId(newListingID);

@@ -10,6 +10,8 @@ import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.Utilities.emailIsValid;
+import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
+import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 
 /**
  * A listing represents an object that is listed for sale on the app
@@ -26,6 +28,9 @@ public class Listing extends Model implements Serializable {
     private String userEmail;
     private String stringImage;
     private String category;
+    private double mpLat = NOLAT;
+    private double mpLng = NOLNG;
+
 
     public static final String COLLECTION = "listings";
 
@@ -39,7 +44,10 @@ public class Listing extends Model implements Serializable {
      * @param userEmail
      * @param stringImage String format : you can use convertFileToString or convertStringToBitmap to convert into String
      */
-    public Listing(String title, String description, String price, String userEmail, String stringImage, String category) {
+    public Listing(String title, String description, String price, String userEmail,
+                   String stringImage, String category, double mpLatitude, double mpLongitude) {
+        this.mpLat = mpLatitude;
+        this.mpLng = mpLongitude;
         this.title = title;
         this.description = description;
         this.price = price;
@@ -52,10 +60,21 @@ public class Listing extends Model implements Serializable {
         this.category = category;
     }
 
+    public Listing(String title, String description, String price, String userEmail, String stringImage, String category) {
+        this(title, description, price, userEmail, null, category, NOLAT, NOLNG);
+    }
+
     public Listing(String title, String description, String price, String userEmail, String category) {
         this(title, description, price, userEmail, null, category);
     }
 
+    public double getMPLatitude() {
+        return mpLat;
+    }
+
+    public double getMPLongitude() {
+        return mpLng;
+    }
 
     public String getTitle() {
         return title;
