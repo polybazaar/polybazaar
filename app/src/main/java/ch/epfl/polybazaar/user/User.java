@@ -2,12 +2,13 @@ package ch.epfl.polybazaar.user;
 
 import com.google.android.gms.tasks.Task;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
-import static ch.epfl.polybazaar.Utilities.*;
+import static ch.epfl.polybazaar.Utilities.emailIsValid;
+import static ch.epfl.polybazaar.Utilities.nameIsValid;
 
 
 /**
@@ -20,7 +21,7 @@ public final class User extends Model {
 
     private static String COLLECTION = "users";
 
-    private List<String> favorites;
+    private ArrayList<String> favorites;
 
     public String getNickName() {
         return nickName;
@@ -66,7 +67,7 @@ public final class User extends Model {
         this.email = id;
     }
 
-    public List<String> getFavorites() {
+    public ArrayList<String> getFavorites() {
         return favorites;
     }
 
