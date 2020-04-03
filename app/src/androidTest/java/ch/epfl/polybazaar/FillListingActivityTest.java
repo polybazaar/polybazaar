@@ -252,7 +252,7 @@ public class FillListingActivityTest {
     public void testUtilitiesResizeBitmap() {
         assertNull(resizeBitmap(null, 0.5f, 0.5f));
 
-        Bitmap bitmap = convertDrawableToBitmap(ContextCompat.getDrawable(fillSaleActivityTestRule.getActivity(), R.drawable.ic_launcher_foreground));
+        Bitmap bitmap = convertDrawableToBitmap(ContextCompat.getDrawable(fillSaleActivityTestRule.getActivity(), R.drawable.bicycle));
         assertEquals(bitmap.getHeight(), resizeBitmap(bitmap, 1, 1).getHeight());
         assertEquals(bitmap.getWidth(), resizeBitmap(bitmap, 1, 1).getWidth());
 
