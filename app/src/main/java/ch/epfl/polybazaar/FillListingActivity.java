@@ -505,7 +505,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     /**
      * return the current StringImage displayed or null if there is no image
-     * @param index
      * @return
      */
     public String getCurrentStringImage() {
