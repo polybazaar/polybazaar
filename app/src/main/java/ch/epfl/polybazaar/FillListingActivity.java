@@ -88,12 +88,13 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private String oldPrice;
     private String currentPhotoPath;
     private File photoFile;
-    //only for tests
-    private ImageView pictureView;
     private List<String> listStringImage;
     private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
+
+    //only for tests
+    private ImageView pictureView;
 
 
 
@@ -149,7 +150,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             }
 
             stringImage = convertBitmapToString(bitmap);
-            Bitmap resizedBitmap = resizeBitmap(bitmap, (float)0.5, (float)0.5);
+            Bitmap resizedBitmap = resizeBitmap(bitmap, 0.5f, 0.5f);
             stringThumbnail = convertBitmapToStringWithQuality(resizedBitmap, 10);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
@@ -158,7 +159,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         }
         listStringImage.add(stringImage);
         drawImages();
-        viewPager2.setCurrentItem(listStringImage.size() - 1);
+        viewPager2.setCurrentItem(listStringImage.size() - 1, false);
         hideImagesButtons();
     }
 
@@ -421,7 +422,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     private void drawImages() {
         runOnUiThread (()-> {
-            modifyImage.setVisibility(View.VISIBLE);
+            hideImagesButtons();
 
             List<SliderItem> sliderItems = new ArrayList<>();
             for(String strImg: listStringImage) {
@@ -441,8 +442,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 page.setScaleY(0.85f + r * 0.15f);
             });
             viewPager2.setPageTransformer(compositePageTransformer);
-
-            viewPager2.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "You click on the image!", Toast.LENGTH_SHORT).show());
 
             viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                 @Override
@@ -476,7 +475,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         Bitmap bitmap = convertStringToBitmap(listStringImage.get(index));
 
         Matrix matrix = new Matrix();
-        matrix.postRotate(90);
+        matrix.postRotate(-90);
         listStringImage.set(index, convertBitmapToStringWithQuality(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true), 100));
 
         drawImages();
@@ -485,7 +484,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     public void deleteImage(View view) {
         hideImagesButtons();
-        listStringImage.remove(viewPager2.getCurrentItem());
+        if(listStringImage.size() > 0)
+            listStringImage.remove(viewPager2.getCurrentItem());
         drawImages();
     }
 
@@ -501,5 +501,19 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         rotateImageLeft.setVisibility(View.VISIBLE);
         deleteImage.setVisibility(View.VISIBLE);
         modifyImage.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * return the current StringImage displayed or null if there is no image
+     * @param index
+     * @return
+     */
+    public String getCurrentStringImage() {
+        if(listStringImage.size() > 0) {
+            return listStringImage.get(viewPager2.getCurrentItem());
+        } else {
+            return null;
+        }
+
     }
 }
