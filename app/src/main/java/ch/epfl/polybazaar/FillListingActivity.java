@@ -477,7 +477,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
-        listStringImage.set(index, convertBitmapToString(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true)));
+        listStringImage.set(index, convertBitmapToStringWithQuality(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true), 100));
 
         drawImages();
         viewPager2.setCurrentItem(index);
