@@ -169,35 +169,38 @@ public class FillListingActivityTest {
         selectCategory("Furniture");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
         closeSoftKeyboard();
-        runOnUiThread(() -> ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.priceSelector)).setText("123"));
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
-        //Thread.sleep(2000);
-    }
+        Thread.sleep(2000);
+        }
 
     @Test
     public void toastAppearsWhenPriceIsEmpty() throws Throwable {
         selectCategory("Furniture");
-        runOnUiThread(() -> ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.titleSelector)).setText("My title"));
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        //Thread.sleep(2000);
+        Thread.sleep(2000);
     }
 
     @Test
     public void toastAppearsWhenNoCategoryIsSelected() throws Throwable {
-        runOnUiThread(() -> ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.titleSelector)).setText("My title"));
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        //Thread.sleep(2000);
+        Thread.sleep(2000);
     }
 
     @Test
     public void toastAppearsWhenNoSubCategoryIsSelected() throws Throwable {
         selectCategory("Multimedia");
-        runOnUiThread(() -> ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.titleSelector)).setText("My title"));
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        //Thread.sleep(2000);
+        Thread.sleep(2000);
     }
 
 
@@ -212,14 +215,16 @@ public class FillListingActivityTest {
     @Test
     public void submittingNewListingRedirectsToSalesOverview() throws Throwable {
         useMockDataStore();
-        runOnUiThread(() -> ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.titleSelector)).setText("My title"));
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
         selectCategory("Furniture");
-        runOnUiThread(() -> ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.descriptionSelector)).setText("That is a loooong description    yada yada yada hahahahaha      much long very description"));
-        runOnUiThread(() -> ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.priceSelector)).setText("123"));
-
+        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("That is a loooong description    yada yada yada hahahahaha      much long very description"));
+        closeSoftKeyboard();
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
+        closeSoftKeyboard();
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(600);
+        Thread.sleep(1000);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
     }
@@ -446,21 +451,12 @@ public class FillListingActivityTest {
         onData(hasToString(cat)).perform(click());
     }
     private void fillListing() throws Throwable {
-        /*runOnUiThread(() -> {
+        runOnUiThread(() -> {
             ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.titleSelector)).setText("My title");
             ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.descriptionSelector)).setText("description");
             ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.priceSelector)).setText("123");
         });
-        selectCategory("Furniture");*/
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
-        closeSoftKeyboard();
         selectCategory("Furniture");
-        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("description"));
-        closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
-        closeSoftKeyboard();
-
-
     }
 
 }
