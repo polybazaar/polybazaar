@@ -79,4 +79,16 @@ public class MockAppUser implements AppUser {
     public String getNickname() {
         return nickname;
     }
+
+    @Override
+    public Task<Void> updateNickname(String newNickname) {
+        nickname = newNickname;
+        return Tasks.forCanceled();
+    }
+
+    @Override
+    public Task<Void> updatePassword(String newPassword) {
+        password = newPassword;
+        return Tasks.forCanceled();
+    }
 }

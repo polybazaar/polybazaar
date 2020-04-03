@@ -44,11 +44,11 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (!Utilities.emailIsValid(email)) {
             makeDialog(SignUpActivity.this, R.string.signup_email_invalid);
-        } else if (!checkNickname(nickname)) {
+        } else if (!Utilities.nickNameIsValid(nickname)) {
             makeDialog(SignUpActivity.this, R.string.signup_nickname_invalid);
         } else if (!password.equals(confirmPassword)) {
             makeDialog(SignUpActivity.this, R.string.signup_passwords_not_matching);
-        } else if (!checkPassword(password)) {
+        } else if (!Utilities.passwordIsValid(password)) {
             makeDialog(SignUpActivity.this, R.string.signup_passwords_weak);
         } else {
             createUser(email, nickname, password);
@@ -72,11 +72,5 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
-    private boolean checkPassword(String password) {
-        return password.length() >= 6;
-    }
 
-    private boolean checkNickname(String nickname) {
-        return nickname.length() >= 6;
-    }
 }

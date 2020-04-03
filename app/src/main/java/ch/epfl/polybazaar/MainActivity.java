@@ -8,18 +8,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-
-import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.SignInActivity;
-
-import ch.epfl.polybazaar.UI.SalesOverview;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,8 +49,13 @@ public class MainActivity extends AppCompatActivity {
             authenticator.signOut();
             user = authenticator.getCurrentUser();
 
-            updateAuthenticationButton();
+            updateUserButtons();
         }
+    }
+
+    public void toProfile(View view){
+        Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -65,15 +63,20 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         user = authenticator.getCurrentUser();
-        updateAuthenticationButton();
+        updateUserButtons();
     }
 
-    private void updateAuthenticationButton() {
+    private void updateUserButtons() {
         Button signInBut = findViewById(R.id.authenticationButton);
+        Button profileBut = findViewById(R.id.profileButton);
         if (user != null) {
             signInBut.setText(R.string.sign_out);
+            profileBut.setClickable(true);
+            profileBut.setVisibility(View.VISIBLE);
         } else {
             signInBut.setText(R.string.sign_in);
+            profileBut.setClickable(false);
+            profileBut.setVisibility(View.INVISIBLE);
         }
     }
 }
