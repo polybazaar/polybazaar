@@ -94,11 +94,9 @@ public abstract class CategoryRepository {
         videoGames.addSubCategory(new StringCategory("PC"));
         videoGames.addSubCategory(new StringCategory("XBOX One"));
 
-        Category bike = new StringCategory("Bike");
-
         multimedia.addSubCategory(videoGames);
 
-        return Arrays.asList(new StringCategory("Furniture"), books, multimedia, bike);
+        return Arrays.asList(new StringCategory("Furniture"), books, multimedia);
     }
 
 }
