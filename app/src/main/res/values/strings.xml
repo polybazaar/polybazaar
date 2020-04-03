@@ -37,4 +37,11 @@
     <string name="confirmMP">Validate</string>
     <string name="MP_removed">Meeting Point removed</string>
     <string name="MP_set">Meeting Point set</string>
+    <string name="title_activity_user_profile">UserProfileActivity</string>
+    <string name="invalid_first_name">Please enter a valid first name</string>
+    <string name="invalid_last_name">Please enter a valid last name</string>
+    <string name="invalid_current_password">The current password is incorrect</string>
+    <string name="password_updated">Your password has successfully been updated</string>
+    <string name="profile_updated">Your profile has successfully been updated</string>
+
 </resources>

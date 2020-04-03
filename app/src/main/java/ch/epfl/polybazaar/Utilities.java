@@ -64,6 +64,14 @@ public abstract class Utilities {
         return (email.matches("[a-zA-Z]+"+"."+"[a-zA-Z]+"+"@epfl.ch"));
     }
 
+    public static boolean passwordIsValid(String password) {
+        return password.length() >= 6;
+    }
+
+    public static boolean nickNameIsValid(String nickname) {
+        return nickname.length() >= 6;
+    }
+
     public static boolean isValidUser(User user) {
         if (user != null
         && nameIsValid(user.getNickName())

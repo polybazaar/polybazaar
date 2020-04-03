@@ -45,4 +45,15 @@ public interface AppUser {
      * @return nickname
      */
     String getNickname();
+
+    /**
+     * Updates the user's nickname
+     */
+    Task<Void> updateNickname(String newNickname);
+
+    /**
+     * Updates the user's password
+     * @return task
+     */
+    Task<Void> updatePassword(String newPassword);
 }
