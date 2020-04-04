@@ -3,6 +3,7 @@ package ch.epfl.polybazaar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,44 +26,41 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
-
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.CompositePageTransformer;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.UI.SliderAdapter;
+import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
 
-import ch.epfl.polybazaar.database.Model;
-import ch.epfl.polybazaar.database.ModelTransaction;
-
-import ch.epfl.polybazaar.network.InternetChecker;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
-import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.Utilities.resizeBitmap;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
-import static ch.epfl.polybazaar.Utilities.resizeBitmap;
 
-import static ch.epfl.polybazaar.Utilities.taskMap;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
@@ -72,10 +70,14 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     public static final String INCORRECT_FIELDS_TEXT = "One or more required fields are incorrect or uncompleted";
     private final String DEFAULT_SPINNER_TEXT = "Select category...";
 
+    private Button setImageFirst;
+    private Button rotateImageLeft;
+    private Button deleteImage;
+    private Button modifyImage;
     private Button uploadImage;
     private Button camera;
     private Button submitListing;
-    private ImageView pictureView;
+    private ViewPager2 viewPager2;
     private Switch freeSwitch;
     private TextView titleSelector;
     private EditText descriptionSelector;
@@ -86,10 +88,13 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private String oldPrice;
     private String currentPhotoPath;
     private File photoFile;
-    private List<String> listStingImage;
+    private List<String> listStringImage;
     private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
+
+    //only for tests
+    private ImageView pictureView;
 
 
 
@@ -98,15 +103,20 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_listing);
 
+        setImageFirst = findViewById(R.id.setFirst);;
+        rotateImageLeft = findViewById(R.id.rotateLeft);;
+        deleteImage = findViewById(R.id.deleteImage);;
+        modifyImage = findViewById(R.id.modifyImage);
         camera = findViewById(R.id.camera);
-        pictureView = findViewById(R.id.picturePreview);
         freeSwitch = findViewById(R.id.freeSwitch);
         uploadImage = findViewById(R.id.uploadImage);
         submitListing = findViewById(R.id.submitListing);
+        viewPager2 = findViewById(R.id.viewPager2);
         titleSelector = findViewById(R.id.titleSelector);
         descriptionSelector = findViewById(R.id.descriptionSelector);
         priceSelector = findViewById(R.id.priceSelector);
         linearLayout = findViewById(R.id.fillListingLinearLayout);
+        pictureView = findViewById(R.id.picturePreview);
 
         categorySelector = findViewById(R.id.categorySelector);
         spinnerList = new ArrayList<>();
@@ -114,7 +124,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
-        listStingImage = new ArrayList<>();
+        listStringImage = new ArrayList<>();
     }
 
     @Override
@@ -131,21 +141,26 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 return;
             }
             Uri selectedImage = data.getData();
-            pictureView.setImageURI(selectedImage);
-            pictureView.setTag(selectedImage.hashCode());
+            Bitmap bitmap;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
 
-            Bitmap convertedBitmap = convertDrawableToBitmap(pictureView.getDrawable());
-            stringImage = convertBitmapToString(convertedBitmap);
-            Bitmap resizedBitmap = resizeBitmap(convertedBitmap, (float)0.5, (float)0.5);
+            stringImage = convertBitmapToString(bitmap);
+            Bitmap resizedBitmap = resizeBitmap(bitmap, 0.5f, 0.5f);
             stringThumbnail = convertBitmapToStringWithQuality(resizedBitmap, 10);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
-           pictureView.setImageURI(Uri.fromFile(new File(currentPhotoPath)));
-
            stringImage = convertFileToString(photoFile);
            stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
         }
-        listStingImage.add(stringImage);
+        listStringImage.add(stringImage);
+        drawImages();
+        viewPager2.setCurrentItem(listStringImage.size() - 1, false);
+        hideImagesButtons();
     }
 
     private void addListeners(boolean edit){
@@ -342,12 +357,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             });
 
             //store images (current has a ref to the next)
-            if(listStingImage.size() > 0) {
+            if(listStringImage.size() > 0) {
                 String currentId = newListingID;
                 String nextId;
-                for(int i = 0; i < (listStingImage.size() - 1); i++) {
+                for(int i = 0; i < (listStringImage.size() - 1); i++) {
                     nextId = randomUUID().toString();
-                    ListingImage newListingImage = new ListingImage(listStingImage.get(i), nextId);
+                    ListingImage newListingImage = new ListingImage(listStringImage.get(i), nextId);
 
                     newListingImage.setId(currentId);
                     newListingImage.save()
@@ -357,7 +372,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                     currentId = nextId;
                 }
                 //store the last without refNextImg
-                ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
+                ListingImage newListingImage = new ListingImage(listStringImage.get(listStringImage.size() - 1), "");
 
                 newListingImage.setId(currentId);
                 newListingImage.save();
@@ -401,6 +416,102 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
             Listing.deleteWithLiteVersion(listingID)
                     .addOnSuccessListener((v) -> submit());
+        }
+
+    }
+
+    private void drawImages() {
+        runOnUiThread (()-> {
+            hideImagesButtons();
+
+            List<SliderItem> sliderItems = new ArrayList<>();
+            for(String strImg: listStringImage) {
+                sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
+            }
+
+            viewPager2.setAdapter(new SliderAdapter(sliderItems, viewPager2));
+
+            viewPager2.setClipToPadding(false);
+            viewPager2.setClipChildren(false);
+            viewPager2.setOffscreenPageLimit(3);
+            viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+
+            CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+            compositePageTransformer.addTransformer((page, position) -> {
+                float r = 1 - Math.abs(position);
+                page.setScaleY(0.85f + r * 0.15f);
+            });
+            viewPager2.setPageTransformer(compositePageTransformer);
+
+            viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    hideImagesButtons();
+
+                }
+
+            });
+        });
+    }
+
+    public void modifyCurrentImage(View v) {
+        showImagesButtons();
+    }
+
+    public void setFirst(View view) {
+        hideImagesButtons();
+        int index = viewPager2.getCurrentItem();
+        if(index == 0) {
+            return;
+        }
+        Collections.swap(listStringImage, 0, index);
+        drawImages();
+    }
+
+    public void rotateLeft(View view) {
+        hideImagesButtons();
+        int index = viewPager2.getCurrentItem();
+        Bitmap bitmap = convertStringToBitmap(listStringImage.get(index));
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(-90);
+        listStringImage.set(index, convertBitmapToStringWithQuality(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true), 100));
+
+        drawImages();
+        viewPager2.setCurrentItem(index);
+    }
+
+    public void deleteImage(View view) {
+        hideImagesButtons();
+        if(listStringImage.size() > 0)
+            listStringImage.remove(viewPager2.getCurrentItem());
+        drawImages();
+    }
+
+    private void hideImagesButtons() {
+        setImageFirst.setVisibility(View.INVISIBLE);
+        rotateImageLeft.setVisibility(View.INVISIBLE);
+        deleteImage.setVisibility(View.INVISIBLE);
+        modifyImage.setVisibility(View.VISIBLE);
+    }
+
+    private void showImagesButtons() {
+        setImageFirst.setVisibility(View.VISIBLE);
+        rotateImageLeft.setVisibility(View.VISIBLE);
+        deleteImage.setVisibility(View.VISIBLE);
+        modifyImage.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * return the current StringImage displayed or null if there is no image
+     * @return
+     */
+    public String getCurrentStringImage() {
+        if(listStringImage.size() > 0) {
+            return listStringImage.get(viewPager2.getCurrentItem());
+        } else {
+            return null;
         }
 
     }

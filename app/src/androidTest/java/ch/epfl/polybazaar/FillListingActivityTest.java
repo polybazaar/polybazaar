@@ -3,7 +3,6 @@ package ch.epfl.polybazaar;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Instrumentation;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -17,7 +16,6 @@ import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -54,9 +52,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
+import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.Utilities.resizeBitmap;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useMockNetworkState;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useRealNetwork;
@@ -64,7 +64,11 @@ import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -109,7 +113,7 @@ public class FillListingActivityTest {
         cameraIntent = new Intent();
         cameraIntent.putExtra("data", imageBitmap);
 
-         }
+    }
 
     @Test
     public void testFreeSwitchFreezesPriceSelector() {
@@ -131,7 +135,11 @@ public class FillListingActivityTest {
     public void testUploadPictureCorrectly(){
         galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
         uploadImage();
-        onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(imageUri.hashCode()))));
+        try {
+            runOnUiThread(()->assertNotEquals(null, fillSaleActivityTestRule.getActivity().findViewById(R.id.picturePreview).getDrawableState()));
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Test
@@ -226,8 +234,84 @@ public class FillListingActivityTest {
     }
 
     @Test
+    public void testUtilitiesConvertBitmapToString() {
+        assertNull(convertBitmapToStringWithQuality(null, 100));
+    }
+
+    @Test
     public void testUtilitiesConvertFileToString() {
         assertThat(convertFileToString(null), is(""));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testUtilitiesResizeBitmap() {
+        assertNull(resizeBitmap(null, 0.5f, 0.5f));
+
+        Bitmap bitmap = convertDrawableToBitmap(ContextCompat.getDrawable(fillSaleActivityTestRule.getActivity(), R.drawable.bicycle));
+        assertEquals(bitmap.getHeight(), resizeBitmap(bitmap, 1, 1).getHeight());
+        assertEquals(bitmap.getWidth(), resizeBitmap(bitmap, 1, 1).getWidth());
+
+        //this should throw an IllegalArgumentException
+        resizeBitmap(bitmap, 2f, 0.5f);
+    }
+
+    @Test
+    public void testRemoveImage() throws Throwable {
+        uploadMultipleImages();
+        String firstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        runOnUiThread(() -> {
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
+            assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).performClick();
+        });
+        String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+
+        //check that it delete last image
+        assertNotEquals(newFirstImage, firstImage);
+    }
+
+    @Test
+    public void testRotateImage() throws Throwable {
+        uploadMultipleImages();
+
+        String beforeRotationImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        runOnUiThread(() -> {
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
+            assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.rotateLeft).performClick();
+        });
+        String afterRotationImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+
+        assertNotEquals(afterRotationImage, beforeRotationImage);
+    }
+
+    @Test
+    public void testMoveImageFirstAndSubmit() throws Throwable {
+        uploadImage();
+        //this do nothing because there only one image
+        runOnUiThread(() -> {
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
+            assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.setFirst).performClick();
+        });
+        uploadMultipleImages();
+        String firstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        runOnUiThread(() -> {
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
+            assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.setFirst).performClick();
+        });
+        String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        //check that it's equal because viewPager show the first image
+        assertEquals(newFirstImage, firstImage);
+
+        fillListing();
+
+        Intents.init();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        Thread.sleep(1000);
+        intended(hasComponent(SalesOverview.class.getName()));
+        Intents.release();
     }
 
 
@@ -310,9 +394,40 @@ public class FillListingActivityTest {
         expectedGalleryIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
         Intents.init();
         intending(expectedGalleryIntent).respondWith(galleryResult);
-        onView(withId(R.id.uploadImage)).perform(scrollTo(), click());
+        try {
+            runOnUiThread(() -> {
+                fillSaleActivityTestRule.getActivity().findViewById(R.id.uploadImage).performClick();
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         intended(expectedGalleryIntent);
         Intents.release();
+    }
+
+    private void uploadMultipleImages() {
+        Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
+        imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                resources.getResourcePackageName(R.drawable.bicycle) + '/' +
+                resources.getResourceTypeName(R.drawable.bicycle) + '/' +
+                resources.getResourceEntryName(R.drawable.bicycle));
+
+        galleryIntent = new Intent();
+        galleryIntent.setData(imageUri);
+
+        galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
+        uploadImage();
+
+        imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                resources.getResourcePackageName(R.drawable.algebre_lin) + '/' +
+                resources.getResourceTypeName(R.drawable.algebre_lin) + '/' +
+                resources.getResourceEntryName(R.drawable.algebre_lin));
+
+        galleryIntent = new Intent();
+        galleryIntent.setData(imageUri);
+
+        galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
+        uploadImage();
     }
 
 
@@ -344,8 +459,6 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         closeSoftKeyboard();
-
-
     }
 
 }
