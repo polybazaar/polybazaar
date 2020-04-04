@@ -61,8 +61,8 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager2"
                 android:layout_width="match_parent"
-                android:layout_height="251dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="@dimen/viewpager_height"
+                android:layout_marginTop="@dimen/viewpager_margin"
                 android:clickable="true"
                 android:focusable="true"/>
 
