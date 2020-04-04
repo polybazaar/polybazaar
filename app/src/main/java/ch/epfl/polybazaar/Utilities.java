@@ -44,8 +44,11 @@ public abstract class Utilities {
             result.put("category", ((LiteListing)o).getCategory());
             result.put("stringThumbnail", ((LiteListing)o).getStringThumbnail());
         } else if (o instanceof User) {
-            result.put("email", ((User)o).getEmail());
             result.put("nickName", ((User)o).getNickName());
+            result.put("email", ((User)o).getEmail());
+            result.put("firstName", ((User)o).getFirstName());
+            result.put("lastName", ((User)o).getLastName());
+            result.put("phoneNumber", ((User)o).getPhoneNumber());
         } else if (o instanceof ListingImage) {
             result.put("image", ((ListingImage)o).getImage());
             result.put("refNextImg", ((ListingImage)o).getRefNextImg());

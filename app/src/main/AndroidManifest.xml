@@ -83,11 +83,11 @@
         <activity
             android:name=".UI.SalesOverview"
             android:parentActivityName=".MainActivity"
-            android:exported="true"
             android:label="Browse Listings"/>
         <activity
             android:name=".SaleDetails"
             android:parentActivityName=".UI.SalesOverview"
+            android:exported="true"
             android:label="Details"/>
         <activity android:name=".MainActivity">
             <intent-filter>
