@@ -191,8 +191,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             LatLng meetingPoint = new LatLng(chosenLat, chosenLng);
             mMap.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, VILLAGE_ZOOM));
+            MPSet = true;
         } else {
             goToEPFL();
+            MPSet = false;
         }
         showMode = false;
     }

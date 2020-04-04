@@ -405,7 +405,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                     newListingImage.setId(currentId);
                     newListingImage.save()
                             .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
-                            .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "An error occurred.", Toast.LENGTH_LONG).show());
+                            .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to send image", Toast.LENGTH_LONG).show());
 
                     currentId = nextId;
                 }
