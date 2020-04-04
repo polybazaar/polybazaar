@@ -138,6 +138,13 @@
                 android:layout_weight="1"
                 android:text="@string/addMP" />
 
+            <TextView
+                android:id="@+id/MPStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/MP_nok" />
+
             <Button
                 android:id="@+id/submitListing"
                 android:layout_width="match_parent"

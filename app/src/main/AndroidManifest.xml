@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.epfl.polybazaar">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -53,19 +44,26 @@
 
         <activity
             android:name=".map.MapsActivity"
-            android:exported="true"
-            android:label="@string/title_activity_maps"
-            android:parentActivityName=".FillListingActivity" />
+            android:label="@string/title_activity_maps" />
+
         <activity
             android:name=".UserProfileActivity"
             android:label="@string/title_activity_user_profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".login.EmailVerificationActivity" />
-        <activity android:name=".login.SignUpActivity" />
-        <activity android:name=".login.SignInSuccessActivity" />
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".login.EmailVerificationActivity"
+            android:label="Verify E-mail"/>
+
+        <activity android:name=".login.SignUpActivity"
+            android:label="Sign Up"/>
+
+        <activity android:name=".login.SignInSuccessActivity"
+            android:label="Sign In"/>
+
         <activity
             android:name=".login.SignInActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:label="Sign In"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -79,14 +77,16 @@
 
         <activity
             android:name=".FillListingActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:label="Listing Editor"/>
         <activity
             android:name=".UI.SalesOverview"
-            android:exported="true"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:label="Browse Listings"/>
         <activity
             android:name=".SaleDetails"
-            android:parentActivityName=".UI.SalesOverview" />
+            android:parentActivityName=".UI.SalesOverview"
+            android:label="Details"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

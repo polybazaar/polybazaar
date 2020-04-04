@@ -9,7 +9,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/general_margin">
+        android:layout_marginRight="@dimen/general_margin"
+        android:layout_marginLeft="@dimen/general_margin">
 
         <LinearLayout
             android:layout_width="match_parent"

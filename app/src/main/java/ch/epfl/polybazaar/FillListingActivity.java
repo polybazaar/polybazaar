@@ -76,6 +76,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private ImageView pictureView;
     private Switch freeSwitch;
     private TextView titleSelector;
+    private TextView MPStatus;
     private EditText descriptionSelector;
     private EditText priceSelector;
     private Spinner categorySelector;
@@ -110,6 +111,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         priceSelector = findViewById(R.id.priceSelector);
         linearLayout = findViewById(R.id.fillListingLinearLayout);
         addMP = findViewById(R.id.addMP);
+        MPStatus = findViewById(R.id.MPStatus);
 
         categorySelector = findViewById(R.id.categorySelector);
         spinnerList = new ArrayList<>();
@@ -152,6 +154,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 lng = data.getDoubleExtra(LNG, NOLNG);
                 lat = data.getDoubleExtra(LAT, NOLAT);
                 addMP.setText(R.string.changeMP);
+                MPStatus.setText(R.string.MP_ok);
+            } else {
+                lng = NOLNG;
+                lat = NOLAT;
+                addMP.setText(R.string.addMP);
+                MPStatus.setText(R.string.MP_nok);
             }
         }
         listStringImage.add(stringImage);

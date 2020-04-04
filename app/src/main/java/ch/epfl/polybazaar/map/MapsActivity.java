@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +25,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import ch.epfl.polybazaar.R;
@@ -86,6 +89,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button confirmMP;
     private Intent returnIntent;
 
+    private List<Toast> toasts;
+
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
         super.startActivityForResult(intent, requestCode);
@@ -137,8 +142,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+        toasts = new ArrayList<>();
         mapInit();
     }
 
@@ -200,7 +206,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMapClickListener(latLng -> {
             if (MPSet) {
                 mMap.clear();
+                chosenLat = NOLAT;
+                chosenLng = NOLNG;
                 MPSet = false;
+                showToast(false);
             }
         });
         mMap.setOnMapLongClickListener(latLng -> {
@@ -209,8 +218,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             chosenLat = latLng.latitude;
             chosenLng = latLng.longitude;
             MPSet = true;
+            showToast(true);
         });
         goToEPFL();
+    }
+
+    private void showToast(boolean isDefined) {
+        for (Toast t : toasts) {
+            t.cancel();
+        }
+        Toast toast;
+        if (isDefined) {
+            toast = Toast.makeText(this, R.string.MP_set, Toast.LENGTH_SHORT);
+        } else {
+            toast = Toast.makeText(this, R.string.MP_removed, Toast.LENGTH_SHORT);
+        }
+        toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 200);
+        toast.show();
+        toasts.add(toast);
     }
 
     private void goToEPFL(){
