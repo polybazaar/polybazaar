@@ -23,6 +23,7 @@
         android:id="@+id/categoryText"
         android:layout_width="129dp"
         android:layout_height="44dp"
+        android:editable="false"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
