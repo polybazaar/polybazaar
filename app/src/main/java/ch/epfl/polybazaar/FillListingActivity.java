@@ -84,7 +84,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private String oldPrice;
     private String currentPhotoPath;
     private File photoFile;
-    private List<String> listStingImage;
+    private List<String> listStringImage;
     private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
@@ -117,7 +117,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
-        listStingImage = new ArrayList<>();
+        listStringImage = new ArrayList<>();
     }
 
     @Override
@@ -148,15 +148,13 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
            stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
         }
         else if (requestCode == RESULT_ADD_MP) {
-            Log.d("HERE0: ", lat + "   " + lng);
             if (data.getBooleanExtra(VALID, false)) {
                 lng = data.getDoubleExtra(LNG, NOLNG);
                 lat = data.getDoubleExtra(LAT, NOLAT);
                 addMP.setText(R.string.changeMP);
             }
-            Log.d("HERE1: ", lat + "   " + lng);
         }
-        listStingImage.add(stringImage);
+        listStringImage.add(stringImage);
     }
 
     private void addListeners(boolean edit){
@@ -352,7 +350,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
             String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
 
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, "", category, lat, lng);
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(),
+                    priceSelector.getText().toString(), userEmail, "", category, lat, lng);
             newListing.setId(newListingID);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
             newLiteListing.setId(newListingID);
@@ -364,12 +363,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             });
 
             //store images (current has a ref to the next)
-            if(listStingImage.size() > 0) {
+            if(listStringImage.size() > 0) {
                 String currentId = newListingID;
                 String nextId;
-                for(int i = 0; i < (listStingImage.size() - 1); i++) {
+                for(int i = 0; i < (listStringImage.size() - 1); i++) {
                     nextId = randomUUID().toString();
-                    ListingImage newListingImage = new ListingImage(listStingImage.get(i), nextId);
+                    ListingImage newListingImage = new ListingImage(listStringImage.get(i), nextId);
 
                     newListingImage.setId(currentId);
                     newListingImage.save()
@@ -379,7 +378,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                     currentId = nextId;
                 }
                 //store the last without refNextImg
-                ListingImage newListingImage = new ListingImage(listStingImage.get(listStingImage.size() - 1), "");
+                ListingImage newListingImage = new ListingImage(listStringImage.get(listStringImage.size() - 1), "");
 
                 newListingImage.setId(currentId);
                 newListingImage.save();

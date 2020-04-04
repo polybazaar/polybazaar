@@ -28,8 +28,8 @@ public class Listing extends Model implements Serializable {
     private String userEmail;
     private String stringImage;
     private String category;
-    private double mpLat = NOLAT;
-    private double mpLng = NOLNG;
+    private double latitude = NOLAT;
+    private double longitude = NOLNG;
 
 
     public static final String COLLECTION = "listings";
@@ -45,9 +45,7 @@ public class Listing extends Model implements Serializable {
      * @param stringImage String format : you can use convertFileToString or convertStringToBitmap to convert into String
      */
     public Listing(String title, String description, String price, String userEmail,
-                   String stringImage, String category, double mpLatitude, double mpLongitude) {
-        this.mpLat = mpLatitude;
-        this.mpLng = mpLongitude;
+                   String stringImage, String category, double latitude, double longitude) throws  IllegalArgumentException {
         this.title = title;
         this.description = description;
         this.price = price;
@@ -58,22 +56,16 @@ public class Listing extends Model implements Serializable {
         }
         this.stringImage = stringImage;
         this.category = category;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Listing(String title, String description, String price, String userEmail, String stringImage, String category) {
-        this(title, description, price, userEmail, null, category, NOLAT, NOLNG);
+        this(title, description, price, userEmail, stringImage, category, NOLAT, NOLNG);
     }
 
     public Listing(String title, String description, String price, String userEmail, String category) {
-        this(title, description, price, userEmail, null, category);
-    }
-
-    public double getMPLatitude() {
-        return mpLat;
-    }
-
-    public double getMPLongitude() {
-        return mpLng;
+        this(title, description, price, userEmail, null, category, NOLAT, NOLNG);
     }
 
     public String getTitle() {
@@ -100,9 +92,17 @@ public class Listing extends Model implements Serializable {
         return category;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
     @Override
     public String collectionName() {
-        return "listings";
+        return COLLECTION;
     }
 
     @Override

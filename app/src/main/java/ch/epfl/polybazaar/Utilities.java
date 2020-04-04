@@ -16,7 +16,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
@@ -36,6 +35,8 @@ public abstract class Utilities {
             result.put("price", ((Listing)o).getPrice());
             result.put("title", ((Listing)o).getTitle());
             result.put("userEmail", ((Listing)o).getUserEmail());
+            result.put("latitude", ((Listing)o).getLatitude());
+            result.put("longitude", ((Listing)o).getLongitude());
         } else if (o instanceof LiteListing) {
             result.put("listingID", ((LiteListing)o).getListingID());
             result.put("price", ((LiteListing)o).getPrice());

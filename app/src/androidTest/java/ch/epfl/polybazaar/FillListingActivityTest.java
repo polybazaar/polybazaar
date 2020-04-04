@@ -80,6 +80,7 @@ public class FillListingActivityTest {
     static Matcher<Intent> expectedGalleryIntent;
     static Matcher<Intent> expectedCameraIntent;
 
+
     @Rule
     public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
 
@@ -88,6 +89,8 @@ public class FillListingActivityTest {
     @Before
     public void init() {
         useMockDataStore();
+        Activity activityUnderTest = fillSaleActivityTestRule.getActivity();
+        activityUnderTest.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
     }
 
 

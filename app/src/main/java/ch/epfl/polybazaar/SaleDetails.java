@@ -2,6 +2,7 @@ package ch.epfl.polybazaar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -41,8 +42,8 @@ public class SaleDetails extends AppCompatActivity {
     private Button deleteButton;
     private AlertDialog deleteDialog;
 
-    private double mpLat;
-    private double mpLng;
+    private double mpLat = NOLAT;
+    private double mpLng = NOLNG;
 
     private ViewPager2 viewPager2;
     private List<String> listStringImage;
@@ -60,37 +61,33 @@ public class SaleDetails extends AppCompatActivity {
         Glide.with(this).load(R.drawable.loading).into(imageLoading);
 
         retrieveListingFromListingID();
-        getSellerInformation();
         viewMP();
+        getSellerInformation();
     }
 
     private void getSellerInformation() {
-        runOnUiThread(() -> {
-            Button get_seller = findViewById(R.id.contactSel);
-            get_seller.setOnClickListener(view -> {
-                //TODO check that user is connected
-                findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
-                findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
-                if (mpLat != NOLAT && mpLng != NOLNG) {
-                    findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
-                }
-            });
-
+        Button get_seller = findViewById(R.id.contactSel);
+        get_seller.setOnClickListener(view -> {
+            //TODO check that user is connected
+            findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
+            findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
+            if (mpLat != NOLAT && mpLng != NOLNG) {
+                findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
+            }
         });
     }
 
     private void viewMP() {
-        runOnUiThread(() -> {
-            Button viewMP = findViewById(R.id.viewMP);
-            viewMP.setOnClickListener(view -> {
-                //TODO check that user is connected
-                Intent viewMPIntent = new Intent(this, MapsActivity.class);
-                viewMPIntent.putExtra(GIVE_LatLng, true);
-                viewMPIntent.putExtra(LAT, mpLat);
-                viewMPIntent.putExtra(LNG, mpLng);
-                startActivity(viewMPIntent);
-            });
-
+        Button viewMP = findViewById(R.id.viewMP);
+        viewMP.setOnClickListener(view -> {
+            //TODO check that user is connected
+            Intent viewMPIntent = new Intent(this, MapsActivity.class);
+            Bundle extras = new Bundle();
+            extras.putBoolean(GIVE_LatLng, true);
+            extras.putDouble(LAT, mpLat);
+            extras.putDouble(LNG, mpLng);
+            viewMPIntent.putExtras(extras);
+            startActivity(viewMPIntent);
         });
     }
 
@@ -116,7 +113,6 @@ public class SaleDetails extends AppCompatActivity {
                 }
             }
             fillWithListing(result);
-
         });
     }
 
@@ -191,6 +187,10 @@ public class SaleDetails extends AppCompatActivity {
             Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
             startActivity(intent);
         } else {
+            //Set Meeting Point
+            mpLat = listing.getLatitude();
+            mpLng = listing.getLongitude();
+
             runOnUiThread(() -> {
                 //Set the title
                 TextView title_txt = findViewById(R.id.title);
@@ -217,10 +217,6 @@ public class SaleDetails extends AppCompatActivity {
                 TextView userEmailTextView = findViewById(R.id.userEmail);
                 userEmailTextView.setText(listing.getUserEmail());
                 userEmailTextView.setVisibility(View.INVISIBLE);
-
-                //Set Meeting Point
-                mpLat = listing.getMPLatitude();
-                mpLng = listing.getMPLongitude();
             });
         }
     }

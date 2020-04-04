@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -74,8 +75,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PermissionRequest perm;
     private boolean mLocationPermissionGranted = false;
     private boolean MPSet = false;
-    private double showLat;
-    private double showLng;
+    private double showLat = NOLAT;
+    private double showLng = NOLNG;
     private double chosenLng = NOLNG;
     private double chosenLat = NOLAT;
 
@@ -120,16 +121,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (extras != null) {
             returnIntent.putExtra(VALID, false);
             if (extras.getBoolean(GIVE_LatLng)) {
+                // show mode
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().setTitle("Meeting Point");
                 }
+                showLat = extras.getDouble(LAT);
+                showLng = extras.getDouble(LNG);
                 showMode = true;
             } else {
+                // define mode
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().setTitle("Define Meeting Point");
                 }
-                showLat = extras.getDouble(LAT);
-                showLng = extras.getDouble(LNG);
                 showMode = false;
             }
         }
@@ -182,16 +185,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setShowMode(){
         mMap.clear();
+        findViewById(R.id.confirmMP).setVisibility(View.INVISIBLE);
         if (showLat != NOLAT && showLng != NOLNG) {
             LatLng meetingPoint = new LatLng(showLat, showLng);
             mMap.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, HOUSE_ZOOM));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, STREET_ZOOM));
         } else {
             goToEPFL();
         }
     }
 
     private void setDefineMode(){
+        findViewById(R.id.confirmMP).setVisibility(View.VISIBLE);
         mMap.setOnMapClickListener(latLng -> {
             if (MPSet) {
                 mMap.clear();
