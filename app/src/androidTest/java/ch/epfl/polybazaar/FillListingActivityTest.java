@@ -307,9 +307,11 @@ public class FillListingActivityTest {
 
         fillListing();
 
-        runOnUiThread(() -> {
-            fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick();
-        });
+        Intents.init();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        Thread.sleep(1000);
+        intended(hasComponent(SalesOverview.class.getName()));
+        Intents.release();
     }
 
 
