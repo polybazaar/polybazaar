@@ -45,7 +45,7 @@ public class FillListingActivityMPTest {
                                         childAtPosition(
                                                 withClassName(is("android.widget.ScrollView")),
                                                 0)),
-                                10)));
+                                11)));
         appCompatButton.perform(scrollTo(), click());
 
         ViewInteraction appCompatButton2 = onView(
@@ -54,7 +54,7 @@ public class FillListingActivityMPTest {
                                 childAtPosition(
                                         withClassName(is("android.widget.RelativeLayout")),
                                         1),
-                                0),
+                                1),
                         isDisplayed()));
         appCompatButton2.perform(click());
 
@@ -65,7 +65,7 @@ public class FillListingActivityMPTest {
                                         childAtPosition(
                                                 IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
                                                 0)),
-                                11),
+                                12),
                         isDisplayed()));
         textView.check(matches(withText("Meeting Point not defined")));
     }
