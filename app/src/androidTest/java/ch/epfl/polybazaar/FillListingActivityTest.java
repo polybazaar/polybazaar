@@ -13,7 +13,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -451,12 +450,13 @@ public class FillListingActivityTest {
         onData(hasToString(cat)).perform(click());
     }
     private void fillListing() throws Throwable {
-        runOnUiThread(() -> {
-            ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.titleSelector)).setText("My title");
-            ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.descriptionSelector)).setText("description");
-            ((TextView)fillSaleActivityTestRule.getActivity().findViewById(R.id.priceSelector)).setText("123");
-        });
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
+        closeSoftKeyboard();
         selectCategory("Furniture");
+        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("description"));
+        closeSoftKeyboard();
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
+        closeSoftKeyboard();
     }
 
 }
