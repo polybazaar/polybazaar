@@ -414,6 +414,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         Category editedCategory = new StringCategory(listing.getCategory());
         traversingCategory = CategoryRepository.getCategoryContaining(editedCategory);
         categorySelector.setSelection(CategoryRepository.indexOf(traversingCategory)+1);
+        lat = listing.getLatitude();
+        lng = listing.getLongitude();
+        if (lat != NOLAT && lng != NOLNG) {
+            addMP.setText(R.string.changeMP);
+            MPStatus.setText(R.string.MP_ok);
+        }
         return true;
     }
 
