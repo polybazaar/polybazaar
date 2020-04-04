@@ -146,6 +146,9 @@ public abstract class Utilities {
      * taken from Stackoverflow
      */
     public static String convertBitmapToStringWithQuality(Bitmap bitmap, int quality){
+        if(bitmap == null) {
+            return null;
+        }
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         byte [] b=baos.toByteArray();
@@ -180,7 +183,9 @@ public abstract class Utilities {
      * @return
      */
     public static Bitmap resizeBitmap(Bitmap bitmap, float scaleWidth, float scaleHeight) throws IllegalArgumentException{
-
+        if(bitmap == null) {
+            return null;
+        }
         if(scaleWidth < 0 || scaleWidth > 1 || scaleHeight < 0 || scaleHeight > 1) {
             throw new IllegalArgumentException("Scale factors should be between 0 and 1");
         }
