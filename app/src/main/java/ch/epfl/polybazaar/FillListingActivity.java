@@ -172,6 +172,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         addMP.setOnClickListener(v -> {
             Intent defineMP = new Intent(this, MapsActivity.class);
             defineMP.putExtra(GIVE_LatLng, false);
+            defineMP.putExtra(LAT, lat);
+            defineMP.putExtra(LNG, lng);
             startActivityForResult(defineMP, RESULT_ADD_MP);
         });
 

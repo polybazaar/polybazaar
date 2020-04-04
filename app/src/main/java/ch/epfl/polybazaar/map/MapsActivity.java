@@ -1,6 +1,5 @@
 package ch.epfl.polybazaar.map;
 
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -127,18 +126,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             returnIntent.putExtra(VALID, false);
             if (extras.getBoolean(GIVE_LatLng)) {
                 // show mode
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().setTitle("Meeting Point");
-                }
-                showLat = extras.getDouble(LAT);
-                showLng = extras.getDouble(LNG);
-                showMode = true;
+                setupShowMode();
             } else {
                 // define mode
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().setTitle("Define Meeting Point");
-                }
-                showMode = false;
+                setupDefineMode();
             }
         }
         if (getSupportActionBar() != null) {
@@ -181,15 +172,41 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setBuildingsEnabled(true);
             mMap.setIndoorEnabled(true);
             if (!showMode) {
-                setDefineMode();
+                DefineMode();
             } else {
-                setShowMode();
+                ShowMode();
             }
             mMap.getUiSettings().setZoomControlsEnabled(false);
         }
     }
 
-    private void setShowMode(){
+    private void setupDefineMode() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Define Meeting Point");
+        }
+        chosenLat = getIntent().getDoubleExtra(LAT, NOLAT);
+        chosenLng = getIntent().getDoubleExtra(LNG, NOLNG);
+        MPSet = true;
+        if (chosenLat != NOLAT && chosenLng != NOLNG) {
+            LatLng meetingPoint = new LatLng(chosenLat, chosenLng);
+            mMap.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, VILLAGE_ZOOM));
+        } else {
+            goToEPFL();
+        }
+        showMode = false;
+    }
+
+    private void setupShowMode() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Meeting Point");
+        }
+        showLat = getIntent().getDoubleExtra(LAT, NOLAT);
+        showLng = getIntent().getDoubleExtra(LNG, NOLNG);
+        showMode = true;
+    }
+
+    private void ShowMode(){
         mMap.clear();
         findViewById(R.id.confirmMP).setVisibility(View.INVISIBLE);
         if (showLat != NOLAT && showLng != NOLNG) {
@@ -201,7 +218,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void setDefineMode(){
+    private void DefineMode(){
         findViewById(R.id.confirmMP).setVisibility(View.VISIBLE);
         mMap.setOnMapClickListener(latLng -> {
             if (MPSet) {
@@ -220,7 +237,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             MPSet = true;
             showToast(true);
         });
-        goToEPFL();
     }
 
     private void showToast(boolean isDefined) {
@@ -262,8 +278,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
-                            goToEPFL();
-                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                 });
             }

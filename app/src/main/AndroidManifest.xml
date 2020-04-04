@@ -78,10 +78,12 @@
         <activity
             android:name=".FillListingActivity"
             android:parentActivityName=".MainActivity"
+            android:exported="true"
             android:label="Listing Editor"/>
         <activity
             android:name=".UI.SalesOverview"
             android:parentActivityName=".MainActivity"
+            android:exported="true"
             android:label="Browse Listings"/>
         <activity
             android:name=".SaleDetails"
