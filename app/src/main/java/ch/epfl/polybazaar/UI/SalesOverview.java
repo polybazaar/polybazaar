@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,10 +19,7 @@ import ch.epfl.polybazaar.SaleDetails;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.RootCategory;
-import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
-import ch.epfl.polybazaar.database.callback.StringListCallback;
-import ch.epfl.polybazaar.listing.ListingDatabase;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
 
@@ -39,8 +35,6 @@ public class SalesOverview extends AppCompatActivity {
     private static final int EXTRALOAD = 20;
     private int positionInIDList = 0;
     private Spinner categorySelector;
-    private final String DEFAULT_SPINNER_TEXT = "Select category...";
-    private String currentQuery = DEFAULT_SPINNER_TEXT;
     private Category currentCategory = new RootCategory();
 
     @Override
@@ -63,15 +57,12 @@ public class SalesOverview extends AppCompatActivity {
         // Create adapter passing in the sample LiteListing data
         adapter = new LiteListingAdapter(liteListingList);
 
-        adapter.setOnItemClickListener(new LiteListingAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view) {
-                int viewID = view.getId();
-                String listingID = adapter.getListingID(viewID);
-                Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-                intent.putExtra("listingID", listingID);
-                startActivity(intent);
-            }
+        adapter.setOnItemClickListener(view -> {
+            int viewID = view.getId();
+            String listingID = adapter.getListingID(viewID);
+            Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
+            intent.putExtra("listingID", listingID);
+            startActivity(intent);
         });
 
         // Attach the adapter to the recyclerview to populate items
@@ -80,8 +71,8 @@ public class SalesOverview extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvLiteListings.setLayoutManager(linearLayoutManager);
 
-        // Initial load
-        loadLiteListingOverview();
+        //no need load the lite listings now as the default item (RootCategory) in the category spinner
+        // is selected at the creation of the activity
 
         // Triggered only when new data needs to be appended to the list
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
@@ -100,11 +91,15 @@ public class SalesOverview extends AppCompatActivity {
      * Create a graphical overview of LiteListings from database
      */
     public void loadLiteListingOverview() {
+        /*
         if(!currentCategory.equals(new RootCategory())){
-            loadLiteListingsfromCategory();
+            loadLiteListingsFromCategory();
         }else{
             loadAllLiteListings();
         }
+
+         */
+        loadLiteListingsFromCategory();
     }
 
     /**
@@ -123,44 +118,27 @@ public class SalesOverview extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-
-                //refresh currentQuery
-                Category selectedCategory = (Category)parent.getItemAtPosition(position);
-                //loadLiteListingQueryOverview(selectedCategory.toString());
-                currentQuery = selectedCategory.toString();
-                currentCategory = selectedCategory;
-                loadLiteListingOverview();
-
-                //re-init layout
+                //refresh currentCategory and re-init layout
+                currentCategory = (Category)parent.getItemAtPosition(position);
                 liteListingList = new ArrayList<>();
                 IDList = new ArrayList<>();
                 positionInIDList = 0;
-                // Lookup the recyclerview in activity layout
                 RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
-
-                // Create adapter passing in the sample LiteListing data
                 adapter = new LiteListingAdapter(liteListingList);
 
-                adapter.setOnItemClickListener(new LiteListingAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view) {
-                        int viewID = view.getId();
-                        String listingID = adapter.getListingID(viewID);
-                        Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-                        intent.putExtra("listingID", listingID);
-                        startActivity(intent);
-                    }
+                adapter.setOnItemClickListener(view1 -> {
+                    int viewID = view1.getId();
+                    String listingID = adapter.getListingID(viewID);
+                    Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
+                    intent.putExtra("listingID", listingID);
+                    startActivity(intent);
                 });
 
-                // Attach the adapter to the recyclerview to populate items
+
                 rvLiteListings.setAdapter(adapter);
-                // Set layout manager to position the items
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 rvLiteListings.setLayoutManager(linearLayoutManager);
-
-
-
-
+                loadLiteListingOverview();
 
             }
             @Override
@@ -170,23 +148,21 @@ public class SalesOverview extends AppCompatActivity {
         });
     }
 
-    private void loadLiteListingsfromCategory(){
+    /***
+     * load lite listing using currentCategory to get all items from the selected category and subcategories
+     */
+    private void loadLiteListingsFromCategory(){
         List<Category> allCategories = getAllSubCategories(currentCategory);
         allCategories.add(currentCategory);
 
         for(Category category : allCategories) {
             LiteListingDatabase.queryLiteListingStringEquality("category", category.toString(), result -> {
 
-                for (String l : result) {
-                    IDList.add(l);      // create deep copy of ID list if list is empty
-                }
+                IDList.addAll(result);
 
-                LiteListingCallback callbackLiteListing = new LiteListingCallback() {
-                    @Override
-                    public void onCallback(LiteListing result) {
-                        liteListingList.add(result);
-                        adapter.notifyItemInserted(liteListingList.size() - 1);
-                    }
+                LiteListingCallback callbackLiteListing = result1 -> {
+                    liteListingList.add(result1);
+                    adapter.notifyItemInserted(liteListingList.size() - 1);
                 };
 
                 int size = IDList.size();
@@ -197,6 +173,10 @@ public class SalesOverview extends AppCompatActivity {
             });
         }
     }
+
+    /***
+     * load all lite listings in the database
+     */
     private void loadAllLiteListings(){
         LiteListing.retrieveAll().addOnSuccessListener(result -> {
             if(IDList.isEmpty()) {
@@ -204,12 +184,9 @@ public class SalesOverview extends AppCompatActivity {
                     IDList.add(l.getId());      // create deep copy of ID list if list is empty
                 }
             }
-            LiteListingCallback callbackLiteListing = new LiteListingCallback() {
-                @Override
-                public void onCallback(LiteListing result) {
-                    liteListingList.add(result);
-                    adapter.notifyItemInserted(liteListingList.size()-1);
-                }
+            LiteListingCallback callbackLiteListing = result1 -> {
+                liteListingList.add(result1);
+                adapter.notifyItemInserted(liteListingList.size()-1);
             };
             int size = IDList.size();
             for(int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
@@ -220,7 +197,12 @@ public class SalesOverview extends AppCompatActivity {
 
     }
 
-    List<Category> getAllSubCategories(Category category){
+    /**
+     * get all subcategories contained in the category
+     * @param category from which all subcategories are extracted
+     * @return the list of all categories contained in 'category'
+     */
+    private List<Category> getAllSubCategories(Category category){
         if(!category.hasSubCategories()){
             return new ArrayList<>();
         }else{
