@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +46,7 @@ import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
 
+import ch.epfl.polybazaar.listingImage.ListingListImages;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 
@@ -89,6 +91,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private String currentPhotoPath;
     private File photoFile;
     private List<String> listStringImage;
+    //only used for edit to delete all images
+    private List<String> listImageIds;
     private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
@@ -122,9 +126,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
         setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
+        listStringImage = new ArrayList<>();
+        listImageIds = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
-        listStringImage = new ArrayList<>();
     }
 
     @Override
@@ -150,12 +155,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             }
 
             stringImage = convertBitmapToString(bitmap);
-            Bitmap resizedBitmap = resizeBitmap(bitmap, 0.5f, 0.5f);
-            stringThumbnail = convertBitmapToStringWithQuality(resizedBitmap, 10);
+            //Bitmap resizedBitmap = resizeBitmap(bitmap, 0.5f, 0.5f);
+            //stringThumbnail = convertBitmapToStringWithQuality(resizedBitmap, 10);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            stringImage = convertFileToString(photoFile);
-           stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
+           //stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
         }
         listStringImage.add(stringImage);
         drawImages();
@@ -266,6 +271,9 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     }
 
     private void submit() {
+        if(!listStringImage.isEmpty()) {
+            stringThumbnail = listStringImage.get(0);
+        }
         Context context = getApplicationContext();
         if (!checkFields()) {
             Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
@@ -392,6 +400,11 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             return false;
         }
         Listing listing = (Listing)bundle.get("listing");
+        String[] stringImages = ((ListingListImages)bundle.get("listingImages")).getListStringImage().first;
+        String[] stringIDs = ((ListingListImages)bundle.get("listingImages")).getListStringImage().second;
+        listStringImage.addAll(Arrays.asList(stringImages));
+        listImageIds.addAll(Arrays.asList(stringIDs));
+        drawImages();
 
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
@@ -416,6 +429,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
             Listing.deleteWithLiteVersion(listingID)
                     .addOnSuccessListener((v) -> submit());
+
+            for(String listingImageID: listImageIds) {
+                ListingImage.delete(listingImageID);
+            }
         }
 
     }
@@ -470,6 +487,9 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     }
 
     public void rotateLeft(View view) {
+        if(listStringImage.isEmpty()) {
+            return;
+        }
         hideImagesButtons();
         int index = viewPager2.getCurrentItem();
         Bitmap bitmap = convertStringToBitmap(listStringImage.get(index));
