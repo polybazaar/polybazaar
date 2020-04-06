@@ -57,6 +57,7 @@ import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
+import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useMockNetworkState;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useRealNetwork;
@@ -253,6 +254,11 @@ public class FillListingActivityTest {
 
         //this should throw an IllegalArgumentException
         resizeBitmap(bitmap, 2f, 0.5f);
+    }
+
+    @Test
+    public void testUtilitiesResizeStringImageThumbnailNull() {
+        assertNull(resizeStringImageThumbnail(null));
     }
 
     @Test

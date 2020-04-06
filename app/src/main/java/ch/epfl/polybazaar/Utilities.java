@@ -171,6 +171,21 @@ public abstract class Utilities {
     }
 
     /**
+     * Resize String image, return null if input is null or equals to ""
+     * @param input
+     * @return
+     */
+    public static String resizeStringImageThumbnail(String input) {
+        if(input == null || input.equals("")) {
+            return null;
+        }
+        Bitmap b = convertStringToBitmap(input);
+        int width = b.getWidth() * 240 / b.getHeight();
+        return convertBitmapToStringWithQuality(Bitmap.createScaledBitmap(b, width, 240, false), 100);
+    }
+
+    //TODO is this function never used?
+    /**
      * Helper function to resize a bitmap given in argument
      * @param bitmap original image
      * @param scaleWidth scale factor for width, should be between 0 and 1

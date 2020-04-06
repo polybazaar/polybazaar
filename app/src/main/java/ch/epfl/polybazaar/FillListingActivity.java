@@ -60,6 +60,7 @@ import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
+import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 
@@ -272,7 +273,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     private void submit() {
         if(!listStringImage.isEmpty()) {
-            stringThumbnail = listStringImage.get(0);
+            stringThumbnail = resizeStringImageThumbnail(listStringImage.get(0));
         }
         Context context = getApplicationContext();
         if (!checkFields()) {
