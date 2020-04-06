@@ -9,16 +9,12 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.List;
-import java.util.Objects;
 
-import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 
 /**
@@ -30,10 +26,7 @@ public class PermissionRationaleDialog extends DialogFragment {
     private static final String PERMISSION = "PERMISSION";
     private static final String MSG = "MSG";
     private static final String DENIED_MSG = "DENIED_MSG";
-    private static final String FINISH = "FINISH";
     private static SuccessCallback cb;
-
-    private boolean mFinishActivity = false;
 
 
     /**

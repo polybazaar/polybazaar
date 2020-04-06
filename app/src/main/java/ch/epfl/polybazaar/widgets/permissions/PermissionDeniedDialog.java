@@ -5,11 +5,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
-import ch.epfl.polybazaar.R;
 
 /**
  * A dialog that displays a permission denied message.
