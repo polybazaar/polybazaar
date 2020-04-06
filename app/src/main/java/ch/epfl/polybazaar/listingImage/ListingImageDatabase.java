@@ -23,7 +23,7 @@ public abstract class ListingImageDatabase {
         db.set(listingImageCollectionName, listingImageID, listingImage, callback);
     }
 
-    public static void deleteListing(final String listingImageID, final SuccessCallback callback){
+    public static void deleteListingImage(final String listingImageID, final SuccessCallback callback){
         db = DataStoreFactory.getDependency();
         db.delete(listingImageCollectionName, listingImageID, callback);
     }

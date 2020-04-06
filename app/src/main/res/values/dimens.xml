@@ -2,6 +2,7 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="general_margin">10dp</dimen>
     <dimen name="title_box_length">200dp</dimen>
     <dimen name="price_box_length">120dp</dimen>
     <dimen name="overview_text_size">22sp</dimen>

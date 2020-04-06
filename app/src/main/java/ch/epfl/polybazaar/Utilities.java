@@ -35,6 +35,8 @@ public abstract class Utilities {
             result.put("price", ((Listing)o).getPrice());
             result.put("title", ((Listing)o).getTitle());
             result.put("userEmail", ((Listing)o).getUserEmail());
+            result.put("latitude", ((Listing)o).getLatitude());
+            result.put("longitude", ((Listing)o).getLongitude());
         } else if (o instanceof LiteListing) {
             result.put("listingID", ((LiteListing)o).getListingID());
             result.put("price", ((LiteListing)o).getPrice());
@@ -42,8 +44,11 @@ public abstract class Utilities {
             result.put("category", ((LiteListing)o).getCategory());
             result.put("stringThumbnail", ((LiteListing)o).getStringThumbnail());
         } else if (o instanceof User) {
-            result.put("email", ((User)o).getEmail());
             result.put("nickName", ((User)o).getNickName());
+            result.put("email", ((User)o).getEmail());
+            result.put("firstName", ((User)o).getFirstName());
+            result.put("lastName", ((User)o).getLastName());
+            result.put("phoneNumber", ((User)o).getPhoneNumber());
         } else if (o instanceof ListingImage) {
             result.put("image", ((ListingImage)o).getImage());
             result.put("refNextImg", ((ListingImage)o).getRefNextImg());
