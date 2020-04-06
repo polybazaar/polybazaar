@@ -21,7 +21,7 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="true" />
+        android:required="true"/>
 
     <application
         android:allowBackup="true"
