@@ -25,6 +25,7 @@ import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
+import ch.epfl.polybazaar.listingImage.ListingListImages;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
@@ -46,6 +47,7 @@ public class SaleDetails extends AppCompatActivity {
 
     private ViewPager2 viewPager2;
     private List<String> listStringImage;
+    private List<String> listImageID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -55,6 +57,7 @@ public class SaleDetails extends AppCompatActivity {
         findViewById(R.id.viewMP).setVisibility(View.INVISIBLE);
 
         listStringImage = new ArrayList<>();
+        listImageID = new ArrayList<>();
 
         final ImageView imageLoading = findViewById(R.id.loadingImage);
         Glide.with(this).load(R.drawable.loading).into(imageLoading);
@@ -120,6 +123,7 @@ public class SaleDetails extends AppCompatActivity {
      * @param listingID
      */
     private void retrieveImages(String listingID) {
+        listImageID.add(listingID);
         ListingImage.fetch(listingID).addOnSuccessListener(result -> {
             if(result == null) {
                 drawImages();
@@ -245,13 +249,14 @@ public class SaleDetails extends AppCompatActivity {
             Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
             intent.putExtra("listingID", listingID);
             intent.putExtra("listing", listing);
+            intent.putExtra("listingImages", new ListingListImages(listStringImage, listImageID));
             startActivity(intent);
         });
     }
 
     private void deleteCurrentListing(String listingID) {
         Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-                Toast toast = Toast.makeText(getApplicationContext(),"Listing successfuly deleted", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(),"Listing successfully deleted", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
