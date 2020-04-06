@@ -17,7 +17,7 @@ public class ListingImage extends Model {
 
     public static final String COLLECTION = "listingsImage";
 
-    private ListingImage() {}
+    public ListingImage() {}
 
     public ListingImage(String image, String refNextImg) {
         this.image = image;

@@ -68,7 +68,7 @@ public class UserProfileActivity extends AppCompatActivity {
         else if (!Utilities.nameIsValid(newFirstName)){
             makeDialog(UserProfileActivity.this, R.string.invalid_first_name);
         }
-        else if (!Utilities.nameIsValid(newFirstName)){
+        else if (!Utilities.nameIsValid(newLastName)){
             makeDialog(UserProfileActivity.this, R.string.invalid_last_name);
         }
         else{

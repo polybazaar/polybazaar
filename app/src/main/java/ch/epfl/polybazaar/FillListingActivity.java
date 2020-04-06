@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,6 +23,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -47,6 +49,7 @@ import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
 
 import ch.epfl.polybazaar.listingImage.ListingListImages;
+import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 
@@ -54,10 +57,12 @@ import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.FirebaseAuthenticator;
+import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertFileToString;
+import static ch.epfl.polybazaar.map.MapsActivity.*;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
 import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
@@ -70,6 +75,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     public static final int RESULT_LOAD_IMAGE = 1;
     public static final int RESULT_TAKE_PICTURE = 2;
+    public static final int RESULT_ADD_MP = 3;
     public static final String INCORRECT_FIELDS_TEXT = "One or more required fields are incorrect or uncompleted";
     private final String DEFAULT_SPINNER_TEXT = "Select category...";
 
@@ -80,9 +86,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private Button uploadImage;
     private Button camera;
     private Button submitListing;
+    private Button addMP;
+    private ImageView pictureView;
     private ViewPager2 viewPager2;
     private Switch freeSwitch;
     private TextView titleSelector;
+    private TextView MPStatus;
     private EditText descriptionSelector;
     private EditText priceSelector;
     private Spinner categorySelector;
@@ -97,9 +106,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
+    private double lat = NOLAT;
+    private double lng = NOLNG;
 
-    //only for tests
-    private ImageView pictureView;
+    private PermissionRequest cameraPermissionRequest;
 
 
 
@@ -121,6 +131,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         descriptionSelector = findViewById(R.id.descriptionSelector);
         priceSelector = findViewById(R.id.priceSelector);
         linearLayout = findViewById(R.id.fillListingLinearLayout);
+        addMP = findViewById(R.id.addMP);
+        MPStatus = findViewById(R.id.MPStatus);
         pictureView = findViewById(R.id.picturePreview);
 
         categorySelector = findViewById(R.id.categorySelector);
@@ -136,9 +148,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         //Tags are set only for testing purposes using Espresso
-        if(resultCode != RESULT_OK){
+        if(resultCode != Activity.RESULT_OK){
             pictureView.setTag(-1);
         }
         else if (requestCode == RESULT_LOAD_IMAGE){
@@ -154,11 +165,30 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 e.printStackTrace();
                 return;
             }
+
             stringImage = convertBitmapToStringWithQuality(bitmap, 10);
+            addImage();
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            stringImage = convertFileToStringWithQuality(photoFile, 10);
+           addImage();
         }
+        else if (requestCode == RESULT_ADD_MP) {
+            if (data.getBooleanExtra(VALID, false)) {
+                lng = data.getDoubleExtra(LNG, NOLNG);
+                lat = data.getDoubleExtra(LAT, NOLAT);
+                addMP.setText(R.string.changeMP);
+                MPStatus.setText(R.string.MP_ok);
+            } else {
+                lng = NOLNG;
+                lat = NOLAT;
+                addMP.setText(R.string.addMP);
+                MPStatus.setText(R.string.MP_nok);
+            }
+        }
+    }
+
+    private void addImage() {
         listStringImage.add(stringImage);
         drawImages();
         viewPager2.setCurrentItem(listStringImage.size() - 1, false);
@@ -166,9 +196,16 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     }
 
     private void addListeners(boolean edit){
-        camera.setOnClickListener(v -> takePicture());
+        camera.setOnClickListener(v -> checkCameraPermission());
         freeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> freezePriceSelector(isChecked));
         uploadImage.setOnClickListener(v -> uploadImage());
+        addMP.setOnClickListener(v -> {
+            Intent defineMP = new Intent(this, MapsActivity.class);
+            defineMP.putExtra(GIVE_LatLng, false);
+            defineMP.putExtra(LAT, lat);
+            defineMP.putExtra(LNG, lng);
+            startActivityForResult(defineMP, RESULT_ADD_MP);
+        });
 
         if(!edit){
             submitListing.setOnClickListener(v -> submit());
@@ -276,7 +313,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
         }
         else {
-
                 if(isInternetAvailable(context)){
                     createAndSendListing();
                     Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
@@ -302,6 +338,13 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    private void checkCameraPermission(){
+        cameraPermissionRequest = new PermissionRequest(this, "CAMERA", "Camera access is required to take pictures", null, result -> {
+            if (result) takePicture();
+        });
+        cameraPermissionRequest.assertPermission();
     }
 
     //Function taken from https://developer.android.com/training/camera/photobasics
@@ -350,7 +393,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
             String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
 
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(), priceSelector.getText().toString(), userEmail, "", category);
+            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(),
+                    priceSelector.getText().toString(), userEmail, "", category, lat, lng);
             newListing.setId(newListingID);
             LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
             newLiteListing.setId(newListingID);
@@ -372,7 +416,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                     newListingImage.setId(currentId);
                     newListingImage.save()
                             .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
-                            .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "An error occurred.", Toast.LENGTH_LONG).show());
+                            .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to send image", Toast.LENGTH_LONG).show());
 
                     currentId = nextId;
                 }
@@ -410,6 +454,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         Category editedCategory = new StringCategory(listing.getCategory());
         traversingCategory = CategoryRepository.getCategoryContaining(editedCategory);
         categorySelector.setSelection(CategoryRepository.indexOf(traversingCategory)+1);
+        lat = listing.getLatitude();
+        lng = listing.getLongitude();
+        if (lat != NOLAT && lng != NOLNG) {
+            addMP.setText(R.string.changeMP);
+            MPStatus.setText(R.string.MP_ok);
+        }
         return true;
     }
 
@@ -432,6 +482,11 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             }
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        cameraPermissionRequest.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void drawImages() {
