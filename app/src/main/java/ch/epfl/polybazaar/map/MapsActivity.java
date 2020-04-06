@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ import java.util.Objects;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
+
+import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback{
 
@@ -81,6 +85,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double showLng = NOLNG;
     private double chosenLng = NOLNG;
     private double chosenLat = NOLAT;
+    private boolean locationAvailablility = false;
 
     // in showMode, the user cannot select a meeting point
     private boolean showMode = true;
@@ -267,8 +272,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
          */
         try {
             if (mLocationPermissionGranted) {
-                Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener(task -> {
+                Task<LocationAvailability> locationAvailable = mFusedLocationProviderClient.getLocationAvailability();
+                locationAvailable.addOnCompleteListener(result -> {
+                    if (!result.getResult().isLocationAvailable()) {
+                        locationAvailablility = false;
+                        makeDialog(this, R.string.location_unavailable);
+                    } else {
+                        locationAvailablility = true;
+                    }
+                });
+                if (locationAvailablility) {
+                    Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+                    locationResult.addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             Location mLastKnownLocation = task.getResult();
@@ -281,7 +296,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
                         }
-                });
+                    });
+                }
             }
         } catch(SecurityException e)  {
             Log.e(TAG, Objects.requireNonNull(e.getMessage()));

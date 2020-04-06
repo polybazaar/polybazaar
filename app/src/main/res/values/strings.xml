@@ -49,5 +49,6 @@
     <string name="profile_updated">Your profile has successfully been updated</string>
     <string name="MP_ok">Meeting Point defined</string>
     <string name="MP_nok">Meeting Point not defined</string>
+    <string name="location_unavailable">Location services are unavailable</string>
 
 </resources>
