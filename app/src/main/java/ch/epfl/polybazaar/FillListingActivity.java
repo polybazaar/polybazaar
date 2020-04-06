@@ -154,14 +154,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 e.printStackTrace();
                 return;
             }
-
-            stringImage = convertBitmapToString(bitmap);
-            //Bitmap resizedBitmap = resizeBitmap(bitmap, 0.5f, 0.5f);
-            //stringThumbnail = convertBitmapToStringWithQuality(resizedBitmap, 10);
+            stringImage = convertBitmapToStringWithQuality(bitmap, 10);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
-           stringImage = convertFileToString(photoFile);
-           //stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
+           stringImage = convertFileToStringWithQuality(photoFile, 10);
         }
         listStringImage.add(stringImage);
         drawImages();
