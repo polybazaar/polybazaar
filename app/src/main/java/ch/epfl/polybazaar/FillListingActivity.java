@@ -47,28 +47,27 @@ import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
-
+import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.listingImage.ListingListImages;
+import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
-
-import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
-import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
-import static ch.epfl.polybazaar.Utilities.convertFileToString;
-import static ch.epfl.polybazaar.map.MapsActivity.*;
-import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
-import static ch.epfl.polybazaar.Utilities.resizeBitmap;
-import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
-import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
-
+import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
+import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LatLng;
+import static ch.epfl.polybazaar.map.MapsActivity.LAT;
+import static ch.epfl.polybazaar.map.MapsActivity.LNG;
+import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
+import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
+import static ch.epfl.polybazaar.map.MapsActivity.VALID;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
@@ -355,15 +354,14 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             photoFile = null;
             try {
                 photoFile = createImageFile();
-            } catch (IOException ex) {
+            } catch (IOException ignored) {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 try{
                     Uri photoURI = FileProvider.getUriForFile(this,"ch.epfl.polybazaar.fileprovider", photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                }
-                catch (IllegalArgumentException ex) {
+                } catch (IllegalArgumentException ignored) {
                 }
                 startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
             }
@@ -387,12 +385,13 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     }
     private void createAndSendListing() {
-           // TODO should not be done this way
             final String newListingID = randomUUID().toString();
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
             FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
-            //TODO: The following line contains a rather unexpected behaviour. Tests should be changed s.t. this line can be deleted
-            String userEmail = fbAuth.getCurrentUser() == null ? "NO_USER@epfl.ch" : fbAuth.getCurrentUser().getEmail();
+
+            assert(fbAuth.getCurrentUser() != null);
+            String userEmail = fbAuth.getCurrentUser().getEmail();
+
 
             Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(),
                     priceSelector.getText().toString(), userEmail, "", category, lat, lng);
@@ -428,9 +427,9 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 newListingImage.save();
             }
 
-            newLiteListing.save().addOnSuccessListener(result -> {
-                //TODO: Check the result to be true
-            });
+            newLiteListing.save()
+                    .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
+                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG).show());
     }
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
