@@ -163,10 +163,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             stringImage = convertBitmapToString(bitmap);
             Bitmap resizedBitmap = resizeBitmap(bitmap, 0.5f, 0.5f);
             stringThumbnail = convertBitmapToStringWithQuality(resizedBitmap, 10);
+            addImage();
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            stringImage = convertFileToString(photoFile);
            stringThumbnail = convertFileToStringWithQuality(photoFile, 10);
+           addImage();
         }
         else if (requestCode == RESULT_ADD_MP) {
             if (data.getBooleanExtra(VALID, false)) {
@@ -181,6 +183,9 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 MPStatus.setText(R.string.MP_nok);
             }
         }
+    }
+
+    private void addImage() {
         listStringImage.add(stringImage);
         drawImages();
         viewPager2.setCurrentItem(listStringImage.size() - 1, false);
