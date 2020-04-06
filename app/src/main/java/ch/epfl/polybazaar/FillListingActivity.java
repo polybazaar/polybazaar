@@ -77,6 +77,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     public static final int RESULT_TAKE_PICTURE = 2;
     public static final int RESULT_ADD_MP = 3;
     public static final String INCORRECT_FIELDS_TEXT = "One or more required fields are incorrect or uncompleted";
+    private final int QUALITY = 10;
     private final String DEFAULT_SPINNER_TEXT = "Select category...";
 
     private Button setImageFirst;
@@ -166,11 +167,11 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 return;
             }
 
-            stringImage = convertBitmapToStringWithQuality(bitmap, 10);
+            stringImage = convertBitmapToStringWithQuality(bitmap, QUALITY);
             addImage();
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
-           stringImage = convertFileToStringWithQuality(photoFile, 10);
+           stringImage = convertFileToStringWithQuality(photoFile, QUALITY);
            addImage();
         }
         else if (requestCode == RESULT_ADD_MP) {
