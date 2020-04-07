@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar.category;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,7 +10,16 @@ public abstract class CategoryRepository {
     /**
      * List containing all the categories of the repository
      */
-    public static List<Category> categories = init();
+    protected static List<Category> categories = init();
+
+
+    /**
+     *
+     * @return a new list containing categories from repository
+     */
+    public static List<Category> getCategories(){
+        return new ArrayList<>(categories);
+    }
 
     /**
      * Computes the number of all categories and sub-categories contained in the repository
@@ -96,7 +106,29 @@ public abstract class CategoryRepository {
 
         multimedia.addSubCategory(videoGames);
 
-        return Arrays.asList(new StringCategory("Furniture"), books, multimedia);
+        //return Arrays.asList(new StringCategory("Furniture"), books, multimedia);
+        List<Category> cats = new ArrayList<>();
+        cats.add(new StringCategory("Furniture"));
+        cats.add(books);
+        cats.add(multimedia);
+        return cats;
+    }
+    /**
+     * get all subcategories contained in the category
+     * @param category from which all subcategories are extracted
+     * @return the list of all categories contained in 'category'
+     */
+    public static List<Category> getAllSubCategories(Category category){
+        if(!category.hasSubCategories()){
+            return new ArrayList<>();
+        }else{
+            List<Category> subCategories = category.subCategories();
+            List<Category> allCategories = new ArrayList<>(subCategories);
+            for(Category cat : subCategories){
+                allCategories.addAll(getAllSubCategories(cat));
+            }
+            return allCategories;
+        }
     }
 
 }

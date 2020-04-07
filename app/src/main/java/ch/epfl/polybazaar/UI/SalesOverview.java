@@ -23,6 +23,7 @@ import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
 
+
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
 
 public class SalesOverview extends AppCompatActivity {
@@ -47,7 +48,7 @@ public class SalesOverview extends AppCompatActivity {
 
         //setup the categories list
         categorySelector = findViewById(R.id.categorySelector);
-        List<Category> categories = new ArrayList<>(CategoryRepository.categories);
+        List<Category> categories = new ArrayList<>(CategoryRepository.getCategories());
         categories.add(0,new RootCategory());
         setupSpinner(categorySelector,categories);
 
@@ -91,15 +92,13 @@ public class SalesOverview extends AppCompatActivity {
      * Create a graphical overview of LiteListings from database
      */
     public void loadLiteListingOverview() {
-        /*
+
         if(!currentCategory.equals(new RootCategory())){
             loadLiteListingsFromCategory();
         }else{
             loadAllLiteListings();
         }
 
-         */
-        loadLiteListingsFromCategory();
     }
 
     /**
@@ -152,7 +151,7 @@ public class SalesOverview extends AppCompatActivity {
      * load lite listing using currentCategory to get all items from the selected category and subcategories
      */
     private void loadLiteListingsFromCategory(){
-        List<Category> allCategories = getAllSubCategories(currentCategory);
+        List<Category> allCategories =  CategoryRepository.getAllSubCategories(currentCategory);
         allCategories.add(currentCategory);
 
         for(Category category : allCategories) {
@@ -197,23 +196,7 @@ public class SalesOverview extends AppCompatActivity {
 
     }
 
-    /**
-     * get all subcategories contained in the category
-     * @param category from which all subcategories are extracted
-     * @return the list of all categories contained in 'category'
-     */
-    private List<Category> getAllSubCategories(Category category){
-        if(!category.hasSubCategories()){
-            return new ArrayList<>();
-        }else{
-            List<Category> subCategories = category.subCategories();
-            List<Category> allCategories = new ArrayList<>(subCategories);
-            for(Category cat : subCategories){
-                allCategories.addAll(getAllSubCategories(cat));
-            }
-            return allCategories;
-        }
-    }
+
 
 }
 

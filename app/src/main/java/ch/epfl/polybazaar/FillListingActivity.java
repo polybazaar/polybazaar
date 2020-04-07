@@ -99,7 +99,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         categorySelector = findViewById(R.id.categorySelector);
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
-        setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
+        setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.getCategories()));
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
         listStingImage = new ArrayList<>();
