@@ -20,6 +20,9 @@ public abstract class CategoryRepository {
     public static List<Category> getCategories(){
         return new ArrayList<>(categories);
     }
+    public static void setCategories(List<Category> categoriesList){
+        categories = new ArrayList<>(categoriesList);
+    }
 
     /**
      * Computes the number of all categories and sub-categories contained in the repository

@@ -32,7 +32,7 @@ public class CategoryRepositoryTest{
 
         multimedia.addSubCategory(videoGames);
 
-        CategoryRepository.categories = Arrays.asList(new StringCategory("Furniture"), books, multimedia);
+        CategoryRepository.setCategories(Arrays.asList(new StringCategory("Furniture"), books, multimedia));
     }
 
     @Test
