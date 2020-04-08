@@ -36,7 +36,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +48,6 @@ import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.listingImage.ListingListImages;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.map.MapsActivity;
@@ -102,7 +100,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private File photoFile;
     private List<String> listStringImage;
     //only used for edit to delete all images
-    private List<String> listImageIds;
+    private List<String> listImageID;
     private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
@@ -140,7 +138,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         spinnerList.add(categorySelector);
         setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
         listStringImage = new ArrayList<>();
-        listImageIds = new ArrayList<>();
+        listImageID = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
     }
@@ -389,9 +387,13 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
             FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
 
-            assert(fbAuth.getCurrentUser() != null);
+            if(fbAuth.getCurrentUser() == null) {
+                Toast.makeText(getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                return;
+            }
             String userEmail = fbAuth.getCurrentUser().getEmail();
-
 
             Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(),
                     priceSelector.getText().toString(), userEmail, "", category, lat, lng);
@@ -415,7 +417,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
                     newListingImage.setId(currentId);
                     newListingImage.save()
-                            .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
+                            .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored image"))
                             .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to send image", Toast.LENGTH_LONG).show());
 
                     currentId = nextId;
@@ -441,11 +443,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             return false;
         }
         Listing listing = (Listing)bundle.get("listing");
-        String[] stringImages = ((ListingListImages)bundle.get("listingImages")).getListStringImage().first;
-        String[] stringIDs = ((ListingListImages)bundle.get("listingImages")).getListStringImage().second;
-        listStringImage.addAll(Arrays.asList(stringImages));
-        listImageIds.addAll(Arrays.asList(stringIDs));
-        drawImages();
+        if(listing == null) {
+            return false;
+        }
+        retrieveAllImages(listingID);
 
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
@@ -463,6 +464,27 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         return true;
     }
 
+    /**
+     * recursive function to retrieve all images
+     * @param listingID ID of the image
+     */
+    private void retrieveAllImages(String listingID) {
+        listImageID.add(listingID);
+        ListingImage.fetch(listingID).addOnSuccessListener(result -> {
+            //check if Listing contains image
+            if(result == null) {
+                drawImages();
+                return;
+            }
+            listStringImage.add(result.getImage());
+            if(!result.getRefNextImg().equals("")) {
+                retrieveAllImages(result.getRefNextImg());
+            } else {
+                drawImages();
+            }
+        });
+    }
+
     private void deleteOldListingAndSubmitNewOne() {
         if (!checkFields()) {
             Toast.makeText(getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
@@ -477,11 +499,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             Listing.deleteWithLiteVersion(listingID)
                     .addOnSuccessListener((v) -> submit());
 
-            for(String listingImageID: listImageIds) {
-                ListingImage.delete(listingImageID);
+            for(String id: listImageID) {
+                ListingImage.delete(id);
             }
         }
-
     }
 
     @Override
