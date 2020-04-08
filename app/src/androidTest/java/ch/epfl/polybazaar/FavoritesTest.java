@@ -30,8 +30,10 @@ public class FavoritesTest {
 
     @Rule
     public final ActivityTestRule<SalesOverview> mActivityRule =
-            new ActivityTestRule<SalesOverview>(SalesOverview.class){
-            };
+            new ActivityTestRule<>(
+                    SalesOverview.class,
+                    true,
+                    true);
 
     @Before
     public void init() {
