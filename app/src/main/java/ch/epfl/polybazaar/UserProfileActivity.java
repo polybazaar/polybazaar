@@ -76,7 +76,7 @@ public class UserProfileActivity extends AppCompatActivity {
         else{
             User editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
             User.editUser(editedUser).addOnSuccessListener(aVoid -> {
-                addNewToast(makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT));
+                addNewToast(makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT)).show();
             }).addOnSuccessListener(aVoid -> appUser.updateNickname(newNickname));
         }
     }
@@ -98,9 +98,9 @@ public class UserProfileActivity extends AppCompatActivity {
                 ((EditText)findViewById(R.id.currentPassword)).setText("");
                 ((EditText)findViewById(R.id.newPassword)).setText("");
                 ((EditText)findViewById(R.id.confirmNewPassword)).setText("");
-                addNewToast(makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT));
+                addNewToast(makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT)).show();
             }).addOnFailureListener(e -> {
-                addNewToast(makeText(getApplicationContext(), R.string.invalid_current_password, Toast.LENGTH_SHORT));
+                addNewToast(makeText(getApplicationContext(), R.string.invalid_current_password, Toast.LENGTH_SHORT)).show();
             });
         }
     }

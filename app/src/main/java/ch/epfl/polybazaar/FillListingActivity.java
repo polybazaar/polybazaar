@@ -312,7 +312,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         }
         Context context = getApplicationContext();
         if (!checkFields()) {
-            addNewToast(makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT));
+            addNewToast(makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT)).show();
         }
         else {
                 if(isInternetAvailable(context)){
@@ -392,7 +392,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
 
             if(fbAuth.getCurrentUser() == null) {
-                addNewToast(makeText(getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_LONG));
+                addNewToast(makeText(getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_LONG)).show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 return;
@@ -406,7 +406,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             newLiteListing.setId(newListingID);
 
             newListing.save().addOnSuccessListener(result -> {
-                addNewToast(makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT));
+                addNewToast(makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT)).show();
             });
 
             //store images (current has a ref to the next)
@@ -420,7 +420,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                     newListingImage.setId(currentId);
                     newListingImage.save()
                             .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored image"))
-                            .addOnFailureListener(e -> addNewToast(makeText(getApplicationContext(), "Failed to send image", Toast.LENGTH_LONG)));
+                            .addOnFailureListener(e -> addNewToast(makeText(getApplicationContext(), "Failed to send image", Toast.LENGTH_LONG)).show());
 
                     currentId = nextId;
                 }
@@ -433,7 +433,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
             newLiteListing.save()
                     .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
-                    .addOnFailureListener(e -> addNewToast(makeText(getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG)));
+                    .addOnFailureListener(e -> addNewToast(makeText(getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG)).show());
     }
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
@@ -489,7 +489,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     private void deleteOldListingAndSubmitNewOne() {
         if (!checkFields()) {
-            addNewToast(makeText(getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT));
+            addNewToast(makeText(getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT)).show();
         }
         else{
             Bundle bundle = getIntent().getExtras();

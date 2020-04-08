@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void toNewListing(View view) {
         if (user == null) {
-            addNewToast(makeText(MainActivity.this, R.string.sign_in_required, Toast.LENGTH_LONG));
+            addNewToast(makeText(MainActivity.this, R.string.sign_in_required, Toast.LENGTH_LONG)).show();
         } else {
             Intent intent = new Intent(MainActivity.this, FillListingActivity.class);
             startActivity(intent);

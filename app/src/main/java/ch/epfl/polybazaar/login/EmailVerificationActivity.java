@@ -45,7 +45,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
                             addNewToast(makeText(
                                     EmailVerificationActivity.this,
                                     R.string.verification_email_sent, Toast.LENGTH_LONG
-                            ));
+                            )).show();
                         } else {
                             MinimalAlertDialog.makeDialog(
                                     EmailVerificationActivity.this,

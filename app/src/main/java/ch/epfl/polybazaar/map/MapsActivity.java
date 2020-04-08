@@ -257,7 +257,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             toast = Toast.makeText(this, R.string.MP_removed, Toast.LENGTH_SHORT);
         }
         toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 200);
-        addNewToast(toast);
+        addNewToast(toast).show();
         toasts.add(toast);
     }
 

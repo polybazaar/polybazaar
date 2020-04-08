@@ -9,12 +9,12 @@ public final class SingletonToast {
      * replace older Toast with a new one, show() is directly called
      * @param newToast
      */
-    public static void addNewToast(Toast newToast) {
+    public static Toast addNewToast(Toast newToast) {
         //first cancel older toast
         cancelToast();
         //set new Toast
         toast = newToast;
-        toast.show();
+        return newToast;
     }
 
     public static void cancelToast() {

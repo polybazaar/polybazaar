@@ -185,7 +185,7 @@ public class SaleDetails extends AppCompatActivity {
      */
     public void fillWithListing(final Listing listing) {
         if(listing == null) {
-            addNewToast(makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG));
+            addNewToast(makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG)).show();
             Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
             startActivity(intent);
         } else {
@@ -256,7 +256,7 @@ public class SaleDetails extends AppCompatActivity {
         Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
                 Toast toast = makeText(getApplicationContext(),"Listing successfully deleted", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                addNewToast(toast);
+                addNewToast(toast).show();
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
         });
