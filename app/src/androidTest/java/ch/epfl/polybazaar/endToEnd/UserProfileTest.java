@@ -29,6 +29,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static com.google.android.gms.tasks.Tasks.whenAll;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
@@ -91,8 +92,7 @@ public class UserProfileTest {
         closeSoftKeyboard();
         onView(withId(R.id.savePassword)).perform(scrollTo(), click());
         signedInFlag = false;
-        authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true);
-        Thread.sleep(1000);
+        whenAll(authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true));
         assertThat(signedInFlag, is(true));
     }
 
