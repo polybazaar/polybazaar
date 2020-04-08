@@ -5,7 +5,7 @@ import android.view.View;
 import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ public class FavoritesTest {
             new ActivityTestRule<SalesOverview>(SalesOverview.class){
             };
 
-    @BeforeClass
+    @Before
     public void init() {
         useMockDataStore();
         auth = MockAuthenticator.getInstance();
