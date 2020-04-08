@@ -390,7 +390,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
 
             if(fbAuth.getCurrentUser() == null) {
-                Toast.makeText(getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 return;

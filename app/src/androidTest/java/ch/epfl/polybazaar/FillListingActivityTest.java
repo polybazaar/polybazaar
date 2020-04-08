@@ -33,7 +33,6 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
@@ -82,6 +81,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 
 public class FillListingActivityTest {
+
     static Uri imageUri;
     static Bitmap imageBitmap;
     static Intent galleryIntent;
@@ -420,6 +420,7 @@ public class FillListingActivityTest {
         onView(withText(R.string.sign_in_required))
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
+        Thread.sleep(2000);
 
         whenAll(AuthenticatorFactory.getDependency().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD));
     }
@@ -475,7 +476,9 @@ public class FillListingActivityTest {
             }
         });
 
-        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT))
+                .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
+                .check(matches(isDisplayed()));
     }
 
     private void checkNoImageUploaded(){
