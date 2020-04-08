@@ -67,6 +67,7 @@ import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useMockNetworkState;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useRealNetwork;
+import static com.google.android.gms.tasks.Tasks.whenAll;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -420,7 +421,7 @@ public class FillListingActivityTest {
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
 
-        AuthenticatorFactory.getDependency().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        whenAll(AuthenticatorFactory.getDependency().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD));
     }
 
     private void uploadImage(){
