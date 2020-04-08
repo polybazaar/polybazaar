@@ -41,15 +41,15 @@ public class FavoritesTest {
         useMockDataStore();
         auth = MockAuthenticator.getInstance();
         AuthenticatorFactory.setDependency(auth);
-
-        LiteListing listing = new LiteListing("1", "title", "1", "multimedia");
-        listing.save().addOnSuccessListener(result -> {
-        });
     }
 
 
     @Test
     public void favoritesUserNotLoggedIn() {
+        LiteListing listing = new LiteListing("1", "title", "1", "multimedia");
+        listing.save().addOnSuccessListener(result -> {
+
+        });
         clickButton(withId(R.id.favoritesOverview));
 
         onView(withText(R.string.sign_in_required))
