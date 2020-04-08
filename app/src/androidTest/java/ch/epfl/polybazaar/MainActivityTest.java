@@ -24,6 +24,7 @@ import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.polybazaar.UI.SingletonToast.cancelToast;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
@@ -62,6 +63,7 @@ public class MainActivityTest{
 
     @Test
     public void accessesForNonAuthenticatedUserAreCorrect() {
+        cancelToast();
         onView(withId(R.id.saleOverview)).perform(click());
         hasComponent(SalesOverview.class.getName());
 

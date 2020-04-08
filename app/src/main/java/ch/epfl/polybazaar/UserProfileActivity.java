@@ -15,6 +15,8 @@ import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.user.User;
 
+import static android.widget.Toast.makeText;
+import static ch.epfl.polybazaar.UI.SingletonToast.addNewToast;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -74,7 +76,7 @@ public class UserProfileActivity extends AppCompatActivity {
         else{
             User editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
             User.editUser(editedUser).addOnSuccessListener(aVoid -> {
-                Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
+                addNewToast(makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT));
             }).addOnSuccessListener(aVoid -> appUser.updateNickname(newNickname));
         }
     }
@@ -96,9 +98,9 @@ public class UserProfileActivity extends AppCompatActivity {
                 ((EditText)findViewById(R.id.currentPassword)).setText("");
                 ((EditText)findViewById(R.id.newPassword)).setText("");
                 ((EditText)findViewById(R.id.confirmNewPassword)).setText("");
-                Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
+                addNewToast(makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT));
             }).addOnFailureListener(e -> {
-                Toast.makeText(getApplicationContext(), R.string.invalid_current_password, Toast.LENGTH_SHORT).show();
+                addNewToast(makeText(getApplicationContext(), R.string.invalid_current_password, Toast.LENGTH_SHORT));
             });
         }
     }

@@ -14,6 +14,9 @@ import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.SignInActivity;
 
+import static android.widget.Toast.makeText;
+import static ch.epfl.polybazaar.UI.SingletonToast.addNewToast;
+
 public class MainActivity extends AppCompatActivity {
 
     private Authenticator authenticator;
@@ -33,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void toNewListing(View view) {
         if (user == null) {
-            Toast toast = Toast.makeText(MainActivity.this, R.string.sign_in_required, Toast.LENGTH_LONG);
-            toast.show();
+            addNewToast(makeText(MainActivity.this, R.string.sign_in_required, Toast.LENGTH_LONG));
         } else {
             Intent intent = new Intent(MainActivity.this, FillListingActivity.class);
             startActivity(intent);

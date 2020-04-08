@@ -20,6 +20,7 @@ import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.polybazaar.UI.SingletonToast.cancelToast;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
@@ -41,6 +42,7 @@ public class SaleDetailsTest {
 
     @Test
     public void testNoBundlePassed () {
+        cancelToast();
         activityRule.launchActivity(new Intent());
 
         onView(withText("Object not found."))

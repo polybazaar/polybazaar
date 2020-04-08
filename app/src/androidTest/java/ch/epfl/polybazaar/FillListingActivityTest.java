@@ -55,6 +55,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.polybazaar.UI.SingletonToast.cancelToast;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
@@ -189,8 +190,7 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
-        }
+    }
 
     @Test
     public void toastAppearsWhenPriceIsEmpty() throws Throwable {
@@ -199,7 +199,6 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
     }
 
     @Test
@@ -208,7 +207,6 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
     }
 
     @Test
@@ -218,7 +216,6 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
     }
 
 
@@ -414,6 +411,7 @@ public class FillListingActivityTest {
 
     @Test
     public void testCreateAndSendListingWhenUserNull() throws Throwable {
+        cancelToast();
         AuthenticatorFactory.getDependency().signOut();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
@@ -467,6 +465,8 @@ public class FillListingActivityTest {
 
 
     private void submitListingAndCheckIncorrectToast() throws Throwable {
+        //cancel previous Toast
+        cancelToast();
         runOnUiThread(new Runnable(){
             @Override
             public void run() {
@@ -475,7 +475,9 @@ public class FillListingActivityTest {
             }
         });
 
-        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT))
+                .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
+                .check(matches(isDisplayed()));
     }
 
     private void checkNoImageUploaded(){

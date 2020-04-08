@@ -29,6 +29,8 @@ import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
 
+import static android.widget.Toast.makeText;
+import static ch.epfl.polybazaar.UI.SingletonToast.addNewToast;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LatLng;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
@@ -183,9 +185,7 @@ public class SaleDetails extends AppCompatActivity {
      */
     public void fillWithListing(final Listing listing) {
         if(listing == null) {
-            Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.show();
+            addNewToast(makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG));
             Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
             startActivity(intent);
         } else {
@@ -254,9 +254,9 @@ public class SaleDetails extends AppCompatActivity {
 
     private void deleteCurrentListing(String listingID) {
         Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-                Toast toast = Toast.makeText(getApplicationContext(),"Listing successfully deleted", Toast.LENGTH_SHORT);
+                Toast toast = makeText(getApplicationContext(),"Listing successfully deleted", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
+                addNewToast(toast);
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
         });

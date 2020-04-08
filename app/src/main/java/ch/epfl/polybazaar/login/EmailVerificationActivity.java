@@ -15,6 +15,9 @@ import com.google.android.gms.tasks.Task;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.widgets.MinimalAlertDialog;
 
+import static android.widget.Toast.makeText;
+import static ch.epfl.polybazaar.UI.SingletonToast.addNewToast;
+
 public class EmailVerificationActivity extends AppCompatActivity {
     private Authenticator authenticator;
 
@@ -39,10 +42,10 @@ public class EmailVerificationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(
+                            addNewToast(makeText(
                                     EmailVerificationActivity.this,
                                     R.string.verification_email_sent, Toast.LENGTH_LONG
-                            ).show();
+                            ));
                         } else {
                             MinimalAlertDialog.makeDialog(
                                     EmailVerificationActivity.this,

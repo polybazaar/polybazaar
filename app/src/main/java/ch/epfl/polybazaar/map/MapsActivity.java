@@ -33,6 +33,7 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
+import static ch.epfl.polybazaar.UI.SingletonToast.addNewToast;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback{
@@ -256,7 +257,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             toast = Toast.makeText(this, R.string.MP_removed, Toast.LENGTH_SHORT);
         }
         toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 200);
-        toast.show();
+        addNewToast(toast);
         toasts.add(toast);
     }
 

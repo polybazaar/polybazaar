@@ -57,6 +57,8 @@ import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
+import static android.widget.Toast.makeText;
+import static ch.epfl.polybazaar.UI.SingletonToast.addNewToast;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
@@ -310,7 +312,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         }
         Context context = getApplicationContext();
         if (!checkFields()) {
-            Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
+            addNewToast(makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT));
         }
         else {
                 if(isInternetAvailable(context)){
@@ -390,7 +392,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
 
             if(fbAuth.getCurrentUser() == null) {
-                Toast.makeText(getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_LONG).show();
+                addNewToast(makeText(getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_LONG));
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 return;
@@ -404,9 +406,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             newLiteListing.setId(newListingID);
 
             newListing.save().addOnSuccessListener(result -> {
-                Toast toast = Toast.makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
+                addNewToast(makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT));
             });
 
             //store images (current has a ref to the next)
@@ -420,7 +420,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                     newListingImage.setId(currentId);
                     newListingImage.save()
                             .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored image"))
-                            .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to send image", Toast.LENGTH_LONG).show());
+                            .addOnFailureListener(e -> addNewToast(makeText(getApplicationContext(), "Failed to send image", Toast.LENGTH_LONG)));
 
                     currentId = nextId;
                 }
@@ -433,7 +433,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
             newLiteListing.save()
                     .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
-                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG).show());
+                    .addOnFailureListener(e -> addNewToast(makeText(getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG)));
     }
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
@@ -489,7 +489,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     private void deleteOldListingAndSubmitNewOne() {
         if (!checkFields()) {
-            Toast.makeText(getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
+            addNewToast(makeText(getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT));
         }
         else{
             Bundle bundle = getIntent().getExtras();
