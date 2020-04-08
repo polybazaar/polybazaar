@@ -5,7 +5,7 @@ import android.view.View;
 import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -31,19 +31,9 @@ public class FavoritesTest {
     @Rule
     public final ActivityTestRule<SalesOverview> mActivityRule =
             new ActivityTestRule<SalesOverview>(SalesOverview.class){
-                /*@Override
-                protected void beforeActivityLaunched() {
-                    AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
-                }
-
-                @Override
-                protected void afterActivityFinished() {
-                    MockAuthenticator.getInstance().reset();
-                    MockPhoneSettings.getInstance().setAirPlaneMode(false);
-                }*/
             };
 
-    @Before
+    @BeforeClass
     public void init() {
         useMockDataStore();
         auth = MockAuthenticator.getInstance();
