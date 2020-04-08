@@ -49,6 +49,8 @@ import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.Authenticator;
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
@@ -385,7 +387,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private void createAndSendListing() {
             final String newListingID = randomUUID().toString();
             String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
-            FirebaseAuthenticator fbAuth = FirebaseAuthenticator.getInstance();
+            Authenticator fbAuth = AuthenticatorFactory.getDependency();
 
             if(fbAuth.getCurrentUser() == null) {
                 Toast.makeText(getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_LONG).show();
