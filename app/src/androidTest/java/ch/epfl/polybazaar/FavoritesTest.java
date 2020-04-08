@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
@@ -40,6 +41,10 @@ public class FavoritesTest {
         useMockDataStore();
         auth = MockAuthenticator.getInstance();
         AuthenticatorFactory.setDependency(auth);
+
+        LiteListing listing = new LiteListing("1", "title", "1", "multimedia");
+        listing.save().addOnSuccessListener(result -> {
+        });
     }
 
 
