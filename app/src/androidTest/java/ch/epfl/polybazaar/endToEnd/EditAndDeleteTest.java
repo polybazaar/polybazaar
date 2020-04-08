@@ -6,7 +6,6 @@ import com.google.android.gms.tasks.Tasks;
 
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
@@ -18,10 +17,8 @@ import ch.epfl.polybazaar.login.MockAuthenticator;
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.listing.ListingDatabase.queryListingStringEquality;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
@@ -51,22 +48,7 @@ public class EditAndDeleteTest {
     public void init() {
         useMockDataStore();
     }
-
-    @Test
-    public void testDeleteWorksForPreviouslyUploadedListing() throws InterruptedException {
-        String title = "My delete test";
-        String email = MockAuthenticator.TEST_USER_EMAIL;
-        storeNewListing(title, email);
-        assertDatabaseHasAtLeastOneEntryWithTitle(title);
-        signInWithFromMainActivity(email, MockAuthenticator.TEST_USER_PASSWORD);
-
-        onView(withId(R.id.saleOverview)).perform(click());
-        onView(withText(title)).perform(click());
-        onView(withId(R.id.deleteButton)).perform(scrollTo(), click());
-        onView(withText("Yes")).perform(click());
-
-        assertDatabaseHasNoListingWithTitle(title);
-    }
+    
 
     private void assertDatabaseHasNoListingWithTitle(String title){
         queryLiteListingStringEquality("title", title, result -> assertThat(result, is(empty())));
