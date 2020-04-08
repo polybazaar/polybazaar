@@ -17,7 +17,6 @@ import ch.epfl.polybazaar.login.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -25,8 +24,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.listing.ListingDatabase.queryListingStringEquality;
-import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -69,30 +66,6 @@ public class EditAndDeleteTest {
         onView(withText("Yes")).perform(click());
 
         assertDatabaseHasNoListingWithTitle(title);
-    }
-
-    @Test
-    public void testEditWorksForPreviouslyUploadedListing() throws Throwable {
-        String oldTitle = "My test";
-        String newTitle = "My edited test";
-        String email = MockAuthenticator.TEST_USER_EMAIL;
-        storeNewListing(oldTitle, email);
-        assertDatabaseHasAtLeastOneEntryWithTitle(oldTitle);
-        signInWithFromMainActivity(email, MockAuthenticator.TEST_USER_PASSWORD);
-
-        onView(withId(R.id.saleOverview)).perform(click());
-
-        onView(withText(oldTitle)).perform(click());
-        onView(withId(R.id.editButton)).perform(scrollTo(), click());
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText(), typeText(newTitle));
-        closeSoftKeyboard();
-        onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
-        onView(withText("Furniture")).perform(scrollTo(), click());
-        onView(withId(R.id.submitListing)).perform(scrollTo(), click());
-
-        assertDatabaseHasAtLeastOneEntryWithTitle(newTitle);
-        assertDatabaseHasNoListingWithTitle(oldTitle);
-
     }
 
     private void assertDatabaseHasNoListingWithTitle(String title){
