@@ -33,6 +33,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
@@ -410,6 +411,17 @@ public class FillListingActivityTest {
         useRealNetwork();
     }
 
+    @Test
+    public void testCreateAndSendListingWhenUserNull() throws Throwable {
+        AuthenticatorFactory.getDependency().signOut();
+        fillListing();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        onView(withText(R.string.sign_in_required))
+                .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
+                .check(matches(isDisplayed()));
+
+        AuthenticatorFactory.getDependency().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+    }
 
     private void uploadImage(){
         closeSoftKeyboard();
