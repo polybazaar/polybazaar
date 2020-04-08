@@ -10,7 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
@@ -46,10 +45,10 @@ public class FavoritesTest {
 
     @Test
     public void favoritesUserNotLoggedIn() {
-        LiteListing listing = new LiteListing("1", "title", "1", "multimedia");
+        /*LiteListing listing = new LiteListing("1", "title", "1", "multimedia");
         listing.save().addOnSuccessListener(result -> {
 
-        });
+        });*/
         clickButton(withId(R.id.favoritesOverview));
 
         onView(withText(R.string.sign_in_required))

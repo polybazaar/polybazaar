@@ -108,8 +108,10 @@ public class SalesOverview extends AppCompatActivity {
             LiteListingCallback callbackLiteListing = new LiteListingCallback() {
                 @Override
                 public void onCallback(LiteListing result) {
-                    liteListingList.add(result);
-                    adapter.notifyItemInserted(liteListingList.size()-1);
+                    if(result != null) {
+                        liteListingList.add(result);
+                        adapter.notifyItemInserted(liteListingList.size() - 1);
+                    }
                 }
             };
             int size = IDList.size();
