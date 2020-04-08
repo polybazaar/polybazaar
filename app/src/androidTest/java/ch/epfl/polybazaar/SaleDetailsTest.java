@@ -42,7 +42,6 @@ public class SaleDetailsTest {
 
     @Test
     public void testNoBundlePassed () {
-        cancelToast();
         activityRule.launchActivity(new Intent());
 
         onView(withText("Object not found."))

@@ -411,7 +411,6 @@ public class FillListingActivityTest {
 
     @Test
     public void testCreateAndSendListingWhenUserNull() throws Throwable {
-        cancelToast();
         AuthenticatorFactory.getDependency().signOut();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
@@ -465,8 +464,6 @@ public class FillListingActivityTest {
 
 
     private void submitListingAndCheckIncorrectToast() throws Throwable {
-        //cancel previous Toast
-        cancelToast();
         runOnUiThread(new Runnable(){
             @Override
             public void run() {

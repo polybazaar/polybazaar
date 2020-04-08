@@ -63,7 +63,6 @@ public class MainActivityTest{
 
     @Test
     public void accessesForNonAuthenticatedUserAreCorrect() {
-        cancelToast();
         onView(withId(R.id.saleOverview)).perform(click());
         hasComponent(SalesOverview.class.getName());
 
