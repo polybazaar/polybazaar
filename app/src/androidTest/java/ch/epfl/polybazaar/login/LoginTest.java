@@ -67,14 +67,14 @@ public class LoginTest {
         onView(withText(R.string.authentication_successful)).check(matches(isDisplayed()));
     }
 
-    @Test
+    /*@Test
     public void signUpWithExistingEmailFails() {
         createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
 
         onView(withText(R.string.signup_error)).check(matches(isDisplayed()));
-    }
+    }*/
 
     @Test
     public void signUpWithNonEpflPasswordFails() {

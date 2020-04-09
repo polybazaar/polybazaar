@@ -48,7 +48,7 @@ public class EditAndDeleteTest {
     public void init() {
         useMockDataStore();
     }
-    
+
 
     private void assertDatabaseHasNoListingWithTitle(String title){
         queryLiteListingStringEquality("title", title, result -> assertThat(result, is(empty())));
