@@ -1,3 +1,4 @@
+/*
 package ch.epfl.polybazaar.login;
 
 import android.view.View;
@@ -22,7 +23,8 @@ public class LoginTest {
     String NICKNAME = "otheruser";
     String PASSWORD = "abcdef";
 
-    /*@Rule
+    */
+/*@Rule
     public final ActivityTestRule<SignInActivity> mActivityRule =
             new ActivityTestRule<SignInActivity>(SignInActivity.class){
                 @Override
@@ -35,15 +37,19 @@ public class LoginTest {
                     MockAuthenticator.getInstance().reset();
                     MockPhoneSettings.getInstance().setAirPlaneMode(false);
                 }
-            };*/
+            };*//*
 
-    /*@Test
+
+    */
+/*@Test
     public void loginWithUnregisteredUserFails() {
         fillAndSubmitSignIn(EMAIL, PASSWORD);
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
-    }*/
+    }*//*
 
-    /*@Test
+
+    */
+/*@Test
     public void signUpProcessWorks() {
         createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
         fillAndSubmitSignIn(EMAIL, "aaaaaaaa");
@@ -56,43 +62,53 @@ public class LoginTest {
 
         fillAndSubmitSignIn(EMAIL, PASSWORD);
         onView(withText(R.string.authentication_successful)).check(matches(isDisplayed()));
-    }*/
+    }*//*
 
-    /*@Test
+
+    */
+/*@Test
     public void signUpWithExistingEmailFails() {
         createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
 
         onView(withText(R.string.signup_error)).check(matches(isDisplayed()));
-    }*/
+    }*//*
 
-    /*@Test
+
+    */
+/*@Test
     public void signUpWithNonEpflPasswordFails() {
         String email = "test@gmail.com";
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(email, NICKNAME, PASSWORD, PASSWORD);
 
         onView(withText(R.string.signup_email_invalid)).check(matches(isDisplayed()));
-    }*/
+    }*//*
 
-    /*@Test
+
+    */
+/*@Test
     public void signUpWithNonMatchingPasswordFails() {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, "random");
 
         onView(withText(R.string.signup_passwords_not_matching)).check(matches(isDisplayed()));
-    }*/
+    }*//*
 
-    /*@Test
+
+    */
+/*@Test
     public void signUpWithBadPassword() {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME,"a", "a");
 
         onView(withText(R.string.signup_passwords_weak)).check(matches(isDisplayed()));
-    }*/
+    }*//*
 
-    /*@Test
+
+    */
+/*@Test
     public void signInWithoutVerificationBlocked() {
         clickButton(withId(R.id.signUpButton));
 
@@ -102,9 +118,11 @@ public class LoginTest {
         fillAndSubmitSignIn(EMAIL, PASSWORD);
 
         onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));
-    }*/
+    }*//*
 
-    /*@Test
+
+    */
+/*@Test
     public void networkInterruptionFailsProperly() {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
@@ -125,7 +143,8 @@ public class LoginTest {
                 .check(matches(isDisplayed()));
 
         clickButton(withText(R.string.alert_close));
-    }*/
+    }*//*
+
 
     public void createAccountAndBackToLogin(String email, String nickname, String password) {
         clickButton(withId(R.id.signUpButton));
@@ -163,3 +182,4 @@ public class LoginTest {
         onView(object).perform(click());
     }
 }
+*/
