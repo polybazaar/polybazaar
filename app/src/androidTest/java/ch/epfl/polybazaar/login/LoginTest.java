@@ -18,12 +18,9 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest {
@@ -113,7 +110,7 @@ public class LoginTest {
         onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));
     }*/
 
-    @Test
+    /*@Test
     public void networkInterruptionFailsProperly() {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
@@ -134,7 +131,7 @@ public class LoginTest {
                 .check(matches(isDisplayed()));
 
         clickButton(withText(R.string.alert_close));
-    }
+    }*/
 
     public void createAccountAndBackToLogin(String email, String nickname, String password) {
         clickButton(withId(R.id.signUpButton));
