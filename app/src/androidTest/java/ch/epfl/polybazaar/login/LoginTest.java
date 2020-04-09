@@ -101,7 +101,7 @@ public class LoginTest {
         onView(withText(R.string.signup_passwords_weak)).check(matches(isDisplayed()));
     }*/
 
-    @Test
+    /*@Test
     public void signInWithoutVerificationBlocked() {
         clickButton(withId(R.id.signUpButton));
 
@@ -111,7 +111,7 @@ public class LoginTest {
         fillAndSubmitSignIn(EMAIL, PASSWORD);
 
         onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));
-    }
+    }*/
 
     @Test
     public void networkInterruptionFailsProperly() {
