@@ -8,7 +8,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/general_margin"
+        android:layout_marginLeft="@dimen/general_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,9 +52,7 @@
                 android:id="@+id/title"
                 android:layout_width="344dp"
                 android:layout_height="27dp"
-                android:layout_marginStart="36dp"
                 android:layout_marginTop="24dp"
-                android:layout_marginEnd="31dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/titre"
                 android:textSize="18sp"
@@ -63,9 +63,7 @@
                 android:id="@+id/category"
                 android:layout_width="344dp"
                 android:layout_height="27dp"
-                android:layout_marginStart="36dp"
                 android:layout_marginTop="24dp"
-                android:layout_marginEnd="31dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/category"
                 android:textSize="18sp"
@@ -76,9 +74,7 @@
                 android:id="@+id/description"
                 android:layout_width="342dp"
                 android:layout_height="121dp"
-                android:layout_marginStart="36dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="35dp"
                 android:text="@string/description"
                 android:visibility="invisible" />
 
@@ -92,13 +88,18 @@
 
             <Button
                 android:id="@+id/contactSel"
-                android:layout_width="343dp"
-                android:layout_height="45dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="76dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/contact_the_seller" />
+
+            <Button
+                android:id="@+id/viewMP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/seeMP" />
 
             <TextView
                 android:id="@+id/userEmail"
@@ -119,6 +120,8 @@
                 android:layout_marginTop="218dp"
                 android:alpha="0.7"
                 android:background="@drawable/rounded_corner" />
+
+
 
         </LinearLayout>
     </ScrollView>
