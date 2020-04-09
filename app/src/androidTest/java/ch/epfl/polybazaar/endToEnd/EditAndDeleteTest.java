@@ -49,6 +49,47 @@ public class EditAndDeleteTest {
         useMockDataStore();
     }
 
+    /*@Test
+    public void testDeleteWorksForPreviouslyUploadedListing() throws InterruptedException {
+        String title = "My delete test";
+        String email = MockAuthenticator.TEST_USER_EMAIL;
+        storeNewListing(title, email);
+        assertDatabaseHasAtLeastOneEntryWithTitle(title);
+        signInWithFromMainActivity(email, MockAuthenticator.TEST_USER_PASSWORD);
+
+        onView(withId(R.id.saleOverview)).perform(click());
+        onView(withText(title)).perform(click());
+        onView(withId(R.id.deleteButton)).perform(scrollTo(), click());
+        onView(withText("Yes")).perform(click());
+
+        assertDatabaseHasNoListingWithTitle(title);
+    }*/
+
+
+    /*@Test
+    public void testEditWorksForPreviouslyUploadedListing() throws Throwable {
+        String oldTitle = "My test";
+        String newTitle = "My edited test";
+        String email = MockAuthenticator.TEST_USER_EMAIL;
+        storeNewListing(oldTitle, email);
+        assertDatabaseHasAtLeastOneEntryWithTitle(oldTitle);
+        signInWithFromMainActivity(email, MockAuthenticator.TEST_USER_PASSWORD);
+
+        onView(withId(R.id.saleOverview)).perform(click());
+
+        onView(withText(oldTitle)).perform(click());
+        onView(withId(R.id.editButton)).perform(scrollTo(), click());
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText(), typeText(newTitle));
+        closeSoftKeyboard();
+        onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
+        onView(withText("Furniture")).perform(scrollTo(), click());
+        onView(withId(R.id.submitListing)).perform(scrollTo(), click());
+
+        assertDatabaseHasAtLeastOneEntryWithTitle(newTitle);
+        assertDatabaseHasNoListingWithTitle(oldTitle);
+
+    }*/
+
 
     private void assertDatabaseHasNoListingWithTitle(String title){
         queryLiteListingStringEquality("title", title, result -> assertThat(result, is(empty())));

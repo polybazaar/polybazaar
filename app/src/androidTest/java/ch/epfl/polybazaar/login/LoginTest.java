@@ -52,7 +52,7 @@ public class LoginTest {
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
     }
 
-    @Test
+    /*@Test
     public void signUpProcessWorks() {
         createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
         fillAndSubmitSignIn(EMAIL, "aaaaaaaa");
@@ -65,7 +65,7 @@ public class LoginTest {
 
         fillAndSubmitSignIn(EMAIL, PASSWORD);
         onView(withText(R.string.authentication_successful)).check(matches(isDisplayed()));
-    }
+    }*/
 
     /*@Test
     public void signUpWithExistingEmailFails() {
