@@ -7,7 +7,6 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.R;
@@ -17,10 +16,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest {
@@ -73,14 +69,14 @@ public class LoginTest {
         onView(withText(R.string.signup_error)).check(matches(isDisplayed()));
     }*/
 
-    @Test
+    /*@Test
     public void signUpWithNonEpflPasswordFails() {
         String email = "test@gmail.com";
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(email, NICKNAME, PASSWORD, PASSWORD);
 
         onView(withText(R.string.signup_email_invalid)).check(matches(isDisplayed()));
-    }
+    }*/
 
     /*@Test
     public void signUpWithNonMatchingPasswordFails() {
