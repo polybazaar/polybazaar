@@ -93,13 +93,13 @@ public class LoginTest {
         onView(withText(R.string.signup_passwords_not_matching)).check(matches(isDisplayed()));
     }*/
 
-    @Test
+    /*@Test
     public void signUpWithBadPassword() {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME,"a", "a");
 
         onView(withText(R.string.signup_passwords_weak)).check(matches(isDisplayed()));
-    }
+    }*/
 
     @Test
     public void signInWithoutVerificationBlocked() {
