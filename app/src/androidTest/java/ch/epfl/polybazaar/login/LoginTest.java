@@ -3,10 +3,8 @@ package ch.epfl.polybazaar.login;
 import android.view.View;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.R;
@@ -24,7 +22,7 @@ public class LoginTest {
     String NICKNAME = "otheruser";
     String PASSWORD = "abcdef";
 
-    @Rule
+    /*@Rule
     public final ActivityTestRule<SignInActivity> mActivityRule =
             new ActivityTestRule<SignInActivity>(SignInActivity.class){
                 @Override
@@ -37,7 +35,7 @@ public class LoginTest {
                     MockAuthenticator.getInstance().reset();
                     MockPhoneSettings.getInstance().setAirPlaneMode(false);
                 }
-            };
+            };*/
 
     /*@Test
     public void loginWithUnregisteredUserFails() {

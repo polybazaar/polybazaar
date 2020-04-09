@@ -3,7 +3,6 @@ package ch.epfl.polybazaar;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Instrumentation;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -17,7 +16,6 @@ import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -248,7 +246,7 @@ public class FillListingActivityTest {
     }
 
 
-    @Test
+    /*@Test
     public void DialogAppearsWhenNoConnection() throws Throwable {
         Intents.init();
         useMockNetworkState(false);
@@ -260,9 +258,9 @@ public class FillListingActivityTest {
         //onView(withText("No Internet connection found")).check(matches(isDisplayed()));
         Intents.release();
         useRealNetwork();
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void DialogPositiveClickGoesToSalesOverview() throws Throwable {
         Intents.init();
         useMockNetworkState(false);
@@ -280,7 +278,7 @@ public class FillListingActivityTest {
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
         useRealNetwork();
-    }
+    }*/
 
     @Test
     public void DialogNegativeClickGoesToFillListing() throws Throwable {
