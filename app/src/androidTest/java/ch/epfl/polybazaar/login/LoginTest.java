@@ -46,11 +46,11 @@ public class LoginTest {
                 }
             };
 
-    @Test
+    /*@Test
     public void loginWithUnregisteredUserFails() {
         fillAndSubmitSignIn(EMAIL, PASSWORD);
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
-    }
+    }*/
 
     /*@Test
     public void signUpProcessWorks() {
