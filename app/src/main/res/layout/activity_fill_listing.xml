@@ -9,7 +9,9 @@
 
     <ScrollView
         android:layout_width="409dp"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:layout_marginStart="@dimen/general_margin"
+        android:layout_marginEnd="@dimen/general_margin">
 
         <LinearLayout
             android:id="@+id/fillListingLinearLayout"
@@ -17,12 +19,54 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/picturePreview"
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="252dp"
-                android:layout_weight="1"
-                app:srcCompat="@android:drawable/screen_background_dark" />
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/setFirst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/move_first"
+                    android:visibility="invisible"
+                    android:textSize="12sp"
+                    android:onClick="setFirst"/>
+
+                <Button
+                    android:id="@+id/rotateLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rotate_left"
+                    android:textSize="12sp"
+                    android:visibility="invisible"
+                    android:onClick="rotateLeft"/>
+
+                <Button
+                    android:id="@+id/deleteImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delete_image"
+                    android:textSize="12sp"
+                    android:visibility="invisible"
+                    android:onClick="deleteImage"/>
+
+                <Button
+                    android:id="@+id/modifyImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="modifyCurrentImage"
+                    android:text="@string/modify_image"
+                    android:visibility="invisible" />
+
+            </TableRow>
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/viewpager_height"
+                android:layout_marginTop="@dimen/viewpager_margin"
+                android:clickable="true"
+                android:focusable="true"/>
 
             <TableRow
                 android:layout_width="match_parent"
@@ -116,6 +160,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/offset"
                     android:text="Free"
                     android:textSize="20sp" />
 
@@ -135,10 +180,31 @@
                 android:inputType="numberDecimal" />
 
             <Button
+                android:id="@+id/addMP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/addMP" />
+
+            <TextView
+                android:id="@+id/MPStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/MP_nok" />
+
+            <Button
                 android:id="@+id/submitListing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Submit listing" />
+                android:text="@string/submit_listing" />
+
+            <ImageView
+                android:id="@+id/picturePreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
+
 
         </LinearLayout>
     </ScrollView>

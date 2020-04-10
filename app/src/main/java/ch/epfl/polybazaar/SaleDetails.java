@@ -25,10 +25,17 @@ import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
+import ch.epfl.polybazaar.listingImage.ListingListImages;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.map.MapsActivity;
 
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LatLng;
+import static ch.epfl.polybazaar.map.MapsActivity.LAT;
+import static ch.epfl.polybazaar.map.MapsActivity.LNG;
+import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
+import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 
 public class SaleDetails extends AppCompatActivity {
     private Button editButton;
@@ -38,20 +45,28 @@ public class SaleDetails extends AppCompatActivity {
     private String listingID;
     private String sellerEmail;
 
+    private double mpLat = NOLAT;
+    private double mpLng = NOLNG;
+
     private ViewPager2 viewPager2;
     private List<String> listStringImage;
+    private List<String> listImageID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_details);
 
+        findViewById(R.id.viewMP).setVisibility(View.INVISIBLE);
+
         listStringImage = new ArrayList<>();
+        listImageID = new ArrayList<>();
 
         final ImageView imageLoading = findViewById(R.id.loadingImage);
         Glide.with(this).load(R.drawable.loading).into(imageLoading);
 
         retrieveListingFromListingID();
+        viewMP();
         getSellerInformation();
     }
 
@@ -63,8 +78,24 @@ public class SaleDetails extends AppCompatActivity {
                 intent.putExtra("listingID", listingID);
                 intent.putExtra("receiverEmail", sellerEmail);
                 startActivity(intent);
+                if (mpLat != NOLAT && mpLng != NOLNG) {
+                    findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
+                }
             });
+        });
+    }
 
+    private void viewMP() {
+        Button viewMP = findViewById(R.id.viewMP);
+        viewMP.setOnClickListener(view -> {
+            //TODO check that user is connected
+            Intent viewMPIntent = new Intent(this, MapsActivity.class);
+            Bundle extras = new Bundle();
+            extras.putBoolean(GIVE_LatLng, true);
+            extras.putDouble(LAT, mpLat);
+            extras.putDouble(LNG, mpLng);
+            viewMPIntent.putExtras(extras);
+            startActivity(viewMPIntent);
         });
     }
 
@@ -95,7 +126,6 @@ public class SaleDetails extends AppCompatActivity {
             this.sellerEmail = result.getUserEmail();
             this.listingID = listingID;
             fillWithListing(result);
-
         });
     }
 
@@ -105,6 +135,7 @@ public class SaleDetails extends AppCompatActivity {
      * @param listingID
      */
     private void retrieveImages(String listingID) {
+        listImageID.add(listingID);
         ListingImage.fetch(listingID).addOnSuccessListener(result -> {
             if(result == null) {
                 drawImages();
@@ -171,6 +202,10 @@ public class SaleDetails extends AppCompatActivity {
             Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
             startActivity(intent);
         } else {
+            //Set Meeting Point
+            mpLat = listing.getLatitude();
+            mpLng = listing.getLongitude();
+
             runOnUiThread(() -> {
                 //Set the title
                 TextView title_txt = findViewById(R.id.title);
@@ -223,13 +258,14 @@ public class SaleDetails extends AppCompatActivity {
             Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
             intent.putExtra("listingID", listingID);
             intent.putExtra("listing", listing);
+            intent.putExtra("listingImages", new ListingListImages(listStringImage, listImageID));
             startActivity(intent);
         });
     }
 
     private void deleteCurrentListing(String listingID) {
         Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-                Toast toast = Toast.makeText(getApplicationContext(),"Listing successfuly deleted", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(),"Listing successfully deleted", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
