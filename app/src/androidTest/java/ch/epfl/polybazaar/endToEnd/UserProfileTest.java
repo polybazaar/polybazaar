@@ -93,6 +93,7 @@ public class UserProfileTest {
         onView(withId(R.id.savePassword)).perform(scrollTo(), click());
         signedInFlag = false;
         whenAll(authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true));
+        Thread.sleep(100);
         assertThat(signedInFlag, is(true));
     }
 
