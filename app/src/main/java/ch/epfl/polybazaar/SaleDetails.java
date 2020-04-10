@@ -35,6 +35,9 @@ public class SaleDetails extends AppCompatActivity {
     private Button deleteButton;
     private AlertDialog deleteDialog;
 
+    private String listingID;
+    private String sellerEmail;
+
     private ViewPager2 viewPager2;
     private List<String> listStringImage;
 
@@ -56,9 +59,10 @@ public class SaleDetails extends AppCompatActivity {
         runOnUiThread(() -> {
             Button get_seller = findViewById(R.id.contactSel);
             get_seller.setOnClickListener(view -> {
-                //TODO check that user is connected
-                findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
-                findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
+                Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
+                intent.putExtra("listingID", listingID);
+                intent.putExtra("sellerEmail", sellerEmail);
+                startActivity(intent);
             });
 
         });
@@ -85,6 +89,8 @@ public class SaleDetails extends AppCompatActivity {
                     createEditAndDeleteActions(result, listingID);
                 }
             }
+            this.sellerEmail = result.getUserEmail();
+            this.listingID = listingID;
             fillWithListing(result);
 
         });
@@ -183,10 +189,7 @@ public class SaleDetails extends AppCompatActivity {
                 price_txt.setTextSize(20);
                 price_txt.setText(String.format("CHF %s", listing.getPrice()));
 
-                //Set email
-                TextView userEmailTextView = findViewById(R.id.userEmail);
-                userEmailTextView.setText(listing.getUserEmail());
-                userEmailTextView.setVisibility(View.INVISIBLE);
+
             });
         }
     }
