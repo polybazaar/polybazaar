@@ -116,6 +116,7 @@ public class SaleDetails extends AppCompatActivity {
         Listing.fetch(listingID).addOnSuccessListener(result -> {
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
             if(!(fbAuth.getCurrentUser() == null)){
+                this.sellerEmail = result.getUserEmail();
                 if(fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
                     createEditAndDeleteActions(result, listingID);
                 }
@@ -123,7 +124,7 @@ public class SaleDetails extends AppCompatActivity {
                     showContactButton();
                 }
             }
-            this.sellerEmail = result.getUserEmail();
+
             this.listingID = listingID;
             fillWithListing(result);
         });
