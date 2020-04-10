@@ -91,9 +91,10 @@ public class UserProfileTest {
         onView(withId(R.id.confirmNewPassword)).perform(scrollTo(), typeText(newPassword));
         closeSoftKeyboard();
         onView(withId(R.id.savePassword)).perform(scrollTo(), click());
+        //wait that password has been updated
+        Thread.sleep(500);
         signedInFlag = false;
-        authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true);
-        Thread.sleep(1000);
+        whenAll(authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true));
         assertThat(signedInFlag, is(true));
     }
 
