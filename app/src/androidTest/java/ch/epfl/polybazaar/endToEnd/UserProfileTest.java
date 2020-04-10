@@ -33,8 +33,6 @@ import static com.google.android.gms.tasks.Tasks.whenAll;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class UserProfileTest {
 
@@ -94,8 +92,9 @@ public class UserProfileTest {
         closeSoftKeyboard();
         onView(withId(R.id.savePassword)).perform(scrollTo(), click());
         signedInFlag = false;
-        whenAll(authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword));
-        assertNotNull(AuthenticatorFactory.getDependency().getCurrentUser());
+        authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true);
+        Thread.sleep(1000);
+        assertThat(signedInFlag, is(true));
     }
 
 
