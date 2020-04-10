@@ -412,7 +412,7 @@ public class FillListingActivityTest {
         useRealNetwork();
     }
 
-    @Test
+    /*@Test
     public void testCreateAndSendListingWhenUserNull() throws Throwable {
         AuthenticatorFactory.getDependency().signOut();
         fillListing();
@@ -423,7 +423,7 @@ public class FillListingActivityTest {
         Thread.sleep(2000);
 
         whenAll(AuthenticatorFactory.getDependency().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD));
-    }
+    }*/
 
     private void uploadImage(){
         closeSoftKeyboard();
