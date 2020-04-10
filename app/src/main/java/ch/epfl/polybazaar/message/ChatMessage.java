@@ -1,15 +1,10 @@
 package ch.epfl.polybazaar.message;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentId;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Date;
 
 import ch.epfl.polybazaar.database.Model;
-import ch.epfl.polybazaar.database.ModelTransaction;
 
 public class ChatMessage extends Model {
     @DocumentId
@@ -18,16 +13,18 @@ public class ChatMessage extends Model {
     private String receiver;
     private String listingID;
     private String message;
+    private Date time;
 
-    public static final String COLLECTION = "messages";
+    public static final String COLLECTION = "chatMessages";
 
     public ChatMessage(){};
 
-    public ChatMessage(String sender, String receiver, String listingID, String message){
+    public ChatMessage(String sender, String receiver, String listingID, String message, Date time){
         this.sender = sender;
         this.receiver = receiver;
         this.listingID = listingID;
         this.message = message;
+        this.time = time;
     }
 
     public String getSender(){
@@ -44,6 +41,10 @@ public class ChatMessage extends Model {
 
     public String getMessage(){
         return message;
+    }
+
+    public Date getTime(){
+        return time;
     }
 
     @Override

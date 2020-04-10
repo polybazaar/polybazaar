@@ -98,7 +98,9 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="76dp"
-                android:text="@string/contact_the_seller" />
+                android:clickable="false"
+                android:text="@string/contact_the_seller"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/userEmail"

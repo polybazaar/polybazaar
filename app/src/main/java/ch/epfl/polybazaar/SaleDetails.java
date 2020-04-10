@@ -61,7 +61,7 @@ public class SaleDetails extends AppCompatActivity {
             get_seller.setOnClickListener(view -> {
                 Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
                 intent.putExtra("listingID", listingID);
-                intent.putExtra("sellerEmail", sellerEmail);
+                intent.putExtra("receiverEmail", sellerEmail);
                 startActivity(intent);
             });
 
@@ -88,6 +88,9 @@ public class SaleDetails extends AppCompatActivity {
                 if(fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
                     createEditAndDeleteActions(result, listingID);
                 }
+                else{
+                    showContactButton();
+                }
             }
             this.sellerEmail = result.getUserEmail();
             this.listingID = listingID;
@@ -95,6 +98,7 @@ public class SaleDetails extends AppCompatActivity {
 
         });
     }
+
 
     /**
      * recursive function to retrieve all images
@@ -231,5 +235,12 @@ public class SaleDetails extends AppCompatActivity {
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
         });
+    }
+
+
+    private void showContactButton() {
+        Button contactSelButton = findViewById(R.id.contactSel);
+        contactSelButton.setVisibility(View.VISIBLE);
+        contactSelButton.setClickable(true);
     }
 }
