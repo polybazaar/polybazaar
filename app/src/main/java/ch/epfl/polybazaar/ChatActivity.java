@@ -11,9 +11,12 @@ import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.List;
+
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.message.ChatMessage;
+import ch.epfl.polybazaar.message.ChatMessageDatabase;
 
 import static java.util.UUID.randomUUID;
 
@@ -26,6 +29,8 @@ public class ChatActivity extends AppCompatActivity {
     private String senderEmail;
     private String receiverEmail;
     private String listingID;
+
+    private List<ChatMessage> conversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +49,16 @@ public class ChatActivity extends AppCompatActivity {
 
         sendMessageButton.setOnClickListener(v -> sendMessage());
 
+        loadConversation();
+    }
 
-        //TODO: Fill the recycler view with the messages belonging to that conversation (i.e. same listingID and sender (and receiver but probably not needed)
+    private void loadConversation() {
+        ChatMessageDatabase.fetchMessagesOfConversation(senderEmail, receiverEmail, listingID).addOnSuccessListener(new OnSuccessListener<List<ChatMessage>>() {
+            @Override
+            public void onSuccess(List<ChatMessage> chatMessages) {
+                conversation = chatMessages;
+            }
+        });
     }
 
     private void sendMessage() {
