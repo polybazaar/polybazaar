@@ -227,7 +227,8 @@ public class MockDataStore implements DataStore {
 
     @Override
     public Task<CollectionSnapshot> fetchWithEqualsMultiple(String collectionPath, List<String> fields, List<String> values) {
-        throw new UnsupportedOperationException();
+        // TODO this does not work. This is only a stub implementation
+        return fetchAll(collectionPath);
     }
 
     // Gets the requested collection if it already exists, otherwise creates a new one
