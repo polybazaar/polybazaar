@@ -40,7 +40,7 @@ public class SendChatForListingTest {
 
 
     @Test
-    public void testUserCanSendMessageViaListing(){
+    public void testUserCanSendMessageViaListing() throws InterruptedException {
         String otherUserEmail = "other.user@epfl.ch";
         String title = "Send chat";
         String message = "Hello how are you?";
@@ -51,16 +51,9 @@ public class SendChatForListingTest {
 
         onView(withText(title)).perform(click());
 
-        //This special construct is needed as the contactSel button may take some time to appear
-        //This could probably be done better, with the use of a callback
-        boolean passed = false;
-        do{
-            try{
-                onView(withId(R.id.contactSel)).perform(scrollTo(), click());
-                passed = true;
-            }
-            catch (Exception e){}
-        }while(!passed);
+        //The sleep is a dirty solution to wait for the activity to load
+        Thread.sleep(5000);
+        onView(withId(R.id.contactSel)).perform(scrollTo(), click());
 
         onView(withId(R.id.messageEditor)).perform(typeText(message));
         closeSoftKeyboard();

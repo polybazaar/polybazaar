@@ -84,16 +84,10 @@ public class UserProfileTest {
         signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         onView(withId(R.id.profileButton)).perform(click());
 
-        //This special construct is needed as the currentPassword text editor may take some time to appear
-        //This could probably be done better, with the use of a callback
-        boolean passed = false;
-        do{
-            try{
-                onView(withId(R.id.currentPassword)).perform(scrollTo(), clearText(), typeText(MockAuthenticator.TEST_USER_PASSWORD));
-                passed = true;
-            }
-            catch (Exception e){}
-        }while(!passed);
+        //The sleep is a dirty solution to wait for the activity to load
+        Thread.sleep(5000);
+        onView(withId(R.id.currentPassword)).perform(scrollTo(), clearText(), typeText(MockAuthenticator.TEST_USER_PASSWORD));
+
 
         closeSoftKeyboard();
         onView(withId(R.id.newPassword)).perform(scrollTo(), clearText(), typeText(newPassword));
