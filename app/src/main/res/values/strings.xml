@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">polybazaar</string>
+    <string name="app_name">PolyBazaar</string>
     <string name="email_not_verified">Your e-mail address has not been verified yet</string>
     <string name="verify_email">Verify e-mail address now</string>
     <string name="verification_not_working">Have you already verified your e-mail?</string>
@@ -29,4 +29,29 @@
     <string name="filter"><u>Filter</u></string>
     <string name="favorites"><u>Favorites</u></string>
     <string name="no_favorites">You don\'t have any saved favorites</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="location_permission_denied">Permission Denied</string>
+    <string name="permission_required_toast">Permission Required</string>
+    <string name="permission_rationale_location">Permission Rationale Location</string>
+    <string name="my_location">Find my location</string>
+    <string name="addMP">Define Meeting Point</string>
+    <string name="changeMP">Change/Remove Meeting Point</string>
+    <string name="submit_listing">Submit Listing</string>
+    <string name="seeMP">See Meeting Point</string>
+    <string name="confirmMP">Validate</string>
+    <string name="MP_removed">Meeting Point removed</string>
+    <string name="MP_set">Meeting Point set</string>
+    <string name="title_activity_user_profile">Profile</string>
+    <string name="modify_image">modify image</string>
+    <string name="move_first">Move first</string>
+    <string name="rotate_left">rotate left</string>
+    <string name="delete_image">delete image</string>
+    <string name="invalid_first_name">Please enter a valid first name</string>
+    <string name="invalid_last_name">Please enter a valid last name</string>
+    <string name="invalid_current_password">The current password is incorrect</string>
+    <string name="password_updated">Your password has successfully been updated</string>
+    <string name="profile_updated">Your profile has successfully been updated</string>
+    <string name="MP_ok">Meeting Point defined</string>
+    <string name="MP_nok">Meeting Point not defined</string>
+    <string name="location_unavailable">Location services are unavailable</string>
 </resources>

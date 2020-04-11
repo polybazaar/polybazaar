@@ -1,10 +1,13 @@
 package ch.epfl.polybazaar.listingImage;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentId;
 
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
+import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 
 public class ListingImage extends Model {
     @DocumentId
@@ -12,9 +15,9 @@ public class ListingImage extends Model {
     private String image;
     private String refNextImg;
 
-    private static final String COLLECTION = "listingsImage";
+    public static final String COLLECTION = "listingsImage";
 
-    private ListingImage() {}
+    public ListingImage() {}
 
     public ListingImage(String image, String refNextImg) {
         this.image = image;
@@ -52,5 +55,17 @@ public class ListingImage extends Model {
      */
     public static Task<ListingImage> fetch(String id) {
         return ModelTransaction.fetch(COLLECTION, id, ListingImage.class);
+    }
+
+    /**
+     * Deletes a ListingImage in its complete and lite form
+     * @param id id of the listingImage
+     * @return task that completes when both versions have been deleted. The task
+     * fails if the database is unreachable
+     */
+    public static Task<Void> delete(String id) {
+        Task<Void> deleteImage = ModelTransaction.delete(ListingImage.COLLECTION, id);
+
+        return Tasks.whenAll(deleteImage);
     }
 }

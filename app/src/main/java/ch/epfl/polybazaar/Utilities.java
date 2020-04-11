@@ -41,6 +41,8 @@ public abstract class Utilities {
             result.put("price", ((Listing)o).getPrice());
             result.put("title", ((Listing)o).getTitle());
             result.put("userEmail", ((Listing)o).getUserEmail());
+            result.put("latitude", ((Listing)o).getLatitude());
+            result.put("longitude", ((Listing)o).getLongitude());
         } else if (o instanceof LiteListing) {
             result.put("listingID", ((LiteListing)o).getListingID());
             result.put("price", ((LiteListing)o).getPrice());
@@ -48,8 +50,11 @@ public abstract class Utilities {
             result.put("category", ((LiteListing)o).getCategory());
             result.put("stringThumbnail", ((LiteListing)o).getStringThumbnail());
         } else if (o instanceof User) {
-            result.put("email", ((User)o).getEmail());
             result.put("nickName", ((User)o).getNickName());
+            result.put("email", ((User)o).getEmail());
+            result.put("firstName", ((User)o).getFirstName());
+            result.put("lastName", ((User)o).getLastName());
+            result.put("phoneNumber", ((User)o).getPhoneNumber());
         } else if (o instanceof ListingImage) {
             result.put("image", ((ListingImage)o).getImage());
             result.put("refNextImg", ((ListingImage)o).getRefNextImg());
@@ -67,6 +72,14 @@ public abstract class Utilities {
 
     public static boolean emailIsValid(String email) {
         return (email.matches("[a-zA-Z]+"+"."+"[a-zA-Z]+"+"@epfl.ch"));
+    }
+
+    public static boolean passwordIsValid(String password) {
+        return password.length() >= 6;
+    }
+
+    public static boolean nickNameIsValid(String nickname) {
+        return nickname.length() >= 6;
     }
 
     public static boolean isValidUser(User user) {
@@ -139,6 +152,9 @@ public abstract class Utilities {
      * taken from Stackoverflow
      */
     public static String convertBitmapToStringWithQuality(Bitmap bitmap, int quality){
+        if(bitmap == null) {
+            return null;
+        }
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         byte [] b=baos.toByteArray();
@@ -166,6 +182,21 @@ public abstract class Utilities {
     }
 
     /**
+     * Resize String image, return null if input is null or equals to ""
+     * @param input
+     * @return
+     */
+    public static String resizeStringImageThumbnail(String input) {
+        if(input == null || input.equals("")) {
+            return null;
+        }
+        Bitmap b = convertStringToBitmap(input);
+        int width = b.getWidth() * 240 / b.getHeight();
+        return convertBitmapToStringWithQuality(Bitmap.createScaledBitmap(b, width, 240, false), 100);
+    }
+
+    //TODO is this function never used?
+    /**
      * Helper function to resize a bitmap given in argument
      * @param bitmap original image
      * @param scaleWidth scale factor for width, should be between 0 and 1
@@ -173,7 +204,9 @@ public abstract class Utilities {
      * @return
      */
     public static Bitmap resizeBitmap(Bitmap bitmap, float scaleWidth, float scaleHeight) throws IllegalArgumentException{
-
+        if(bitmap == null) {
+            return null;
+        }
         if(scaleWidth < 0 || scaleWidth > 1 || scaleHeight < 0 || scaleHeight > 1) {
             throw new IllegalArgumentException("Scale factors should be between 0 and 1");
         }
