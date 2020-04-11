@@ -84,14 +84,14 @@ public class UserProfileTest {
         signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         onView(withId(R.id.profileButton)).perform(click());
 
-
-        onView(withId(R.id.currentPassword)).perform(scrollTo(), clearText(), typeText(MockAuthenticator.TEST_USER_PASSWORD));
+        onView(withId(R.id.newPassword)).perform(scrollTo());
+        onView(withId(R.id.currentPassword)).perform(typeText(MockAuthenticator.TEST_USER_PASSWORD));
 
 
         closeSoftKeyboard();
-        onView(withId(R.id.newPassword)).perform(scrollTo(), clearText(), typeText(newPassword));
+        onView(withId(R.id.newPassword)).perform(scrollTo(), typeText(newPassword));
         closeSoftKeyboard();
-        onView(withId(R.id.confirmNewPassword)).perform(scrollTo(), clearText(), typeText(newPassword));
+        onView(withId(R.id.confirmNewPassword)).perform(scrollTo(), typeText(newPassword));
         closeSoftKeyboard();
         onView(withId(R.id.savePassword)).perform(scrollTo(), click());
         signedInFlag = false;

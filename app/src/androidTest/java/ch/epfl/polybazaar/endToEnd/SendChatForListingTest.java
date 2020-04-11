@@ -51,9 +51,7 @@ public class SendChatForListingTest {
 
         onView(withText(title)).perform(click());
 
-        //The sleep is a dirty solution to wait for the activity to load
-        onView(withId(R.id.price)).perform(scrollTo());
-        onView(withId(R.id.contactSel)).perform(click());
+        onView(withId(R.id.contactSel)).perform(scrollTo(), click());
 
         onView(withId(R.id.messageEditor)).perform(typeText(message));
         closeSoftKeyboard();
