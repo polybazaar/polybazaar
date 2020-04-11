@@ -102,14 +102,18 @@ public class SalesOverview extends AppCompatActivity {
         LiteListing.retrieveAll().addOnSuccessListener(result -> {
             if(IDList.isEmpty()) {
                 for (LiteListing l : result) {
-                    IDList.add(l.getId());      // create deep copy of ID list if list is empty
+                    if(l != null) {
+                        IDList.add(l.getId());      // create deep copy of ID list if list is empty
+                    }
                 }
             }
             LiteListingCallback callbackLiteListing = new LiteListingCallback() {
                 @Override
                 public void onCallback(LiteListing result) {
-                    liteListingList.add(result);
-                    adapter.notifyItemInserted(liteListingList.size()-1);
+                    if(result != null) {
+                        liteListingList.add(result);
+                        adapter.notifyItemInserted(liteListingList.size() - 1);
+                    }
                 }
             };
             int size = IDList.size();
