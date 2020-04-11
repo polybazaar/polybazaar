@@ -50,7 +50,18 @@ public class SendChatForListingTest {
         onView(withId(R.id.saleOverview)).perform(click());
 
         onView(withText(title)).perform(click());
-        onView(withId(R.id.contactSel)).perform(scrollTo(), click());
+
+        //This special construct is needed as the contactSel button may take some time to appear
+        //This could probably be done better, with the use of a callback
+        boolean passed = false;
+        do{
+            try{
+                onView(withId(R.id.contactSel)).perform(scrollTo(), click());
+                passed = true;
+            }
+            catch (Exception e){}
+        }while(!passed);
+
         onView(withId(R.id.messageEditor)).perform(typeText(message));
         closeSoftKeyboard();
         onView(withId(R.id.sendMessageButton)).perform(click());
