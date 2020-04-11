@@ -41,7 +41,7 @@ public class SendChatForListingTest {
 
     @Test
     public void testUserCanSendMessageViaListing() throws InterruptedException {
-        String otherUserEmail = "other.user@epfl.ch";
+        String otherUserEmail = "otherother.user@epfl.ch";
         String title = "Send chat";
         String message = "Hello how are you?";
         SignInUtilities.signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
@@ -52,8 +52,8 @@ public class SendChatForListingTest {
         onView(withText(title)).perform(click());
 
         //The sleep is a dirty solution to wait for the activity to load
-        Thread.sleep(5000);
-        onView(withId(R.id.contactSel)).perform(scrollTo(), click());
+        onView(withId(R.id.price)).perform(scrollTo());
+        onView(withId(R.id.contactSel)).perform(click());
 
         onView(withId(R.id.messageEditor)).perform(typeText(message));
         closeSoftKeyboard();

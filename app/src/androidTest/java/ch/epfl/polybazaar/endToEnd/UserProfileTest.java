@@ -84,8 +84,7 @@ public class UserProfileTest {
         signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         onView(withId(R.id.profileButton)).perform(click());
 
-        //The sleep is a dirty solution to wait for the activity to load
-        Thread.sleep(5000);
+
         onView(withId(R.id.currentPassword)).perform(scrollTo(), clearText(), typeText(MockAuthenticator.TEST_USER_PASSWORD));
 
 
