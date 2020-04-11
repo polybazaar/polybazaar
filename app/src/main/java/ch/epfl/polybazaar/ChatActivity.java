@@ -67,22 +67,20 @@ public class ChatActivity extends AppCompatActivity {
         Task<List<ChatMessage>> fetchSenderMessages = ChatMessageDatabase.fetchMessagesOfConversation(senderEmail, receiverEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
         Task<List<ChatMessage>> fetchReceiverMessages = ChatMessageDatabase.fetchMessagesOfConversation(receiverEmail, senderEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
 
-        Tasks.whenAll(fetchReceiverMessages, fetchSenderMessages).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                //Sort the conversation by the time the messages were sent
-                if(conversation != null){
-                    conversation.sort((o1, o2) -> {
-                        if(o1.getTime().getTime() < o2.getTime().getTime()){
-                            return -1;
-                        } else{
-                            return 1;
-                        }
-                    });
-                    chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
-                    messageRecycler.setAdapter(chatMessageRecyclerAdapter);
-                }
+
+        Tasks.whenAll(fetchReceiverMessages, fetchSenderMessages).addOnSuccessListener(aVoid -> {
+            //Sort the conversation by the time the messages were sent
+            if(conversation != null){
+                conversation.sort((o1, o2) -> {
+                    if(o1.getTime().getTime() < o2.getTime().getTime()){
+                        return -1;
+                    } else{
+                        return 1;
+                    }
+                });
             }
+            chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
+            messageRecycler.setAdapter(chatMessageRecyclerAdapter);
         });
     }
 

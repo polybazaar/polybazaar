@@ -5,6 +5,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Tasks;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -95,9 +96,12 @@ public class UserProfileTest {
         closeSoftKeyboard();
         onView(withId(R.id.savePassword)).perform(scrollTo(), click());
         signedInFlag = false;
-        authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true);
-        Thread.sleep(1000);
-        assertThat(signedInFlag, is(true));
+        Tasks.whenAll(authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true)).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                assertThat(signedInFlag, is(true));
+            }
+        });
     }
 
 }

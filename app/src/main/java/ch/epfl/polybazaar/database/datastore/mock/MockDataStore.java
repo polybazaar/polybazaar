@@ -254,7 +254,7 @@ public class MockDataStore implements DataStore {
         if (!collections.containsKey(collectionPath)){
             return Tasks.forResult(null);
         }
-        List<Object> equals = new ArrayList<>(collection.entrySet());
+        List<Object> equals = new ArrayList<>();
 
             for (Map.Entry<String, Object> entry : collection.entrySet()) {
                 Object o = entry.getValue();
@@ -269,6 +269,7 @@ public class MockDataStore implements DataStore {
                     equals.add(entry.getValue());
                 }
         }
+            System.out.println(equals);
         return Tasks.forResult(new MockCollectionSnapshot(equals));
     }
 

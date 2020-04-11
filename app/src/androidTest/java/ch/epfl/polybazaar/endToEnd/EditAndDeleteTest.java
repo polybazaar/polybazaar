@@ -21,12 +21,9 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
-import static ch.epfl.polybazaar.listing.ListingDatabase.queryListingStringEquality;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
 import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.signInWithFromMainActivity;
-import static ch.epfl.polybazaar.testingUtilities.StoreListingUtilities.storeNewListing;
+import static ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities.storeNewListing;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
