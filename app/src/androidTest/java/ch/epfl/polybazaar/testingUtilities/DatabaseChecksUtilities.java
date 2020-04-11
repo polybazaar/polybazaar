@@ -1,14 +1,8 @@
 package ch.epfl.polybazaar.testingUtilities;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.util.List;
-
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
-import static ch.epfl.polybazaar.listing.ListingDatabase.queryListingStringEquality;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.queryLiteListingStringEquality;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;

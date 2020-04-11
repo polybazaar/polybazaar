@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.message.ChatMessage;
 import ch.epfl.polybazaar.user.User;
 
 public abstract class Utilities {
@@ -38,11 +39,17 @@ public abstract class Utilities {
             result.put("latitude", ((Listing)o).getLatitude());
             result.put("longitude", ((Listing)o).getLongitude());
         } else if (o instanceof LiteListing) {
-            result.put("listingID", ((LiteListing)o).getListingID());
-            result.put("price", ((LiteListing)o).getPrice());
-            result.put("title", ((LiteListing)o).getTitle());
-            result.put("category", ((LiteListing)o).getCategory());
-            result.put("stringThumbnail", ((LiteListing)o).getStringThumbnail());
+            result.put("listingID", ((LiteListing) o).getListingID());
+            result.put("price", ((LiteListing) o).getPrice());
+            result.put("title", ((LiteListing) o).getTitle());
+            result.put("category", ((LiteListing) o).getCategory());
+            result.put("stringThumbnail", ((LiteListing) o).getStringThumbnail());
+        } else if (o instanceof ChatMessage) {
+            result.put("listingID", ((ChatMessage)o).getListingID());
+            result.put("receiver", ((ChatMessage)o).getReceiver());
+            result.put("sender", ((ChatMessage)o).getSender());
+            result.put("message", ((ChatMessage)o).getMessage());
+            result.put("time", ((ChatMessage)o).getTime());
         } else if (o instanceof User) {
             result.put("nickName", ((User)o).getNickName());
             result.put("email", ((User)o).getEmail());
