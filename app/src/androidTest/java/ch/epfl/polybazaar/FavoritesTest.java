@@ -1,9 +1,12 @@
 package ch.epfl.polybazaar;
+
 import android.view.View;
 
+import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,9 +41,15 @@ public class FavoritesTest {
 
     @Before
     public void init() {
+        Intents.init();
         useMockDataStore();
         auth = MockAuthenticator.getInstance();
         AuthenticatorFactory.setDependency(auth);
+    }
+
+    @After
+    public void cleanUp() {
+        Intents.release();
     }
 
 
@@ -53,10 +62,20 @@ public class FavoritesTest {
                 .check(matches(isDisplayed()));
     }
 
+    @Test
+    public void loggedUserHasNoFavorites() throws Throwable {
+        auth.reset();
+        auth.signIn("test.user@epfl.ch", "abcdef");
+
+        clickButton(withId(R.id.favoritesOverview));
+        Thread.sleep(1000);
+        onView(withText(R.string.no_favorites))
+                .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
+                .check(matches(isDisplayed()));
+    }
+
 
     private void clickButton(Matcher<View> object) {
         onView(object).perform(click());
     }
-
-
 }
