@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +42,6 @@ public class ChatActivity extends AppCompatActivity {
     private List<ChatMessage> conversation = new ArrayList<>();
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.N)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
@@ -62,7 +62,6 @@ public class ChatActivity extends AppCompatActivity {
         loadConversation();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void loadConversation() {
         Task<List<ChatMessage>> fetchSenderMessages = ChatMessageDatabase.fetchMessagesOfConversation(senderEmail, receiverEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
         Task<List<ChatMessage>> fetchReceiverMessages = ChatMessageDatabase.fetchMessagesOfConversation(receiverEmail, senderEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
@@ -71,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
         Tasks.whenAll(fetchReceiverMessages, fetchSenderMessages).addOnSuccessListener(aVoid -> {
             //Sort the conversation by the time the messages were sent
             if(conversation != null){
-                conversation.sort((o1, o2) -> {
+                Collections.sort(conversation, (o1, o2) -> {
                     if(o1.getTime().getTime() < o2.getTime().getTime()){
                         return -1;
                     } else{
