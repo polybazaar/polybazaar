@@ -52,20 +52,7 @@ public class FavoritesTest {
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
     }
-
-    @Test
-    public void loggedUserHasNoFavorites() {
-        auth.reset();
-        auth.signIn("test.user@epfl.ch", "abcdef");
-
-        clickButton(withId(R.id.favoritesOverview));
-        onView(withText(R.string.no_favorites))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
-                .check(matches(isDisplayed()));
-    }
-
-
-
+    
     private void clickButton(Matcher<View> object) {
         onView(object).perform(click());
     }
