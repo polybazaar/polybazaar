@@ -1,11 +1,9 @@
 package ch.epfl.polybazaar;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,7 +14,6 @@ import com.google.android.gms.tasks.Tasks;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +38,9 @@ public class ChatActivity extends AppCompatActivity {
 
     private List<ChatMessage> conversation = new ArrayList<>();
 
+    public static final String bundleLisitngId = "listingID";
+    public static final String bundleReceiverEmail = "receiverEmail";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +48,8 @@ public class ChatActivity extends AppCompatActivity {
 
         //TODO: What if the bundle is null ?
         Bundle bundle = getIntent().getExtras();
-        this.listingID = bundle.getString("listingID");
-        this.receiverEmail = bundle.getString("receiverEmail");
+        this.listingID = bundle.getString(bundleLisitngId);
+        this.receiverEmail = bundle.getString(bundleReceiverEmail);
         this.senderEmail = AuthenticatorFactory.getDependency().getCurrentUser().getEmail();
 
         sendMessageButton = findViewById(R.id.sendMessageButton);
@@ -90,15 +90,12 @@ public class ChatActivity extends AppCompatActivity {
         final String newMessageID = randomUUID().toString();
         message.setId(newMessageID);
 
-        message.save().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-               conversation.add(message);
-               messageEditor.setText("");
-
-               chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
-               messageRecycler.setAdapter(chatMessageRecyclerAdapter);
-            }
+        message.save().addOnSuccessListener(aVoid -> {
+            //TODO: It would be nice to have the keyboard close when the message is sent
+           conversation.add(message);
+           messageEditor.setText("");
+           chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
+           messageRecycler.setAdapter(chatMessageRecyclerAdapter);
         });
     }
 }

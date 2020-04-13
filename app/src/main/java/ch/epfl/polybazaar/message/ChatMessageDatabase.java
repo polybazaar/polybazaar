@@ -33,12 +33,3 @@ public class ChatMessageDatabase {
         return ModelTransaction.fetchAllWithMultipleFieldsEquality(ChatMessage.COLLECTION, Arrays.asList("sender", "receiver", "listingID"), Arrays.asList(userEmail1, userEmail2, listingID), ChatMessage.class);
     }
 }
-
-
-           /* for (ChatMessage chatMessage : chatMessages) {
-
-                if (chatMessage.getListingID().equals(listingID) && ((chatMessage.getSender().equals(userEmail1) && chatMessage.getReceiver().equals(userEmail2))
-                                                                    || (chatMessage.getSender().equals(userEmail2) && chatMessage.getReceiver().equals(userEmail1)))) {
-                    conversationMessages.add(chatMessage);
-                }
-            }*/

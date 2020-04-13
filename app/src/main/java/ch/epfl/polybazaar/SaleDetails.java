@@ -52,6 +52,7 @@ public class SaleDetails extends AppCompatActivity {
     private List<String> listStringImage;
     private List<String> listImageID;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -75,12 +76,13 @@ public class SaleDetails extends AppCompatActivity {
             Button get_seller = findViewById(R.id.contactSel);
             get_seller.setOnClickListener(view -> {
                 Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
-                intent.putExtra("listingID", listingID);
-                intent.putExtra("receiverEmail", sellerEmail);
+                intent.putExtra(ChatActivity.bundleLisitngId, listingID);
+                intent.putExtra(ChatActivity., sellerEmail);
                 startActivity(intent);
                 if (mpLat != NOLAT && mpLng != NOLNG) {
                     findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
                 }
+                //TODO: The map is not displayed anymore. Another method should be found
             });
         });
     }
