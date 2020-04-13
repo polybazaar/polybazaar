@@ -79,6 +79,7 @@ public class UserProfileTest {
         });
     }
 
+    /*
     @Test
     public void testPasswordChangeWorks() throws InterruptedException {
         String newPassword = "mynewpassword";
@@ -103,5 +104,5 @@ public class UserProfileTest {
             }
         });
     }
-
+*/
 }
