@@ -77,7 +77,7 @@ public class SaleDetails extends AppCompatActivity {
             get_seller.setOnClickListener(view -> {
                 Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
                 intent.putExtra(ChatActivity.bundleLisitngId, listingID);
-                intent.putExtra(ChatActivity., sellerEmail);
+                intent.putExtra(ChatActivity.bundleReceiverEmail, sellerEmail);
                 startActivity(intent);
                 if (mpLat != NOLAT && mpLng != NOLNG) {
                     findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
