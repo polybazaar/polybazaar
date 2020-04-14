@@ -411,10 +411,11 @@ public class FillListingActivityTest {
 
     @Test
     public void testCreateAndSendListingWhenUserNull() throws Throwable {
-        AuthenticatorFactory.getDependency().signOut();
         fillListing();
+        AuthenticatorFactory.getDependency().signOut();
+        Thread.sleep(2000);
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        onView(withText("You have to sign in to use that functionality"))
+        onView(withText(R.string.sign_in_required))
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
 
