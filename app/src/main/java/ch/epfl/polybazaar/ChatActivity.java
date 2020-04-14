@@ -19,7 +19,6 @@ import java.util.List;
 
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.message.ChatMessage;
-import ch.epfl.polybazaar.message.ChatMessageDatabase;
 import ch.epfl.polybazaar.message.ChatMessageRecyclerAdapter;
 
 import static java.util.UUID.randomUUID;
@@ -63,8 +62,8 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadConversation() {
-        Task<List<ChatMessage>> fetchSenderMessages = ChatMessageDatabase.fetchMessagesOfConversation(senderEmail, receiverEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
-        Task<List<ChatMessage>> fetchReceiverMessages = ChatMessageDatabase.fetchMessagesOfConversation(receiverEmail, senderEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
+        Task<List<ChatMessage>> fetchSenderMessages = ChatMessage.fetchMessagesOfConversation(senderEmail, receiverEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
+        Task<List<ChatMessage>> fetchReceiverMessages = ChatMessage.fetchMessagesOfConversation(receiverEmail, senderEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
 
 
         Tasks.whenAll(fetchReceiverMessages, fetchSenderMessages).addOnSuccessListener(aVoid -> {
