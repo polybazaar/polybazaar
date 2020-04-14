@@ -25,6 +25,10 @@
     <string name="sign_out">Sign out</string>
     <string name="sign_in_required">You have to sign in to use that functionality</string>
     <string name="welcome_message">Welcome to PolyBazaar!</string>
+    <string name="search"><u>Search</u></string>
+    <string name="filter"><u>Filter</u></string>
+    <string name="favorites"><u>Favorites</u></string>
+    <string name="no_favorites">You don\'t have any saved favorites</string>
     <string name="title_activity_maps">Map</string>
     <string name="location_permission_denied">Permission Denied</string>
     <string name="permission_required_toast">Permission Required</string>
@@ -50,5 +54,4 @@
     <string name="MP_ok">Meeting Point defined</string>
     <string name="MP_nok">Meeting Point not defined</string>
     <string name="location_unavailable">Location services are unavailable</string>
-
 </resources>

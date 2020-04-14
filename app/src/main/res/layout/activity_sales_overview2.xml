@@ -7,6 +7,42 @@
     android:layout_height="match_parent"
     tools:context=".UI.SalesOverview">
 
+    <LinearLayout
+        android:id="@+id/salesOverviewTopMenu"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/salesOverviewTopMenuHeight"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/searchOverview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="@dimen/overview_text_size"
+            android:text="@string/search" />
+
+        <TextView
+            android:id="@+id/filterOverview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="@dimen/overview_text_size"
+            android:text="@string/filter" />
+
+        <TextView
+            android:id="@+id/favoritesOverview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:clickable="true"
+            android:textSize="@dimen/overview_text_size"
+            android:text="@string/favorites" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLiteListings"
         android:layout_width="0dp"
@@ -16,6 +52,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/salesOverviewTopMenu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
