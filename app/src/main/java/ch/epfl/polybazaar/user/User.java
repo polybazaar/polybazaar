@@ -1,6 +1,5 @@
 package ch.epfl.polybazaar.user;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
@@ -8,8 +7,6 @@ import java.util.ArrayList;
 
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
-import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.Utilities.emailIsValid;
 import static ch.epfl.polybazaar.Utilities.nameIsValid;
@@ -29,6 +26,7 @@ public final class User extends Model {
     private static String COLLECTION = "users";
 
     private ArrayList<String> favorites;
+    private ArrayList<String> ownListings;
 
     public String getNickName() {
         return nickName;
@@ -107,6 +105,10 @@ public final class User extends Model {
 
     public ArrayList<String> getFavorites() {
         return favorites;
+    }
+
+    public ArrayList<String> getOwnListings() {
+        return ownListings;
     }
 
     public static Task<User> fetch(String email) {
