@@ -437,8 +437,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
             // update own listings of (logged) user
             authAccount.getUserData().addOnSuccessListener(user -> {
-                user.addOwnListing(newListingID);
-                editUser(user);
+                if(user != null) {
+                    user.addOwnListing(newListingID);
+                    editUser(user);
+                }
             });
     }
     private boolean fillFieldsIfEdit() {
