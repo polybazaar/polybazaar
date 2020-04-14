@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.favorites;
+package ch.epfl.polybazaar.userListings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +34,7 @@ public abstract class Favorites {
             } else {
                 Intent intent = new Intent(context, SalesOverview.class);
                 Bundle extras = new Bundle();
-                extras.putStringArrayList("favoritesList", favoritesIds);
+                extras.putStringArrayList("userLiteListings", favoritesIds);
                 intent.putExtras(extras);
                 context.startActivity(intent);
             }

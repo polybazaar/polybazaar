@@ -47,28 +47,30 @@ import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
-
+import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.listingImage.ListingListImages;
+import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.AppUser;
+import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
-
-import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
-import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
-import static ch.epfl.polybazaar.Utilities.convertFileToString;
-import static ch.epfl.polybazaar.map.MapsActivity.*;
-import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
-import static ch.epfl.polybazaar.Utilities.resizeBitmap;
-import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
-import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
-
+import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.Utilities.getUser;
+import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
+import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LatLng;
+import static ch.epfl.polybazaar.map.MapsActivity.LAT;
+import static ch.epfl.polybazaar.map.MapsActivity.LNG;
+import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
+import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
+import static ch.epfl.polybazaar.map.MapsActivity.VALID;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
+import static ch.epfl.polybazaar.user.User.editUser;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
@@ -111,8 +113,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private double lng = NOLNG;
 
     private PermissionRequest cameraPermissionRequest;
-
-
+    private AppUser authAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +145,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         listImageIds = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
+
+        authAccount = getUser();
     }
 
     @Override
@@ -430,6 +433,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
             newLiteListing.save().addOnSuccessListener(result -> {
                 //TODO: Check the result to be true
+            });
+
+            // update own listings of (logged) user
+            authAccount.getUserData().addOnSuccessListener(user -> {
+                user.addOwnListing(newListingID);
+                editUser(user);
             });
     }
     private boolean fillFieldsIfEdit() {

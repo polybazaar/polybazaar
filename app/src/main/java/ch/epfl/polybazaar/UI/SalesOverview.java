@@ -18,7 +18,7 @@ import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.Utilities.checkUserLoggedIn;
-import static ch.epfl.polybazaar.favorites.Favorites.displayFavorites;
+import static ch.epfl.polybazaar.userListings.Favorites.displayFavorites;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
 
 public class SalesOverview extends AppCompatActivity {
@@ -84,10 +84,10 @@ public class SalesOverview extends AppCompatActivity {
             };
         });
 
-        // activity is launched with a list of favorites
+        // activity is launched with a list of litelistings
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
-            IDList = bundle.getStringArrayList("favoritesList");
+            IDList = bundle.getStringArrayList("userLiteListings");
         }
 
         // Initial load
