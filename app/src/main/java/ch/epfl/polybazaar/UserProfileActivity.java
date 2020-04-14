@@ -8,13 +8,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import java.util.ArrayList;
 
 import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.user.User;
 
+import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
+import static ch.epfl.polybazaar.Utilities.displayToast;
+import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -101,5 +104,20 @@ public class UserProfileActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), R.string.invalid_current_password, Toast.LENGTH_SHORT).show();
             });
         }
+    }
+
+    public void viewOwnListings(View view) {
+        AppUser user = getUser();
+        user.getUserData().addOnSuccessListener(authUser -> {
+            ArrayList<String> ownListingsIds = authUser.getOwnListings();
+
+            // the list of user-created listings is empty
+            if (ownListingsIds == null || ownListingsIds.isEmpty()) {
+                displayToast(this, R.string.no_created_listings, Gravity.CENTER);
+                // we relaunch the SalesOverview activity with the list of favorites in the bundle
+            } else {
+                displaySavedListings(this, ownListingsIds);
+            }
+        });
     }
 }
