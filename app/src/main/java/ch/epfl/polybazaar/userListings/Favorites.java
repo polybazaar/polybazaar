@@ -34,7 +34,7 @@ public abstract class Favorites {
             } else {
                 Intent intent = new Intent(context, SalesOverview.class);
                 Bundle extras = new Bundle();
-                extras.putStringArrayList("userLiteListings", favoritesIds);
+                extras.putStringArrayList("userSavedListings", favoritesIds);
                 intent.putExtras(extras);
                 context.startActivity(intent);
             }
