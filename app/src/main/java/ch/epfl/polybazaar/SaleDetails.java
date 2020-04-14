@@ -197,7 +197,7 @@ public class SaleDetails extends AppCompatActivity {
      * Fill the UI with the Listing given in parameter
      * @param listing
      */
-    public void fillWithListing(final Listing listing) {
+        public void fillWithListing(final Listing listing) {
         if(listing == null) {
             Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);

@@ -10,6 +10,8 @@
     <dimen name="offset">30dp</dimen>
     <dimen name="pageMarginAndOffset">50dp</dimen>
     <dimen name="thumbnail_size">80dp</dimen>
+    <dimen name="salesOverviewTopMenuHeight">28dp</dimen>
+    <dimen name="salesOverviewTopMenu_text_size">16sp</dimen>
     <dimen name="viewpager_height">251dp</dimen>
     <dimen name="viewpager_margin">16dp</dimen>
 </resources>
