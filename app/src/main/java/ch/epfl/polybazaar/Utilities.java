@@ -55,6 +55,8 @@ public abstract class Utilities {
             result.put("firstName", ((User)o).getFirstName());
             result.put("lastName", ((User)o).getLastName());
             result.put("phoneNumber", ((User)o).getPhoneNumber());
+            result.put("favorites", ((User)o).getFavorites());
+            result.put("ownListings", ((User)o).getOwnListings());
         } else if (o instanceof ListingImage) {
             result.put("image", ((ListingImage)o).getImage());
             result.put("refNextImg", ((ListingImage)o).getRefNextImg());

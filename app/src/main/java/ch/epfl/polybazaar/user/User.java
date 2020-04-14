@@ -13,7 +13,7 @@ import static ch.epfl.polybazaar.Utilities.nameIsValid;
 
 
 /**
- * If you attributes of this class, also change its CallbackAdapter and Utilities
+ * If you change attributes of this class, also change its CallbackAdapter and Utilities
  */
 public final class User extends Model {
 
@@ -26,7 +26,7 @@ public final class User extends Model {
     private static String COLLECTION = "users";
 
     private ArrayList<String> favorites;
-    private ArrayList<String> ownListings;
+    private ArrayList<String> ownListings = new ArrayList<>();
 
     public String getNickName() {
         return nickName;
@@ -109,6 +109,10 @@ public final class User extends Model {
 
     public ArrayList<String> getOwnListings() {
         return ownListings;
+    }
+
+    public void addOwnListing(String liteListingId) {
+        ownListings.add(liteListingId);
     }
 
     public static Task<User> fetch(String email) {
