@@ -43,12 +43,16 @@ public class SaleDetails extends AppCompatActivity {
     private Button deleteButton;
     private AlertDialog deleteDialog;
 
+    private String listingID;
+    private String sellerEmail;
+
     private double mpLat = NOLAT;
     private double mpLng = NOLNG;
 
     private ViewPager2 viewPager2;
     private List<String> listStringImage;
     private List<String> listImageID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -69,14 +73,18 @@ public class SaleDetails extends AppCompatActivity {
     }
 
     private void getSellerInformation() {
-        Button get_seller = findViewById(R.id.contactSel);
-        get_seller.setOnClickListener(view -> {
-            //TODO check that user is connected
-            findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
-            findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
-            if (mpLat != NOLAT && mpLng != NOLNG) {
-                findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
-            }
+        runOnUiThread(() -> {
+            Button get_seller = findViewById(R.id.contactSel);
+            get_seller.setOnClickListener(view -> {
+                Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
+                intent.putExtra(ChatActivity.bundleLisitngId, listingID);
+                intent.putExtra(ChatActivity.bundleReceiverEmail, sellerEmail);
+                startActivity(intent);
+                if (mpLat != NOLAT && mpLng != NOLNG) {
+                    findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
+                }
+                //TODO: The map is not displayed anymore. Another method should be found
+            });
         });
     }
 
@@ -111,13 +119,20 @@ public class SaleDetails extends AppCompatActivity {
         Listing.fetch(listingID).addOnSuccessListener(result -> {
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
             if(!(fbAuth.getCurrentUser() == null)){
+                this.sellerEmail = result.getUserEmail();
                 if(fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
                     createEditAndDeleteActions(result, listingID);
                 }
+                else{
+                    showContactButton();
+                }
             }
+
+            this.listingID = listingID;
             fillWithListing(result);
         });
     }
+
 
     /**
      * recursive function to retrieve all images
@@ -183,7 +198,7 @@ public class SaleDetails extends AppCompatActivity {
      * Fill the UI with the Listing given in parameter
      * @param listing
      */
-    public void fillWithListing(final Listing listing) {
+        public void fillWithListing(final Listing listing) {
         if(listing == null) {
             addNewToast(makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG)).show();
             Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
@@ -215,10 +230,7 @@ public class SaleDetails extends AppCompatActivity {
                 price_txt.setTextSize(20);
                 price_txt.setText(String.format("CHF %s", listing.getPrice()));
 
-                //Set email
-                TextView userEmailTextView = findViewById(R.id.userEmail);
-                userEmailTextView.setText(listing.getUserEmail());
-                userEmailTextView.setVisibility(View.INVISIBLE);
+
             });
         }
     }
@@ -264,5 +276,12 @@ public class SaleDetails extends AppCompatActivity {
         for(String id: listImageID) {
             ListingImage.delete(id);
         }
+    }
+
+
+    private void showContactButton() {
+        Button contactSelButton = findViewById(R.id.contactSel);
+        contactSelButton.setVisibility(View.VISIBLE);
+        contactSelButton.setClickable(true);
     }
 }

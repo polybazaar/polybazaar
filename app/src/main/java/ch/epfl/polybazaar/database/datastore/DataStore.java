@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.Task;
 
+import java.util.List;
+
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.callback.StringListCallback;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
@@ -115,4 +117,13 @@ public interface DataStore {
      * @return task that fails if the database is unreachable
      */
     Task<CollectionSnapshot> fetchWithEquals(String collectionPath, String field, String value);
+
+    /**
+     * Fetches all the data in a collection that respects equalities on multiple fields
+     * @param collectionPath collection
+     * @param fields List of fields name to be compared
+     * @param values values that the fields must contain so that the data is retrieved
+     * @return task that fails if the database is unreachable
+     */
+    Task<CollectionSnapshot> fetchWithEqualsMultiple(String collectionPath, List<String> fields, List<String> values);
 }
