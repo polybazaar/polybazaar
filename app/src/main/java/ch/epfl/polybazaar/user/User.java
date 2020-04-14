@@ -28,7 +28,7 @@ public final class User extends Model {
 
     private static String COLLECTION = "users";
 
-    private ArrayList<String> favorites;
+    private ArrayList<String> favorites = new ArrayList<>();
 
     public String getNickName() {
         return nickName;
@@ -107,6 +107,22 @@ public final class User extends Model {
 
     public ArrayList<String> getFavorites() {
         return favorites;
+    }
+
+    /**
+     * Adds a listing to the user's favorites
+     * @param listing listing to add
+     */
+    public void addFavorite(Listing listing) {
+        favorites.add(listing.getId());
+    }
+
+    /**
+     * Removes a listing from the user's favorites
+     * @param listing listing to remove
+     */
+    public void removeFavorite(Listing listing) {
+        favorites.remove(listing.getId());
     }
 
     public static Task<User> fetch(String email) {

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +49,8 @@ public class SaleDetails extends AppCompatActivity {
     private ViewPager2 viewPager2;
     private List<String> listStringImage;
     private List<String> listImageID;
+
+    private Listing listing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -114,6 +117,7 @@ public class SaleDetails extends AppCompatActivity {
                     createEditAndDeleteActions(result, listingID);
                 }
             }
+            listing = result;
             fillWithListing(result);
         });
     }
@@ -220,6 +224,13 @@ public class SaleDetails extends AppCompatActivity {
                 TextView userEmailTextView = findViewById(R.id.userEmail);
                 userEmailTextView.setText(listing.getUserEmail());
                 userEmailTextView.setVisibility(View.INVISIBLE);
+
+                ToggleButton toggleFavorite = findViewById(R.id.toggleFavoriteButton);
+                Authenticator auth = AuthenticatorFactory.getDependency();
+                auth.getCurrentUser().getUserData().addOnSuccessListener(user -> {
+                    List<String> favorites = user.getFavorites();
+                    toggleFavorite.setChecked(favorites.contains(listing.getId()));
+                });
             });
         }
     }
@@ -261,6 +272,25 @@ public class SaleDetails extends AppCompatActivity {
                 toast.show();
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
+        });
+    }
+
+    /**
+     * Adds the listing to favorites, or removes it from the user's favorites if it is already
+     * a favorite
+     * @param view button that triggers the action
+     */
+    public void toggleFavorite(View view) {
+        ToggleButton button = (ToggleButton) view;
+        Authenticator auth = AuthenticatorFactory.getDependency();
+        auth.getCurrentUser().getUserData().addOnSuccessListener(user -> {
+            if (button.isChecked()) {
+                user.addFavorite(listing);
+            } else {
+                user.removeFavorite(listing);
+            }
+
+            user.save();
         });
     }
 }

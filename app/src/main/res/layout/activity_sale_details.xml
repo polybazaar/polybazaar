@@ -48,6 +48,15 @@
 
             </androidx.viewpager2.widget.ViewPager2>
 
+            <ToggleButton
+                android:id="@+id/toggleFavoriteButton"
+                android:layout_width="216dp"
+                android:layout_height="wrap_content"
+                android:onClick="toggleFavorite"
+                android:text="ToggleButton"
+                android:textOff="@string/add__favorite"
+                android:textOn="@string/remove_favorites" />
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="344dp"
@@ -120,7 +129,6 @@
                 android:layout_marginTop="218dp"
                 android:alpha="0.7"
                 android:background="@drawable/rounded_corner" />
-
 
 
         </LinearLayout>
