@@ -10,9 +10,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -203,6 +205,20 @@ public class FirebaseDataStore implements DataStore {
                 .get().onSuccessTask((queryDocumentSnapshots ->
                         Tasks.forResult(new FirebaseCollectionSnapshot(queryDocumentSnapshots))
                 ));
+    }
+
+    @Override
+    public Task<CollectionSnapshot> fetchWithEqualsMultiple(String collectionPath, List<String> fields, List<String> values) {
+        assert(fields.size() == values.size());
+        assert(fields.size() > 0);
+        CollectionReference collectionReference = database.collection(collectionPath);
+        Query query = collectionReference.whereEqualTo(fields.get(0), values.get(0));
+        for(int i = 1 ; i < fields.size() ; i++){
+            query = query.whereEqualTo(fields.get(i), values.get(i));
+        }
+        return query.get().onSuccessTask((queryDocumentSnapshots ->
+                Tasks.forResult(new FirebaseCollectionSnapshot(queryDocumentSnapshots))
+        ));
     }
 }
 

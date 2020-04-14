@@ -19,10 +19,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true"/>
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
@@ -30,6 +26,7 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -77,6 +74,7 @@
 
         <activity
             android:name=".FillListingActivity"
+
             android:parentActivityName=".MainActivity"
             android:exported="true"
             android:label="Listing Editor"/>
@@ -84,11 +82,17 @@
             android:name=".UI.SalesOverview"
             android:parentActivityName=".MainActivity"
             android:label="Browse Listings"/>
+
+        <activity
+            android:name=".ChatActivity"
+            android:parentActivityName=".SaleDetails"
+            android:label="Chat"/>
         <activity
             android:name=".SaleDetails"
             android:parentActivityName=".UI.SalesOverview"
             android:exported="true"
             android:label="Details"/>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,10 +1,15 @@
 package ch.epfl.polybazaar.database;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import java.util.List;
 
+import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 
@@ -27,6 +32,18 @@ public final class ModelTransaction {
                     if (dataSnapshot.exists()) return Tasks.forResult(dataSnapshot.toObject(clazz));
                     else return Tasks.forResult(null);
                 });
+    }
+
+    public static <T extends Model> Task<List<T>> fetchAllWithFieldEquality(String collection, String field, String compareValue, Class<T> clazz) {
+        DataStore db = DataStoreFactory.getDependency();
+        return db.fetchWithEquals(collection, field, compareValue)
+                .onSuccessTask(querySnapshot -> Tasks.forResult(querySnapshot.toObjects(clazz)));
+    }
+
+    public static <T extends Model> Task<List<T>> fetchAllWithMultipleFieldsEquality(String collection, List<String> fields, List<String> compareValues, Class<T> clazz) {
+        DataStore db = DataStoreFactory.getDependency();
+        return db.fetchWithEqualsMultiple(collection, fields, compareValues)
+                .onSuccessTask(querySnapshot -> Tasks.forResult(querySnapshot.toObjects(clazz)));
     }
 
     /**

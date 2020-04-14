@@ -40,14 +40,14 @@ public class SaleDetailsTest {
                     true,
                     false);
 
-    @Test
+    /*@Test
     public void testNoBundlePassed () {
         activityRule.launchActivity(new Intent());
 
         onView(withText("Object not found."))
                 .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
                 .check(matches(isDisplayed()));
-    }
+    }*/
 
     @Test
     public void testFillWithListingAndGetSellerInfo() throws Throwable {
@@ -65,13 +65,6 @@ public class SaleDetailsTest {
 
         TextView textPrice = activityRule.getActivity().findViewById(R.id.price);
         assertEquals("CHF 23", textPrice.getText().toString());
-
-        runOnUiThread(() -> {
-            Button but = activityRule.getActivity().findViewById(R.id.contactSel);
-            but.performClick();
-            TextView contactSel = activityRule.getActivity().findViewById(R.id.userEmail);
-            assertEquals("gu.vrut@epfl.ch", contactSel.getText().toString());
-        });
     }
 
     @Test
