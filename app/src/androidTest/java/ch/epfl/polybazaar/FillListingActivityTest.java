@@ -414,7 +414,7 @@ public class FillListingActivityTest {
         AuthenticatorFactory.getDependency().signOut();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        onView(withText(R.string.sign_in_required))
+        onView(withText("You have to sign in to use that functionality"))
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
 
