@@ -67,13 +67,6 @@ public class SaleDetailsTest {
 
         TextView textPrice = activityRule.getActivity().findViewById(R.id.price);
         assertEquals("CHF 23", textPrice.getText().toString());
-
-        runOnUiThread(() -> {
-            Button but = activityRule.getActivity().findViewById(R.id.contactSel);
-            but.performClick();
-            TextView contactSel = activityRule.getActivity().findViewById(R.id.userEmail);
-            assertEquals("gu.vrut@epfl.ch", contactSel.getText().toString());
-        });
     }
 
     @Test
