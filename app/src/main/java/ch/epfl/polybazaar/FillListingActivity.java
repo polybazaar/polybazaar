@@ -146,7 +146,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
 
-        authAccount = getUser();
     }
 
     @Override
@@ -435,6 +434,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 //TODO: Check the result to be true
             });
 
+            authAccount = getUser();
             // update own listings of (logged) user
             if(authAccount != null) {
                 authAccount.getUserData().addOnSuccessListener(user -> {

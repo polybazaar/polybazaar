@@ -1,22 +1,23 @@
 package ch.epfl.polybazaar.endToEnd;
 
-import androidx.annotation.NonNull;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.database.callback.UserCallback;
+import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.login.AuthenticatorResult;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.user.User;
 
@@ -26,9 +27,15 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
@@ -96,9 +103,38 @@ public class UserProfileTest {
         assertThat(signedInFlag, is(true));
     }
 
+    @Test
+    public void userHasNoOwnListings() {
+        signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
+        onView(withId(R.id.profileButton)).perform(click());
+        closeSoftKeyboard();
+        onView(withId(R.id.viewOwnListingsButton)).perform(click());
 
+        onView(withText(R.string.no_created_listings))
+                .inRoot(withDecorView(not(is(activityRule.getActivity().getWindow().getDecorView()))))
+                .check(matches(isDisplayed()));
+    }
 
-
+    @Test
+    public void userHasOwnListings() {
+        authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
+        AppUser authAccount = authenticator.getCurrentUser();
+        authAccount.getUserData().addOnSuccessListener(user -> {
+            if (user != null) {
+                user.addOwnListing("listing_1");
+            }
+        });
+        authenticator.signOut();
+        signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
+        onView(withId(R.id.profileButton)).perform(click());
+        closeSoftKeyboard();
+        onView(withId(R.id.viewOwnListingsButton)).perform(click());
+        Activity activity = getActivityInstance();
+        Intent intent = activity.getIntent();
+        Bundle bundle = intent.getExtras();
+        ArrayList<String> ownListings = bundle.getStringArrayList("userSavedListings");
+        assertEquals("listing_1", ownListings.get(0));
+    }
 
     private void signInWithFromMainActivity(String email, String password){
         onView(withId(R.id.authenticationButton)).perform(click());
@@ -109,4 +145,21 @@ public class UserProfileTest {
         onView(withId(R.id.loginButton)).perform(click());
         onView(withId(R.id.toMainButton)).perform(click());
 }
+
+
+    Activity currentActivity = null;
+
+    public Activity getActivityInstance(){
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                Collection resumedActivities =
+                        ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(RESUMED);
+                if (resumedActivities.iterator().hasNext()){
+                    currentActivity = (Activity)resumedActivities.iterator().next();
+                }
+            }
+        });
+
+        return currentActivity;
+    }
 }
