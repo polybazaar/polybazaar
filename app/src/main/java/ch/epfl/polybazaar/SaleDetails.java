@@ -234,6 +234,8 @@ public class SaleDetails extends AppCompatActivity {
                         List<String> favorites = user.getFavorites();
                         toggleFavorite.setChecked(favorites.contains(listing.getId()));
                     });
+                } else {
+                    toggleFavorite.setEnabled(false);
                 }
             });
         }
@@ -298,10 +300,6 @@ public class SaleDetails extends AppCompatActivity {
 
                 user.save();
             });
-        } else {
-            Toast toast = Toast.makeText(SaleDetails.this, R.string.sign_in_required, Toast.LENGTH_SHORT);
-            toast.show();
         }
-
     }
 }
