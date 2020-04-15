@@ -221,8 +221,21 @@ public class MockDataStore implements DataStore {
 
     @Override
     public Task<CollectionSnapshot> fetchWithEquals(String collectionPath, String field, String value) {
-        // TODO this does not work
-        return fetchAll(collectionPath);
+        if (!collections.containsKey(collectionPath)){
+            Log.i(TAG, "Collection does not exist");
+            return Tasks.forResult(null);
+        }
+        Map<String, Object> collection = collections.get(collectionPath);
+        Map<String, Object> list = new HashMap<>();
+        assert collection != null;
+        for (Map.Entry<String, Object> entry : collection.entrySet()) {
+            Object o = entry.getValue();
+            if (getMap(o).containsKey(field) && getMap(o).get(field).equals(value)) {
+                list.put(entry.getKey(), entry.getValue());
+            }
+        }
+        Log.i(TAG, "Query successful");
+        return Tasks.forResult(new MockCollectionSnapshot(list));
     }
 
     // Gets the requested collection if it already exists, otherwise creates a new one
