@@ -7,17 +7,29 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.Authenticator;
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.login.LoginTest;
+import ch.epfl.polybazaar.login.MockAuthenticator;
+import ch.epfl.polybazaar.user.User;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
@@ -29,6 +41,8 @@ import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SaleDetailsTest {
 
@@ -122,6 +136,53 @@ public class SaleDetailsTest {
                     });
                 });
             });
+        });
+    }
+
+    @Test
+    public void favoriteButtonIsDisabledForUnauthenticatedUsers() throws ExecutionException, InterruptedException {
+        useMockDataStore();
+
+        Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
+
+        Tasks.await(listing.save());
+        String id = listing.getId();
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+
+        activityRule.launchActivity(intent);
+
+        onView(withText(R.string.add__favorite)).check(matches(not(isEnabled())));
+    }
+
+    @Test
+    public void favoriteButtonChangesFavorites() throws ExecutionException, InterruptedException {
+        useMockDataStore();
+        Authenticator auth = MockAuthenticator.getInstance();
+        AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
+
+        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+
+        Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
+
+        Tasks.await(listing.save());
+        String id = listing.getId();
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+
+        activityRule.launchActivity(intent);
+
+        onView(withText(R.string.add__favorite)).perform(click());
+
+        // we fetch after each click to make sure the data is actually saved to mock db
+        User.fetch(MockAuthenticator.TEST_USER_EMAIL).addOnSuccessListener(user -> {
+            assertTrue(user.getFavorites().contains(listing.getId()));
+        });
+
+        onView(withText(R.string.remove_favorites)).perform(click());
+
+        User.fetch(MockAuthenticator.TEST_USER_EMAIL).addOnSuccessListener(user -> {
+            assertFalse(user.getFavorites().contains(listing.getId()));
         });
     }
 }
