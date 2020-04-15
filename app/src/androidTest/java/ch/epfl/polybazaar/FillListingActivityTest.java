@@ -412,18 +412,22 @@ public class FillListingActivityTest {
         useRealNetwork();
     }
 
-    /*@Test
+    @Test
     public void testCreateAndSendListingWhenUserNull() throws Throwable {
-        AuthenticatorFactory.getDependency().signOut();
+        MockAuthenticator.getInstance().signOut();
         fillListing();
-        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        onView(withText(R.string.sign_in_required))
-                .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
-                .check(matches(isDisplayed()));
-        Thread.sleep(2000);
 
-        whenAll(AuthenticatorFactory.getDependency().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD));
-    }*/
+        Intents.init();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        //wait for MainActivity
+        Thread.sleep(1000);
+        intended(hasComponent(MainActivity.class.getName()));
+        Intents.release();
+
+        //sign in again for remaining tests
+        whenAll(MockAuthenticator.getInstance().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD));
+
+    }
 
     private void uploadImage(){
         closeSoftKeyboard();
