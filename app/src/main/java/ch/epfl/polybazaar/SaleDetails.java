@@ -26,6 +26,7 @@ import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.listingImage.ListingListImages;
+import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
@@ -271,6 +272,14 @@ public class SaleDetails extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(),"Listing successfully deleted", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
+
+                Authenticator fbAuth = AuthenticatorFactory.getDependency();
+                AppUser authAccount = fbAuth.getCurrentUser();
+
+                authAccount.getUserData().addOnSuccessListener(user -> {
+                    user.deleteOwnListing(listingID);
+                });
+
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
         });

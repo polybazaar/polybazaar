@@ -115,6 +115,10 @@ public final class User extends Model {
         ownListings.add(liteListingId);
     }
 
+    public void deleteOwnListing(String liteListingid) {
+        ownListings.remove(liteListingid);
+    }
+
     public static Task<User> fetch(String email) {
         return ModelTransaction.fetch(COLLECTION, email, User.class);
     }
