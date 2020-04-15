@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +26,6 @@ import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.listingImage.ListingListImages;
 import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -53,6 +53,7 @@ public class SaleDetails extends AppCompatActivity {
     private List<String> listStringImage;
     private List<String> listImageID;
 
+    private Listing listing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -128,6 +129,8 @@ public class SaleDetails extends AppCompatActivity {
                 }
             }
 
+            listing = result;
+
             this.listingID = listingID;
             fillWithListing(result);
         });
@@ -136,7 +139,7 @@ public class SaleDetails extends AppCompatActivity {
 
     /**
      * recursive function to retrieve all images
-     * @param listingID
+     * @param listingID ID of the image
      */
     private void retrieveImages(String listingID) {
         listImageID.add(listingID);
@@ -232,7 +235,22 @@ public class SaleDetails extends AppCompatActivity {
                 price_txt.setTextSize(20);
                 price_txt.setText(String.format("CHF %s", listing.getPrice()));
 
+                //Set email
+                TextView userEmailTextView = findViewById(R.id.userEmail);
+                userEmailTextView.setText(listing.getUserEmail());
+                userEmailTextView.setVisibility(View.INVISIBLE);
 
+                ToggleButton toggleFavorite = findViewById(R.id.toggleFavoriteButton);
+                AppUser authUser = AuthenticatorFactory.getDependency().getCurrentUser();
+
+                if (authUser != null) {
+                    authUser.getUserData().addOnSuccessListener(user -> {
+                        List<String> favorites = user.getFavorites();
+                        toggleFavorite.setChecked(favorites.contains(listing.getId()));
+                    });
+                } else {
+                    toggleFavorite.setEnabled(false);
+                }
             });
         }
     }
@@ -262,7 +280,6 @@ public class SaleDetails extends AppCompatActivity {
             Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
             intent.putExtra("listingID", listingID);
             intent.putExtra("listing", listing);
-            intent.putExtra("listingImages", new ListingListImages(listStringImage, listImageID));
             startActivity(intent);
         });
     }
@@ -283,6 +300,10 @@ public class SaleDetails extends AppCompatActivity {
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
         });
+        //delete all images
+        for(String id: listImageID) {
+            ListingImage.delete(id);
+        }
     }
 
 
@@ -290,5 +311,27 @@ public class SaleDetails extends AppCompatActivity {
         Button contactSelButton = findViewById(R.id.contactSel);
         contactSelButton.setVisibility(View.VISIBLE);
         contactSelButton.setClickable(true);
+    }
+
+    /**
+     * Adds the listing to favorites, or removes it from the user's favorites if it is already
+     * a favorite
+     * @param view button that triggers the action
+     */
+    public void toggleFavorite(View view) {
+        ToggleButton button = (ToggleButton) view;
+        AppUser authUser = AuthenticatorFactory.getDependency().getCurrentUser();
+
+        if (authUser != null) {
+            authUser.getUserData().addOnSuccessListener(user -> {
+                if (button.isChecked()) {
+                    user.addFavorite(listing);
+                } else {
+                    user.removeFavorite(listing);
+                }
+
+                user.save();
+            });
+        }
     }
 }

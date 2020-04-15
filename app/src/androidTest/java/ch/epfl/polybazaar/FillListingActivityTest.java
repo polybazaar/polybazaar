@@ -24,6 +24,7 @@ import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -61,8 +62,11 @@ import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
 import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
+import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useMockNetworkState;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useRealNetwork;
+import static com.google.android.gms.tasks.Tasks.whenAll;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -77,6 +81,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 
 public class FillListingActivityTest {
+
     static Uri imageUri;
     static Bitmap imageBitmap;
     static Intent galleryIntent;
@@ -98,10 +103,18 @@ public class FillListingActivityTest {
     @Before
     public void init() {
         useMockDataStore();
+        AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
+        AuthenticatorFactory.getDependency().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+
         Activity activityUnderTest = fillSaleActivityTestRule.getActivity();
         activityUnderTest.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         auth = MockAuthenticator.getInstance();
         AuthenticatorFactory.setDependency(auth);
+    }
+
+    @After
+    public void unSigned() {
+        AuthenticatorFactory.getDependency().signOut();
     }
 
 
@@ -424,6 +437,23 @@ public class FillListingActivityTest {
     }*/
 
 
+    @Test
+    public void testCreateAndSendListingWhenUserNull() throws Throwable {
+        MockAuthenticator.getInstance().signOut();
+        fillListing();
+
+        Intents.init();
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        //wait for MainActivity
+        Thread.sleep(1000);
+        intended(hasComponent(MainActivity.class.getName()));
+        Intents.release();
+
+        //sign in again for remaining tests
+        whenAll(MockAuthenticator.getInstance().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD));
+
+    }
+
     private void uploadImage(){
         closeSoftKeyboard();
         expectedGalleryIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
@@ -475,7 +505,9 @@ public class FillListingActivityTest {
             }
         });
 
-        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT)).inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT))
+                .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
+                .check(matches(isDisplayed()));
     }
 
     private void checkNoImageUploaded(){

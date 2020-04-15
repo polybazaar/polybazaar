@@ -55,4 +55,6 @@
     <string name="MP_ok">Meeting Point defined</string>
     <string name="MP_nok">Meeting Point not defined</string>
     <string name="location_unavailable">Location services are unavailable</string>
+    <string name="add__favorite">Add to favorites</string>
+    <string name="remove_favorites">Remove from favorites</string>
 </resources>

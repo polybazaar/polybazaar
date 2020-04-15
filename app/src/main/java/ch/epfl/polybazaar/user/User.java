@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
+import ch.epfl.polybazaar.listing.Listing;
 
 import static ch.epfl.polybazaar.Utilities.emailIsValid;
 import static ch.epfl.polybazaar.Utilities.nameIsValid;
@@ -25,8 +26,9 @@ public final class User extends Model {
 
     private static String COLLECTION = "users";
 
-    private ArrayList<String> favorites;
     private ArrayList<String> ownListings = new ArrayList<>();
+    private ArrayList<String> favorites = new ArrayList<>();
+
 
     public String getNickName() {
         return nickName;
@@ -117,6 +119,22 @@ public final class User extends Model {
 
     public void deleteOwnListing(String liteListingid) {
         ownListings.remove(liteListingid);
+    }
+
+    /**
+     * Adds a listing to the user's favorites
+     * @param listing listing to add
+     */
+    public void addFavorite(Listing listing) {
+        favorites.add(listing.getId());
+    }
+
+    /**
+     * Removes a listing from the user's favorites
+     * @param listing listing to remove
+     */
+    public void removeFavorite(Listing listing) {
+        favorites.remove(listing.getId());
     }
 
     public static Task<User> fetch(String email) {

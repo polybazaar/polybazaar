@@ -115,7 +115,14 @@ public class SalesOverview extends AppCompatActivity {
      */
     public void loadLiteListingOverview() {
         LiteListing.retrieveAll().addOnSuccessListener(result -> {
+<<<<<<< HEAD
             if (IDList.isEmpty()) {
+=======
+            if(result == null) {
+                return;
+            }
+            if(IDList.isEmpty()) {
+>>>>>>> 47da783f816d5af4d89c08a6b99a13ea8e15da3f
                 for (LiteListing l : result) {
                     if (l != null) {
                         IDList.add(l.getId());      // create deep copy of ID list if list is empty
