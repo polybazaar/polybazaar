@@ -100,6 +100,9 @@ public class SalesOverview extends AppCompatActivity {
      */
     public void loadLiteListingOverview() {
         LiteListing.retrieveAll().addOnSuccessListener(result -> {
+            if(result == null) {
+                return;
+            }
             if(IDList.isEmpty()) {
                 for (LiteListing l : result) {
                     if(l != null) {

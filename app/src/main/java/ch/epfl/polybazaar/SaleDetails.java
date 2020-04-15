@@ -25,7 +25,6 @@ import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.listingImage.ListingListImages;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
@@ -135,7 +134,7 @@ public class SaleDetails extends AppCompatActivity {
 
     /**
      * recursive function to retrieve all images
-     * @param listingID
+     * @param listingID ID of the image
      */
     private void retrieveImages(String listingID) {
         listImageID.add(listingID);
@@ -261,7 +260,6 @@ public class SaleDetails extends AppCompatActivity {
             Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
             intent.putExtra("listingID", listingID);
             intent.putExtra("listing", listing);
-            intent.putExtra("listingImages", new ListingListImages(listStringImage, listImageID));
             startActivity(intent);
         });
     }
@@ -274,6 +272,10 @@ public class SaleDetails extends AppCompatActivity {
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
         });
+        //delete all images
+        for(String id: listImageID) {
+            ListingImage.delete(id);
+        }
     }
 
 

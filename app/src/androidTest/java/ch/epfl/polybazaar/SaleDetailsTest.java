@@ -3,6 +3,7 @@ package ch.epfl.polybazaar;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.test.rule.ActivityTestRule;
@@ -31,6 +32,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 
 public class SaleDetailsTest {
+    private static final int TOAST_LONG_DELAY = 3500;
 
     @Rule
     public final ActivityTestRule<SaleDetails> activityRule =
@@ -39,14 +41,15 @@ public class SaleDetailsTest {
                     true,
                     false);
 
-    /*@Test
-    public void testNoBundlePassed () {
+    @Test
+    public void testNoBundlePassed () throws InterruptedException {
         activityRule.launchActivity(new Intent());
 
         onView(withText("Object not found."))
                 .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
                 .check(matches(isDisplayed()));
-    }*/
+        Thread.sleep(TOAST_LONG_DELAY);
+    }
 
     @Test
     public void testFillWithListingAndGetSellerInfo() throws Throwable {

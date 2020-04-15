@@ -6,8 +6,6 @@ import com.google.firebase.firestore.DocumentId;
 
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
-import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.litelisting.LiteListing;
 
 public class ListingImage extends Model {
     @DocumentId
