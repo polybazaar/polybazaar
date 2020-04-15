@@ -53,14 +53,14 @@ public class FavoritesTest {
                 .check(matches(isDisplayed()));
     }
 
-    @Test public void favoritesListIsEmpty() {
+   /* @Test public void favoritesListIsEmpty() {
         auth.signIn("test.user@epfl.ch", "abcdef");
         clickButton(withId(R.id.favoritesOverview));
 
         onView(withText(R.string.no_favorites))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
-    }
+    }*/
     
     private void clickButton(Matcher<View> object) {
         onView(object).perform(click());
