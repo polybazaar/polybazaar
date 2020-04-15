@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,6 +11,8 @@ import androidx.test.rule.ActivityTestRule;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -62,6 +65,17 @@ public class SaleDetailsTest {
                 .check(matches(isDisplayed()));
     }
 
+    @Before
+    public void init() {
+        useMockDataStore();
+        AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
+    }
+
+    @After
+    public void cleanup() {
+        MockAuthenticator.getInstance().reset();
+    }
+
     @Test
     public void testFillWithListingAndGetSellerInfo() throws Throwable {
         Intent intent = new Intent();
@@ -89,7 +103,6 @@ public class SaleDetailsTest {
 
     @Test
     public void testWithMockListing() {
-        useMockDataStore();
 
         String listingID1 = randomUUID().toString();
         String listingID2 = randomUUID().toString();
@@ -141,7 +154,6 @@ public class SaleDetailsTest {
 
     @Test
     public void favoriteButtonIsDisabledForUnauthenticatedUsers() throws ExecutionException, InterruptedException {
-        useMockDataStore();
 
         Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
 
@@ -157,9 +169,7 @@ public class SaleDetailsTest {
 
     @Test
     public void favoriteButtonChangesFavorites() throws ExecutionException, InterruptedException {
-        useMockDataStore();
-        Authenticator auth = MockAuthenticator.getInstance();
-        AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
+        Authenticator auth = AuthenticatorFactory.getDependency();
 
         Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
 
