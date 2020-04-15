@@ -26,7 +26,6 @@ import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.listingImage.ListingListImages;
 import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -43,6 +42,9 @@ public class SaleDetails extends AppCompatActivity {
     private Button editButton;
     private Button deleteButton;
     private AlertDialog deleteDialog;
+
+    private String listingID;
+    private String sellerEmail;
 
     private double mpLat = NOLAT;
     private double mpLng = NOLNG;
@@ -72,14 +74,18 @@ public class SaleDetails extends AppCompatActivity {
     }
 
     private void getSellerInformation() {
-        Button get_seller = findViewById(R.id.contactSel);
-        get_seller.setOnClickListener(view -> {
-            //TODO check that user is connected
-            findViewById(R.id.contactSel).setVisibility(View.INVISIBLE);
-            findViewById(R.id.userEmail).setVisibility(View.VISIBLE);
-            if (mpLat != NOLAT && mpLng != NOLNG) {
-                findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
-            }
+        runOnUiThread(() -> {
+            Button get_seller = findViewById(R.id.contactSel);
+            get_seller.setOnClickListener(view -> {
+                Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
+                intent.putExtra(ChatActivity.bundleLisitngId, listingID);
+                intent.putExtra(ChatActivity.bundleReceiverEmail, sellerEmail);
+                startActivity(intent);
+                if (mpLat != NOLAT && mpLng != NOLNG) {
+                    findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
+                }
+                //TODO: The map is not displayed anymore. Another method should be found
+            });
         });
     }
 
@@ -114,18 +120,26 @@ public class SaleDetails extends AppCompatActivity {
         Listing.fetch(listingID).addOnSuccessListener(result -> {
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
             if(!(fbAuth.getCurrentUser() == null)){
+                this.sellerEmail = result.getUserEmail();
                 if(fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
                     createEditAndDeleteActions(result, listingID);
                 }
+                else{
+                    showContactButton();
+                }
             }
+
             listing = result;
+
+            this.listingID = listingID;
             fillWithListing(result);
         });
     }
 
+
     /**
      * recursive function to retrieve all images
-     * @param listingID
+     * @param listingID ID of the image
      */
     private void retrieveImages(String listingID) {
         listImageID.add(listingID);
@@ -266,7 +280,6 @@ public class SaleDetails extends AppCompatActivity {
             Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
             intent.putExtra("listingID", listingID);
             intent.putExtra("listing", listing);
-            intent.putExtra("listingImages", new ListingListImages(listStringImage, listImageID));
             startActivity(intent);
         });
     }
@@ -279,6 +292,17 @@ public class SaleDetails extends AppCompatActivity {
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
         });
+        //delete all images
+        for(String id: listImageID) {
+            ListingImage.delete(id);
+        }
+    }
+
+
+    private void showContactButton() {
+        Button contactSelButton = findViewById(R.id.contactSel);
+        contactSelButton.setVisibility(View.VISIBLE);
+        contactSelButton.setClickable(true);
     }
 
     /**

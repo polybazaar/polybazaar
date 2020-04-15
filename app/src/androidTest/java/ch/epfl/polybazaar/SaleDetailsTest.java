@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.test.rule.ActivityTestRule;
@@ -48,6 +49,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class SaleDetailsTest {
+    private static final int TOAST_LONG_DELAY = 3500;
 
     @Rule
     public final ActivityTestRule<SaleDetails> activityRule =
@@ -57,12 +59,13 @@ public class SaleDetailsTest {
                     false);
 
     @Test
-    public void testNoBundlePassed () {
+    public void testNoBundlePassed () throws InterruptedException {
         activityRule.launchActivity(new Intent());
 
         onView(withText("Object not found."))
                 .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
                 .check(matches(isDisplayed()));
+        Thread.sleep(TOAST_LONG_DELAY);
     }
 
     @Before
@@ -92,13 +95,6 @@ public class SaleDetailsTest {
 
         TextView textPrice = activityRule.getActivity().findViewById(R.id.price);
         assertEquals("CHF 23", textPrice.getText().toString());
-
-        runOnUiThread(() -> {
-            Button but = activityRule.getActivity().findViewById(R.id.contactSel);
-            but.performClick();
-            TextView contactSel = activityRule.getActivity().findViewById(R.id.userEmail);
-            assertEquals("gu.vrut@epfl.ch", contactSel.getText().toString());
-        });
     }
 
     @Test
