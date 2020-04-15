@@ -27,9 +27,9 @@ import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest {
-    String EMAIL = "otheruser.test@epfl.ch";
-    String NICKNAME = "otheruser";
-    String PASSWORD = "abcdef";
+    public static final String EMAIL = "otheruser.test@epfl.ch";
+    public static final String NICKNAME = "otheruser";
+    public static final String PASSWORD = "abcdef";
 
     @Rule
     public final ActivityTestRule<SignInActivity> mActivityRule =
