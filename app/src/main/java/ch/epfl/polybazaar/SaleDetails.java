@@ -27,6 +27,7 @@ import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.listingImage.ListingListImages;
+import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
@@ -226,11 +227,14 @@ public class SaleDetails extends AppCompatActivity {
                 userEmailTextView.setVisibility(View.INVISIBLE);
 
                 ToggleButton toggleFavorite = findViewById(R.id.toggleFavoriteButton);
-                Authenticator auth = AuthenticatorFactory.getDependency();
-                auth.getCurrentUser().getUserData().addOnSuccessListener(user -> {
-                    List<String> favorites = user.getFavorites();
-                    toggleFavorite.setChecked(favorites.contains(listing.getId()));
-                });
+                AppUser authUser = AuthenticatorFactory.getDependency().getCurrentUser();
+
+                if (authUser != null) {
+                    authUser.getUserData().addOnSuccessListener(user -> {
+                        List<String> favorites = user.getFavorites();
+                        toggleFavorite.setChecked(favorites.contains(listing.getId()));
+                    });
+                }
             });
         }
     }
@@ -282,15 +286,22 @@ public class SaleDetails extends AppCompatActivity {
      */
     public void toggleFavorite(View view) {
         ToggleButton button = (ToggleButton) view;
-        Authenticator auth = AuthenticatorFactory.getDependency();
-        auth.getCurrentUser().getUserData().addOnSuccessListener(user -> {
-            if (button.isChecked()) {
-                user.addFavorite(listing);
-            } else {
-                user.removeFavorite(listing);
-            }
+        AppUser authUser = AuthenticatorFactory.getDependency().getCurrentUser();
 
-            user.save();
-        });
+        if (authUser != null) {
+            authUser.getUserData().addOnSuccessListener(user -> {
+                if (button.isChecked()) {
+                    user.addFavorite(listing);
+                } else {
+                    user.removeFavorite(listing);
+                }
+
+                user.save();
+            });
+        } else {
+            Toast toast = Toast.makeText(SaleDetails.this, R.string.sign_in_required, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
     }
 }
