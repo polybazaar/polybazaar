@@ -3,6 +3,7 @@ package ch.epfl.polybazaar.UI;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,11 +17,11 @@ import ch.epfl.polybazaar.SaleDetails;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
+import static ch.epfl.polybazaar.Utilities.checkUserLoggedIn;
+import static ch.epfl.polybazaar.favorites.Favorites.displayFavorites;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
 
 public class SalesOverview extends AppCompatActivity {
-
-    // TODO: add tests for error cases (ex empty list on database)
 
     private List<String> IDList;
     private List<LiteListing> liteListingList;
@@ -59,9 +60,6 @@ public class SalesOverview extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvLiteListings.setLayoutManager(linearLayoutManager);
 
-        // Initial load
-        loadLiteListingOverview();
-
         // Triggered only when new data needs to be appended to the list
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
@@ -74,22 +72,51 @@ public class SalesOverview extends AppCompatActivity {
         rvLiteListings.addOnScrollListener(scrollListener);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // prepare top menu
+        TextView favorites = findViewById(R.id.favoritesOverview);
+        favorites.setOnClickListener(v -> {
+            if(checkUserLoggedIn(this)) {
+                displayFavorites(this);
+            };
+        });
+
+        // activity is launched with a list of favorites
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null) {
+            IDList = bundle.getStringArrayList("favoritesList");
+        }
+
+        // Initial load
+        loadLiteListingOverview();
+    }
+
 
     /**
      * Create a graphical overview of LiteListings from database
      */
     public void loadLiteListingOverview() {
         LiteListing.retrieveAll().addOnSuccessListener(result -> {
+            if(result == null) {
+                return;
+            }
             if(IDList.isEmpty()) {
                 for (LiteListing l : result) {
-                    IDList.add(l.getId());      // create deep copy of ID list if list is empty
+                    if(l != null) {
+                        IDList.add(l.getId());      // create deep copy of ID list if list is empty
+                    }
                 }
             }
             LiteListingCallback callbackLiteListing = new LiteListingCallback() {
                 @Override
                 public void onCallback(LiteListing result) {
-                    liteListingList.add(result);
-                    adapter.notifyItemInserted(liteListingList.size()-1);
+                    if(result != null) {
+                        liteListingList.add(result);
+                        adapter.notifyItemInserted(liteListingList.size() - 1);
+                    }
                 }
             };
             int size = IDList.size();
@@ -107,5 +134,6 @@ public class SalesOverview extends AppCompatActivity {
     public List<LiteListing> getLiteListingList() {
         return liteListingList;
     }
+
 
 }

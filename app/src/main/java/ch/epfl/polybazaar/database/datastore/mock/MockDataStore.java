@@ -221,21 +221,56 @@ public class MockDataStore implements DataStore {
 
     @Override
     public Task<CollectionSnapshot> fetchWithEquals(String collectionPath, String field, String value) {
+        //TODO This might only be a temporary solution has this makes use of "getMap"
+        Map<String, Object> collection = collections.get(collectionPath);
+
+        if (collection == null)
+            return Tasks.forResult(null);
+
         if (!collections.containsKey(collectionPath)){
-            Log.i(TAG, "Collection does not exist");
             return Tasks.forResult(null);
         }
-        Map<String, Object> collection = collections.get(collectionPath);
-        Map<String, Object> list = new HashMap<>();
-        assert collection != null;
+        List<Object> equals = new ArrayList<>();
         for (Map.Entry<String, Object> entry : collection.entrySet()) {
             Object o = entry.getValue();
             if (getMap(o).containsKey(field) && getMap(o).get(field).equals(value)) {
-                list.put(entry.getKey(), entry.getValue());
+                equals.add(entry.getValue());
             }
         }
-        Log.i(TAG, "Query successful");
-        return Tasks.forResult(new MockCollectionSnapshot(list));
+        return Tasks.forResult(new MockCollectionSnapshot(equals));
+    }
+
+    @Override
+    public Task<CollectionSnapshot> fetchWithEqualsMultiple(String collectionPath, List<String> fields, List<String> values) {
+        //TODO This might only be a temporary solution has this makes use of "getMap"
+        assert(fields.size()> 0);
+        assert(values.size() == fields.size());
+        Map<String, Object> collection = collections.get(collectionPath);
+
+        if (collection == null)
+            return Tasks.forResult(null);
+
+
+        if (!collections.containsKey(collectionPath)){
+            return Tasks.forResult(null);
+        }
+        List<Object> equals = new ArrayList<>();
+
+            for (Map.Entry<String, Object> entry : collection.entrySet()) {
+                Object o = entry.getValue();
+                boolean isIn = true;
+                for(int i = 0 ; i < fields.size(); i++){
+                    if (!(getMap(o).containsKey(fields.get(i)) && getMap(o).get(fields.get(i)).equals(values.get(i)))) {
+                        isIn = false;
+                        break;
+                    }
+                }
+                if(isIn){
+                    equals.add(entry.getValue());
+                }
+        }
+            System.out.println(equals);
+        return Tasks.forResult(new MockCollectionSnapshot(equals));
     }
 
     // Gets the requested collection if it already exists, otherwise creates a new one
