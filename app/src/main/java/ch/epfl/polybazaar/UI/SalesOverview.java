@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.SaleDetails;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
@@ -102,7 +103,9 @@ public class SalesOverview extends AppCompatActivity {
         // activity is launched with a list of litelistings
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            IDList = bundle.getStringArrayList(bundleKey);
+            if(bundle.getBoolean(bundleKey)) {
+                IDList = DataHolder.getInstance().getData();
+            }
         }
 
         // Initial load
@@ -158,10 +161,10 @@ public class SalesOverview extends AppCompatActivity {
      * @param savedListings the list of saved listings that has to be displayed in Sales Overview
      */
     public static void displaySavedListings(Context context, ArrayList<String> savedListings) {
-        // we relaunch the activity with the list of favorites in the bundle
+        DataHolder.getInstance().setData(savedListings);
         Intent intent = new Intent(context, SalesOverview.class);
         Bundle extras = new Bundle();
-        extras.putStringArrayList(bundleKey, savedListings);
+        extras.putBoolean(bundleKey, true);
         intent.putExtras(extras);
         context.startActivity(intent);
     }
