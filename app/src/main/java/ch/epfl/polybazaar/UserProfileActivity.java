@@ -108,6 +108,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     public void viewOwnListings(View view) {
         AppUser user = getUser();
+        if(user == null) return;
         user.getUserData().addOnSuccessListener(authUser -> {
             ArrayList<String> ownListingsIds = authUser.getOwnListings();
 
