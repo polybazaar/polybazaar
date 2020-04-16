@@ -130,7 +130,7 @@ public class UserProfileTest {
         Activity activity = getActivityInstance();
         Intent intent = activity.getIntent();
         Bundle bundle = intent.getExtras();
-        ArrayList<String> ownListings = bundle.getStringArrayList("userSavedListings");
+        ArrayList<String> ownListings = bundle.getStringArrayList(bundleKey);
         assertEquals("listing_1", ownListings.get(0));
     }*/
 

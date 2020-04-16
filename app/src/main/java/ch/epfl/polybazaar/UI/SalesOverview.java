@@ -3,9 +3,9 @@ package ch.epfl.polybazaar.UI;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,13 +21,13 @@ import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AppUser;
 
 import static ch.epfl.polybazaar.Utilities.checkUserLoggedIn;
-import static ch.epfl.polybazaar.Utilities.displayToast;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
 
 public class SalesOverview extends AppCompatActivity {
 
     private static final int EXTRALOAD = 20;
+    private static final String bundleKey = "userSavedListings";
     private List<String> IDList;
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
@@ -90,7 +90,7 @@ public class SalesOverview extends AppCompatActivity {
 
                     // the list of favorites of the user is empty
                     if (favoritesIds == null || favoritesIds.isEmpty()) {
-                        displayToast(this, R.string.no_favorites, Gravity.CENTER);
+                        Toast.makeText(getApplicationContext(), R.string.no_favorites, Toast.LENGTH_SHORT).show() ;
                         // we relaunch the activity with the list of favorites in the bundle
                     } else {
                         displaySavedListings(this, favoritesIds);
@@ -102,7 +102,7 @@ public class SalesOverview extends AppCompatActivity {
         // activity is launched with a list of litelistings
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            IDList = bundle.getStringArrayList("userSavedListings");
+            IDList = bundle.getStringArrayList(bundleKey);
         }
 
         // Initial load
@@ -161,7 +161,7 @@ public class SalesOverview extends AppCompatActivity {
         // we relaunch the activity with the list of favorites in the bundle
         Intent intent = new Intent(context, SalesOverview.class);
         Bundle extras = new Bundle();
-        extras.putStringArrayList("userSavedListings", savedListings);
+        extras.putStringArrayList(bundleKey, savedListings);
         intent.putExtras(extras);
         context.startActivity(intent);
     }
