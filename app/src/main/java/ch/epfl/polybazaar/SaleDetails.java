@@ -289,6 +289,14 @@ public class SaleDetails extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(),"Listing successfully deleted", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
+
+                Authenticator fbAuth = AuthenticatorFactory.getDependency();
+                AppUser authAccount = fbAuth.getCurrentUser();
+
+                authAccount.getUserData().addOnSuccessListener(user -> {
+                    user.deleteOwnListing(listingID);
+                });
+
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
         });

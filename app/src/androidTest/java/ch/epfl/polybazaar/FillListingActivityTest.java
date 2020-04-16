@@ -92,6 +92,8 @@ public class FillListingActivityTest {
     static Matcher<Intent> expectedGalleryIntent;
     static Matcher<Intent> expectedCameraIntent;
 
+    MockAuthenticator auth;
+
 
     @Rule
     public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
@@ -106,6 +108,8 @@ public class FillListingActivityTest {
 
         Activity activityUnderTest = fillSaleActivityTestRule.getActivity();
         activityUnderTest.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        auth = MockAuthenticator.getInstance();
+        AuthenticatorFactory.setDependency(auth);
     }
 
     @After
@@ -411,6 +415,27 @@ public class FillListingActivityTest {
         Intents.release();
         useRealNetwork();
     }
+
+   /* @Test
+    public void newListingIsAddedToUserOwnListings() throws Throwable {
+        auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
+        fillListing();
+        runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+                Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing);
+                but.performClick();
+            }
+        });
+        AppUser authAccount = auth.getCurrentUser();
+        authAccount.getUserData().addOnSuccessListener(user -> {
+            if (user != null) {
+                ArrayList<String> ownListings = user.getOwnListings();
+                assertNotEquals(null, ownListings.get(0));
+            }
+        });
+    }*/
+
 
     @Test
     public void testCreateAndSendListingWhenUserNull() throws Throwable {
