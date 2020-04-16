@@ -49,6 +49,8 @@ import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.AppUser;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.FirebaseAuthenticator;
@@ -60,6 +62,7 @@ import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LatLng;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
@@ -68,6 +71,7 @@ import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.map.MapsActivity.VALID;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
+import static ch.epfl.polybazaar.user.User.editUser;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
@@ -110,8 +114,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private double lng = NOLNG;
 
     private PermissionRequest cameraPermissionRequest;
-
-
+    private AppUser authAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +146,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         listImageID = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
+
     }
 
     @Override
@@ -431,10 +435,22 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 newListingImage.save();
             }
 
-            newLiteListing.save()
-                    .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
-                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG).show());
+        newLiteListing.save()
+                .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
+                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG).show());
+
+            authAccount = getUser();
+            // update own listings of (logged) user
+            if(authAccount != null) {
+                authAccount.getUserData().addOnSuccessListener(user -> {
+                    if (user != null) {
+                        user.addOwnListing(newListingID);
+                        editUser(user);
+                    }
+                });
+            }
     }
+
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
         if(bundle == null){

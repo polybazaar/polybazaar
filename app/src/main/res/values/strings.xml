@@ -29,6 +29,7 @@
     <string name="filter"><u>Filter</u></string>
     <string name="favorites"><u>Favorites</u></string>
     <string name="no_favorites">You don\'t have any saved favorites</string>
+    <string name="no_created_listings">You haven\'t created any listing</string>
     <string name="title_activity_maps">Map</string>
     <string name="location_permission_denied">Permission Denied</string>
     <string name="permission_required_toast">Permission Required</string>
@@ -54,4 +55,6 @@
     <string name="MP_ok">Meeting Point defined</string>
     <string name="MP_nok">Meeting Point not defined</string>
     <string name="location_unavailable">Location services are unavailable</string>
+    <string name="add__favorite">Add to favorites</string>
+    <string name="remove_favorites">Remove from favorites</string>
 </resources>

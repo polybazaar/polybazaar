@@ -1,9 +1,11 @@
 package ch.epfl.polybazaar.UI;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,21 +14,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.SaleDetails;
 import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.AppUser;
 
 import static ch.epfl.polybazaar.Utilities.checkUserLoggedIn;
-import static ch.epfl.polybazaar.favorites.Favorites.displayFavorites;
+import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
 
 public class SalesOverview extends AppCompatActivity {
 
+    private static final int EXTRALOAD = 20;
+    private static final String bundleKey = "userSavedListings";
     private List<String> IDList;
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
-    private static final int EXTRALOAD = 20;
     private int positionInIDList = 0;
 
     @Override
@@ -39,7 +44,7 @@ public class SalesOverview extends AppCompatActivity {
 
         // Lookup the recyclerview in activity layout
         RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
-        
+
         // Create adapter passing in the sample LiteListing data
         adapter = new LiteListingAdapter(liteListingList);
 
@@ -79,15 +84,28 @@ public class SalesOverview extends AppCompatActivity {
         // prepare top menu
         TextView favorites = findViewById(R.id.favoritesOverview);
         favorites.setOnClickListener(v -> {
-            if(checkUserLoggedIn(this)) {
-                displayFavorites(this);
-            };
+            if (checkUserLoggedIn(this)) {
+                AppUser user = getUser();
+                user.getUserData().addOnSuccessListener(authUser -> {
+                    ArrayList<String> favoritesIds = authUser.getFavorites();
+
+                    // the list of favorites of the user is empty
+                    if (favoritesIds == null || favoritesIds.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), R.string.no_favorites, Toast.LENGTH_SHORT).show() ;
+                        // we relaunch the activity with the list of favorites in the bundle
+                    } else {
+                        displaySavedListings(this, favoritesIds);
+                    }
+                });
+            }
         });
 
-        // activity is launched with a list of favorites
+        // activity is launched with a list of litelistings
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null) {
-            IDList = bundle.getStringArrayList("favoritesList");
+        if (bundle != null) {
+            if(bundle.getBoolean(bundleKey)) {
+                IDList = DataHolder.getInstance().getData();
+            }
         }
 
         // Initial load
@@ -105,7 +123,7 @@ public class SalesOverview extends AppCompatActivity {
             }
             if(IDList.isEmpty()) {
                 for (LiteListing l : result) {
-                    if(l != null) {
+                    if (l != null) {
                         IDList.add(l.getId());      // create deep copy of ID list if list is empty
                     }
                 }
@@ -113,14 +131,14 @@ public class SalesOverview extends AppCompatActivity {
             LiteListingCallback callbackLiteListing = new LiteListingCallback() {
                 @Override
                 public void onCallback(LiteListing result) {
-                    if(result != null) {
+                    if (result != null) {
                         liteListingList.add(result);
                         adapter.notifyItemInserted(liteListingList.size() - 1);
                     }
                 }
             };
             int size = IDList.size();
-            for(int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
+            for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
                 fetchLiteListing(IDList.get(i), callbackLiteListing);
                 positionInIDList++;
             }
@@ -129,11 +147,26 @@ public class SalesOverview extends AppCompatActivity {
 
     /**
      * Returns the list of lite listings shown currently
+     *
      * @return list of lite listings
      */
     public List<LiteListing> getLiteListingList() {
         return liteListingList;
     }
 
+
+    /**
+     * Display saved listings of the user (if any), they can be favorites or user created own listings
+     *
+     * @param savedListings the list of saved listings that has to be displayed in Sales Overview
+     */
+    public static void displaySavedListings(Context context, ArrayList<String> savedListings) {
+        DataHolder.getInstance().setData(savedListings);
+        Intent intent = new Intent(context, SalesOverview.class);
+        Bundle extras = new Bundle();
+        extras.putBoolean(bundleKey, true);
+        intent.putExtras(extras);
+        context.startActivity(intent);
+    }
 
 }

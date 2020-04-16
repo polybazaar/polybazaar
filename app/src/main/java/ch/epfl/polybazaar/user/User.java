@@ -1,6 +1,5 @@
 package ch.epfl.polybazaar.user;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
@@ -9,14 +8,13 @@ import java.util.ArrayList;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.Utilities.emailIsValid;
 import static ch.epfl.polybazaar.Utilities.nameIsValid;
 
 
 /**
- * If you attributes of this class, also change its CallbackAdapter and Utilities
+ * If you change attributes of this class, also change its CallbackAdapter and Utilities
  */
 public final class User extends Model {
 
@@ -28,7 +26,9 @@ public final class User extends Model {
 
     private static String COLLECTION = "users";
 
-    private ArrayList<String> favorites;
+    private ArrayList<String> ownListings = new ArrayList<>();
+    private ArrayList<String> favorites = new ArrayList<>();
+
 
     public String getNickName() {
         return nickName;
@@ -107,6 +107,34 @@ public final class User extends Model {
 
     public ArrayList<String> getFavorites() {
         return favorites;
+    }
+
+    public ArrayList<String> getOwnListings() {
+        return ownListings;
+    }
+
+    public void addOwnListing(String liteListingId) {
+        ownListings.add(liteListingId);
+    }
+
+    public void deleteOwnListing(String liteListingid) {
+        ownListings.remove(liteListingid);
+    }
+
+    /**
+     * Adds a listing to the user's favorites
+     * @param listing listing to add
+     */
+    public void addFavorite(Listing listing) {
+        favorites.add(listing.getId());
+    }
+
+    /**
+     * Removes a listing from the user's favorites
+     * @param listing listing to remove
+     */
+    public void removeFavorite(Listing listing) {
+        favorites.remove(listing.getId());
     }
 
     public static Task<User> fetch(String email) {
