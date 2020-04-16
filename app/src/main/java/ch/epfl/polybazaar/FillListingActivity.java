@@ -50,10 +50,8 @@ import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AppUser;
-import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
@@ -64,7 +62,7 @@ import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
-import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LatLng;
+import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
@@ -181,12 +179,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             if (data.getBooleanExtra(VALID, false)) {
                 lng = data.getDoubleExtra(LNG, NOLNG);
                 lat = data.getDoubleExtra(LAT, NOLAT);
-                addMP.setText(R.string.changeMP);
+                addMP.setText(R.string.change_MP);
                 MPStatus.setText(R.string.MP_ok);
             } else {
                 lng = NOLNG;
                 lat = NOLAT;
-                addMP.setText(R.string.addMP);
+                addMP.setText(R.string.add_MP);
                 MPStatus.setText(R.string.MP_nok);
             }
         }
@@ -205,7 +203,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         uploadImage.setOnClickListener(v -> uploadImage());
         addMP.setOnClickListener(v -> {
             Intent defineMP = new Intent(this, MapsActivity.class);
-            defineMP.putExtra(GIVE_LatLng, false);
+            defineMP.putExtra(GIVE_LAT_LNG, false);
             defineMP.putExtra(LAT, lat);
             defineMP.putExtra(LNG, lng);
             startActivityForResult(defineMP, RESULT_ADD_MP);
@@ -476,7 +474,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         lat = listing.getLatitude();
         lng = listing.getLongitude();
         if (lat != NOLAT && lng != NOLNG) {
-            addMP.setText(R.string.changeMP);
+            addMP.setText(R.string.change_MP);
             MPStatus.setText(R.string.MP_ok);
         }
         return true;

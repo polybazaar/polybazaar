@@ -32,7 +32,7 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
 
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
-import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LatLng;
+import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
@@ -95,7 +95,7 @@ public class SaleDetails extends AppCompatActivity {
             //TODO check that user is connected
             Intent viewMPIntent = new Intent(this, MapsActivity.class);
             Bundle extras = new Bundle();
-            extras.putBoolean(GIVE_LatLng, true);
+            extras.putBoolean(GIVE_LAT_LNG, true);
             extras.putDouble(LAT, mpLat);
             extras.putDouble(LNG, mpLng);
             viewMPIntent.putExtras(extras);

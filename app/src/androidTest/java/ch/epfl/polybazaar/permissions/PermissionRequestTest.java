@@ -27,6 +27,8 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class PermissionRequestTest {
 
+    private final int SLEEP_TIME = 1500;
+
     @Rule
     public final ActivityTestRule<FillListingActivity> permissionActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
 
@@ -41,7 +43,7 @@ public class PermissionRequestTest {
             });
             permissionRequest.assertPermission();
         });
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
     }
 
     @Test
@@ -52,7 +54,7 @@ public class PermissionRequestTest {
             });
             permissionRequest.assertPermission();
         });
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         onView(withText("hello")).check(matches(isDisplayed()));
     }
 

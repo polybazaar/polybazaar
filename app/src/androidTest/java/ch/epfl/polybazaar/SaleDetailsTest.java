@@ -1,15 +1,11 @@
 package ch.epfl.polybazaar;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
@@ -50,6 +46,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SaleDetailsTest {
     private static final int TOAST_LONG_DELAY = 3500;
+    private final int SLEEP_TIME = 1500;
 
     @Rule
     public final ActivityTestRule<SaleDetails> activityRule =
@@ -129,7 +126,7 @@ public class SaleDetailsTest {
                             throwable.printStackTrace();
                         }
                         try {
-                            Thread.sleep(1000);
+                            Thread.sleep(SLEEP_TIME);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -160,7 +157,7 @@ public class SaleDetailsTest {
 
         activityRule.launchActivity(intent);
 
-        onView(withText(R.string.add__favorite)).check(matches(not(isEnabled())));
+        onView(withText(R.string.add_favorite)).check(matches(not(isEnabled())));
     }
 
     @Test
@@ -178,7 +175,7 @@ public class SaleDetailsTest {
 
         activityRule.launchActivity(intent);
 
-        onView(withText(R.string.add__favorite)).perform(click());
+        onView(withText(R.string.add_favorite)).perform(click());
 
         // we fetch after each click to make sure the data is actually saved to mock db
         User.fetch(MockAuthenticator.TEST_USER_EMAIL).addOnSuccessListener(user -> {

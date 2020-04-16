@@ -82,6 +82,8 @@ import static org.junit.Assert.assertTrue;
 
 public class FillListingActivityTest {
 
+    private final int SLEEP_TIME = 1500;
+
     static Uri imageUri;
     static Bitmap imageBitmap;
     static Intent galleryIntent;
@@ -193,7 +195,7 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_TIME);
         }
 
     @Test
@@ -203,7 +205,7 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_TIME);
     }
 
     @Test
@@ -212,7 +214,7 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_TIME);
     }
 
     @Test
@@ -222,7 +224,7 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_TIME);
     }
 
 
@@ -246,7 +248,7 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
     }
@@ -337,7 +339,7 @@ public class FillListingActivityTest {
 
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
     }
@@ -367,7 +369,7 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         assert(fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog").isVisible());
         //onView(withText("No Internet connection found")).check(matches(isDisplayed()));
         Intents.release();
@@ -381,14 +383,14 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         runOnUiThread(() -> {
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
             AlertDialog dialog = (AlertDialog) dialogFragment.getDialog();
             Button posButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
             posButton.performClick();
         });
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
         useRealNetwork();
@@ -401,7 +403,7 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         runOnUiThread(() -> {
 
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
@@ -410,7 +412,7 @@ public class FillListingActivityTest {
             negButton.performClick();
         });
 
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         hasComponent(FillListingActivity.class.getName());
         Intents.release();
         useRealNetwork();
@@ -445,7 +447,7 @@ public class FillListingActivityTest {
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         //wait for MainActivity
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         intended(hasComponent(MainActivity.class.getName()));
         Intents.release();
 

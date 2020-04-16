@@ -11,7 +11,7 @@
         android:id="@+id/salesOverviewTopMenu"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/salesOverviewTopMenuHeight"
+        android:layout_height="@dimen/sales_overview_top_menu_height"
         android:orientation="horizontal">
 
         <TextView
