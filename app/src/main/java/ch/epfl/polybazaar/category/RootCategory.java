@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.Math.max;
@@ -27,7 +28,6 @@ public class RootCategory implements Category {
      * @param context : application context
      * @return the root category, if JSON couldn't be parsed, return null
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static RootCategory getInstance(Context context) {
         if(root == null){
             try {
@@ -40,7 +40,6 @@ public class RootCategory implements Category {
         return root;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private RootCategory(Context context) throws IOException, JSONException {
         nodes = new ArrayList<>();
             BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open("categories.json")));
@@ -56,21 +55,19 @@ public class RootCategory implements Category {
             traverse(jsonObject, this);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+
     private void traverse(Object json, Category cat) throws JSONException {
         if(json instanceof JSONObject){
             JSONObject jsonObject = (JSONObject)json;
-            jsonObject.keys().forEachRemaining(s -> {
-                NodeCategory node = new NodeCategory(s);
+            Iterator<String> keys = jsonObject.keys();
+            while(keys.hasNext()){
+                String name = keys.next();
+                NodeCategory node = new NodeCategory(name);
                 cat.addSubCategory(node);
-                JSONArray arr = null;
-                try {
-                    arr = new JSONArray(jsonObject.getJSONArray(s).toString());
-                    traverse(arr, node);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            });
+
+                JSONArray arr = new JSONArray(jsonObject.getJSONArray(name).toString());
+                traverse(arr, node);
+            }
         }
 
         else if(json instanceof JSONArray){
