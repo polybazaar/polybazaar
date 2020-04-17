@@ -74,7 +74,7 @@ public class EditAndDeleteTest {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText(), typeText(newTitle));
         closeSoftKeyboard();
         onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
-        onView(withText("Furniture")).perform(scrollTo(), click());
+        onView(withText("Others")).perform(scrollTo(), click());
         onView(withId(R.id.submitListing)).perform(scrollTo(), click());
 
         DatabaseChecksUtilities.assertDatabaseHasAtLeastOneEntryWithField(Listing.COLLECTION, "title", newTitle, Listing.class);
