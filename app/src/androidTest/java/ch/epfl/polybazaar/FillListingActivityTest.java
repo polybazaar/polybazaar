@@ -188,7 +188,7 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenTitleIsEmpty() throws Throwable {
-        selectCategory("Furniture");
+        selectCategory("Others");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
@@ -198,7 +198,7 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenPriceIsEmpty() throws Throwable {
-        selectCategory("Furniture");
+        selectCategory("Others");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
@@ -210,7 +210,7 @@ public class FillListingActivityTest {
     public void toastAppearsWhenNoCategoryIsSelected() throws Throwable {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
         Thread.sleep(2000);
     }
@@ -237,13 +237,7 @@ public class FillListingActivityTest {
     @Test
     public void submittingNewListingRedirectsToSalesOverview() throws Throwable {
         useMockDataStore();
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
-        closeSoftKeyboard();
-        selectCategory("Furniture");
-        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("That is a loooong description    yada yada yada hahahahaha      much long very description"));
-        closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
-        closeSoftKeyboard();
+        fillListing();
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(1000);
@@ -521,7 +515,7 @@ public class FillListingActivityTest {
     private void fillListing() throws Throwable {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
-        selectCategory("Furniture");
+        selectCategory("Others");
         onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("description"));
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
