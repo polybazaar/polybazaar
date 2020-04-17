@@ -25,11 +25,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +52,6 @@ import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
-import static ch.epfl.polybazaar.filllisting.ImageManager.*;
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
@@ -85,7 +81,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private Button submitListing;
     private Button addMP;
     private ImageView pictureView;
-    private ViewPager2 viewPager;
     private Switch freeSwitch;
     private TextView titleSelector;
     private TextView meetingPointStatus;
@@ -95,8 +90,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private List<Spinner> spinnerList;
     private LinearLayout linearLayout;
     private String oldPrice;
-    private String currentPhotoPath;
-    private File photoFile;
     private List<String> listStringImage;
     //only used for edit to delete all images
     private List<String> listImageID;
@@ -459,20 +452,18 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         }
     }
 
+    private void checkCameraPermission(){
+        cameraPermissionRequest = new PermissionRequest(this, "CAMERA", "Camera access is required to take pictures", null, result -> {
+            if (result) imageManager.takePicture();
+        });
+        cameraPermissionRequest.assertPermission();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         cameraPermissionRequest.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-
-
-
-    private void checkCameraPermission(){
-        PermissionRequest cameraPermissionRequest = new PermissionRequest(this, "CAMERA", "Camera access is required to take pictures", null, result -> {
-            if (result) imageManager.takePicture();
-        });
-        cameraPermissionRequest.assertPermission();
-    }
 
     private void hideImagesButtons() {
         setImageFirst.setVisibility(View.INVISIBLE);

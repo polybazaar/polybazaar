@@ -1,18 +1,14 @@
 package ch.epfl.polybazaar.filllisting;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
@@ -29,9 +25,6 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
-
-import static androidx.core.app.ActivityCompat.startActivityForResult;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.filllisting.FillListingActivity.RESULT_LOAD_IMAGE;
@@ -77,7 +70,7 @@ public class ImageManager {
 
 
     //Function taken from https://developer.android.com/training/camera/photobasics
-    public void takePicture(){
+    public void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
             photoFile = null;
@@ -101,7 +94,7 @@ public class ImageManager {
         return photoFile;
     }
 
-    public void uploadImage(){
+    public void uploadImage() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         activity.startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
     }
