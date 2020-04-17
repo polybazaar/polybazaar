@@ -395,7 +395,7 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         runOnUiThread(() -> {
 
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
@@ -404,7 +404,7 @@ public class FillListingActivityTest {
             negButton.performClick();
         });
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         hasComponent(FillListingActivity.class.getName());
         Intents.release();
         useRealNetwork();
@@ -502,6 +502,7 @@ public class FillListingActivityTest {
         onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT))
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
+        Thread.sleep(2000);
     }
 
     private void checkNoImageUploaded(){
