@@ -27,12 +27,11 @@ public class RootCategory implements Category {
      * @param context : application context
      * @return the root category, if JSON couldn't be parsed, return null
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static RootCategory getInstance(Context context) {
         if(root == null){
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    root = new RootCategory(context);
-                }
+                root = new RootCategory(context);
             }
             catch (Exception e){
                 root = null;
