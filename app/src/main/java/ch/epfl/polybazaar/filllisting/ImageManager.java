@@ -34,12 +34,14 @@ import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 import static androidx.core.app.ActivityCompat.startActivityForResult;
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.filllisting.FillListingActivity.RESULT_LOAD_IMAGE;
 import static ch.epfl.polybazaar.filllisting.FillListingActivity.RESULT_TAKE_PICTURE;
 
 public class ImageManager {
 
     private ViewPager2 viewPager;
     private Activity activity;
+    private File photoFile;
 
     ImageManager(Activity activity) {
         this.activity = activity;
@@ -74,13 +76,11 @@ public class ImageManager {
     }
 
 
-
-
     //Function taken from https://developer.android.com/training/camera/photobasics
     public void takePicture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-            File photoFile = null;
+            photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ignored) {
@@ -95,6 +95,15 @@ public class ImageManager {
                 activity.startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
             }
         }
+    }
+
+    public File getPhotoFile() {
+        return photoFile;
+    }
+
+    public void uploadImage(){
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        activity.startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
     }
 
 

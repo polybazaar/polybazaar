@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/modify_image"
-                    android:visibility="invisible" />
+                    android:visibility="visible" />
 
             </TableRow>
 

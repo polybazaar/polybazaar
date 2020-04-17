@@ -169,8 +169,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             imageManager.addImage(listStringImage, stringImage);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
-           stringImage = convertFileToStringWithQuality(photoFile, QUALITY);
-            imageManager.addImage(listStringImage, stringImage);
+           stringImage = convertFileToStringWithQuality(imageManager.getPhotoFile(), QUALITY);
+           imageManager.addImage(listStringImage, stringImage);
         }
         else if (requestCode == RESULT_ADD_MP) {
             if (data != null) {
@@ -193,7 +193,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private void addListeners(boolean edit){
         camera.setOnClickListener(v -> checkCameraPermission());
         freeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> freezePriceSelector(isChecked));
-        uploadImage.setOnClickListener(v -> uploadImage());
+        uploadImage.setOnClickListener(v -> imageManager.uploadImage());
         addMP.setOnClickListener(v -> {
             Intent defineMP = new Intent(this, MapsActivity.class);
             defineMP.putExtra(GIVE_LAT_LNG, false);
@@ -205,7 +205,13 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         setImageFirst.setOnClickListener(v -> imageManager.setFirst(listStringImage));
         rotateImageLeft.setOnClickListener(v -> imageManager.rotateLeft(listStringImage));
         deleteImage.setOnClickListener(v -> imageManager.deleteImage(listStringImage));
-        modifyImage.setOnClickListener(v -> showImagesButtons());
+        modifyImage.setOnClickListener(v -> {
+            if (setImageFirst.getVisibility() == View.INVISIBLE) {
+                showImagesButtons();
+            } else {
+                hideImagesButtons();
+            }
+        });
 
         if(!edit){
             submitListing.setOnClickListener(v -> submit());
@@ -459,10 +465,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     }
 
 
-    private void uploadImage(){
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-    }
+
 
     private void checkCameraPermission(){
         PermissionRequest cameraPermissionRequest = new PermissionRequest(this, "CAMERA", "Camera access is required to take pictures", null, result -> {
@@ -475,14 +478,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         setImageFirst.setVisibility(View.INVISIBLE);
         rotateImageLeft.setVisibility(View.INVISIBLE);
         deleteImage.setVisibility(View.INVISIBLE);
-        modifyImage.setVisibility(View.VISIBLE);
     }
 
     private void showImagesButtons() {
         setImageFirst.setVisibility(View.VISIBLE);
         rotateImageLeft.setVisibility(View.VISIBLE);
         deleteImage.setVisibility(View.VISIBLE);
-        modifyImage.setVisibility(View.INVISIBLE);
     }
 
 
