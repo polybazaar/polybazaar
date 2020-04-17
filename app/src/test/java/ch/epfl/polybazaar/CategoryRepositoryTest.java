@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
-import ch.epfl.polybazaar.category.StringCategory;
+import ch.epfl.polybazaar.category.NodeCategory;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -16,23 +16,23 @@ public class CategoryRepositoryTest{
 
     @BeforeClass
     public static void setupCategoryRepository(){
-        Category books = new StringCategory("Book");
-        books.addSubCategory(new StringCategory("Engineering"));
-        books.addSubCategory(new StringCategory("Cooking"));
+        Category books = new NodeCategory("Book");
+        books.addSubCategory(new NodeCategory("Engineering"));
+        books.addSubCategory(new NodeCategory("Cooking"));
 
-        Category multimedia = new StringCategory("Multimedia");
-        multimedia.addSubCategory(new StringCategory("Television"));
-        multimedia.addSubCategory(new StringCategory("Computer"));
+        Category multimedia = new NodeCategory("Multimedia");
+        multimedia.addSubCategory(new NodeCategory("Television"));
+        multimedia.addSubCategory(new NodeCategory("Computer"));
 
-        Category videoGames = new StringCategory("Video games");
-        videoGames.addSubCategory(new StringCategory("Nintendo Switch"));
-        videoGames.addSubCategory(new StringCategory("Playstation 4"));
-        videoGames.addSubCategory(new StringCategory("PC"));
-        videoGames.addSubCategory(new StringCategory("XBOX One"));
+        Category videoGames = new NodeCategory("Video games");
+        videoGames.addSubCategory(new NodeCategory("Nintendo Switch"));
+        videoGames.addSubCategory(new NodeCategory("Playstation 4"));
+        videoGames.addSubCategory(new NodeCategory("PC"));
+        videoGames.addSubCategory(new NodeCategory("XBOX One"));
 
         multimedia.addSubCategory(videoGames);
 
-        CategoryRepository.categories = Arrays.asList(new StringCategory("Furniture"), books, multimedia);
+        CategoryRepository.categories = Arrays.asList(new NodeCategory("Furniture"), books, multimedia);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class CategoryRepositoryTest{
 
     @Test
     public void testContainsIsCorrect(){
-        assertTrue(CategoryRepository.contains(new StringCategory("Playstation 4")));
-        assertFalse(CategoryRepository.contains(new StringCategory("Coronavirus")));
+        assertTrue(CategoryRepository.contains(new NodeCategory("Playstation 4")));
+        assertFalse(CategoryRepository.contains(new NodeCategory("Coronavirus")));
     }
 }

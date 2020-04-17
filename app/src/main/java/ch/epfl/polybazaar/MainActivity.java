@@ -1,14 +1,18 @@
 package ch.epfl.polybazaar;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.category.Category;
+import ch.epfl.polybazaar.category.RootCategory;
 import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -19,11 +23,14 @@ public class MainActivity extends AppCompatActivity {
     private Authenticator authenticator;
     private AppUser user;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         authenticator = AuthenticatorFactory.getDependency();
+        Category c = RootCategory.getInstance(this);
+        System.out.println(c.toString());
     }
 
     public void toSalesOverview(View view) {

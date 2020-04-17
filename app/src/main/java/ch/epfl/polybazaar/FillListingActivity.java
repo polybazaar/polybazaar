@@ -44,16 +44,14 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.category.Category;
-import ch.epfl.polybazaar.category.CategoryRepository;
-import ch.epfl.polybazaar.category.StringCategory;
+import ch.epfl.polybazaar.category.NodeCategory;
+import ch.epfl.polybazaar.category.RootCategory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AppUser;
-import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.login.FirebaseAuthenticator;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
@@ -141,7 +139,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         categorySelector = findViewById(R.id.categorySelector);
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
-        setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
+        setupSpinner(categorySelector, categoriesWithDefaultText(RootCategory.getInstance(this).subCategories()));
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
@@ -258,7 +256,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
             Bundle bundle = getIntent().getExtras();
             if(bundle != null && traversingCategory != null){
-                Category editedCategory = new StringCategory(((Listing)bundle.get("listing")).getCategory());
+                Category editedCategory = new NodeCategory(((Listing)bundle.get("listing")).getCategory());
                 subSpinner.setSelection(traversingCategory.indexOf(traversingCategory.getSubCategoryContaining(editedCategory))+1);
                 traversingCategory = traversingCategory.getSubCategoryContaining(editedCategory);
             }
@@ -269,7 +267,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     private List<Category> categoriesWithDefaultText(List<Category> categories){
         List<Category> categoriesWithDefText = new ArrayList<>(categories);
-        categoriesWithDefText.add(0, new StringCategory(DEFAULT_SPINNER_TEXT));
+        categoriesWithDefText.add(0, new NodeCategory(DEFAULT_SPINNER_TEXT));
         return categoriesWithDefText;
     }
 
@@ -470,9 +468,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         descriptionSelector.setText(listing.getDescription());
         freeSwitch.setChecked(listing.getPrice().equals("0.0"));
         priceSelector.setText(listing.getPrice());
-        Category editedCategory = new StringCategory(listing.getCategory());
-        traversingCategory = CategoryRepository.getCategoryContaining(editedCategory);
-        categorySelector.setSelection(CategoryRepository.indexOf(traversingCategory)+1);
+        Category editedCategory = new NodeCategory(listing.getCategory());
+        RootCategory root = RootCategory.getInstance(this);
+        traversingCategory = root.getSubCategoryContaining(editedCategory);
+        categorySelector.setSelection(root.indexOf(traversingCategory)+1);
+
+
         lat = listing.getLatitude();
         lng = listing.getLongitude();
         if (lat != NOLAT && lng != NOLNG) {

@@ -1,17 +1,21 @@
 package ch.epfl.polybazaar.category;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static java.lang.Math.max;
 
-public class StringCategory implements Category {
+public class NodeCategory implements Category {
     private List<Category> subCategories;
     private String name;
 
-    public StringCategory(String name){
+    public NodeCategory(String name){
         this.name = name;
         this.subCategories = new ArrayList<>();
     }
@@ -79,12 +83,6 @@ public class StringCategory implements Category {
         return null;
     }
 
-    @NonNull
-    @Override
-    public String toString(){
-        return name;
-    }
-
     @Override
     public void addSubCategory(Category subCategory) {
         subCategories.add(subCategory);
@@ -93,5 +91,25 @@ public class StringCategory implements Category {
     @Override
     public void removeSubCategory(Category subCategory) {
         subCategories.remove(subCategory);
+    }
+
+
+    @Override
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String treeRepresentation(int depth){
+        StringBuilder repr = new StringBuilder(name+"\n");
+        String offset = "";
+        for (int i = 0; i < depth; i++) {
+            offset += "---/";
+        }
+        String finalOffset = offset;
+        subCategories.forEach(category -> repr.append(finalOffset + category.treeRepresentation(depth+1)+"\n"));
+        return repr.toString();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public String toString(){
+        return name;
     }
 }
