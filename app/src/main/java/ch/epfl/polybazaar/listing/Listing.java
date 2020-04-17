@@ -117,6 +117,19 @@ public class Listing extends Model implements Serializable {
     }
 
     /**
+     * Saves the listing with its lite version in a safe way
+     * @return successful task containing the model instance if it exists, null otherwise. The task
+     * fails if the database is unreachable
+     */
+    public Task<Void> saveWithLiteVersion() {
+        return this.save().onSuccessTask(v -> {
+            // TODO make thumbnail
+           LiteListing liteVersion = new LiteListing(id, title, price, category, "");
+           return liteVersion.save();
+        });
+    }
+
+    /**
      * Fetches the requested listing
      * @param id id of the listing
      * @return successful task containing the model instance if it exists, null otherwise. The task
