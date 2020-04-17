@@ -1,28 +1,24 @@
 package ch.epfl.polybazaar.filllisting;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,9 +30,6 @@ import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.login.Authenticator;
-import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
@@ -44,14 +37,12 @@ import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
-import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.map.MapsActivity.VALID;
-import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
 
@@ -60,7 +51,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     public static final int RESULT_ADD_MP = 3;
     public static final String INCORRECT_FIELDS_TEXT = "One or more required fields are incorrect or uncompleted";
     private final int QUALITY = 10;
-    private final String DEFAULT_SPINNER_TEXT = "Select category...";
+    public static final String DEFAULT_SPINNER_TEXT = "Select category...";
 
     private Button setImageFirst;
     private Button rotateImageLeft;
@@ -68,6 +59,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private Button modifyImage;
     private ImageManager imageManager;
     private ListingManager listingManager;
+    private CategoryManager categoryManager;
     private Button uploadImage;
     private Button camera;
     private Button submitListing;
@@ -80,7 +72,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private EditText priceSelector;
     private Spinner categorySelector;
     private List<Spinner> spinnerList;
-    private LinearLayout linearLayout;
     private String oldPrice;
     private List<String> listStringImage;
     //only used for edit to delete all images
@@ -100,29 +91,27 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         setContentView(R.layout.activity_fill_listing);
         imageManager = new ImageManager(this);
         listingManager = new ListingManager(this);
-
+        categoryManager = new CategoryManager(this);
         setImageFirst = findViewById(R.id.setFirst);
         rotateImageLeft = findViewById(R.id.rotateLeft);
         deleteImage = findViewById(R.id.deleteImage);
         modifyImage = findViewById(R.id.modifyImage);
-
         camera = findViewById(R.id.camera);
         freeSwitch = findViewById(R.id.freeSwitch);
         uploadImage = findViewById(R.id.uploadImage);
         submitListing = findViewById(R.id.submitListing);
-
         titleSelector = findViewById(R.id.titleSelector);
         descriptionSelector = findViewById(R.id.descriptionSelector);
         priceSelector = findViewById(R.id.priceSelector);
-        linearLayout = findViewById(R.id.fillListingLinearLayout);
         addMP = findViewById(R.id.addMP);
-        meetingPointStatus = findViewById(R.id.MPStatus);
+        meetingPointStatus = findViewById(R.id.meetingPointStatus);
         pictureView = findViewById(R.id.picturePreview);
-
         categorySelector = findViewById(R.id.categorySelector);
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
-        setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.categories));
+        categoryManager.setupSpinner(categorySelector, CategoryRepository.categories, spinnerList, traversingCategory);
+        traversingCategory = categoryManager.getTraversingCategory();
+        spinnerList = categoryManager.getSpinnerList();
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
@@ -175,7 +164,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         }
     }
 
-
     private void addListeners(boolean edit){
         camera.setOnClickListener(v -> checkCameraPermission());
         freeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> freezePriceSelector(isChecked));
@@ -187,7 +175,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             defineMP.putExtra(LNG, lng);
             startActivityForResult(defineMP, RESULT_ADD_MP);
         });
-
         setImageFirst.setOnClickListener(v -> imageManager.setFirst(listStringImage));
         rotateImageLeft.setOnClickListener(v -> imageManager.rotateLeft(listStringImage));
         deleteImage.setOnClickListener(v -> imageManager.deleteImage(listStringImage));
@@ -198,69 +185,20 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 hideImagesButtons();
             }
         });
-
         if(!edit){
-            submitListing.setOnClickListener(v -> submit());
+            submitListing.setOnClickListener(v -> {
+                if (!listingManager.submit(spinnerList, listStringImage, stringThumbnail, lat, lng)) {
+                    NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
+                    dialog.show(getSupportFragmentManager(), "noConnectionDialog");
+                }
+            });
         }
         else{
             submitListing.setText(R.string.edit);
-            submitListing.setOnClickListener(v -> deleteOldListingAndSubmitNewOne());
-        }
-
-    }
-
-    private void setupSpinner(Spinner spinner, List<Category> categories){
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories);
-        spinner.setAdapter(arrayAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                removeSpinnersBelow(spinner);
-                Category selectedCategory = (Category)parent.getItemAtPosition(position);
-                popsUpSubCategorySpinner(selectedCategory);
-                linearLayout.invalidate();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //Do nothing
-            }
-        });
-    }
-
-    private void removeSpinnersBelow(Spinner spinner){
-        if(!spinner.equals(spinnerList.get(spinnerList.size()-1))){
-            int numbersOfSpinnersToRemove = spinnerList.size() - spinnerList.indexOf(spinner) -1;
-            int indexOfFirstSpinnerToRemove = linearLayout.indexOfChild(categorySelector) + spinnerList.indexOf(spinner) + 1;
-            linearLayout.removeViews(indexOfFirstSpinnerToRemove, numbersOfSpinnersToRemove);
-            spinnerList = spinnerList.subList(0, spinnerList.indexOf(spinner)+1);
+            submitListing.setOnClickListener(v ->
+                    listingManager.deleteOldListingAndSubmitNewOne(spinnerList, listStringImage, stringThumbnail, lat, lng, listImageID));
         }
     }
-
-    private void popsUpSubCategorySpinner(Category selectedCategory){
-        if (selectedCategory.hasSubCategories()){
-            Spinner subSpinner = new Spinner(getApplicationContext());
-            spinnerList.add(subSpinner);
-            linearLayout.addView(subSpinner, linearLayout.indexOfChild(categorySelector)+spinnerList.size()-1);
-            setupSpinner(subSpinner, categoriesWithDefaultText(selectedCategory.subCategories()));
-
-            Bundle bundle = getIntent().getExtras();
-            if(bundle != null && traversingCategory != null){
-                Category editedCategory = new StringCategory(((Listing)bundle.get("listing")).getCategory());
-                subSpinner.setSelection(traversingCategory.indexOf(traversingCategory.getSubCategoryContaining(editedCategory))+1);
-                traversingCategory = traversingCategory.getSubCategoryContaining(editedCategory);
-            }
-
-
-        }
-    }
-
-    private List<Category> categoriesWithDefaultText(List<Category> categories){
-        List<Category> categoriesWithDefText = new ArrayList<>(categories);
-        categoriesWithDefText.add(0, new StringCategory(DEFAULT_SPINNER_TEXT));
-        return categoriesWithDefText;
-    }
-
 
     private void freezePriceSelector(boolean isChecked){
         if(isChecked){
@@ -276,40 +214,15 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         }
     }
 
-    private boolean checkFields(){
-        return checkTitle() && checkPrice() && checkCategory();
-    }
-
-    private boolean checkCategory() {
-        return !spinnerList.get(spinnerList.size()-1).getSelectedItem().toString().equals(DEFAULT_SPINNER_TEXT);
-    }
-
-    private boolean checkPrice() {
-        return !priceSelector.getText().toString().isEmpty();
-    }
-
-    private boolean checkTitle() {
-        return !titleSelector.getText().toString().isEmpty();
-    }
-
-
-    private Listing makeListing() {
-        String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
-        Authenticator fbAuth = AuthenticatorFactory.getDependency();
-        String userEmail = fbAuth.getCurrentUser().getEmail();
-        Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(),
-                priceSelector.getText().toString(), userEmail, "", category, lat, lng);
-        return newListing;
-    }
-
-
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         if(dialog instanceof NoConnectionForListingDialog){
-            listingManager.createAndSendListing(makeListing(), listStringImage, stringThumbnail);
-            Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-            startActivity(SalesOverviewIntent);
-
+            Listing newListing = listingManager.makeListing(lat, lng, spinnerList);
+            if (newListing != null) {
+                listingManager.createAndSendListing(newListing, listStringImage, stringThumbnail);
+                Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+                startActivity(SalesOverviewIntent);
+            }
         }
     }
 
@@ -318,9 +231,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         if(dialog instanceof NoConnectionForListingDialog){
             //do nothing
         }
-
     }
-
 
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
@@ -336,7 +247,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             return false;
         }
         imageManager.retrieveAllImages(listStringImage, listImageID, listingID);
-
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
         freeSwitch.setChecked(listing.getPrice().equals("0.0"));
@@ -353,47 +263,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         return true;
     }
 
-    private void submit() {
-        if(!listStringImage.isEmpty()) {
-            stringThumbnail = resizeStringImageThumbnail(listStringImage.get(0));
-        }
-        Context context = getApplicationContext();
-        if (!checkFields()) {
-            Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
-        }
-        else {
-            if(isInternetAvailable(context)){
-                listingManager.createAndSendListing(makeListing(), listStringImage, stringThumbnail);
-                Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-                startActivity(SalesOverviewIntent);
-            }else{
-                NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
-                dialog.show(getSupportFragmentManager(),"noConnectionDialog");
-            }
-        }
-    }
-
-
-    private void deleteOldListingAndSubmitNewOne() {
-        if (!checkFields()) {
-            Toast.makeText(getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Bundle bundle = getIntent().getExtras();
-            if(bundle == null){
-                return;
-            }
-            String listingID = bundle.getString("listingID");
-
-            Listing.deleteWithLiteVersion(listingID)
-                    .addOnSuccessListener((v) -> submit());
-
-            for(String id: listImageID) {
-                ListingImage.delete(id);
-            }
-        }
-    }
-
     private void checkCameraPermission(){
         cameraPermissionRequest = new PermissionRequest(this, "CAMERA", "Camera access is required to take pictures", null, result -> {
             if (result) imageManager.takePicture();
@@ -405,7 +274,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         cameraPermissionRequest.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
 
     private void hideImagesButtons() {
         setImageFirst.setVisibility(View.INVISIBLE);
@@ -419,6 +287,16 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         deleteImage.setVisibility(View.VISIBLE);
     }
 
-
+    /**
+     * return the current StringImage displayed or null if there is no image
+     * @return
+     */
+    public String getCurrentStringImage() {
+        if(listStringImage.size() > 0) {
+            return listStringImage.get(((ViewPager2)findViewById(R.id.viewPager)).getCurrentItem());
+        } else {
+            return null;
+        }
+    }
 
 }

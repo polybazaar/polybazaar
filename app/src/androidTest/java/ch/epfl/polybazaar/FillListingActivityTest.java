@@ -83,7 +83,7 @@ import static org.junit.Assert.assertTrue;
 
 public class FillListingActivityTest {
 
-    private final int SLEEP_TIME = 1500;
+    private final int SLEEP_TIME = 2000;
 
     static Uri imageUri;
     static Bitmap imageBitmap;

@@ -30,7 +30,7 @@ import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.filllisting.FillListingActivity.RESULT_LOAD_IMAGE;
 import static ch.epfl.polybazaar.filllisting.FillListingActivity.RESULT_TAKE_PICTURE;
 
-public class ImageManager {
+class ImageManager {
 
     private ViewPager2 viewPager;
     private Activity activity;
@@ -47,13 +47,11 @@ public class ImageManager {
         }
     }
 
-    public void addImage(List<String> listStringImage, String stringImage) {
+    void addImage(List<String> listStringImage, String stringImage) {
         listStringImage.add(stringImage);
         drawImages(listStringImage);
         viewPager.setCurrentItem(listStringImage.size() - 1, false);
     }
-
-
 
     //Function taken from https://developer.android.com/training/camera/photobasics
     File createImageFile() throws IOException {
@@ -68,9 +66,8 @@ public class ImageManager {
         );
     }
 
-
     //Function taken from https://developer.android.com/training/camera/photobasics
-    public void takePicture() {
+    void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
             photoFile = null;
@@ -90,15 +87,14 @@ public class ImageManager {
         }
     }
 
-    public File getPhotoFile() {
+    File getPhotoFile() {
         return photoFile;
     }
 
-    public void uploadImage() {
+    void uploadImage() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         activity.startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
     }
-
 
     /**
      * recursive function to retrieve all images
@@ -121,27 +117,22 @@ public class ImageManager {
         });
     }
 
-
     void drawImages(List<String> listStringImage) {
         List<SliderItem> sliderItems = new ArrayList<>();
         for(String strImg: listStringImage) {
             sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
         }
-
         viewPager.setAdapter(new SliderAdapter(sliderItems, viewPager));
-
         viewPager.setClipToPadding(false);
         viewPager.setClipChildren(false);
         viewPager.setOffscreenPageLimit(3);
         viewPager.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
-
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         compositePageTransformer.addTransformer((page, position) -> {
             float r = 1 - Math.abs(position);
             page.setScaleY(0.85f + r * 0.15f);
         });
         viewPager.setPageTransformer(compositePageTransformer);
-
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -150,7 +141,6 @@ public class ImageManager {
             }
         });
     }
-
 
     void setFirst(List<String> listStringImage) {
         int index = viewPager.getCurrentItem();
@@ -182,17 +172,4 @@ public class ImageManager {
         drawImages(listStringImage);
     }
 
-
-
-    /**
-     * return the current StringImage displayed or null if there is no image
-     * @return
-     */
-    public String getCurrentStringImage(List<String> listStringImage) {
-        if(listStringImage.size() > 0) {
-            return listStringImage.get(viewPager.getCurrentItem());
-        } else {
-            return null;
-        }
-    }
 }
