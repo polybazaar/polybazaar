@@ -11,6 +11,11 @@ public class ListingImage extends Model {
     @DocumentId
     private String id;
     private String image;
+
+    public void setRefNextImg(String refNextImg) {
+        this.refNextImg = refNextImg;
+    }
+
     private String refNextImg;
 
     public static final String COLLECTION = "listingsImage";
