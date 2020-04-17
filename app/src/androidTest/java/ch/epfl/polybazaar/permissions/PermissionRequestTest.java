@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class PermissionRequestTest {
 
-    private final int SLEEP_TIME = 1500;
+    private final int SLEEP_TIME = 2000;
 
     @Rule
     public final ActivityTestRule<FillListingActivity> permissionActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);

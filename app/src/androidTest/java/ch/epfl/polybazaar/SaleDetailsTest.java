@@ -46,7 +46,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SaleDetailsTest {
     private static final int TOAST_LONG_DELAY = 3500;
-    private final int SLEEP_TIME = 1500;
+    private final int SLEEP_TIME = 2000;
 
     @Rule
     public final ActivityTestRule<SaleDetails> activityRule =
