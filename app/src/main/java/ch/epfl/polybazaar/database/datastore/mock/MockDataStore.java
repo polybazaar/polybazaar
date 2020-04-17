@@ -1,35 +1,19 @@
 package ch.epfl.polybazaar.database.datastore.mock;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import ch.epfl.polybazaar.database.Model;
-import ch.epfl.polybazaar.database.callback.StringListCallback;
-import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
-import ch.epfl.polybazaar.database.datastore.CollectionSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
-import ch.epfl.polybazaar.database.datastore.DataSnapshotCallback;
 import ch.epfl.polybazaar.database.datastore.DataStore;
-import ch.epfl.polybazaar.listing.ListingDatabase;
-import ch.epfl.polybazaar.listingImage.ListingImageDatabase;
-import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
-import ch.epfl.polybazaar.user.UserDatabase;
 
 import static ch.epfl.polybazaar.Utilities.getMap;
-import static ch.epfl.polybazaar.Utilities.getOrDefaultMap;
-import static ch.epfl.polybazaar.Utilities.getOrDefaultObj;
 
 
 public class MockDataStore implements DataStore {
@@ -41,10 +25,6 @@ public class MockDataStore implements DataStore {
 
     public MockDataStore(){
         collections = new HashMap<>();
-        addCollection(ListingDatabase.listingCollectionName);
-        addCollection(ListingImageDatabase.listingImageCollectionName);
-        addCollection(UserDatabase.userCollectionName);
-        addCollection(LiteListingDatabase.liteListingCollectionName);
     }
 
     public void reset(){
@@ -69,102 +49,6 @@ public class MockDataStore implements DataStore {
         Map<String,Object> document = new HashMap<>();
         document.put(dataId,data);
         collections.put(collectionName,document);
-    }
-
-    @Override
-    public void fetch(@NonNull String collectionPath, @NonNull String documentPath, @NonNull DataSnapshotCallback callback) {
-        if (!collections.containsKey(collectionPath)){
-            Log.i(TAG, "Collection does not exist");
-            callback.onCallback(null);
-            return;
-        }
-        if(!Objects.requireNonNull(collections.get(collectionPath)).containsKey(documentPath)){
-            Log.i(TAG, "Document does not exist");
-            callback.onCallback(null);
-            return;
-        }
-        Object data = Objects.requireNonNull(getOrDefaultObj(Objects.requireNonNull(collections.get(collectionPath)), documentPath));
-        MockDataSnapshot snapshot = new MockDataSnapshot(documentPath, data);
-        Log.i(TAG, "Document retrieved successfully");
-        callback.onCallback(snapshot);
-    }
-
-    @Override
-    public void set(@NonNull String collectionPath, @NonNull String documentPath, @NonNull Object data, @NonNull SuccessCallback callback) {
-        if (!collections.containsKey(collectionPath)){
-            Log.i(TAG, "Collection does not exist");
-            callback.onCallback(false);
-            return;
-        }
-        if(!Objects.requireNonNull(collections.get(collectionPath)).containsKey(documentPath)){
-           Objects.requireNonNull(collections.get(collectionPath)).put(documentPath,data);
-        }else{
-            Objects.requireNonNull(collections.get(collectionPath)).remove(documentPath);
-            Objects.requireNonNull(collections.get(collectionPath)).put(documentPath,data);
-        }
-        Log.i(TAG, "Data successfully set");
-        callback.onCallback(true);
-    }
-
-    @Override
-    public void add(@NonNull String collectionPath, @NonNull Object data, @NonNull SuccessCallback callback) {
-        if (!collections.containsKey(collectionPath)){
-            Log.i(TAG, "Collection does not exist");
-            callback.onCallback(false);
-            return;
-        }
-        String docPath = Integer.toString ((int)(Math.random()*1000));
-        Objects.requireNonNull(collections.get(collectionPath)).put(docPath,data);
-        Log.i(TAG, "Data successfully set");
-        callback.onCallback(true);
-    }
-
-    @Override
-    public void delete(@NonNull String collectionPath, @NonNull String documentPath, @NonNull SuccessCallback callback) {
-        if (!collections.containsKey(collectionPath)){
-            Log.i(TAG, "Collection does not exist");
-            callback.onCallback(false);
-            return;
-        }
-        if(!Objects.requireNonNull(collections.get(collectionPath)).containsKey(documentPath)){
-            Log.i(TAG, "Document does not exist");
-            callback.onCallback(false);
-            return;
-        }
-        Objects.requireNonNull(collections.get(collectionPath)).remove(documentPath);
-        Log.i(TAG, "Document successfully deleted");
-        callback.onCallback(true);
-    }
-
-    @Override
-    public void getAllDataInCollection(@NonNull String collectionPath, @NonNull CollectionSnapshotCallback callback) {
-        if (!collections.containsKey(collectionPath)){
-            Log.i(TAG, "Collection does not exist");
-            callback.onCallback(null);
-            return;
-        }
-        callback.onCallback(new MockCollectionSnapshot(getOrDefaultMap(collections, collectionPath)));
-    }
-
-    @Override
-    public void queryStringEquality(@NonNull String collectionPath, @NonNull String field,
-                                    @NonNull String equalTo, @NonNull StringListCallback callback) {
-        if (!collections.containsKey(collectionPath)){
-            Log.i(TAG, "Collection does not exist");
-            callback.onCallback(null);
-            return;
-        }
-        Map<String, Object> collection = collections.get(collectionPath);
-        List<String> list = new ArrayList<>();
-        assert collection != null;
-        for (Map.Entry<String, Object> entry : collection.entrySet()) {
-            Object o = entry.getValue();
-            if (getMap(o).containsKey(field) && getMap(o).get(field).equals(equalTo)) {
-                list.add(entry.getKey());
-            }
-        }
-        Log.i(TAG, "Query successful");
-        callback.onCallback(list);
     }
 
     @Override

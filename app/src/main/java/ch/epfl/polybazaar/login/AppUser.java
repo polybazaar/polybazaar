@@ -2,7 +2,6 @@ package ch.epfl.polybazaar.login;
 
 import com.google.android.gms.tasks.Task;
 
-import ch.epfl.polybazaar.database.callback.UserCallback;
 import ch.epfl.polybazaar.user.User;
 
 /**

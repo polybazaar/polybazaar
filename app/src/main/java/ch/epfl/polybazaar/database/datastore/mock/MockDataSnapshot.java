@@ -6,7 +6,6 @@ import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 
 import static ch.epfl.polybazaar.Utilities.getMap;
-import static ch.epfl.polybazaar.Utilities.getOrDefaultObj;
 
 public class MockDataSnapshot implements DataSnapshot {
 
@@ -28,7 +27,7 @@ public class MockDataSnapshot implements DataSnapshot {
 
     @Override
     public Object get(String field) {
-        return getOrDefaultObj(data, field);
+        return data.get(field);
     }
 
     @Override

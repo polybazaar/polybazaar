@@ -17,13 +17,11 @@ import java.util.List;
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.SaleDetails;
-import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AppUser;
 
 import static ch.epfl.polybazaar.Utilities.checkUserLoggedIn;
 import static ch.epfl.polybazaar.Utilities.getUser;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
 
 public class SalesOverview extends AppCompatActivity {
 
@@ -128,18 +126,14 @@ public class SalesOverview extends AppCompatActivity {
                     }
                 }
             }
-            LiteListingCallback callbackLiteListing = new LiteListingCallback() {
-                @Override
-                public void onCallback(LiteListing result) {
-                    if (result != null) {
-                        liteListingList.add(result);
-                        adapter.notifyItemInserted(liteListingList.size() - 1);
-                    }
-                }
-            };
             int size = IDList.size();
             for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-                fetchLiteListing(IDList.get(i), callbackLiteListing);
+                LiteListing.fetch(IDList.get(i)).addOnSuccessListener(result2 -> {
+                    if (result2 != null) {
+                        liteListingList.add(result2);
+                        adapter.notifyItemInserted(liteListingList.size() - 1);
+                    }
+                });
                 positionInIDList++;
             }
         });

@@ -5,7 +5,6 @@ import android.accounts.NetworkErrorException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
-import ch.epfl.polybazaar.database.callback.UserCallback;
 import ch.epfl.polybazaar.user.User;
 
 /**
