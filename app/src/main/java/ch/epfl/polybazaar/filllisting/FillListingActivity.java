@@ -7,8 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,13 +23,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.viewpager2.widget.ViewPager2;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.category.Category;
@@ -39,8 +35,6 @@ import ch.epfl.polybazaar.category.CategoryRepository;
 import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
@@ -50,7 +44,6 @@ import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
 import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
-import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
@@ -59,8 +52,6 @@ import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.map.MapsActivity.VALID;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
-import static ch.epfl.polybazaar.user.User.editUser;
-import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
 
@@ -76,6 +67,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private Button deleteImage;
     private Button modifyImage;
     private ImageManager imageManager;
+    private ListingManager listingManager;
     private Button uploadImage;
     private Button camera;
     private Button submitListing;
@@ -100,13 +92,14 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private double lng = NOLNG;
 
     private PermissionRequest cameraPermissionRequest;
-    private AppUser authAccount;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_listing);
         imageManager = new ImageManager(this);
+        listingManager = new ListingManager(this);
 
         setImageFirst = findViewById(R.id.setFirst);
         rotateImageLeft = findViewById(R.id.rotateLeft);
@@ -299,31 +292,21 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         return !titleSelector.getText().toString().isEmpty();
     }
 
-    private void submit() {
-        if(!listStringImage.isEmpty()) {
-            stringThumbnail = resizeStringImageThumbnail(listStringImage.get(0));
-        }
-        Context context = getApplicationContext();
-        if (!checkFields()) {
-            Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
-        }
-        else {
-                if(isInternetAvailable(context)){
-                    createAndSendListing();
-                    Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
-                    startActivity(SalesOverviewIntent);
-                }else{
-                    NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
-                    dialog.show(getSupportFragmentManager(),"noConnectionDialog");
-                }
-        }
+
+    private Listing makeListing() {
+        String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
+        Authenticator fbAuth = AuthenticatorFactory.getDependency();
+        String userEmail = fbAuth.getCurrentUser().getEmail();
+        Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(),
+                priceSelector.getText().toString(), userEmail, "", category, lat, lng);
+        return newListing;
     }
 
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         if(dialog instanceof NoConnectionForListingDialog){
-            createAndSendListing();
+            listingManager.createAndSendListing(makeListing(), listStringImage, stringThumbnail);
             Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
             startActivity(SalesOverviewIntent);
 
@@ -337,68 +320,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         }
 
     }
-    private void createAndSendListing() {
-            final String newListingID = randomUUID().toString();
-            String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
-            Authenticator fbAuth = AuthenticatorFactory.getDependency();
 
-            if(fbAuth.getCurrentUser() == null) {
-                Toast.makeText(getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                return;
-            }
-            String userEmail = fbAuth.getCurrentUser().getEmail();
-
-            Listing newListing = new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(),
-                    priceSelector.getText().toString(), userEmail, "", category, lat, lng);
-            newListing.setId(newListingID);
-            LiteListing newLiteListing = new LiteListing(newListingID, titleSelector.getText().toString(), priceSelector.getText().toString(), category, stringThumbnail);
-            newLiteListing.setId(newListingID);
-
-            newListing.save().addOnSuccessListener(result -> {
-                Toast toast = Toast.makeText(getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
-            });
-
-            //store images (current has a ref to the next)
-            if(listStringImage.size() > 0) {
-                String currentId = newListingID;
-                String nextId;
-                for(int i = 0; i < (listStringImage.size() - 1); i++) {
-                    nextId = randomUUID().toString();
-                    ListingImage newListingImage = new ListingImage(listStringImage.get(i), nextId);
-
-                    newListingImage.setId(currentId);
-                    newListingImage.save()
-                            .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored image"))
-                            .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to send image", Toast.LENGTH_LONG).show());
-
-                    currentId = nextId;
-                }
-                //store the last without refNextImg
-                ListingImage newListingImage = new ListingImage(listStringImage.get(listStringImage.size() - 1), "");
-
-                newListingImage.setId(currentId);
-                newListingImage.save();
-            }
-
-        newLiteListing.save()
-                .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
-                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG).show());
-
-            authAccount = getUser();
-            // update own listings of (logged) user
-            if(authAccount != null) {
-                authAccount.getUserData().addOnSuccessListener(user -> {
-                    if (user != null) {
-                        user.addOwnListing(newListingID);
-                        editUser(user);
-                    }
-                });
-            }
-    }
 
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
@@ -429,6 +351,26 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             meetingPointStatus.setText(R.string.MP_ok);
         }
         return true;
+    }
+
+    private void submit() {
+        if(!listStringImage.isEmpty()) {
+            stringThumbnail = resizeStringImageThumbnail(listStringImage.get(0));
+        }
+        Context context = getApplicationContext();
+        if (!checkFields()) {
+            Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            if(isInternetAvailable(context)){
+                listingManager.createAndSendListing(makeListing(), listStringImage, stringThumbnail);
+                Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+                startActivity(SalesOverviewIntent);
+            }else{
+                NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
+                dialog.show(getSupportFragmentManager(),"noConnectionDialog");
+            }
+        }
     }
 
 
