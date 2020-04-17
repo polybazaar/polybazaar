@@ -299,7 +299,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         } catch(SecurityException e)  {
-            Toast.makeText(this, R.string.security_error, Toast.LENGTH_SHORT).show();
             Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
     }

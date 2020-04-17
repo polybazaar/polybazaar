@@ -360,6 +360,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             try {
                 photoFile = createImageFile();
             } catch (IOException ignored) {
+                Toast.makeText(this, "Unable to take picture", Toast.LENGTH_SHORT);
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {

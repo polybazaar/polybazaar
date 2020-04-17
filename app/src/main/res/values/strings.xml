@@ -58,5 +58,4 @@
     <string name="add__favorite">Add to favorites</string>
     <string name="remove_favorites">Remove from favorites</string>
     <string name="unable_load_image">Unable to load image</string>
-    <string name="security_error">Security error</string>
 </resources>
