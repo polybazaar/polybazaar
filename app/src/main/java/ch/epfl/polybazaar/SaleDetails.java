@@ -31,7 +31,7 @@ import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
 
-import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LatLng;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
