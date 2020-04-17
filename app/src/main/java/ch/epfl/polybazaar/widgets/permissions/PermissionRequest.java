@@ -33,24 +33,24 @@ public final class PermissionRequest extends Fragment {
     private String message;
     private String denied_message;
     private SuccessCallback callback;
-    private AppCompatActivity context;
+    private AppCompatActivity activity;
 
     /**
      * Creates a new permission request
-     * @param context the caller (i.e. this)
+     * @param activity the caller (i.e. this)
      * @param permission the permission you ask for, i.e : "ACCESS_FINE_LOCATION"
      * @param message message to display in order to explain why the permission is necessary, if null, no message is displayed,
      *                the message is shown only for the second request if the user has chosen deny & don't ask again on the first request
      * @param denied_message message to display if the permission is denied, if null, no message is displayed
      * @param callback a SuccessCallback implementation
      */
-    public PermissionRequest(@NonNull AppCompatActivity context, @NonNull String permission,
+    public PermissionRequest(@NonNull AppCompatActivity activity, @NonNull String permission,
                              String message, String denied_message, @NonNull final SuccessCallback callback) {
         this.callback = callback;
         this.denied_message = denied_message;
         this.message = message;
         this.permission = "android.permission." + permission;
-        this.context = context;
+        this.activity = activity;
     }
 
     /**
@@ -62,23 +62,23 @@ public final class PermissionRequest extends Fragment {
             callback.onCallback(true);
         } else {
             Log.d(TAG, "Permission " + permission + " not yet granted");
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(context, permission)) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
                 requestPermission();
             } else {
                 String[] permissions = {permission};
-                ActivityCompat.requestPermissions(context, permissions, 1);
+                ActivityCompat.requestPermissions(activity, permissions, 1);
             }
         }
     }
 
     private boolean isPermissionGranted() {
-        return ContextCompat.checkSelfPermission(context, permission)
+        return ContextCompat.checkSelfPermission(activity, permission)
                 == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestPermission() {
         PermissionRationaleDialog.newInstance(permission, message, denied_message, callback)
-                    .show(context.getSupportFragmentManager(), "dialog");
+                    .show(activity.getSupportFragmentManager(), "dialog");
     }
 
     @Override
@@ -88,7 +88,7 @@ public final class PermissionRequest extends Fragment {
             callback.onCallback(true);
         } else {
             if (denied_message != null) {
-                PermissionDeniedDialog.newInstance(denied_message).show(context.getSupportFragmentManager(), "permission_denied");
+                PermissionDeniedDialog.newInstance(denied_message).show(activity.getSupportFragmentManager(), "permission_denied");
             }
             callback.onCallback(false);
         }

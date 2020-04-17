@@ -57,4 +57,8 @@
     <string name="location_unavailable">Location services are unavailable</string>
     <string name="add_favorite">Add to favorites</string>
     <string name="remove_favorites">Remove from favorites</string>
+    <string name="edit">Edit</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
