@@ -360,7 +360,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             try {
                 photoFile = createImageFile();
             } catch (IOException ignored) {
-                Toast.makeText(this, "Unable to take picture", Toast.LENGTH_SHORT);
+                Toast.makeText(this, R.string.take_picture_fail, Toast.LENGTH_SHORT).show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -368,7 +368,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                     Uri photoURI = FileProvider.getUriForFile(this, "ch.epfl.polybazaar.fileprovider", photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 }catch (IllegalArgumentException ignored) {
-                    //Picture has been canceled
+                    //Picture has been canceled by the user
                 }
                 startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
             }
