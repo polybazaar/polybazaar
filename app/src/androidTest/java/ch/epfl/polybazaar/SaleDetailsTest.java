@@ -55,6 +55,10 @@ public class SaleDetailsTest {
                     true,
                     false);
 
+    /**
+     * This test will not be relevant with the new UI anymore
+     */
+    /*
     @Test
     public void testNoBundlePassed () throws InterruptedException {
         Thread.sleep(SLEEP_TIME);
@@ -65,6 +69,7 @@ public class SaleDetailsTest {
                 .check(matches(isDisplayed()));
         Thread.sleep(TOAST_LONG_DELAY);
     }
+    */
 
     @Before
     public void init() {
