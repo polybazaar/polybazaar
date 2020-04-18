@@ -211,6 +211,7 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenNoCategoryIsSelected() throws Throwable {
+        Thread.sleep(SLEEP_TIME);
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());

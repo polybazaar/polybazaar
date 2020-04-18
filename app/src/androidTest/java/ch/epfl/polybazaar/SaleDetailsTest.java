@@ -57,9 +57,10 @@ public class SaleDetailsTest {
 
     @Test
     public void testNoBundlePassed () throws InterruptedException {
+        Thread.sleep(SLEEP_TIME);
         activityRule.launchActivity(new Intent());
 
-        onView(withText("Object not found."))
+        onView(withText(R.string.object_not_found))
                 .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
                 .check(matches(isDisplayed()));
         Thread.sleep(TOAST_LONG_DELAY);

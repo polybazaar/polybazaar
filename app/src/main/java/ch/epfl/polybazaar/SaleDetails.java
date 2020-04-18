@@ -204,7 +204,7 @@ public class SaleDetails extends AppCompatActivity {
      */
         public void fillWithListing(final Listing listing) {
         if(listing == null) {
-            Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(),R.string.object_not_found,Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
             toast.show();
             Intent intent = new Intent(SaleDetails.this, SalesOverview.class);

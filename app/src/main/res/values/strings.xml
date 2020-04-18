@@ -60,6 +60,7 @@
     <string name="edit">Edit</string>
     <string name="incorrect_fields">One or more fields are missing</string>
     <string name="default_spinner_text">Select category...</string>
+    <string name="object_not_found">Object not found</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
