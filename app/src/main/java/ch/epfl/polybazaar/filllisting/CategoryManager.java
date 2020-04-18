@@ -71,7 +71,7 @@ class CategoryManager {
             setupSpinner(subSpinner, categoriesWithDefaultText(selectedCategory.subCategories()), spinnerList, traversingCategory);
 
             Bundle bundle = activity.getIntent().getExtras();
-            if(bundle != null && traversingCategory != null){
+            if(bundle != null && traversingCategory != null) {
                 Category editedCategory = new StringCategory(((Listing)bundle.get("listing")).getCategory());
                 subSpinner.setSelection(traversingCategory.indexOf(traversingCategory.getSubCategoryContaining(editedCategory))+1);
                 this.traversingCategory = traversingCategory.getSubCategoryContaining(editedCategory);
