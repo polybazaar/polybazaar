@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,6 +75,7 @@ class ImageManager {
             try {
                 photoFile = createImageFile();
             } catch (IOException ignored) {
+                Toast.makeText(activity, activity.getResources().getString(R.string.take_picture_fail), Toast.LENGTH_SHORT).show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {

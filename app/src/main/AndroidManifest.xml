@@ -73,12 +73,6 @@
         </provider>
 
         <activity
-            android:name=".filllisting.FillListingActivity"
-
-            android:parentActivityName=".MainActivity"
-            android:exported="true"
-            android:label="Listing Editor"/>
-        <activity
             android:name=".UI.SalesOverview"
             android:parentActivityName=".MainActivity"
             android:label="Browse Listings"/>
