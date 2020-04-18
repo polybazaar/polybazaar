@@ -15,6 +15,10 @@ public class MockRootCategory implements Category {
     private NodeCategory onlyCategory;
     private static final MockRootCategory MOCK_ROOT_CATEGORY = new MockRootCategory();
 
+    /**
+     * Get the singleton root category of the mock
+     * @return the mock root category
+     */
     public static final MockRootCategory getInstance(){
         return MOCK_ROOT_CATEGORY;
     }

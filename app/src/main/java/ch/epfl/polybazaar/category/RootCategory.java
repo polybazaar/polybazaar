@@ -52,34 +52,32 @@ public class RootCategory implements Category {
             }
             String json = jsonBuilder.toString();
             JSONObject jsonObject = new JSONObject(new JSONTokener(json));
-            traverse(jsonObject, this);
+            JSONToCategory(jsonObject, this);
     }
 
 
-    private void traverse(Object json, Category cat) throws JSONException {
+    private void JSONToCategory(Object json, Category currentLevelCategory) throws JSONException {
         if(json instanceof JSONObject){
             JSONObject jsonObject = (JSONObject)json;
             Iterator<String> keys = jsonObject.keys();
             while(keys.hasNext()){
                 String name = keys.next();
                 NodeCategory node = new NodeCategory(name);
-                cat.addSubCategory(node);
-
+                currentLevelCategory.addSubCategory(node);
                 JSONArray arr = new JSONArray(jsonObject.getJSONArray(name).toString());
-                traverse(arr, node);
+                JSONToCategory(arr, node);
             }
         }
-
         else if(json instanceof JSONArray){
-            JSONArray arr = (JSONArray)json;
-            for(int i = 0 ; i<arr.length() ; i++){
-                if(!arr.get(i).toString().substring(0,1).equals("{")){
-                    NodeCategory node = new NodeCategory(arr.get(i).toString());
-                    cat.addSubCategory(node);
-                    traverse(arr.get(i), node);
+            JSONArray jsonArray = (JSONArray)json;
+            for(int i = 0 ; i<jsonArray.length() ; i++){
+                if(!jsonArray.get(i).toString().substring(0,1).equals("{")){
+                    NodeCategory node = new NodeCategory(jsonArray.get(i).toString());
+                    currentLevelCategory.addSubCategory(node);
+                    JSONToCategory(jsonArray.get(i), node);
                 }
                 else{
-                    traverse(arr.get(i), cat);
+                    JSONToCategory(jsonArray.get(i), currentLevelCategory);
                 }
             }
         }

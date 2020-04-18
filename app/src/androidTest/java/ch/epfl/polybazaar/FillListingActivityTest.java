@@ -373,7 +373,7 @@ public class FillListingActivityTest {
         useRealNetwork();
     }
 
-    /*
+
     @Test
     public void DialogPositiveClickGoesToSalesOverview() throws Throwable {
         Intents.init();
@@ -393,8 +393,7 @@ public class FillListingActivityTest {
         Intents.release();
         useRealNetwork();
     }
-    */
-    /*
+
     @Test
     public void DialogNegativeClickGoesToFillListing() throws Throwable {
         Intents.init();
@@ -415,7 +414,7 @@ public class FillListingActivityTest {
         hasComponent(FillListingActivity.class.getName());
         Intents.release();
         useRealNetwork();
-    }*/
+    }
 
    /* @Test
     public void newListingIsAddedToUserOwnListings() throws Throwable {

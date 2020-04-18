@@ -12,13 +12,17 @@ public class RootCategoryFactory {
         return dependency;
     }
 
+    /**
+     * Use this static method to use the mock category
+     */
     public static void useMockCategory(){
-        if(dependency == null){
-            System.out.println("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
-        }
         dependency = MockRootCategory.getInstance();
     }
 
+    /**
+     * Use this method to use the JSON category. Be careful that it is only effective is mock category isn't being used.
+     * @param context Context of the activity. Needed to find the json file
+     */
     public static void useJSONCategory(Context context) {
         if (dependency == null) {
             dependency = RootCategory.getInstance(context);

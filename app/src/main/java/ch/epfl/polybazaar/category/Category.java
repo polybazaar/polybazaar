@@ -8,7 +8,7 @@ public interface Category {
 
     @NonNull
     /**
-     * @return the String representation of a category
+     * @return the tree representation of a category
      */
     String treeRepresentation(int depth);
 
