@@ -440,6 +440,10 @@ public class FillListingActivityTest {
     }*/
 
 
+    /**
+     * This test will no longer be relevant with the new UI
+     */
+   /*
     @Test
     public void testCreateAndSendListingWhenUserNull() throws Throwable {
         MockAuthenticator.getInstance().signOut();
@@ -454,8 +458,8 @@ public class FillListingActivityTest {
 
         //sign in again for remaining tests
         whenAll(MockAuthenticator.getInstance().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD));
-
     }
+    */
 
     private void uploadImage(){
         closeSoftKeyboard();
@@ -508,7 +512,7 @@ public class FillListingActivityTest {
             }
         });
 
-        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT))
+        onView(withText(R.string.incorrect_fields))
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
     }

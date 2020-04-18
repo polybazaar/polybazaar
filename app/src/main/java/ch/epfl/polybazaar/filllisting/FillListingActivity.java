@@ -49,9 +49,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     public static final int RESULT_LOAD_IMAGE = 1;
     public static final int RESULT_TAKE_PICTURE = 2;
     public static final int RESULT_ADD_MP = 3;
-    public static final String INCORRECT_FIELDS_TEXT = "One or more required fields are incorrect or uncompleted";
     private final int QUALITY = 10;
-    public static final String DEFAULT_SPINNER_TEXT = "Select category...";
 
     private Button setImageFirst;
     private Button rotateImageLeft;

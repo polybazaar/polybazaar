@@ -25,8 +25,6 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
-import static ch.epfl.polybazaar.filllisting.FillListingActivity.INCORRECT_FIELDS_TEXT;
-import static ch.epfl.polybazaar.filllisting.FillListingActivity.DEFAULT_SPINNER_TEXT;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 import static ch.epfl.polybazaar.user.User.editUser;
 import static java.util.UUID.randomUUID;
@@ -53,8 +51,6 @@ class ListingManager {
         Authenticator fbAuth = AuthenticatorFactory.getDependency();
         if(fbAuth.getCurrentUser() == null) {
             Toast.makeText(activity.getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
-            activity.startActivity(intent);
             return;
         }
         newListing.setId(newListingID);
@@ -106,7 +102,7 @@ class ListingManager {
     }
 
     private boolean checkCategory(List<Spinner> spinnerList) {
-        return !spinnerList.get(spinnerList.size()-1).getSelectedItem().toString().equals(DEFAULT_SPINNER_TEXT);
+        return !spinnerList.get(spinnerList.size()-1).getSelectedItem().toString().equals(R.string.default_spinner_text);
     }
 
     private boolean checkPrice() {
@@ -135,7 +131,7 @@ class ListingManager {
         }
         Context context = activity.getApplicationContext();
         if (!checkFields(spinnerList)) {
-            Toast.makeText(context, INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.incorrect_fields, Toast.LENGTH_SHORT).show();
         }
         else {
             if(isInternetAvailable(context)){
@@ -145,7 +141,7 @@ class ListingManager {
                     Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
                     activity.startActivity(SalesOverviewIntent);
                 } else {
-                    Toast.makeText(activity.getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), R.string.incorrect_fields, Toast.LENGTH_SHORT).show();
                 }
             }else{
                 return false;
@@ -156,7 +152,7 @@ class ListingManager {
 
     void deleteOldListingAndSubmitNewOne(List<Spinner> spinnerList, List<String> listStringImage, String stringThumbnail, Double lat, Double lng, List<String> listImageID) {
         if (!checkFields(spinnerList)) {
-            Toast.makeText(activity.getApplicationContext(), INCORRECT_FIELDS_TEXT, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), R.string.incorrect_fields, Toast.LENGTH_SHORT).show();
         }
         else{
             Bundle bundle = activity.getIntent().getExtras();

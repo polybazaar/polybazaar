@@ -16,7 +16,6 @@ import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.listing.Listing;
 
-import static ch.epfl.polybazaar.filllisting.FillListingActivity.DEFAULT_SPINNER_TEXT;
 
 class CategoryManager {
 
@@ -90,7 +89,7 @@ class CategoryManager {
 
     private List<Category> categoriesWithDefaultText(List<Category> categories){
         List<Category> categoriesWithDefText = new ArrayList<>(categories);
-        categoriesWithDefText.add(0, new StringCategory(DEFAULT_SPINNER_TEXT));
+        categoriesWithDefText.add(0, new StringCategory(activity.getResources().getString(R.string.default_spinner_text)));
         return categoriesWithDefText;
     }
 }
