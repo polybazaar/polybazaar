@@ -22,6 +22,7 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.polybazaar.category.RootCategoryFactory.useMockCategory;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities.storeNewListing;
 import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.signInWithFromMainActivity;
@@ -37,6 +38,7 @@ public class EditAndDeleteTest {
                 protected void beforeActivityLaunched() {
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                     useMockDataStore();
+                    useMockCategory();
                 }
                 @Override
                 protected void afterActivityFinished() {

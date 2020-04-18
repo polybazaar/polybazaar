@@ -45,7 +45,7 @@ import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.NodeCategory;
-import ch.epfl.polybazaar.category.RootCategory;
+import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
@@ -119,6 +119,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_listing);
 
+        RootCategoryFactory.useJSONCategory(this);
+
         setImageFirst = findViewById(R.id.setFirst);;
         rotateImageLeft = findViewById(R.id.rotateLeft);;
         deleteImage = findViewById(R.id.deleteImage);;
@@ -139,7 +141,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         categorySelector = findViewById(R.id.categorySelector);
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
-        setupSpinner(categorySelector, categoriesWithDefaultText(RootCategory.getInstance(this).subCategories()));
+
+        setupSpinner(categorySelector, categoriesWithDefaultText(RootCategoryFactory.getDependency().subCategories()));
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
@@ -469,7 +472,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         freeSwitch.setChecked(listing.getPrice().equals("0.0"));
         priceSelector.setText(listing.getPrice());
         Category editedCategory = new NodeCategory(listing.getCategory());
-        RootCategory root = RootCategory.getInstance(this);
+
+        Category root = RootCategoryFactory.getDependency();
         traversingCategory = root.getSubCategoryContaining(editedCategory);
         categorySelector.setSelection(root.indexOf(traversingCategory)+1);
 

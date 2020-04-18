@@ -34,6 +34,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
@@ -63,6 +64,7 @@ import static ch.epfl.polybazaar.Utilities.convertFileToString;
 import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.Utilities.resizeBitmap;
 import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
+import static ch.epfl.polybazaar.category.RootCategoryFactory.useMockCategory;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
@@ -98,13 +100,21 @@ public class FillListingActivityTest {
 
 
     @Rule
-    public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
+    public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<FillListingActivity>(FillListingActivity.class) {
+
+
+    @Override
+    protected void beforeActivityLaunched() {
+        useMockCategory();
+        useMockDataStore();
+    }
+};
 
     @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
     @Before
     public void init() {
-        useMockDataStore();
+
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
         AuthenticatorFactory.getDependency().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD);
 
@@ -112,6 +122,7 @@ public class FillListingActivityTest {
         activityUnderTest.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         auth = MockAuthenticator.getInstance();
         AuthenticatorFactory.setDependency(auth);
+
     }
 
     @After
@@ -122,6 +133,7 @@ public class FillListingActivityTest {
 
     @BeforeClass
     public static void setupStubIntent(){
+
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
         imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 resources.getResourcePackageName(R.mipmap.ic_launcher) + '/' +
@@ -200,6 +212,7 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenPriceIsEmpty() throws Throwable {
+
         selectCategory("Others");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
