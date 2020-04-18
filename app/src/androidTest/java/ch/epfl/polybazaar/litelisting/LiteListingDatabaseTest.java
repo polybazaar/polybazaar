@@ -3,8 +3,10 @@ package ch.epfl.polybazaar.litelisting;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LiteListingDatabaseTest {
 
     @Test

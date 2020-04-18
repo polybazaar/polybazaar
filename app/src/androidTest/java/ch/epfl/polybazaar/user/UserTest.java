@@ -2,8 +2,10 @@ package ch.epfl.polybazaar.user;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 
 import ch.epfl.polybazaar.user.User;
@@ -14,6 +16,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserTest {
 
     @Test

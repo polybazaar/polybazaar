@@ -2,7 +2,9 @@ package ch.epfl.polybazaar;
 import android.content.Context;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -10,7 +12,7 @@ import ch.epfl.polybazaar.login.MockAuthenticator;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UtilitiesTest {
     MockAuthenticator auth;
     Context context;

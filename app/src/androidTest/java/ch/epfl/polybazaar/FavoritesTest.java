@@ -5,8 +5,10 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -24,7 +26,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
 
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class FavoritesTest {
 
 

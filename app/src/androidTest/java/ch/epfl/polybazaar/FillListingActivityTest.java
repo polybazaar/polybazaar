@@ -27,9 +27,11 @@ import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -79,7 +81,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class FillListingActivityTest {
 
     static Uri imageUri;
@@ -395,7 +397,7 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         runOnUiThread(() -> {
 
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
@@ -404,7 +406,7 @@ public class FillListingActivityTest {
             negButton.performClick();
         });
 
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         hasComponent(FillListingActivity.class.getName());
         Intents.release();
         useRealNetwork();

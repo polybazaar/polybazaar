@@ -5,8 +5,10 @@ import android.content.Intent;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.util.List;
 
@@ -18,7 +20,7 @@ import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockData
 import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
 import static org.junit.Assert.assertEquals;
 
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SalesOverviewTest {
 
     @Rule

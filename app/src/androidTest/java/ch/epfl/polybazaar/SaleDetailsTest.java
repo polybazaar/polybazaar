@@ -14,8 +14,10 @@ import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.util.concurrent.ExecutionException;
 
@@ -47,7 +49,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SaleDetailsTest {
     private static final int TOAST_LONG_DELAY = 3500;
 

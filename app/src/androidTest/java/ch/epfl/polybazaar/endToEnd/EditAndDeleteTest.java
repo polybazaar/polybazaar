@@ -2,8 +2,10 @@ package ch.epfl.polybazaar.endToEnd;
 
 import androidx.test.rule.ActivityTestRule;
 
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
@@ -21,12 +23,10 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
-import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.signInWithFromMainActivity;
 import static ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities.storeNewListing;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNot.not;
+import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.signInWithFromMainActivity;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EditAndDeleteTest {
 
 

@@ -8,9 +8,11 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.Matcher;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.FillListingActivity;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
@@ -25,6 +27,7 @@ import static org.hamcrest.Matchers.is;
 
 
 @RunWith(AndroidJUnit4.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PermissionRequestTest {
 
     @Rule

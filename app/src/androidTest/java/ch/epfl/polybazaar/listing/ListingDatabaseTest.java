@@ -3,8 +3,10 @@ package ch.epfl.polybazaar.listing;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.database.callback.ListingCallback;
 import ch.epfl.polybazaar.database.callback.ListingCallbackAdapter;
@@ -19,6 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ListingDatabaseTest {
 
     @Test

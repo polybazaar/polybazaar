@@ -1,11 +1,13 @@
 package ch.epfl.polybazaar.litelisting;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static org.junit.Assert.assertEquals;
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LiteListingTest {
 
     LiteListing listing1 = new LiteListing("someID", "Livre d'algèbre linéaire", "22 CHF", "Furniture");
