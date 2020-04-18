@@ -167,7 +167,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(this, R.string.unable_load_image, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -360,15 +359,13 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             try {
                 photoFile = createImageFile();
             } catch (IOException ignored) {
-                Toast.makeText(this, R.string.take_picture_fail, Toast.LENGTH_SHORT).show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                try {
-                    Uri photoURI = FileProvider.getUriForFile(this, "ch.epfl.polybazaar.fileprovider", photoFile);
+                try{
+                    Uri photoURI = FileProvider.getUriForFile(this,"ch.epfl.polybazaar.fileprovider", photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                }catch (IllegalArgumentException ignored) {
-                    //Picture has been canceled by the user
+                } catch (IllegalArgumentException ignored) {
                 }
                 startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
             }
