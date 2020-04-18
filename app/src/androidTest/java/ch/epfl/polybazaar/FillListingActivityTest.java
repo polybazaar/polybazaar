@@ -232,7 +232,6 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenNoSubCategoryIsSelected() throws Throwable {
-        selectCategory("Multimedia");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
