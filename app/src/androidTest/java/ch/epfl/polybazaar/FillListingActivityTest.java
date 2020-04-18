@@ -230,15 +230,6 @@ public class FillListingActivityTest {
         Thread.sleep(2000);
     }
 
-    @Test
-    public void toastAppearsWhenNoSubCategoryIsSelected() throws Throwable {
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
-        closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
-        submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
-    }
-
 
     @Test
     public void testNoPictureIsDisplayedWhenNoPictureIsTaken() throws Throwable {
