@@ -9,7 +9,7 @@ import ch.epfl.polybazaar.category.Field;
  * transformation
  * @param <T> value type that the field contains
  */
-public class SimpleField<T> extends Field<T> implements Serializable {
+public class SimpleField<T> extends Field<T> {
     private T value;
 
     /**

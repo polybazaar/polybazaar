@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar.category;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
@@ -8,7 +9,7 @@ import ch.epfl.polybazaar.database.datastore.DataSnapshot;
  * Abstraction representing an attribute of a model stored on the database
  * @param <T> value type that the field contains
  */
-public abstract class Field<T> {
+public abstract class Field<T> implements Serializable {
     private final String name;
 
     public Field(String name) {
