@@ -2,14 +2,14 @@ package ch.epfl.polybazaar.database;
 
 import java.io.Serializable;
 
-import ch.epfl.polybazaar.category.AbstractField;
+import ch.epfl.polybazaar.category.Field;
 
 /**
  * Field that contain a basic value that can be saved on the database without any particular
  * transformation
  * @param <T> value type that the field contains
  */
-public class SimpleField<T> extends AbstractField<T> implements Serializable {
+public class SimpleField<T> extends Field<T> implements Serializable {
     private T value;
 
     /**
