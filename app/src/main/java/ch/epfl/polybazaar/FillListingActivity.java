@@ -167,6 +167,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
             } catch (IOException e) {
                 e.printStackTrace();
+                Toast.makeText(this, R.string.unable_load_image, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -359,6 +360,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             try {
                 photoFile = createImageFile();
             } catch (IOException ignored) {
+                Toast.makeText(this, R.string.take_picture_fail, Toast.LENGTH_SHORT).show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
