@@ -31,44 +31,6 @@ import ch.epfl.polybazaar.user.User;
 
 public abstract class Utilities {
 
-    public static Map<String, Object> getMap(Object o) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        if (o instanceof Listing) {
-            result.put("description", ((Listing)o).getDescription());
-            result.put("price", ((Listing)o).getPrice());
-            result.put("title", ((Listing)o).getTitle());
-            result.put("userEmail", ((Listing)o).getUserEmail());
-            result.put("latitude", ((Listing)o).getLatitude());
-            result.put("longitude", ((Listing)o).getLongitude());
-        } else if (o instanceof LiteListing) {
-            result.put("listingID", ((LiteListing) o).getListingID());
-            result.put("price", ((LiteListing) o).getPrice());
-            result.put("title", ((LiteListing) o).getTitle());
-            result.put("category", ((LiteListing) o).getCategory());
-            result.put("stringThumbnail", ((LiteListing) o).getStringThumbnail());
-        } else if (o instanceof ChatMessage) {
-            result.put("listingID", ((ChatMessage)o).getListingID());
-            result.put("receiver", ((ChatMessage)o).getReceiver());
-            result.put("sender", ((ChatMessage)o).getSender());
-            result.put("message", ((ChatMessage)o).getMessage());
-            result.put("time", ((ChatMessage)o).getTime());
-        } else if (o instanceof User) {
-            result.put("nickName", ((User)o).getNickName());
-            result.put("email", ((User)o).getEmail());
-            result.put("firstName", ((User)o).getFirstName());
-            result.put("lastName", ((User)o).getLastName());
-            result.put("phoneNumber", ((User)o).getPhoneNumber());
-            result.put("favorites", ((User)o).getFavorites());
-            result.put("ownListings", ((User)o).getOwnListings());
-        } else if (o instanceof ListingImage) {
-            result.put("image", ((ListingImage)o).getImage());
-            result.put("refNextImg", ((ListingImage)o).getRefNextImg());
-        } else {
-            return null;
-        }
-        return result;
-    }
-
     // TODO: can be adjusted
     public static boolean nameIsValid(String name) {
         //return (name.matches("[a-zA-Z]+"));
