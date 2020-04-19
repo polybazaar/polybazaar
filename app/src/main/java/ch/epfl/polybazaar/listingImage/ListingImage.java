@@ -3,14 +3,14 @@ package ch.epfl.polybazaar.listingImage;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
-import ch.epfl.polybazaar.database.Field;
+import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
 public class ListingImage extends Model {
-    private final Field<String> id = new Field<>("id");
-    private final Field<String> image = new Field<>("image");
-    private final Field<String> refNextImg = new Field<>("refNextImg");
+    private final SimpleField<String> id = new SimpleField<>("id");
+    private final SimpleField<String> image = new SimpleField<>("image");
+    private final SimpleField<String> refNextImg = new SimpleField<>("refNextImg");
 
     public static final String COLLECTION = "listingsImage";
 

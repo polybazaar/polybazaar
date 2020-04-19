@@ -5,7 +5,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
-import ch.epfl.polybazaar.database.Field;
+import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
@@ -13,11 +13,11 @@ import ch.epfl.polybazaar.database.ModelTransaction;
  * If you attributes of this class, also change its CallbackAdapter and Utilities
  */
 public class LiteListing extends Model {
-    private final Field<String> listingID = new Field<>("listingID");
-    private final Field<String> title = new Field<>("title");
-    private final Field<String> price = new Field<>("price");
-    private final Field<String> category = new Field<>("category");
-    private final Field<String> stringThumbnail = new Field<>("stringThumbnail");
+    private final SimpleField<String> listingID = new SimpleField<>("listingID");
+    private final SimpleField<String> title = new SimpleField<>("title");
+    private final SimpleField<String> price = new SimpleField<>("price");
+    private final SimpleField<String> category = new SimpleField<>("category");
+    private final SimpleField<String> stringThumbnail = new SimpleField<>("stringThumbnail");
 
     public static final String COLLECTION = "liteListings";
 

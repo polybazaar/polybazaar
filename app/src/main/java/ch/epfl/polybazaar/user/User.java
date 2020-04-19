@@ -4,7 +4,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 
-import ch.epfl.polybazaar.database.Field;
+import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.listing.Listing;
@@ -17,13 +17,13 @@ import static ch.epfl.polybazaar.Utilities.nameIsValid;
  * If you change attributes of this class, also change its CallbackAdapter and Utilities
  */
 public final class User extends Model {
-    private final Field<String> nickName = new Field<>("nickName");
-    private final Field<String> email = new Field<>("email");
-    private final Field<String> firstName = new Field<>("firstName");
-    private final Field<String> lastName = new Field<>("lastName");
-    private final Field<String> phoneNumber = new Field<>("phoneNumber");
-    private final Field<ArrayList<String>> ownListings = new Field<>("ownListings", new ArrayList<>());
-    private final Field<ArrayList<String>> favorites = new Field<>("favorites", new ArrayList<>());
+    private final SimpleField<String> nickName = new SimpleField<>("nickName");
+    private final SimpleField<String> email = new SimpleField<>("email");
+    private final SimpleField<String> firstName = new SimpleField<>("firstName");
+    private final SimpleField<String> lastName = new SimpleField<>("lastName");
+    private final SimpleField<String> phoneNumber = new SimpleField<>("phoneNumber");
+    private final SimpleField<ArrayList<String>> ownListings = new SimpleField<>("ownListings", new ArrayList<>());
+    private final SimpleField<ArrayList<String>> favorites = new SimpleField<>("favorites", new ArrayList<>());
 
     private final static String COLLECTION = "users";
 

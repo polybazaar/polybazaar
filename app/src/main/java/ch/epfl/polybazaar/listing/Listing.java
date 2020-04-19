@@ -5,7 +5,7 @@ import com.google.android.gms.tasks.Tasks;
 
 import java.io.Serializable;
 
-import ch.epfl.polybazaar.database.Field;
+import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.litelisting.LiteListing;
@@ -21,15 +21,15 @@ import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
  *
  */
 public class Listing extends Model implements Serializable {
-    private final Field<String> id = new Field<>("id");
-    private final Field<String> title = new Field<>("title");
-    private final Field<String> description = new Field<>("description");
-    private final Field<String> price = new Field<>("price");
-    private final Field<String> userEmail = new Field<>("userEmail");
-    private final Field<String> stringImage = new Field<>("stringImage");
-    private final Field<String> category = new Field<>("category");
-    private final Field<Double> latitude = new Field<>("latitude", NOLAT);
-    private final Field<Double> longitude = new Field<>("longitude", NOLNG);
+    private final SimpleField<String> id = new SimpleField<>("id");
+    private final SimpleField<String> title = new SimpleField<>("title");
+    private final SimpleField<String> description = new SimpleField<>("description");
+    private final SimpleField<String> price = new SimpleField<>("price");
+    private final SimpleField<String> userEmail = new SimpleField<>("userEmail");
+    private final SimpleField<String> stringImage = new SimpleField<>("stringImage");
+    private final SimpleField<String> category = new SimpleField<>("category");
+    private final SimpleField<Double> latitude = new SimpleField<>("latitude", NOLAT);
+    private final SimpleField<Double> longitude = new SimpleField<>("longitude", NOLNG);
 
     public static final String COLLECTION = "listings";
 

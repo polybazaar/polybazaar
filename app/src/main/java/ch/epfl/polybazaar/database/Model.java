@@ -11,13 +11,13 @@ import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 
 public abstract class Model {
-    private Field[] fields;
+    private SimpleField[] fields;
 
     /**
      * Registers fields that should be fetched and saved on the database
      * @param fields all the fields of the model
      */
-    protected void registerFields(Field... fields) {
+    protected void registerFields(SimpleField... fields) {
         this.fields = fields;
     }
 
@@ -51,7 +51,7 @@ public abstract class Model {
         DataStore db = DataStoreFactory.getDependency();
         Map<String, Object> map = new HashMap<>();
 
-        for (Field f: fields) {
+        for (SimpleField f: fields) {
             f.addToMap(map);
         }
 
@@ -79,7 +79,7 @@ public abstract class Model {
      * @param snap result from the database
      */
     public final void fillWith(DataSnapshot snap) {
-        for (Field f: fields) {
+        for (SimpleField f: fields) {
             f.fillFromSnapshot(snap);
         }
     }

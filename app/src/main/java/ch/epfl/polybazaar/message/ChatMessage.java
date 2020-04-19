@@ -6,17 +6,17 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import ch.epfl.polybazaar.database.Field;
+import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
 public class ChatMessage extends Model {
-    private Field<String> id = new Field<>("id");
-    private Field<String> sender = new Field<>("sender");
-    private Field<String> receiver = new Field<>("receiver");
-    private Field<String> listingID = new Field<>("listingID");
-    private Field<String> message = new Field<>("message");
-    private Field<Date> time = new Field<>("time");
+    private SimpleField<String> id = new SimpleField<>("id");
+    private SimpleField<String> sender = new SimpleField<>("sender");
+    private SimpleField<String> receiver = new SimpleField<>("receiver");
+    private SimpleField<String> listingID = new SimpleField<>("listingID");
+    private SimpleField<String> message = new SimpleField<>("message");
+    private SimpleField<Date> time = new SimpleField<>("time");
 
     public static final String COLLECTION = "chatMessages";
 
