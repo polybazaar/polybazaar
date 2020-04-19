@@ -49,7 +49,7 @@ import ch.epfl.polybazaar.category.StringCategory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.login.AppUser;
+import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
@@ -111,7 +111,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private double lng = NOLNG;
 
     private PermissionRequest cameraPermissionRequest;
-    private AppUser authAccount;
+    private Account authAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

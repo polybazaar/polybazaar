@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import ch.epfl.polybazaar.login.AppUser;
+import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.user.User;
@@ -23,7 +23,7 @@ import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 public class UserProfileActivity extends AppCompatActivity {
 
     private Authenticator authenticator;
-    private AppUser appUser;
+    private Account account;
     private User user;
 
 
@@ -48,9 +48,9 @@ public class UserProfileActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         authenticator = AuthenticatorFactory.getDependency();
-        appUser = authenticator.getCurrentUser();
+        account = authenticator.getCurrentUser();
 
-        User.fetch(appUser.getEmail()).addOnSuccessListener( returnedUser -> {
+        User.fetch(account.getEmail()).addOnSuccessListener(returnedUser -> {
                 user = returnedUser;
                 nicknameSelector.setText(user.getNickName());
                 firstNameSelector.setText(user.getFirstName());
@@ -78,7 +78,7 @@ public class UserProfileActivity extends AppCompatActivity {
             User editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
             editedUser.save().addOnSuccessListener(aVoid -> {
                 Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
-            }).addOnSuccessListener(aVoid -> appUser.updateNickname(newNickname));
+            }).addOnSuccessListener(aVoid -> account.updateNickname(newNickname));
         }
     }
 
@@ -95,7 +95,7 @@ public class UserProfileActivity extends AppCompatActivity {
         }
         else{
             authenticator.signIn(user.getEmail(), currentPassword).addOnSuccessListener(authenticatorResult -> {
-                appUser.updatePassword(newPassword);
+                account.updatePassword(newPassword);
                 ((EditText)findViewById(R.id.currentPassword)).setText("");
                 ((EditText)findViewById(R.id.newPassword)).setText("");
                 ((EditText)findViewById(R.id.confirmNewPassword)).setText("");
@@ -107,7 +107,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     public void viewOwnListings(View view) {
-        AppUser user = getUser();
+        Account user = getUser();
         if(user == null) return;
         user.getUserData().addOnSuccessListener(authUser -> {
             ArrayList<String> ownListingsIds = authUser.getOwnListings();

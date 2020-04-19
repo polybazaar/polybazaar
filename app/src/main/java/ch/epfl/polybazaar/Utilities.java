@@ -1,30 +1,10 @@
 package ch.epfl.polybazaar;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.util.Base64;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
-
-import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.message.ChatMessage;
-import ch.epfl.polybazaar.login.AppUser;
+import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.user.User;
@@ -63,9 +43,9 @@ public abstract class Utilities {
      * Helper method to retrieve the logged user (if any)
      * @return the logged user (can be null)
      */
-    public static AppUser getUser() {
+    public static Account getUser() {
         Authenticator auth = AuthenticatorFactory.getDependency();
-        AppUser user = auth.getCurrentUser();
+        Account user = auth.getCurrentUser();
         return user;
     }
 
@@ -88,7 +68,7 @@ public abstract class Utilities {
      * @return
      */
     public static boolean checkUserLoggedIn(Context context) {
-        AppUser user = getUser();
+        Account user = getUser();
 
         // the user is not logged in
         if (user == null) {

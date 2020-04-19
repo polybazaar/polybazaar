@@ -18,7 +18,7 @@ import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.SaleDetails;
 import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.login.AppUser;
+import ch.epfl.polybazaar.login.Account;
 
 import static ch.epfl.polybazaar.Utilities.checkUserLoggedIn;
 import static ch.epfl.polybazaar.Utilities.getUser;
@@ -83,7 +83,7 @@ public class SalesOverview extends AppCompatActivity {
         TextView favorites = findViewById(R.id.favoritesOverview);
         favorites.setOnClickListener(v -> {
             if (checkUserLoggedIn(this)) {
-                AppUser user = getUser();
+                Account user = getUser();
                 user.getUserData().addOnSuccessListener(authUser -> {
                     ArrayList<String> favoritesIds = authUser.getFavorites();
 

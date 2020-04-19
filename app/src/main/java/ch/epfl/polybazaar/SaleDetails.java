@@ -26,7 +26,7 @@ import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.login.AppUser;
+import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
@@ -241,7 +241,7 @@ public class SaleDetails extends AppCompatActivity {
                 userEmailTextView.setVisibility(View.INVISIBLE);
 
                 ToggleButton toggleFavorite = findViewById(R.id.toggleFavoriteButton);
-                AppUser authUser = AuthenticatorFactory.getDependency().getCurrentUser();
+                Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
 
                 if (authUser != null) {
                     authUser.getUserData().addOnSuccessListener(user -> {
@@ -291,7 +291,7 @@ public class SaleDetails extends AppCompatActivity {
                 toast.show();
 
                 Authenticator fbAuth = AuthenticatorFactory.getDependency();
-                AppUser authAccount = fbAuth.getCurrentUser();
+                Account authAccount = fbAuth.getCurrentUser();
 
                 authAccount.getUserData().addOnSuccessListener(user -> {
                     user.deleteOwnListing(listingID);
@@ -320,7 +320,7 @@ public class SaleDetails extends AppCompatActivity {
      */
     public void toggleFavorite(View view) {
         ToggleButton button = (ToggleButton) view;
-        AppUser authUser = AuthenticatorFactory.getDependency().getCurrentUser();
+        Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
 
         if (authUser != null) {
             authUser.getUserData().addOnSuccessListener(user -> {

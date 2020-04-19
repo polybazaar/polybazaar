@@ -10,7 +10,7 @@ import ch.epfl.polybazaar.user.User;
 /**
  * Mocked app user
  */
-public class MockAppUser implements AppUser {
+public class MockAccount implements Account {
     private boolean sentEmail;
     private boolean isVerified;
     private String email;
@@ -18,7 +18,7 @@ public class MockAppUser implements AppUser {
     private String password;
     private User dbUser;
 
-    public MockAppUser(String email, String nickname, String password) {
+    public MockAccount(String email, String nickname, String password) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
