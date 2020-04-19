@@ -20,12 +20,10 @@ public class ChatMessage extends Model {
     private Field<String> message = new Field<>("message");
     private Field<Date> time = new Field<>("time");
 
-    private List<Field> fields = Arrays.asList(id, sender, receiver, listingID, message, time);
-
     public static final String COLLECTION = "chatMessages";
 
     public ChatMessage(){
-        registerFields(fields);
+        registerFields(id, sender, receiver, listingID, message, time);
     }
 
     public ChatMessage(String sender, String receiver, String listingID, String message, Date time){

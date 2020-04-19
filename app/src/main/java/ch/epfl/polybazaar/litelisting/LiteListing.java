@@ -25,8 +25,7 @@ public class LiteListing extends Model {
     public static final String COLLECTION = "liteListings";
 
     public LiteListing() {
-        List<Field> fields = Arrays.asList(listingID, title, price, category, stringThumbnail);
-        registerFields(fields);
+        registerFields(listingID, title, price, category, stringThumbnail);
     }
 
     public LiteListing(String listingID, String title, String price, String category, String stringThumbnail) {

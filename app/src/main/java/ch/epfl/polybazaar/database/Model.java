@@ -14,9 +14,9 @@ import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.user.User;
 
 public abstract class Model {
-    private List<Field> fields;
+    private Field[] fields;
 
-    protected void registerFields(List<Field> fields) {
+    protected void registerFields(Field... fields) {
         this.fields = fields;
     }
 

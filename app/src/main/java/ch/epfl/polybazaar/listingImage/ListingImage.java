@@ -17,8 +17,6 @@ public class ListingImage extends Model {
     private final Field<String> image = new Field<>("image");
     private final Field<String> refNextImg = new Field<>("refNextImg");
 
-    private final List<Field> fields = Arrays.asList(id, image, refNextImg);
-
     public static final String COLLECTION = "listingsImage";
 
 
@@ -27,7 +25,7 @@ public class ListingImage extends Model {
     }
 
     public ListingImage() {
-        registerFields(fields);
+        registerFields(id, image, refNextImg);
     }
 
     public ListingImage(String image, String refNextImg) {

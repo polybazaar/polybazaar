@@ -34,12 +34,10 @@ public class Listing extends Model implements Serializable {
     private final Field<Double> latitude = new Field<>("latitude", NOLAT);
     private final Field<Double> longitude = new Field<>("longitude", NOLNG);
 
-    private final List<Field> fields = Arrays.asList(id, title, description, price, userEmail, stringImage, category, latitude, longitude);
-
     public static final String COLLECTION = "listings";
 
     public Listing() {
-        registerFields(fields);
+        registerFields(id, title, description, price, userEmail, stringImage, category, latitude, longitude);
     }
 
     /**

@@ -28,10 +28,7 @@ public final class User extends Model {
     private final Field<ArrayList<String>> ownListings = new Field<>("ownListings", new ArrayList<>());
     private final Field<ArrayList<String>> favorites = new Field<>("favorites", new ArrayList<>());
 
-    private final List<Field> fields = Arrays.asList(nickName, email, firstName, lastName, phoneNumber, ownListings, favorites);
-
     private final static String COLLECTION = "users";
-
 
     public String getNickName() {
         return nickName.get();
@@ -54,7 +51,7 @@ public final class User extends Model {
     }
 
     public User() {
-        registerFields(fields);
+        registerFields(nickName, email, firstName, lastName, phoneNumber, ownListings, favorites);
     }
 
     /**
