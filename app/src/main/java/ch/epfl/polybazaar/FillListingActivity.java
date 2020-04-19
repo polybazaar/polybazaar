@@ -368,6 +368,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                     Uri photoURI = FileProvider.getUriForFile(this,"ch.epfl.polybazaar.fileprovider", photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 } catch (IllegalArgumentException ignored) {
+                    //Picture has been canceled by the user
                 }
                 startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
             }
