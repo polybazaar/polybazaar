@@ -1,9 +1,5 @@
 package ch.epfl.polybazaar.database;
 
-import java.io.Serializable;
-
-import ch.epfl.polybazaar.category.Field;
-
 /**
  * Field that contain a basic value that can be saved on the database without any particular
  * transformation

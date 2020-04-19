@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.category;
+package ch.epfl.polybazaar.database;
 
 import java.io.Serializable;
 import java.util.Map;
