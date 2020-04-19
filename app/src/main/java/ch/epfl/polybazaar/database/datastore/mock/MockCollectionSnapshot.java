@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 

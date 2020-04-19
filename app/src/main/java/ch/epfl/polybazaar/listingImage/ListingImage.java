@@ -2,27 +2,17 @@ package ch.epfl.polybazaar.listingImage;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.DocumentId;
-
-import java.util.Arrays;
-import java.util.List;
 
 import ch.epfl.polybazaar.database.Field;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
 public class ListingImage extends Model {
-    @DocumentId
     private final Field<String> id = new Field<>("id");
     private final Field<String> image = new Field<>("image");
     private final Field<String> refNextImg = new Field<>("refNextImg");
 
     public static final String COLLECTION = "listingsImage";
-
-
-    public void setRefNextImg(String refNextImg) {
-        this.refNextImg.set(refNextImg);
-    }
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public ListingImage() {

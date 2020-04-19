@@ -44,7 +44,7 @@ public final class ModelTransaction {
      * @return successful task containing a list of model instances fulfilling the criterion. The task
      * fails if the database is unreachable
      */
-    public static <T extends Model> Task<List<T>> fetchAllWithFieldEquality(String collection, String field, String compareValue, Class<T> clazz) {
+    public static <T extends Model> Task<List<T>> fetchFieldEquality(String collection, String field, String compareValue, Class<T> clazz) {
         DataStore db = DataStoreFactory.getDependency();
         return db.fetchWithEquals(collection, field, compareValue)
                 .onSuccessTask(querySnapshot -> Tasks.forResult(toModels(querySnapshot, clazz)));
@@ -60,7 +60,7 @@ public final class ModelTransaction {
      * @return successful task containing a list of model instances fulfilling the criteria. The task
      * fails if the database is unreachable
      */
-    public static <T extends Model> Task<List<T>> fetchAllWithMultipleFieldsEquality(String collection, List<String> fields, List<String> compareValues, Class<T> clazz) {
+    public static <T extends Model> Task<List<T>> fetchMultipleFieldsEquality(String collection, List<String> fields, List<String> compareValues, Class<T> clazz) {
         DataStore db = DataStoreFactory.getDependency();
         return db.fetchWithEqualsMultiple(collection, fields, compareValues)
                 .onSuccessTask(querySnapshot -> Tasks.forResult(toModels(querySnapshot, clazz)));

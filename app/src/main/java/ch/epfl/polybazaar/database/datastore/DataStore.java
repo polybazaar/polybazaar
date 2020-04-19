@@ -5,8 +5,6 @@ import com.google.android.gms.tasks.Task;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.polybazaar.database.Model;
-
 
 public interface DataStore {
     /**

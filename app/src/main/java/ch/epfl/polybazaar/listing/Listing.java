@@ -1,16 +1,13 @@
 package ch.epfl.polybazaar.listing;
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.DocumentId;
+
+import java.io.Serializable;
 
 import ch.epfl.polybazaar.database.Field;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
-import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.Utilities.emailIsValid;

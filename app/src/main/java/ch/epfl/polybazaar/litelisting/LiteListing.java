@@ -2,9 +2,7 @@ package ch.epfl.polybazaar.litelisting;
 
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentId;
 
-import java.util.Arrays;
 import java.util.List;
 
 import ch.epfl.polybazaar.database.Field;
@@ -15,7 +13,6 @@ import ch.epfl.polybazaar.database.ModelTransaction;
  * If you attributes of this class, also change its CallbackAdapter and Utilities
  */
 public class LiteListing extends Model {
-    @DocumentId
     private final Field<String> listingID = new Field<>("listingID");
     private final Field<String> title = new Field<>("title");
     private final Field<String> price = new Field<>("price");
@@ -92,7 +89,7 @@ public class LiteListing extends Model {
      * @return task containing the a list of listings. The task
      * fails if the database is unreachable
      */
-    public static Task<List<LiteListing>> retrieveAll() {
+    public static Task<List<LiteListing>> fetchAll() {
         return ModelTransaction.fetchAll(COLLECTION, LiteListing.class);
     }
 }

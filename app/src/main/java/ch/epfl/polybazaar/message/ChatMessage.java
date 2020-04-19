@@ -1,7 +1,6 @@
 package ch.epfl.polybazaar.message;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentId;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -12,7 +11,6 @@ import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
 public class ChatMessage extends Model {
-    @DocumentId
     private Field<String> id = new Field<>("id");
     private Field<String> sender = new Field<>("sender");
     private Field<String> receiver = new Field<>("receiver");
@@ -38,14 +36,6 @@ public class ChatMessage extends Model {
 
     public String getSender(){
         return sender.get();
-    }
-
-    public String getReceiver(){
-        return receiver.get();
-    }
-
-    public String getListingID(){
-        return listingID.get();
     }
 
     public String getMessage(){
@@ -90,7 +80,7 @@ public class ChatMessage extends Model {
      *         fails if the database is unreachable
      */
 
-    public static Task<List<ChatMessage>> fetchMessagesOfConversation(String userEmail1, String userEmail2, String listingID) {
-        return ModelTransaction.fetchAllWithMultipleFieldsEquality(ChatMessage.COLLECTION, Arrays.asList("sender", "receiver", "listingID"), Arrays.asList(userEmail1, userEmail2, listingID), ChatMessage.class);
+    public static Task<List<ChatMessage>> fetchConversation(String userEmail1, String userEmail2, String listingID) {
+        return ModelTransaction.fetchMultipleFieldsEquality(ChatMessage.COLLECTION, Arrays.asList("sender", "receiver", "listingID"), Arrays.asList(userEmail1, userEmail2, listingID), ChatMessage.class);
     }
 }

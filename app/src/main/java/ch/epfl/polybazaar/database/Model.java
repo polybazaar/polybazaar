@@ -2,16 +2,13 @@ package ch.epfl.polybazaar.database;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.remote.Datastore;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
-import ch.epfl.polybazaar.user.User;
 
 public abstract class Model {
     private Field[] fields;

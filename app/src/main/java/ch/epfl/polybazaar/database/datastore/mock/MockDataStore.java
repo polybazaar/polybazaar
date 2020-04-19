@@ -3,12 +3,10 @@ package ch.epfl.polybazaar.database.datastore.mock;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataStore;
@@ -26,14 +24,6 @@ public class MockDataStore implements DataStore {
 
     public void reset(){
         collections = new HashMap<>();
-    }
-
-    /**
-     * create a new mock empty collection
-     * @param collectionName obvious
-     */
-    public void addCollection(String collectionName){
-        collections.put(collectionName,new HashMap<>());
     }
 
     @Override

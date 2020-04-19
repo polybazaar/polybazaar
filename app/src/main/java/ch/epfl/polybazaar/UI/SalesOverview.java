@@ -115,7 +115,7 @@ public class SalesOverview extends AppCompatActivity {
      * Create a graphical overview of LiteListings from database
      */
     public void loadLiteListingOverview() {
-        LiteListing.retrieveAll().addOnSuccessListener(result -> {
+        LiteListing.fetchAll().addOnSuccessListener(result -> {
             if(result == null) {
                 return;
             }

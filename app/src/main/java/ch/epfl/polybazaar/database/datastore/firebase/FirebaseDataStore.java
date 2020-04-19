@@ -11,7 +11,6 @@ import com.google.firebase.firestore.Query;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataStore;
