@@ -13,12 +13,9 @@ import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 
-import static ch.epfl.polybazaar.Utilities.getMap;
-
-
 public class MockDataStore implements DataStore {
 
-    private Map<String,Map<String,Object>> collections;
+    private Map<String,Map<String,Map<String, Object>>> collections;
 
     private final String TAG = "MockDataStore";
     private int idCount = 0;
@@ -39,21 +36,9 @@ public class MockDataStore implements DataStore {
         collections.put(collectionName,new HashMap<>());
     }
 
-    /**
-     * put mock data in one collection
-     * @param collectionName obvious
-     * @param dataId obvious
-     * @param data obvious
-     */
-    public void setupMockData(String collectionName, String dataId, Object data){
-        Map<String,Object> document = new HashMap<>();
-        document.put(dataId,data);
-        collections.put(collectionName,document);
-    }
-
     @Override
     public Task<DataSnapshot> fetch(String collectionPath, String documentPath) {
-        Map<String, Object> collection = collections.get(collectionPath);
+        Map<String, Map<String, Object>> collection = collections.get(collectionPath);
 
         if (collection == null)
             return Tasks.forResult(null);
@@ -62,8 +47,8 @@ public class MockDataStore implements DataStore {
     }
 
     @Override
-    public Task<Void> set(String collectionPath, String documentPath, Model data) {
-        Map<String, Object> collection = getOrCreateCollection(collectionPath);
+    public Task<Void> set(String collectionPath, String documentPath, Map<String, Object> data) {
+        Map<String, Map<String, Object>> collection = getOrCreateCollection(collectionPath);
 
         collection.put(documentPath, data);
 
@@ -72,7 +57,7 @@ public class MockDataStore implements DataStore {
 
     @Override
     public Task<Void> delete(String collectionPath, String documentPath) {
-        Map<String, Object> collection = collections.get(collectionPath);
+        Map<String, Map<String, Object>> collection = collections.get(collectionPath);
         if (collection != null) {
             collection.remove(documentPath);
         }
@@ -81,8 +66,8 @@ public class MockDataStore implements DataStore {
     }
 
     @Override
-    public Task<String> add(String collectionPath, Model data) {
-        Map<String, Object> collection = getOrCreateCollection(collectionPath);
+    public Task<String> add(String collectionPath, Map<String, Object> data) {
+        Map<String, Map<String, Object>> collection = getOrCreateCollection(collectionPath);
 
         idCount++;
         String id = Integer.toString(idCount);
@@ -93,20 +78,18 @@ public class MockDataStore implements DataStore {
 
     @Override
     public Task<CollectionSnapshot> fetchAll(String collectionPath) {
-        Map<String, Object> collection = collections.get(collectionPath);
+        Map<String, Map<String, Object>> collection = collections.get(collectionPath);
 
         if (collection == null)
             return Tasks.forResult(null);
         else {
-            List<Object> documents = new ArrayList<>(collection.values());
-            return Tasks.forResult(new MockCollectionSnapshot(documents));
+            return Tasks.forResult(new MockCollectionSnapshot(collection));
         }
     }
 
     @Override
     public Task<CollectionSnapshot> fetchWithEquals(String collectionPath, String field, String value) {
-        //TODO This might only be a temporary solution has this makes use of "getMap"
-        Map<String, Object> collection = collections.get(collectionPath);
+        Map<String, Map<String, Object>> collection = collections.get(collectionPath);
 
         if (collection == null)
             return Tasks.forResult(null);
@@ -114,11 +97,12 @@ public class MockDataStore implements DataStore {
         if (!collections.containsKey(collectionPath)){
             return Tasks.forResult(null);
         }
-        List<Object> equals = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : collection.entrySet()) {
-            Object o = entry.getValue();
-            if (getMap(o).containsKey(field) && getMap(o).get(field).equals(value)) {
-                equals.add(entry.getValue());
+        Map<String, Map<String, Object>> equals = new HashMap<>();
+
+        for (Map.Entry<String, Map<String, Object>> entry : collection.entrySet()) {
+            Map<String, Object> o = entry.getValue();
+            if (o.containsKey(field) && o.get(field).equals(value)) {
+                equals.put(entry.getKey(), entry.getValue());
             }
         }
         return Tasks.forResult(new MockCollectionSnapshot(equals));
@@ -126,10 +110,9 @@ public class MockDataStore implements DataStore {
 
     @Override
     public Task<CollectionSnapshot> fetchWithEqualsMultiple(String collectionPath, List<String> fields, List<String> values) {
-        //TODO This might only be a temporary solution has this makes use of "getMap"
         assert(fields.size()> 0);
         assert(values.size() == fields.size());
-        Map<String, Object> collection = collections.get(collectionPath);
+        Map<String, Map<String, Object>> collection = collections.get(collectionPath);
 
         if (collection == null)
             return Tasks.forResult(null);
@@ -138,28 +121,27 @@ public class MockDataStore implements DataStore {
         if (!collections.containsKey(collectionPath)){
             return Tasks.forResult(null);
         }
-        List<Object> equals = new ArrayList<>();
+        Map<String, Map<String, Object>> equals = new HashMap<>();
 
-            for (Map.Entry<String, Object> entry : collection.entrySet()) {
-                Object o = entry.getValue();
-                boolean isIn = true;
-                for(int i = 0 ; i < fields.size(); i++){
-                    if (!(getMap(o).containsKey(fields.get(i)) && getMap(o).get(fields.get(i)).equals(values.get(i)))) {
-                        isIn = false;
-                        break;
-                    }
+        for (Map.Entry<String, Map<String, Object>> entry: collection.entrySet()) {
+            Map<String, Object> o = entry.getValue();
+            boolean isIn = true;
+            for(int i = 0; i < fields.size(); i++){
+                if (!(o.containsKey(fields.get(i)) && o.get(fields.get(i)).equals(values.get(i)))) {
+                    isIn = false;
+                    break;
                 }
-                if(isIn){
-                    equals.add(entry.getValue());
-                }
+            }
+            if(isIn){
+                equals.put(entry.getKey(), entry.getValue());
+            }
         }
-            System.out.println(equals);
         return Tasks.forResult(new MockCollectionSnapshot(equals));
     }
 
     // Gets the requested collection if it already exists, otherwise creates a new one
-    private Map<String, Object> getOrCreateCollection(String collectionPath) {
-        Map<String, Object> collection = collections.get(collectionPath);
+    private Map<String, Map<String, Object>> getOrCreateCollection(String collectionPath) {
+        Map<String, Map<String, Object>> collection = collections.get(collectionPath);
 
         if (collection == null) {
             collection = new HashMap<>();

@@ -4,8 +4,10 @@ package ch.epfl.polybazaar.litelisting;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentId;
 
+import java.util.Arrays;
 import java.util.List;
 
+import ch.epfl.polybazaar.database.Field;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
@@ -14,23 +16,26 @@ import ch.epfl.polybazaar.database.ModelTransaction;
  */
 public class LiteListing extends Model {
     @DocumentId
-    private String id;
-    private String listingID;
-    private String title;
-    private String price;
-    private String category;
-    private String stringThumbnail;
+    private final Field<String> listingID = new Field<>("listingID");
+    private final Field<String> title = new Field<>("title");
+    private final Field<String> price = new Field<>("price");
+    private final Field<String> category = new Field<>("category");
+    private final Field<String> stringThumbnail = new Field<>("stringThumbnail");
 
     public static final String COLLECTION = "liteListings";
 
-    public LiteListing() {}
+    public LiteListing() {
+        List<Field> fields = Arrays.asList(listingID, title, price, category, stringThumbnail);
+        registerFields(fields);
+    }
 
     public LiteListing(String listingID, String title, String price, String category, String stringThumbnail) {
-        this.listingID = listingID;
-        this.title = title;
-        this.price = price;
-        this.category = category;
-        this.stringThumbnail = stringThumbnail;
+        this();
+        this.listingID.set(listingID);
+        this.title.set(title);
+        this.price.set(price);
+        this.category.set(category);
+        this.stringThumbnail.set(stringThumbnail);
     }
 
     public LiteListing(String listingID, String title, String price, String category) {
@@ -38,23 +43,23 @@ public class LiteListing extends Model {
     }
 
     public String getTitle() {
-        return title;
+        return title.get();
     }
 
     public String getListingID() {
-        return listingID;
+        return listingID.get();
     }
 
     public String getPrice() {
-        return price;
+        return price.get();
     }
 
     public String getCategory(){
-        return category;
+        return category.get();
     }
 
     public String getStringThumbnail() {
-        return stringThumbnail;
+        return stringThumbnail.get();
     }
 
     @Override
@@ -64,12 +69,12 @@ public class LiteListing extends Model {
 
     @Override
     public String getId() {
-        return id;
+        return listingID.get();
     }
 
     @Override
     public void setId(String id) {
-        this.id = id;
+        this.listingID.set(id);
     }
 
     /**

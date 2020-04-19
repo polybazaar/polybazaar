@@ -1,15 +1,13 @@
 package ch.epfl.polybazaar.database;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
+import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 
@@ -29,7 +27,9 @@ public final class ModelTransaction {
         DataStore db = DataStoreFactory.getDependency();
         return db.fetch(collection, id)
                 .onSuccessTask(dataSnapshot -> {
-                    if (dataSnapshot.exists()) return Tasks.forResult(dataSnapshot.toObject(clazz));
+                    if (dataSnapshot.exists()){
+                        return Tasks.forResult(toModel(dataSnapshot, clazz));
+                    }
                     else return Tasks.forResult(null);
                 });
     }
@@ -37,13 +37,13 @@ public final class ModelTransaction {
     public static <T extends Model> Task<List<T>> fetchAllWithFieldEquality(String collection, String field, String compareValue, Class<T> clazz) {
         DataStore db = DataStoreFactory.getDependency();
         return db.fetchWithEquals(collection, field, compareValue)
-                .onSuccessTask(querySnapshot -> Tasks.forResult(querySnapshot.toObjects(clazz)));
+                .onSuccessTask(querySnapshot -> Tasks.forResult(toModels(querySnapshot, clazz)));
     }
 
     public static <T extends Model> Task<List<T>> fetchAllWithMultipleFieldsEquality(String collection, List<String> fields, List<String> compareValues, Class<T> clazz) {
         DataStore db = DataStoreFactory.getDependency();
         return db.fetchWithEqualsMultiple(collection, fields, compareValues)
-                .onSuccessTask(querySnapshot -> Tasks.forResult(querySnapshot.toObjects(clazz)));
+                .onSuccessTask(querySnapshot -> Tasks.forResult(toModels(querySnapshot, clazz)));
     }
 
     /**
@@ -57,7 +57,7 @@ public final class ModelTransaction {
     public static <T extends Model> Task<List<T>> fetchAll(String collection, Class<T> clazz) {
         DataStore db = DataStoreFactory.getDependency();
         return db.fetchAll(collection)
-                .onSuccessTask(querySnapshot -> Tasks.forResult(querySnapshot.toObjects(clazz)));
+                .onSuccessTask(querySnapshot -> Tasks.forResult(toModels(querySnapshot, clazz)));
     }
 
     /**
@@ -78,5 +78,26 @@ public final class ModelTransaction {
      */
     public static Task<Void> delete(Model model) {
         return delete(model.collectionName(), model.getId());
+    }
+
+    private static <T extends Model> T toModel(DataSnapshot snap, Class<T> clazz) {
+        try {
+            T model = clazz.newInstance();
+            model.fillWith(snap);
+            return model;
+
+        } catch (IllegalAccessException | InstantiationException e) {
+            return null;
+        }
+    }
+
+    private static <T extends Model> List<T> toModels(CollectionSnapshot snap, Class<T> clazz) {
+        List<T> models = new ArrayList<>();
+
+        for (DataSnapshot dataSnapshot: snap.getDocuments()) {
+            models.add(toModel(dataSnapshot, clazz));
+        }
+
+        return models;
     }
 }

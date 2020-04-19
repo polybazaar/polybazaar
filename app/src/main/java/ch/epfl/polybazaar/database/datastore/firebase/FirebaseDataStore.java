@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
@@ -35,7 +36,7 @@ public class FirebaseDataStore implements DataStore {
     }
 
     @Override
-    public Task<Void> set(String collectionPath, String documentPath, Model data) {
+    public Task<Void> set(String collectionPath, String documentPath, Map<String, Object> data) {
         return database.collection(collectionPath).document(documentPath)
                 .set(data);
     }
@@ -46,7 +47,7 @@ public class FirebaseDataStore implements DataStore {
     }
 
     @Override
-    public Task<String> add(String collectionPath, Model data) {
+    public Task<String> add(String collectionPath, Map<String, Object> data) {
         return database.collection(collectionPath)
                 .add(data).onSuccessTask((documentReference ->
                         Tasks.forResult(documentReference.getId())

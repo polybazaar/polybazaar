@@ -4,11 +4,14 @@ import android.content.Intent;
 
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.tasks.Tasks;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.litelisting.LiteListing;

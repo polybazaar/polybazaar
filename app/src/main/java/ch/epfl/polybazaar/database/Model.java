@@ -2,11 +2,24 @@ package ch.epfl.polybazaar.database;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.remote.Datastore;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import ch.epfl.polybazaar.database.datastore.DataSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataStore;
 import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
+import ch.epfl.polybazaar.user.User;
 
 public abstract class Model {
+    private List<Field> fields;
+
+    protected void registerFields(List<Field> fields) {
+        this.fields = fields;
+    }
+
     /**
      * Returns the name of the collection corresponding to the model
      * @return model name
@@ -31,14 +44,20 @@ public abstract class Model {
      */
     public final Task<Void> save() {
         DataStore db = DataStoreFactory.getDependency();
+        Map<String, Object> map = new HashMap<>();
+
+        for (Field f: fields) {
+            f.addToMap(map);
+        }
+
         if (getId() == null) {
-            return db.add(collectionName(), this)
+            return db.add(collectionName(), map)
                     .onSuccessTask(s -> {
                         setId(s);
                         return Tasks.forResult(null);
                     });
         } else {
-            return db.set(collectionName(), getId(), this);
+            return db.set(collectionName(), getId(), map);
         }
     }
 
@@ -48,5 +67,11 @@ public abstract class Model {
      */
     public final Task<Void> delete() {
         return ModelTransaction.delete(this);
+    }
+
+    public final void fillWith(DataSnapshot snap) {
+        for (Field f: fields) {
+            f.fillFromSnapshot(snap);
+        }
     }
 }

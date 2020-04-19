@@ -4,35 +4,44 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentId;
 
+import java.util.Arrays;
+import java.util.List;
+
+import ch.epfl.polybazaar.database.Field;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
 public class ListingImage extends Model {
     @DocumentId
-    private String id;
-    private String image;
+    private final Field<String> id = new Field<>("id");
+    private final Field<String> image = new Field<>("image");
+    private final Field<String> refNextImg = new Field<>("refNextImg");
 
-    public void setRefNextImg(String refNextImg) {
-        this.refNextImg = refNextImg;
-    }
-
-    private String refNextImg;
+    private final List<Field> fields = Arrays.asList(id, image, refNextImg);
 
     public static final String COLLECTION = "listingsImage";
 
-    public ListingImage() {}
+
+    public void setRefNextImg(String refNextImg) {
+        this.refNextImg.set(refNextImg);
+    }
+
+    public ListingImage() {
+        registerFields(fields);
+    }
 
     public ListingImage(String image, String refNextImg) {
-        this.image = image;
-        this.refNextImg = refNextImg;
+        this();
+        this.image.set(image);
+        this.refNextImg.set(refNextImg);
     }
 
     public String getImage() {
-        return image;
+        return image.get();
     }
 
     public String getRefNextImg() {
-        return refNextImg;
+        return refNextImg.get();
     }
 
     @Override
@@ -42,12 +51,12 @@ public class ListingImage extends Model {
 
     @Override
     public String getId() {
-        return id;
+        return id.get();
     }
 
     @Override
     public void setId(String id) {
-        this.id = id;
+        this.id.set(id);
     }
 
     /**

@@ -124,7 +124,7 @@ public class SaleDetailsTest {
     public void favoriteButtonChangesFavorites() throws ExecutionException, InterruptedException {
         Authenticator auth = AuthenticatorFactory.getDependency();
 
-        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+        Tasks.await(auth.createUser("user.test@epfl.ch", "usert", "abcdef"));
 
         Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
 

@@ -3,6 +3,7 @@ package ch.epfl.polybazaar.database.datastore;
 import com.google.android.gms.tasks.Task;
 
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.polybazaar.database.Model;
 
@@ -23,7 +24,7 @@ public interface DataStore {
      * @param data data to write
      * @return task that fails if the database is unreachable
      */
-    Task<Void> set(String collectionPath, String documentPath, Model data);
+    Task<Void> set(String collectionPath, String documentPath, Map<String, Object> data);
 
     /**
      * Deletes the requested data
@@ -39,7 +40,7 @@ public interface DataStore {
      * @param data data to write
      * @return task that fails if the database is unreachable
      */
-    Task<String> add(String collectionPath, Model data);
+    Task<String> add(String collectionPath, Map<String, Object> data);
 
     /**
      * Fetches all the data in a collection

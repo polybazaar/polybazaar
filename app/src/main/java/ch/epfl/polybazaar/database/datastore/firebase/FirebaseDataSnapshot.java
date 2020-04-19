@@ -34,9 +34,4 @@ public class FirebaseDataSnapshot implements DataSnapshot {
     public String getId() {
         return documentSnapshot.getId();
     }
-
-    @Override
-    public <T extends Model> T toObject(Class<T> clazz) {
-        return documentSnapshot.toObject(clazz);
-    }
 }

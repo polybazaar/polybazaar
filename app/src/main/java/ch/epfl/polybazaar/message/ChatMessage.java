@@ -7,48 +7,54 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import ch.epfl.polybazaar.database.Field;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
 public class ChatMessage extends Model {
     @DocumentId
-    private String id;
-    private String sender;
-    private String receiver;
-    private String listingID;
-    private String message;
-    private Date time;
+    private Field<String> id = new Field<>("id");
+    private Field<String> sender = new Field<>("sender");
+    private Field<String> receiver = new Field<>("receiver");
+    private Field<String> listingID = new Field<>("listingID");
+    private Field<String> message = new Field<>("message");
+    private Field<Date> time = new Field<>("time");
+
+    private List<Field> fields = Arrays.asList(id, sender, receiver, listingID, message, time);
 
     public static final String COLLECTION = "chatMessages";
 
-    public ChatMessage(){};
+    public ChatMessage(){
+        registerFields(fields);
+    }
 
     public ChatMessage(String sender, String receiver, String listingID, String message, Date time){
-        this.sender = sender;
-        this.receiver = receiver;
-        this.listingID = listingID;
-        this.message = message;
-        this.time = time;
+        this();
+        this.sender.set(sender);
+        this.receiver.set(receiver);
+        this.listingID.set(listingID);
+        this.message.set(message);
+        this.time.set(time);
     }
 
     public String getSender(){
-        return sender;
+        return sender.get();
     }
 
     public String getReceiver(){
-        return receiver;
+        return receiver.get();
     }
 
     public String getListingID(){
-        return listingID;
+        return listingID.get();
     }
 
     public String getMessage(){
-        return message;
+        return message.get();
     }
 
     public Date getTime(){
-        return time;
+        return time.get();
     }
 
     @Override
@@ -58,12 +64,12 @@ public class ChatMessage extends Model {
 
     @Override
     public String getId() {
-        return id;
+        return id.get();
     }
 
     @Override
     public void setId(String id) {
-        this.id = id;
+        this.id.set(id);
     }
 
     /**

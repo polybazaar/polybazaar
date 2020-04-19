@@ -26,9 +26,4 @@ public class FirebaseCollectionSnapshot implements CollectionSnapshot {
         }
         return list;
     }
-
-    @Override
-    public <T extends Model> List<T> toObjects(Class<T> clazz) {
-        return querySnapshot.toObjects(clazz);
-    }
 }

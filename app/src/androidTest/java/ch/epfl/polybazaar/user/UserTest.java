@@ -2,6 +2,8 @@ package ch.epfl.polybazaar.user;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.google.firebase.firestore.remote.Datastore;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -10,6 +12,8 @@ import ch.epfl.polybazaar.user.User;
 
 import static ch.epfl.polybazaar.Utilities.*;
 
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.getDependency;
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -48,6 +52,24 @@ public class UserTest {
     public void createUserInvalidName() {
         User user = new User("no1ody",  "me.help@efl.ch");
         assertThat(isValidUser(user), is(true));
+    }
+
+    @Test
+    public void databaseWorks() {
+        useMockDataStore();
+        String email = "test.test@epfl.ch";
+        String nickname = "test";
+
+        User user = new User(nickname, email);
+        user.save();
+
+        User.fetch("test.test@epfl.ch").addOnSuccessListener(user1 -> {
+           assertEquals(nickname, user1.getNickName());
+        });
+
+        getDependency().fetchAll(user.collectionName()).addOnSuccessListener(command -> {
+           return;
+        });
     }
 
 }

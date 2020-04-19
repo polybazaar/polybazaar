@@ -1,10 +1,13 @@
 package ch.epfl.polybazaar.listing;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentId;
 
+import ch.epfl.polybazaar.database.Field;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.listingImage.ListingImage;
@@ -21,21 +24,23 @@ import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
  *
  */
 public class Listing extends Model implements Serializable {
-    @DocumentId
-    private String id;
-    private String title;
-    private String description;
-    private String price;
-    private String userEmail;
-    private String stringImage;
-    private String category;
-    private double latitude = NOLAT;
-    private double longitude = NOLNG;
+    private final Field<String> id = new Field<>("id");
+    private final Field<String> title = new Field<>("title");
+    private final Field<String> description = new Field<>("description");
+    private final Field<String> price = new Field<>("price");
+    private final Field<String> userEmail = new Field<>("userEmail");
+    private final Field<String> stringImage = new Field<>("stringImage");
+    private final Field<String> category = new Field<>("category");
+    private final Field<Double> latitude = new Field<>("latitude", NOLAT);
+    private final Field<Double> longitude = new Field<>("longitude", NOLNG);
 
+    private final List<Field> fields = Arrays.asList(id, title, description, price, userEmail, stringImage, category, latitude, longitude);
 
     public static final String COLLECTION = "listings";
 
-    public Listing() {}
+    public Listing() {
+        registerFields(fields);
+    }
 
     /**
      *
@@ -47,18 +52,19 @@ public class Listing extends Model implements Serializable {
      */
     public Listing(String title, String description, String price, String userEmail,
                    String stringImage, String category, double latitude, double longitude) throws  IllegalArgumentException {
-        this.title = title;
-        this.description = description;
-        this.price = price;
+        this();
+        this.title.set(title);
+        this.description.set(description);
+        this.price.set(price);
         if (emailIsValid(userEmail)) {
-            this.userEmail = userEmail;
+            this.userEmail.set(userEmail);
         } else {
             throw new IllegalArgumentException("userEmail has invalid format");
         }
-        this.stringImage = stringImage;
-        this.category = category;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.stringImage.set(stringImage);
+        this.category.set(category);
+        this.latitude.set(latitude);
+        this.longitude.set(longitude);
     }
 
     public Listing(String title, String description, String price, String userEmail, String stringImage, String category) {
@@ -70,35 +76,35 @@ public class Listing extends Model implements Serializable {
     }
 
     public String getTitle() {
-        return title;
+        return title.get();
     }
 
     public String getDescription() {
-        return description;
+        return description.get();
     }
 
     public String getPrice() {
-        return price;
+        return price.get();
     }
 
     public String getUserEmail() {
-        return userEmail;
+        return userEmail.get();
     }
 
     public String getStringImage() {
-        return stringImage;
+        return stringImage.get();
     }
 
     public String getCategory(){
-        return category;
+        return category.get();
     }
 
     public double getLatitude() {
-        return latitude;
+        return latitude.get();
     }
 
     public double getLongitude() {
-        return longitude;
+        return longitude.get();
     }
 
     @Override
@@ -108,12 +114,12 @@ public class Listing extends Model implements Serializable {
 
     @Override
     public String getId() {
-        return id;
+        return id.get();
     }
 
     @Override
     public void setId(String id) {
-        this.id = id;
+        this.id.set(id);
     }
 
     /**
@@ -124,7 +130,7 @@ public class Listing extends Model implements Serializable {
     public Task<Void> saveWithLiteVersion() {
         return this.save().onSuccessTask(v -> {
             // TODO make thumbnail
-           LiteListing liteVersion = new LiteListing(id, title, price, category, "");
+           LiteListing liteVersion = new LiteListing(id.get(), title.get(), price.get(), category.get(), "");
            return liteVersion.save();
         });
     }
