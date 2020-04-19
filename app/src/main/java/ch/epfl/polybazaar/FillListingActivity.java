@@ -69,7 +69,6 @@ import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.map.MapsActivity.VALID;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
-import static ch.epfl.polybazaar.user.User.editUser;
 import static java.util.UUID.randomUUID;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
@@ -443,7 +442,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 authAccount.getUserData().addOnSuccessListener(user -> {
                     if (user != null) {
                         user.addOwnListing(newListingID);
-                        editUser(user);
+                        user.save();
                     }
                 });
             }

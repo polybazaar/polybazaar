@@ -147,12 +147,6 @@ public final class User extends Model {
         return ModelTransaction.fetch(COLLECTION, email, User.class);
     }
 
-    // TODO remove
-    public static Task<Void> editUser(User editedUser) {
-        Task<Void> deleteUser = ModelTransaction.delete(COLLECTION, editedUser.getEmail()).addOnSuccessListener(aVoid -> editedUser.save());
-        return Tasks.whenAll(deleteUser);
-    }
-
     private String capitalize(String str){
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }

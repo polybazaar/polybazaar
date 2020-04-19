@@ -76,7 +76,7 @@ public class UserProfileActivity extends AppCompatActivity {
         }
         else{
             User editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
-            User.editUser(editedUser).addOnSuccessListener(aVoid -> {
+            editedUser.save().addOnSuccessListener(aVoid -> {
                 Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
             }).addOnSuccessListener(aVoid -> appUser.updateNickname(newNickname));
         }
