@@ -38,7 +38,6 @@ public abstract class Utilities {
         return false;
     }
 
-
     /**
      * Helper method to retrieve the logged user (if any)
      * @return the logged user (can be null)

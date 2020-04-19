@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -135,6 +136,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
             } catch (IOException e) {
                 e.printStackTrace();
+                Toast.makeText(this, R.string.unable_load_image, Toast.LENGTH_SHORT).show();
                 return;
             }
 

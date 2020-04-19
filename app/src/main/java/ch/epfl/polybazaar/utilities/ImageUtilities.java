@@ -58,6 +58,7 @@ public final class ImageUtilities {
             byte [] encodeByte = Base64.decode(stringImage, Base64.DEFAULT);
             bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
         } catch(Exception e) {
+            //do nothing
         }
         return bitmap;
     }

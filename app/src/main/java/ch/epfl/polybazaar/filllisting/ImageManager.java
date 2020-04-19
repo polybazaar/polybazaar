@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,6 +75,7 @@ class ImageManager {
             try {
                 photoFile = createImageFile();
             } catch (IOException ignored) {
+                Toast.makeText(activity, R.string.take_picture_fail, Toast.LENGTH_SHORT).show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -81,6 +83,7 @@ class ImageManager {
                     Uri photoURI = FileProvider.getUriForFile(activity,"ch.epfl.polybazaar.fileprovider", photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 } catch (IllegalArgumentException ignored) {
+                    //Picture has been canceled by the user
                 }
                 activity.startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
             }
