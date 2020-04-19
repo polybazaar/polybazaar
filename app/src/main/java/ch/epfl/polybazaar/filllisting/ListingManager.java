@@ -19,14 +19,14 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.login.AppUser;
+import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
 import static ch.epfl.polybazaar.Utilities.getUser;
-import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
-import static ch.epfl.polybazaar.user.User.editUser;
+
+import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
 import static java.util.UUID.randomUUID;
 
 class ListingManager {
@@ -85,13 +85,13 @@ class ListingManager {
         newLiteListing.save()
                 .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
                 .addOnFailureListener(e -> Toast.makeText(activity.getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG).show());
-        AppUser authAccount = getUser();
+        Account authAccount = getUser();
         // update own listings of (logged) user
         if(authAccount != null) {
             authAccount.getUserData().addOnSuccessListener(user -> {
                 if (user != null) {
                     user.addOwnListing(newListingID);
-                    editUser(user);
+                    user.save();
                 }
             });
         }

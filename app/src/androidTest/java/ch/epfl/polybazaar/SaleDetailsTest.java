@@ -3,7 +3,6 @@ package ch.epfl.polybazaar;
 import android.content.Intent;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Tasks;
@@ -16,8 +15,6 @@ import org.junit.Test;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.LoginTest;
@@ -32,13 +29,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
-import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
-import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
-import static ch.epfl.polybazaar.listingImage.ListingImageDatabase.storeListingImage;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
-import static java.util.UUID.randomUUID;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -101,54 +92,25 @@ public class SaleDetailsTest {
     }
 
     @Test
-    public void testWithMockListing() {
-
-        String listingID1 = randomUUID().toString();
-        String listingID2 = randomUUID().toString();
-
+    public void testWithMockListing() throws ExecutionException, InterruptedException {
         Intent intent = new Intent();
-        intent.putExtra("listingID", listingID1);
+
+        Listing newListing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "");
+        Tasks.await(newListing.saveWithLiteVersion());
+
+        intent.putExtra("listingID", newListing.getId());
 
         activityRule.launchActivity(intent);
-        Listing newListing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "");
-        LiteListing newLiteListing = new LiteListing(listingID1, newListing.getTitle(), newListing.getPrice(), newListing.getCategory());
-        ListingImage listingImage1 = new ListingImage(convertBitmapToString(convertDrawableToBitmap(ContextCompat.getDrawable(activityRule.getActivity(), R.drawable.bicycle))), listingID2);
-        ListingImage listingImage2 = new ListingImage(convertBitmapToString(convertDrawableToBitmap(ContextCompat.getDrawable(activityRule.getActivity(), R.drawable.bicycle))), "");
 
-        storeListing(newListing, listingID1, result -> {
-            assertEquals(true, result);
-            addLiteListing(newLiteListing, resultLite -> {
-                assertEquals(true, resultLite);
-                storeListingImage(listingImage1, listingID1, resultImage1 -> {
-                    assertEquals(true, resultImage1);
-                    storeListingImage(listingImage2, listingID2, resultImage2 -> {
-                        assertEquals(true, resultImage2);
-                        try {
-                            runOnUiThread(() -> {
-                                //recreate to load the new Listing
-                                activityRule.getActivity().recreate();
-                            });
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
-                        try {
-                            Thread.sleep(SLEEP_TIME);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+        TextView textTitle = activityRule.getActivity().findViewById(R.id.title);
+        assertEquals("Title", textTitle.getText().toString());
 
-                        TextView textTitle = activityRule.getActivity().findViewById(R.id.title);
-                        assertEquals("Title", textTitle.getText().toString());
+        TextView textDescr = activityRule.getActivity().findViewById(R.id.description);
+        assertEquals("description", textDescr.getText().toString());
 
-                        TextView textDescr = activityRule.getActivity().findViewById(R.id.description);
-                        assertEquals("description", textDescr.getText().toString());
+        TextView textPrice = activityRule.getActivity().findViewById(R.id.price);
+        assertEquals("CHF 0.0", textPrice.getText().toString());
 
-                        TextView textPrice = activityRule.getActivity().findViewById(R.id.price);
-                        assertEquals("CHF 0.0", textPrice.getText().toString());
-                    });
-                });
-            });
-        });
     }
 
     @Test
@@ -170,7 +132,7 @@ public class SaleDetailsTest {
     public void favoriteButtonChangesFavorites() throws ExecutionException, InterruptedException {
         Authenticator auth = AuthenticatorFactory.getDependency();
 
-        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+        Tasks.await(auth.createUser("user.test@epfl.ch", "usert", "abcdef"));
 
         Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
 

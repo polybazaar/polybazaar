@@ -35,14 +35,14 @@ import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
-import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
-import static ch.epfl.polybazaar.Utilities.convertFileToStringWithQuality;
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.map.MapsActivity.VALID;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertFileToStringWithQuality;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
 

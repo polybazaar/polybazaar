@@ -31,7 +31,7 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        AppUser currentUser = authenticator.getCurrentUser();
+        Account currentUser = authenticator.getCurrentUser();
 
         if (currentUser != null) {
             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);

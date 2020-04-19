@@ -9,8 +9,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.filllisting.FillListingActivity;
-import ch.epfl.polybazaar.login.AppUser;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.SignInActivity;
@@ -18,7 +18,7 @@ import ch.epfl.polybazaar.login.SignInActivity;
 public class MainActivity extends AppCompatActivity {
 
     private Authenticator authenticator;
-    private AppUser user;
+    private Account user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

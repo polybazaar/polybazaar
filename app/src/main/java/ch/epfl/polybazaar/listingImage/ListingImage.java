@@ -2,32 +2,35 @@ package ch.epfl.polybazaar.listingImage;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.DocumentId;
 
+import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
 public class ListingImage extends Model {
-    @DocumentId
-    private String id;
-    private String image;
-    private String refNextImg;
+    private final SimpleField<String> id = new SimpleField<>("id");
+    private final SimpleField<String> image = new SimpleField<>("image");
+    private final SimpleField<String> refNextImg = new SimpleField<>("refNextImg");
 
     public static final String COLLECTION = "listingsImage";
 
-    public ListingImage() {}
+    // no-argument constructor so that instances can be created by ModelTransaction
+    public ListingImage() {
+        registerFields(id, image, refNextImg);
+    }
 
     public ListingImage(String image, String refNextImg) {
-        this.image = image;
-        this.refNextImg = refNextImg;
+        this();
+        this.image.set(image);
+        this.refNextImg.set(refNextImg);
     }
 
     public String getImage() {
-        return image;
+        return image.get();
     }
 
     public String getRefNextImg() {
-        return refNextImg;
+        return refNextImg.get();
     }
 
     @Override
@@ -37,12 +40,12 @@ public class ListingImage extends Model {
 
     @Override
     public String getId() {
-        return id;
+        return id.get();
     }
 
     @Override
     public void setId(String id) {
-        this.id = id;
+        this.id.set(id);
     }
 
     /**

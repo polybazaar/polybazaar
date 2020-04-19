@@ -2,6 +2,8 @@ package ch.epfl.polybazaar.user;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.google.firebase.firestore.remote.Datastore;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -10,6 +12,8 @@ import ch.epfl.polybazaar.user.User;
 
 import static ch.epfl.polybazaar.Utilities.*;
 
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.getDependency;
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -49,5 +53,4 @@ public class UserTest {
         User user = new User("no1ody",  "me.help@efl.ch");
         assertThat(isValidUser(user), is(true));
     }
-
 }

@@ -25,10 +25,10 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
-import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.filllisting.FillListingActivity.RESULT_LOAD_IMAGE;
 import static ch.epfl.polybazaar.filllisting.FillListingActivity.RESULT_TAKE_PICTURE;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 class ImageManager {
 
