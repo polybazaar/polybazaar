@@ -9,10 +9,10 @@ import ch.epfl.polybazaar.user.User;
 /**
  * Adapter for firebase app user
  */
-public class FirebaseAppUser implements AppUser {
+public class FirebaseAccount implements Account {
     private FirebaseUser fbUser;
 
-    public FirebaseAppUser(FirebaseUser user) {
+    public FirebaseAccount(FirebaseUser user) {
         fbUser = user;
     }
 

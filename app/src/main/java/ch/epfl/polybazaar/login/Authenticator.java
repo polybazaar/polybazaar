@@ -10,7 +10,7 @@ public interface Authenticator {
      * Returns the user currently signed in
      * @return user
      */
-    AppUser getCurrentUser();
+    Account getCurrentUser();
 
     /**
      * Attempts to sign in the user with the given credentials
