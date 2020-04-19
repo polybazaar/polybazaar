@@ -59,7 +59,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
          * true if an external activity gives the map a marker to display and
          * false if the map gives an external activity a user-chosen location
          */
-        public static final String GIVE_LatLng = "GIVE";
+        public static final String GIVE_LAT_LNG = "GIVE";
         /**
          * the valid boolean indicates if the passed location (from map to
          * external activity) is valid, i.e. a user-chosen location.
@@ -72,24 +72,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * ===========================================================
      */
 
-    private GoogleMap mMap;
+    private GoogleMap map;
 
     private final String TAG = "MapsActivity";
 
-    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private FusedLocationProviderClient fusedLocationProviderClient;
     private PermissionRequest perm;
-    private boolean mLocationPermissionGranted = false;
-    private boolean MPSet = false;
+    private boolean locationPermissionGranted = false;
+    private boolean meetingPointSet = false;
     private double showLat = NOLAT;
     private double showLng = NOLNG;
     private double chosenLng = NOLNG;
     private double chosenLat = NOLAT;
-    private boolean locationAvailablility = false;
+    private boolean locationAvailability = false;
 
     // in showMode, the user cannot select a meeting point
     private boolean showMode = true;
-    private ImageView imgMyLocation;
-    private Button confirmMP;
     private Intent returnIntent;
 
     private List<Toast> toasts;
@@ -106,7 +104,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
@@ -123,12 +121,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        map = googleMap;
         Bundle extras = getIntent().getExtras();
         returnIntent = new Intent();
         if (extras != null) {
             returnIntent.putExtra(VALID, false);
-            if (extras.getBoolean(GIVE_LatLng)) {
+            if (extras.getBoolean(GIVE_LAT_LNG)) {
                 // show mode
                 setupShowMode();
             } else {
@@ -146,9 +144,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void checkLocationPermissions(SuccessCallback successCallback) {
         SuccessCallback callback = result -> {
             if (result) {
-                mLocationPermissionGranted = true;
+                locationPermissionGranted = true;
             } else {
-                mLocationPermissionGranted = false;
+                locationPermissionGranted = false;
             }
             successCallback.onCallback(result);
         };
@@ -160,27 +158,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void mapInit() {
-        if (mMap != null) {
-            imgMyLocation = (ImageView) findViewById(R.id.imgMyLocation);
+        if (map != null) {
+            ImageView imgMyLocation = findViewById(R.id.imgMyLocation);
             imgMyLocation.setOnClickListener(v -> checkLocationPermissions(result ->  {
                 if (result) {
-                    mMap.setMyLocationEnabled(true);
-                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    map.setMyLocationEnabled(true);
+                    map.getUiSettings().setMyLocationButtonEnabled(false);
                     getDeviceLocation();
                 }
             }));
-            confirmMP = findViewById(R.id.confirmMP);
+            Button confirmMP = findViewById(R.id.confirmMP);
             confirmMP.setOnClickListener(v -> {
                 sendResponse();
             });
-            mMap.setBuildingsEnabled(true);
-            mMap.setIndoorEnabled(true);
+            map.setBuildingsEnabled(true);
+            map.setIndoorEnabled(true);
             if (!showMode) {
                 DefineMode();
             } else {
                 ShowMode();
             }
-            mMap.getUiSettings().setZoomControlsEnabled(false);
+            map.getUiSettings().setZoomControlsEnabled(false);
         }
     }
 
@@ -190,15 +188,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         chosenLat = getIntent().getDoubleExtra(LAT, NOLAT);
         chosenLng = getIntent().getDoubleExtra(LNG, NOLNG);
-        MPSet = true;
+        meetingPointSet = true;
         if (chosenLat != NOLAT && chosenLng != NOLNG) {
             LatLng meetingPoint = new LatLng(chosenLat, chosenLng);
-            mMap.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, VILLAGE_ZOOM));
-            MPSet = true;
+            map.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, VILLAGE_ZOOM));
+            meetingPointSet = true;
         } else {
             goToEPFL();
-            MPSet = false;
+            meetingPointSet = false;
         }
         showMode = false;
     }
@@ -213,12 +211,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void ShowMode(){
-        mMap.clear();
+        map.clear();
         findViewById(R.id.confirmMP).setVisibility(View.INVISIBLE);
         if (showLat != NOLAT && showLng != NOLNG) {
             LatLng meetingPoint = new LatLng(showLat, showLng);
-            mMap.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, STREET_ZOOM));
+            map.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, STREET_ZOOM));
         } else {
             goToEPFL();
         }
@@ -226,21 +224,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void DefineMode(){
         findViewById(R.id.confirmMP).setVisibility(View.VISIBLE);
-        mMap.setOnMapClickListener(latLng -> {
-            if (MPSet) {
-                mMap.clear();
+        map.setOnMapClickListener(latLng -> {
+            if (meetingPointSet) {
+                map.clear();
                 chosenLat = NOLAT;
                 chosenLng = NOLNG;
-                MPSet = false;
+                meetingPointSet = false;
                 showToast(false);
             }
         });
-        mMap.setOnMapLongClickListener(latLng -> {
-            mMap.clear();
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Meeting Point"));
+        map.setOnMapLongClickListener(latLng -> {
+            map.clear();
+            map.addMarker(new MarkerOptions().position(latLng).title("Meeting Point"));
             chosenLat = latLng.latitude;
             chosenLng = latLng.longitude;
-            MPSet = true;
+            meetingPointSet = true;
             showToast(true);
         });
     }
@@ -261,7 +259,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void goToEPFL(){
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EPFL_LOCATION, VILLAGE_ZOOM));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(EPFL_LOCATION, VILLAGE_ZOOM));
     }
 
     private void getDeviceLocation() {
@@ -270,24 +268,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
          * cases when a location is not available.
          */
         try {
-            if (mLocationPermissionGranted) {
-                Task<LocationAvailability> locationAvailable = mFusedLocationProviderClient.getLocationAvailability();
+            if (locationPermissionGranted) {
+                Task<LocationAvailability> locationAvailable = fusedLocationProviderClient.getLocationAvailability();
                 locationAvailable.addOnCompleteListener(result -> {
                     if (!result.getResult().isLocationAvailable()) {
-                        locationAvailablility = false;
+                        locationAvailability = false;
                         makeDialog(this, R.string.location_unavailable);
                     } else {
-                        locationAvailablility = true;
+                        locationAvailability = true;
                     }
                 });
-                if (locationAvailablility) {
-                    Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+                if (locationAvailability) {
+                    Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
                     locationResult.addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             Location mLastKnownLocation = task.getResult();
                             if (mLastKnownLocation != null) {
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(mLastKnownLocation.getLatitude(),
                                                 mLastKnownLocation.getLongitude()), STREET_ZOOM));
                             }
@@ -306,7 +304,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void sendResponse() {
         returnIntent.putExtra(LAT, chosenLat);
         returnIntent.putExtra(LNG, chosenLng);
-        if (chosenLat != NOLAT && chosenLng != NOLNG && MPSet) {
+        if (chosenLat != NOLAT && chosenLng != NOLNG && meetingPointSet) {
             returnIntent.putExtra(VALID, true);
         } else {
             returnIntent.putExtra(VALID, false);

@@ -24,6 +24,7 @@ import java.util.List;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
+import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Account;
@@ -32,7 +33,7 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
 
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
-import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LatLng;
+import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
@@ -95,7 +96,7 @@ public class SaleDetails extends AppCompatActivity {
             //TODO check that user is connected
             Intent viewMPIntent = new Intent(this, MapsActivity.class);
             Bundle extras = new Bundle();
-            extras.putBoolean(GIVE_LatLng, true);
+            extras.putBoolean(GIVE_LAT_LNG, true);
             extras.putDouble(LAT, mpLat);
             extras.putDouble(LNG, mpLng);
             viewMPIntent.putExtras(extras);
@@ -203,7 +204,7 @@ public class SaleDetails extends AppCompatActivity {
      */
         public void fillWithListing(final Listing listing) {
         if(listing == null) {
-            Toast toast = Toast.makeText(getApplicationContext(),"Object not found.",Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(),R.string.object_not_found,Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
             toast.show();
             Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
