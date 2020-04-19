@@ -24,6 +24,7 @@ public class ListingImage extends Model {
         this.refNextImg.set(refNextImg);
     }
 
+    // no-argument constructor so that instances can be created by ModelTransaction
     public ListingImage() {
         registerFields(id, image, refNextImg);
     }

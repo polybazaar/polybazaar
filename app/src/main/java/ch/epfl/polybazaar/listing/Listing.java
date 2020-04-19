@@ -36,6 +36,7 @@ public class Listing extends Model implements Serializable {
 
     public static final String COLLECTION = "listings";
 
+    // no-argument constructor so that instances can be created by ModelTransaction
     public Listing() {
         registerFields(id, title, description, price, userEmail, stringImage, category, latitude, longitude);
     }

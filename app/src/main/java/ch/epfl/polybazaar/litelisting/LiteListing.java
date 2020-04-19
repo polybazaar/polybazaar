@@ -24,6 +24,7 @@ public class LiteListing extends Model {
 
     public static final String COLLECTION = "liteListings";
 
+    // no-argument constructor so that instances can be created by ModelTransaction
     public LiteListing() {
         registerFields(listingID, title, price, category, stringThumbnail);
     }

@@ -34,12 +34,32 @@ public final class ModelTransaction {
                 });
     }
 
+    /**
+     * Retrieves all documents that correspond to the criterion
+     * @param collection name of the collection
+     * @param field name of the field that should be compared
+     * @param compareValue value against which the field will be compared
+     * @param clazz data model class
+     * @param <T> type of the model
+     * @return successful task containing a list of model instances fulfilling the criterion. The task
+     * fails if the database is unreachable
+     */
     public static <T extends Model> Task<List<T>> fetchAllWithFieldEquality(String collection, String field, String compareValue, Class<T> clazz) {
         DataStore db = DataStoreFactory.getDependency();
         return db.fetchWithEquals(collection, field, compareValue)
                 .onSuccessTask(querySnapshot -> Tasks.forResult(toModels(querySnapshot, clazz)));
     }
 
+    /**
+     * Retrieves all documents that correspond to the criteria
+     * @param collection name of the collection
+     * @param fields name of the fields that should be compared
+     * @param compareValues values against which the fields will be compared
+     * @param clazz data model class
+     * @param <T> type of the model
+     * @return successful task containing a list of model instances fulfilling the criteria. The task
+     * fails if the database is unreachable
+     */
     public static <T extends Model> Task<List<T>> fetchAllWithMultipleFieldsEquality(String collection, List<String> fields, List<String> compareValues, Class<T> clazz) {
         DataStore db = DataStoreFactory.getDependency();
         return db.fetchWithEqualsMultiple(collection, fields, compareValues)
@@ -80,6 +100,7 @@ public final class ModelTransaction {
         return delete(model.collectionName(), model.getId());
     }
 
+    // Creates a model base on the query result
     private static <T extends Model> T toModel(DataSnapshot snap, Class<T> clazz) {
         try {
             T model = clazz.newInstance();
@@ -91,6 +112,7 @@ public final class ModelTransaction {
         }
     }
 
+    // Creates a list of models based on the query result
     private static <T extends Model> List<T> toModels(CollectionSnapshot snap, Class<T> clazz) {
         List<T> models = new ArrayList<>();
 

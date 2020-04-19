@@ -22,6 +22,7 @@ public class ChatMessage extends Model {
 
     public static final String COLLECTION = "chatMessages";
 
+    // no-argument constructor so that instances can be created by ModelTransaction
     public ChatMessage(){
         registerFields(id, sender, receiver, listingID, message, time);
     }

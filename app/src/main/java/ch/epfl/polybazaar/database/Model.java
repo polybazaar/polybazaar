@@ -16,6 +16,10 @@ import ch.epfl.polybazaar.user.User;
 public abstract class Model {
     private Field[] fields;
 
+    /**
+     * Registers fields that should be fetched and saved on the database
+     * @param fields all the fields of the model
+     */
     protected void registerFields(Field... fields) {
         this.fields = fields;
     }
@@ -39,7 +43,11 @@ public abstract class Model {
     public abstract void setId(String id);
 
     /**
-     * Saves the model on the database
+     * Saves the model on the database. If the model entity has no id (getId() returning null),
+     * an ID is automatically created by the database and set (using setId()) when the transaction
+     * completes. If the model already has an ID (getId() returning a non-null value), the entity is
+     * saved under this ID. This method can be used to create a new entity on the database or save
+     * modifications to an already existing one.
      * @return successful task if the database was reachable
      */
     public final Task<Void> save() {
@@ -69,6 +77,10 @@ public abstract class Model {
         return ModelTransaction.delete(this);
     }
 
+    /**
+     * Fills the model with the result of a database query according to the model fields
+     * @param snap result from the database
+     */
     public final void fillWith(DataSnapshot snap) {
         for (Field f: fields) {
             f.fillFromSnapshot(snap);

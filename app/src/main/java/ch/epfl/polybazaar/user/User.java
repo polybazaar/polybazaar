@@ -50,6 +50,7 @@ public final class User extends Model {
         return phoneNumber.get();
     }
 
+    // no-argument constructor so that instances can be created by ModelTransaction
     public User() {
         registerFields(nickName, email, firstName, lastName, phoneNumber, ownListings, favorites);
     }
