@@ -53,23 +53,4 @@ public class UserTest {
         User user = new User("no1ody",  "me.help@efl.ch");
         assertThat(isValidUser(user), is(true));
     }
-
-    @Test
-    public void databaseWorks() {
-        useMockDataStore();
-        String email = "test.test@epfl.ch";
-        String nickname = "test";
-
-        User user = new User(nickname, email);
-        user.save();
-
-        User.fetch("test.test@epfl.ch").addOnSuccessListener(user1 -> {
-           assertEquals(nickname, user1.getNickName());
-        });
-
-        getDependency().fetchAll(user.collectionName()).addOnSuccessListener(command -> {
-           return;
-        });
-    }
-
 }
