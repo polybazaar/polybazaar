@@ -28,7 +28,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LoginTest {
     public static final String EMAIL = "otheruser.test@epfl.ch";
     public static final String NICKNAME = "otheruser";

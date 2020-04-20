@@ -11,10 +11,10 @@ import static org.hamcrest.core.IsNot.not;
 public abstract class DatabaseChecksUtilities {
 
     public static <T extends Model> void  assertDatabaseHasNoEntryWithField(String collection, String field, String value, Class<T> clazz){
-        ModelTransaction.fetchAllWithFieldEquality(collection, field, value, clazz).addOnSuccessListener(ts -> assertThat(ts, is(empty())));
+        ModelTransaction.fetchFieldEquality(collection, field, value, clazz).addOnSuccessListener(ts -> assertThat(ts, is(empty())));
     }
 
     public static <T extends Model> void  assertDatabaseHasAtLeastOneEntryWithField(String collection, String field, String value, Class<T> clazz){
-        ModelTransaction.fetchAllWithFieldEquality(collection, field, value, clazz).addOnSuccessListener(ts -> assertThat(ts, is(not(empty()))));
+        ModelTransaction.fetchFieldEquality(collection, field, value, clazz).addOnSuccessListener(ts -> assertThat(ts, is(not(empty()))));
     }
 }

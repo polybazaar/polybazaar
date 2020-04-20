@@ -2,10 +2,8 @@ package ch.epfl.polybazaar.endToEnd;
 
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
@@ -27,7 +25,7 @@ import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockData
 import static ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities.storeNewListing;
 import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.signInWithFromMainActivity;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+
 public class EditAndDeleteTest {
 
 

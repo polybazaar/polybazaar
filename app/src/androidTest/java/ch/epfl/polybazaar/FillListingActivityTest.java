@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.category.RootCategoryFactory;
+import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
@@ -57,20 +57,19 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
-import static ch.epfl.polybazaar.Utilities.convertBitmapToStringWithQuality;
-import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
-import static ch.epfl.polybazaar.Utilities.convertFileToString;
-import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
-import static ch.epfl.polybazaar.Utilities.resizeBitmap;
-import static ch.epfl.polybazaar.Utilities.resizeStringImageThumbnail;
 import static ch.epfl.polybazaar.category.RootCategoryFactory.useMockCategory;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useMockNetworkState;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useRealNetwork;
-import static com.google.android.gms.tasks.Tasks.whenAll;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToString;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertDrawableToBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertFileToString;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -83,8 +82,9 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class FillListingActivityTest {
+
+    private final int SLEEP_TIME = 2000;
 
     static Uri imageUri;
     static Bitmap imageBitmap;
@@ -207,28 +207,29 @@ public class FillListingActivityTest {
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_TIME);
         }
 
     @Test
     public void toastAppearsWhenPriceIsEmpty() throws Throwable {
-
         selectCategory("Others");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_TIME);
     }
 
     @Test
     public void toastAppearsWhenNoCategoryIsSelected() throws Throwable {
+        Thread.sleep(SLEEP_TIME);
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
         submitListingAndCheckIncorrectToast();
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_TIME);
     }
+
 
 
     @Test
@@ -245,7 +246,7 @@ public class FillListingActivityTest {
         fillListing();
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
     }
@@ -336,7 +337,7 @@ public class FillListingActivityTest {
 
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
     }
@@ -366,7 +367,7 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         assert(fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog").isVisible());
         //onView(withText("No Internet connection found")).check(matches(isDisplayed()));
         Intents.release();
@@ -381,14 +382,14 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         runOnUiThread(() -> {
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
             AlertDialog dialog = (AlertDialog) dialogFragment.getDialog();
             Button posButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
             posButton.performClick();
         });
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
         useRealNetwork();
@@ -401,7 +402,7 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         runOnUiThread(() -> {
 
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
@@ -410,7 +411,7 @@ public class FillListingActivityTest {
             negButton.performClick();
         });
 
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         hasComponent(FillListingActivity.class.getName());
         Intents.release();
         useRealNetwork();
@@ -437,6 +438,10 @@ public class FillListingActivityTest {
     }*/
 
 
+    /**
+     * This test will no longer be relevant with the new UI
+     */
+   /*
     @Test
     public void testCreateAndSendListingWhenUserNull() throws Throwable {
         MockAuthenticator.getInstance().signOut();
@@ -445,14 +450,14 @@ public class FillListingActivityTest {
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         //wait for MainActivity
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         intended(hasComponent(MainActivity.class.getName()));
         Intents.release();
 
         //sign in again for remaining tests
         whenAll(MockAuthenticator.getInstance().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD));
-
     }
+    */
 
     private void uploadImage(){
         closeSoftKeyboard();
@@ -505,7 +510,7 @@ public class FillListingActivityTest {
             }
         });
 
-        onView(withText(FillListingActivity.INCORRECT_FIELDS_TEXT))
+        onView(withText(R.string.incorrect_fields))
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
         Thread.sleep(2000);

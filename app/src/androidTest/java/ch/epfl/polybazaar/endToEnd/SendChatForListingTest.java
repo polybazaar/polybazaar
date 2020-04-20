@@ -2,10 +2,8 @@ package ch.epfl.polybazaar.endToEnd;
 
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
@@ -13,8 +11,8 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.message.ChatMessage;
 import ch.epfl.polybazaar.testingUtilities.DatabaseChecksUtilities;
-import ch.epfl.polybazaar.testingUtilities.SignInUtilities;
 import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
+import ch.epfl.polybazaar.testingUtilities.SignInUtilities;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -26,7 +24,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+
 public class SendChatForListingTest {
     @Rule
     public final ActivityTestRule<MainActivity> activityRule =

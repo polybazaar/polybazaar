@@ -1,15 +1,10 @@
 package ch.epfl.polybazaar;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
@@ -22,8 +17,6 @@ import org.junit.runners.MethodSorters;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listingImage.ListingImage;
-import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.LoginTest;
@@ -38,20 +31,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.polybazaar.Utilities.convertBitmapToString;
-import static ch.epfl.polybazaar.Utilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
-import static ch.epfl.polybazaar.listing.ListingDatabase.storeListing;
-import static ch.epfl.polybazaar.listingImage.ListingImageDatabase.storeListingImage;
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.addLiteListing;
-import static java.util.UUID.randomUUID;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+
 public class SaleDetailsTest {
     private static final int TOAST_LONG_DELAY = 3500;
+    private final int SLEEP_TIME = 2000;
 
     @Rule
     public final ActivityTestRule<SaleDetails> activityRule =
@@ -60,15 +48,21 @@ public class SaleDetailsTest {
                     true,
                     false);
 
+    /**
+     * This test will not be relevant with the new UI anymore
+     */
+    /*
     @Test
     public void testNoBundlePassed () throws InterruptedException {
+        Thread.sleep(SLEEP_TIME);
         activityRule.launchActivity(new Intent());
 
-        onView(withText("Object not found."))
+        onView(withText(R.string.object_not_found))
                 .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
                 .check(matches(isDisplayed()));
         Thread.sleep(TOAST_LONG_DELAY);
     }
+    */
 
     @Before
     public void init() {
@@ -100,54 +94,25 @@ public class SaleDetailsTest {
     }
 
     @Test
-    public void testWithMockListing() {
-
-        String listingID1 = randomUUID().toString();
-        String listingID2 = randomUUID().toString();
-
+    public void testWithMockListing() throws ExecutionException, InterruptedException {
         Intent intent = new Intent();
-        intent.putExtra("listingID", listingID1);
+
+        Listing newListing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "");
+        Tasks.await(newListing.saveWithLiteVersion());
+
+        intent.putExtra("listingID", newListing.getId());
 
         activityRule.launchActivity(intent);
-        Listing newListing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "");
-        LiteListing newLiteListing = new LiteListing(listingID1, newListing.getTitle(), newListing.getPrice(), newListing.getCategory());
-        ListingImage listingImage1 = new ListingImage(convertBitmapToString(convertDrawableToBitmap(ContextCompat.getDrawable(activityRule.getActivity(), R.drawable.bicycle))), listingID2);
-        ListingImage listingImage2 = new ListingImage(convertBitmapToString(convertDrawableToBitmap(ContextCompat.getDrawable(activityRule.getActivity(), R.drawable.bicycle))), "");
 
-        storeListing(newListing, listingID1, result -> {
-            assertEquals(true, result);
-            addLiteListing(newLiteListing, resultLite -> {
-                assertEquals(true, resultLite);
-                storeListingImage(listingImage1, listingID1, resultImage1 -> {
-                    assertEquals(true, resultImage1);
-                    storeListingImage(listingImage2, listingID2, resultImage2 -> {
-                        assertEquals(true, resultImage2);
-                        try {
-                            runOnUiThread(() -> {
-                                //recreate to load the new Listing
-                                activityRule.getActivity().recreate();
-                            });
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+        TextView textTitle = activityRule.getActivity().findViewById(R.id.title);
+        assertEquals("Title", textTitle.getText().toString());
 
-                        TextView textTitle = activityRule.getActivity().findViewById(R.id.title);
-                        assertEquals("Title", textTitle.getText().toString());
+        TextView textDescr = activityRule.getActivity().findViewById(R.id.description);
+        assertEquals("description", textDescr.getText().toString());
 
-                        TextView textDescr = activityRule.getActivity().findViewById(R.id.description);
-                        assertEquals("description", textDescr.getText().toString());
+        TextView textPrice = activityRule.getActivity().findViewById(R.id.price);
+        assertEquals("CHF 0.0", textPrice.getText().toString());
 
-                        TextView textPrice = activityRule.getActivity().findViewById(R.id.price);
-                        assertEquals("CHF 0.0", textPrice.getText().toString());
-                    });
-                });
-            });
-        });
     }
 
     @Test
@@ -162,14 +127,14 @@ public class SaleDetailsTest {
 
         activityRule.launchActivity(intent);
 
-        onView(withText(R.string.add__favorite)).check(matches(not(isEnabled())));
+        onView(withText(R.string.add_favorite)).check(matches(not(isEnabled())));
     }
 
     @Test
     public void favoriteButtonChangesFavorites() throws ExecutionException, InterruptedException {
         Authenticator auth = AuthenticatorFactory.getDependency();
 
-        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+        Tasks.await(auth.createUser("user.test@epfl.ch", "usert", "abcdef"));
 
         Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
 
@@ -180,7 +145,7 @@ public class SaleDetailsTest {
 
         activityRule.launchActivity(intent);
 
-        onView(withText(R.string.add__favorite)).perform(click());
+        onView(withText(R.string.add_favorite)).perform(click());
 
         // we fetch after each click to make sure the data is actually saved to mock db
         User.fetch(MockAuthenticator.TEST_USER_EMAIL).addOnSuccessListener(user -> {

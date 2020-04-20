@@ -26,7 +26,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class FavoritesTest {
 
 

@@ -25,9 +25,9 @@ public class FirebaseAuthenticator implements Authenticator {
     }
 
     @Override
-    public AppUser getCurrentUser() {
+    public Account getCurrentUser() {
         FirebaseUser fbUser = fbAuth.getCurrentUser();
-        return fbUser == null ? null : new FirebaseAppUser(fbAuth.getCurrentUser());
+        return fbUser == null ? null : new FirebaseAccount(fbAuth.getCurrentUser());
     }
 
     @Override

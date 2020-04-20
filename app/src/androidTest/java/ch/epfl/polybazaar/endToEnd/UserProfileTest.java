@@ -31,7 +31,6 @@ import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserProfileTest {
 
     private static Authenticator authenticator;

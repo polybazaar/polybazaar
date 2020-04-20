@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FillListingActivity">
+    tools:context=".filllisting.FillListingActivity">
 
     <ScrollView
         android:layout_width="409dp"
@@ -29,8 +29,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/move_first"
                     android:visibility="invisible"
-                    android:textSize="12sp"
-                    android:onClick="setFirst"/>
+                    android:textSize="12sp"/>
 
                 <Button
                     android:id="@+id/rotateLeft"
@@ -38,8 +37,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/rotate_left"
                     android:textSize="12sp"
-                    android:visibility="invisible"
-                    android:onClick="rotateLeft"/>
+                    android:visibility="invisible"/>
 
                 <Button
                     android:id="@+id/deleteImage"
@@ -47,21 +45,19 @@
                     android:layout_height="wrap_content"
                     android:text="@string/delete_image"
                     android:textSize="12sp"
-                    android:visibility="invisible"
-                    android:onClick="deleteImage"/>
+                    android:visibility="invisible"/>
 
                 <Button
                     android:id="@+id/modifyImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="modifyCurrentImage"
                     android:text="@string/modify_image"
-                    android:visibility="invisible" />
+                    android:visibility="visible" />
 
             </TableRow>
 
             <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager2"
+                android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/viewpager_height"
                 android:layout_marginTop="@dimen/viewpager_margin"
@@ -184,10 +180,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/addMP" />
+                android:text="@string/add_MP" />
 
             <TextView
-                android:id="@+id/MPStatus"
+                android:id="@+id/meetingPointStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
