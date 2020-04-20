@@ -22,7 +22,8 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
                 <Button
                     style="?android:attr/buttonBarButtonStyle"
@@ -61,52 +62,61 @@
 
             </TableRow>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/viewpager_height"
-                android:layout_marginTop="@dimen/viewpager_margin"
-                android:clickable="true"
-                android:focusable="true" />
-
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5" />
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/camera"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/take_a_picture"
-                    android:textSize="@dimen/default_button_text_size"/>
+                    android:textSize="@dimen/small_button_text_size"/>
 
                 <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.05" />
+                    android:layout_weight="1" />
 
                 <Button
                     android:id="@+id/uploadImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/upload_image"
-                    android:textSize="@dimen/default_button_text_size"/>
+                    android:textSize="@dimen/small_button_text_size"/>
 
             </TableRow>
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/viewpager_height"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/addImages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:background="@drawable/rounded_corner"
+                android:backgroundTint="@color/colorAccent"
+                android:text="@string/add_images"
+                android:textColor="@color/pureWhite"
+                android:textSize="@dimen/default_button_text_size" />
 
             <TextView
                 android:id="@+id/titleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:layout_marginTop="@dimen/fillListing_inter_space_extra_large"
                 android:text="@string/listing_title"
                 android:textColor="@android:color/secondary_text_light"
-                android:textSize="20sp"
+                android:textSize="@dimen/default_textView_text_size"
                 android:textStyle="bold" />
 
             <EditText
@@ -120,36 +130,19 @@
                 tools:ignore="LabelFor" />
 
             <TextView
-                android:id="@+id/categoryTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large"
-                android:text="@string/category"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/categorySelector"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_small"/>
-
-            <TextView
                 android:id="@+id/descriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/fillListing_inter_space_large"
                 android:text="@string/description"
                 android:textColor="@android:color/secondary_text_light"
-                android:textSize="20sp"
+                android:textSize="@dimen/default_textView_text_size"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/descriptionSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginTop="@dimen/fillListing_inter_space_small"
                 android:ems="10"
                 android:gravity="start|top"
@@ -161,22 +154,54 @@
                 android:id="@+id/priceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:layout_marginTop="@dimen/fillListing_inter_space_extra_large"
                 android:text="@string/price"
                 android:textColor="@android:color/secondary_text_light"
-                android:textSize="20sp"
+                android:textSize="@dimen/default_textView_text_size"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/priceSelector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginTop="@dimen/fillListing_inter_space_small"
                 android:ems="10"
                 android:inputType="numberDecimal"
                 android:importantForAutofill="no"
                 tools:ignore="LabelFor" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large">
+
+                <TextView
+                    android:id="@+id/categoryTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.1"
+                    android:text="@string/category"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="@dimen/default_textView_text_size"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/selectCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_weight="0.01"
+                    android:textSize="@dimen/small_button_text_size"
+                    android:text="@string/select_a_category" />
+
+            </TableRow>
+
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -190,7 +215,7 @@
                     android:layout_weight="0.1"
                     android:text="@string/meeting_point"
                     android:textColor="@android:color/secondary_text_light"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/default_textView_text_size"
                     android:textStyle="bold" />
 
                 <Space
@@ -210,7 +235,6 @@
 
             <Button
                 android:id="@+id/submitListing"
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -228,6 +252,13 @@
                 android:layout_height="wrap_content"
                 android:visibility="invisible"
                 android:contentDescription="@string/loading" />
+
+            <Spinner
+                android:id="@+id/categorySelector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"/>
 
         </LinearLayout>
     </ScrollView>
