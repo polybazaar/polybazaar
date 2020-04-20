@@ -73,4 +73,5 @@
     <string name="meeting_point">Meeting Point</string>
     <string name="add_images">Add Images</string>
     <string name="select_a_category">Select a category</string>
+    <string name="currency">CHF</string>
 </resources>
