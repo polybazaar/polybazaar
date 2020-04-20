@@ -29,5 +29,5 @@ public class MockCategoryTest {
     public void maxDepthIsCorrect(){
         assertThat(mockRoot.maxDepth(), is(1));
     }
-    
+
 }
