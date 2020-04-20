@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="toggleFavorite"
                 android:text="ToggleButton"
-                android:textOff="@string/add__favorite"
+                android:textOff="@string/add_favorite"
                 android:textOn="@string/remove_favorites" />
 
             <TextView
@@ -112,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="@string/seeMP" />
+                android:text="@string/see_MP" />
 
             <TextView
                 android:id="@+id/userEmail"

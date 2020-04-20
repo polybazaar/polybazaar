@@ -16,7 +16,7 @@ import java.util.TreeMap;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
-import static ch.epfl.polybazaar.Utilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 
 /**

@@ -61,7 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthenticatorResult> task) {
                         if (task.isSuccessful()) {
-                            AppUser user = authenticator.getCurrentUser();
+                            Account user = authenticator.getCurrentUser();
 
                             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
                             startActivity(intent);

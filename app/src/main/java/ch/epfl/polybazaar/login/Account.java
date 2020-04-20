@@ -2,13 +2,12 @@ package ch.epfl.polybazaar.login;
 
 import com.google.android.gms.tasks.Task;
 
-import ch.epfl.polybazaar.database.callback.UserCallback;
 import ch.epfl.polybazaar.user.User;
 
 /**
  * Generic user interface
  */
-public interface AppUser {
+public interface Account {
     /**
      * Checks that the user's email has been verified
      * @return true iff the email is verified
