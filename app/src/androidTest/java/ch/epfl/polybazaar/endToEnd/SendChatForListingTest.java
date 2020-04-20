@@ -11,8 +11,8 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.message.ChatMessage;
 import ch.epfl.polybazaar.testingUtilities.DatabaseChecksUtilities;
-import ch.epfl.polybazaar.testingUtilities.SignInUtilities;
 import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
+import ch.epfl.polybazaar.testingUtilities.SignInUtilities;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;

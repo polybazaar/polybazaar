@@ -28,8 +28,8 @@ import java.util.List;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.category.Category;
-import ch.epfl.polybazaar.category.CategoryRepository;
-import ch.epfl.polybazaar.category.StringCategory;
+import ch.epfl.polybazaar.category.NodeCategory;
+import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
@@ -103,7 +103,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         categorySelector = findViewById(R.id.categorySelector);
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
-        categoryManager.setupSpinner(categorySelector, CategoryRepository.categories, spinnerList, traversingCategory);
+        RootCategoryFactory.useJSONCategory(this);
+        categoryManager.setupSpinner(categorySelector, RootCategoryFactory.getDependency().subCategories() , spinnerList, traversingCategory);
         traversingCategory = categoryManager.getTraversingCategory();
         spinnerList = categoryManager.getSpinnerList();
         listStringImage = new ArrayList<>();
@@ -228,9 +229,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
         priceSelector.setText(listing.getPrice());
-        Category editedCategory = new StringCategory(listing.getCategory());
-        traversingCategory = CategoryRepository.getCategoryContaining(editedCategory);
-        categorySelector.setSelection(CategoryRepository.indexOf(traversingCategory)+1);
+        Category editedCategory = new NodeCategory(listing.getCategory());
+        Category root = RootCategoryFactory.getDependency();
+        traversingCategory = root.getSubCategoryContaining(editedCategory);
+        categorySelector.setSelection(root.indexOf(traversingCategory)+1);
         lat = listing.getLatitude();
         lng = listing.getLongitude();
         if (lat != NOLAT && lng != NOLNG) {

@@ -9,8 +9,10 @@ import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.util.concurrent.ExecutionException;
 

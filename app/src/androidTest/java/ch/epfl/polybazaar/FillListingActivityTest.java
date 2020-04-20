@@ -27,9 +27,11 @@ import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.filllisting.FillListingActivity;
@@ -55,6 +57,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.polybazaar.category.RootCategoryFactory.useMockCategory;
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
+import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.useMockNetworkState;
+import static ch.epfl.polybazaar.network.InternetCheckerFactory.useRealNetwork;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToString;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertDrawableToBitmap;
@@ -62,12 +70,6 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertFileToString;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
-import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
-import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
-import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
-import static ch.epfl.polybazaar.network.InternetCheckerFactory.useMockNetworkState;
-import static ch.epfl.polybazaar.network.InternetCheckerFactory.useRealNetwork;
-import static com.google.android.gms.tasks.Tasks.whenAll;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -80,7 +82,6 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
-
 public class FillListingActivityTest {
 
     private final int SLEEP_TIME = 2000;
@@ -99,13 +100,21 @@ public class FillListingActivityTest {
 
 
     @Rule
-    public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
+    public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<FillListingActivity>(FillListingActivity.class) {
+
+
+    @Override
+    protected void beforeActivityLaunched() {
+        useMockCategory();
+        useMockDataStore();
+    }
+};
 
     @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
     @Before
     public void init() {
-        useMockDataStore();
+
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
         AuthenticatorFactory.getDependency().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD);
 
@@ -113,6 +122,7 @@ public class FillListingActivityTest {
         activityUnderTest.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         auth = MockAuthenticator.getInstance();
         AuthenticatorFactory.setDependency(auth);
+
     }
 
     @After
@@ -123,6 +133,7 @@ public class FillListingActivityTest {
 
     @BeforeClass
     public static void setupStubIntent(){
+
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
         imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 resources.getResourcePackageName(R.mipmap.ic_launcher) + '/' +
@@ -191,7 +202,7 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenTitleIsEmpty() throws Throwable {
-        selectCategory("Furniture");
+        selectCategory("Others");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
@@ -201,7 +212,7 @@ public class FillListingActivityTest {
 
     @Test
     public void toastAppearsWhenPriceIsEmpty() throws Throwable {
-        selectCategory("Furniture");
+        selectCategory("Others");
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
@@ -219,15 +230,6 @@ public class FillListingActivityTest {
         Thread.sleep(SLEEP_TIME);
     }
 
-    @Test
-    public void toastAppearsWhenNoSubCategoryIsSelected() throws Throwable {
-        selectCategory("Multimedia");
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
-        closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
-        submitListingAndCheckIncorrectToast();
-        Thread.sleep(SLEEP_TIME);
-    }
 
 
     @Test
@@ -241,13 +243,7 @@ public class FillListingActivityTest {
     @Test
     public void submittingNewListingRedirectsToSalesOverview() throws Throwable {
         useMockDataStore();
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
-        closeSoftKeyboard();
-        selectCategory("Furniture");
-        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("That is a loooong description    yada yada yada hahahahaha      much long very description"));
-        closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
-        closeSoftKeyboard();
+        fillListing();
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(SLEEP_TIME);
@@ -377,6 +373,7 @@ public class FillListingActivityTest {
         Intents.release();
         useRealNetwork();
     }
+
 
     @Test
     public void DialogPositiveClickGoesToSalesOverview() throws Throwable {
@@ -516,6 +513,7 @@ public class FillListingActivityTest {
         onView(withText(R.string.incorrect_fields))
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
+        Thread.sleep(2000);
     }
 
     private void checkNoImageUploaded(){
@@ -529,7 +527,7 @@ public class FillListingActivityTest {
     private void fillListing() throws Throwable {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
-        selectCategory("Furniture");
+        selectCategory("Others");
         onView(withId(R.id.descriptionSelector)).perform(scrollTo(), typeText("description"));
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));

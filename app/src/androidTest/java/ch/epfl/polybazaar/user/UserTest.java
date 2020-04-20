@@ -2,20 +2,12 @@ package ch.epfl.polybazaar.user;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.google.firebase.firestore.remote.Datastore;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
-import ch.epfl.polybazaar.user.User;
-
-import static ch.epfl.polybazaar.Utilities.*;
-
-import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.getDependency;
-import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static ch.epfl.polybazaar.Utilities.isValidUser;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class UserTest {

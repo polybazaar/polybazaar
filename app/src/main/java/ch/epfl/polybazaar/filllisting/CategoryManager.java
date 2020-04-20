@@ -13,7 +13,7 @@ import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.category.Category;
-import ch.epfl.polybazaar.category.StringCategory;
+import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.listing.Listing;
 
 
@@ -72,7 +72,7 @@ class CategoryManager {
 
             Bundle bundle = activity.getIntent().getExtras();
             if(bundle != null && traversingCategory != null){
-                Category editedCategory = new StringCategory(((Listing)bundle.get("listing")).getCategory());
+                Category editedCategory = new NodeCategory(((Listing)bundle.get("listing")).getCategory());
                 subSpinner.setSelection(traversingCategory.indexOf(traversingCategory.getSubCategoryContaining(editedCategory))+1);
                 this.traversingCategory = traversingCategory.getSubCategoryContaining(editedCategory);
             }
@@ -89,7 +89,7 @@ class CategoryManager {
 
     private List<Category> categoriesWithDefaultText(List<Category> categories){
         List<Category> categoriesWithDefText = new ArrayList<>(categories);
-        categoriesWithDefText.add(0, new StringCategory(activity.getResources().getString(R.string.default_spinner_text)));
+        categoriesWithDefText.add(0, new NodeCategory(activity.getResources().getString(R.string.default_spinner_text)));
         return categoriesWithDefText;
     }
 }

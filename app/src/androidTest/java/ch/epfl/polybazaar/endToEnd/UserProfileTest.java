@@ -5,8 +5,10 @@ import android.app.Activity;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.util.Collection;
 
@@ -29,7 +31,6 @@ import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-
 public class UserProfileTest {
 
     private static Authenticator authenticator;

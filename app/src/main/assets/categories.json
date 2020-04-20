@@ -1,0 +1,25 @@
+{
+  "Furniture" : [
+    "Desk",
+    "Shelf",
+    "Bed"
+  ],
+  "Multimedia" : [
+    {
+      "Television" : [
+        "DVD player",
+        "Bluray player",
+        "TV screens"]
+    },
+    {
+      "Video games" : [
+        "Sony",
+        "Microsoft",
+        {"Nintendo" : ["Gamecube", "Nintendo 64", "Wii", "Wii U", {"Nintendo Switch" : ["Game", "Console", "Accessory"]}]}]
+    }],
+  "Book" : [
+    "Cooking",
+    "Litterature",
+    "Engineering"],
+  "Others" : []
+}
