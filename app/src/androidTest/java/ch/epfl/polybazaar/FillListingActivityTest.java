@@ -153,22 +153,6 @@ public class FillListingActivityTest {
     }
 
     @Test
-    public void testFreeSwitchFreezesPriceSelector() {
-        onView(withId(R.id.freeSwitch)).perform(scrollTo(), click());
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
-        onView(withId(R.id.priceSelector)).check(matches(withText("0.0")));
-    }
-
-    @Test
-    public void testPriceSelectorRemembersPriceAfterFreeSwitchDisabled() {
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123.45"));
-        onView(withId(R.id.freeSwitch)).perform(click());
-        onView(withId(R.id.priceSelector)).check(matches(withText("0.0")));
-        onView(withId(R.id.freeSwitch)).perform(click());
-        onView(withId(R.id.priceSelector)).check(matches(withText("123.45")));
-    }
-
-    @Test
     public void testUploadPictureCorrectly(){
         galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
         uploadImage();
@@ -521,8 +505,13 @@ public class FillListingActivityTest {
     }
 
     private void selectCategory(String cat){
+        /**
+         * TODO : complete with new category selection activity
+         */
+        /*
         onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
         onData(hasToString(cat)).perform(click());
+         */
     }
     private void fillListing() throws Throwable {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
