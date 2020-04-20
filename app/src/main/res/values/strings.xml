@@ -15,13 +15,10 @@
     <string name="verification_email_fail">Unable to send verification e-mail</string>
     <string name="reload_fail">Unable to reload</string>
     <string name="contact_the_seller">Contact the seller</string>
-    <string name="price">Price</string>
-    <string name="description">Description</string>
     <string name="titre">Titre</string>
     <string name="sales_overview">Sales overview</string>
     <string name="add_new_listing">Add new listing</string>
     <string name="sign_in">Sign in</string>
-    <string name="category">Category</string>
     <string name="sign_out">Sign out</string>
     <string name="sign_in_required">You have to sign in to use that functionality</string>
     <string name="welcome_message">Welcome to PolyBazaar!</string>
@@ -66,4 +63,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="listing_title">Listing title</string>
+    <string name="category">Category</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="upload_image">upload image</string>
+    <string name="take_a_picture">Take a picture</string>
+    <string name="loading">LOADING</string>
+    <string name="meeting_point">Meeting Point</string>
 </resources>

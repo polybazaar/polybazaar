@@ -8,10 +8,11 @@
     tools:context=".filllisting.FillListingActivity">
 
     <ScrollView
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_marginStart="@dimen/general_margin"
-        android:layout_marginEnd="@dimen/general_margin">
+        android:layout_marginEnd="@dimen/general_margin"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:id="@+id/fillListingLinearLayout"
@@ -24,30 +25,34 @@
                 android:layout_height="match_parent">
 
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:id="@+id/setFirst"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/move_first"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:textSize="12sp"/>
 
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:id="@+id/rotateLeft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rotate_left"
                     android:textSize="12sp"
-                    android:visibility="invisible"/>
+                    android:visibility="visible"/>
 
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:id="@+id/deleteImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/delete_image"
                     android:textSize="12sp"
-                    android:visibility="invisible"/>
+                    android:visibility="visible"/>
 
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:id="@+id/modifyImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -62,7 +67,7 @@
                 android:layout_height="@dimen/viewpager_height"
                 android:layout_marginTop="@dimen/viewpager_margin"
                 android:clickable="true"
-                android:focusable="true"/>
+                android:focusable="true" />
 
             <TableRow
                 android:layout_width="match_parent"
@@ -77,7 +82,8 @@
                     android:id="@+id/camera"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Take a picture" />
+                    android:text="@string/take_a_picture"
+                    android:textSize="@dimen/default_button_text_size"/>
 
                 <Space
                     android:layout_width="wrap_content"
@@ -88,7 +94,8 @@
                     android:id="@+id/uploadImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="upload image" />
+                    android:text="@string/upload_image"
+                    android:textSize="@dimen/default_button_text_size"/>
 
             </TableRow>
 
@@ -96,111 +103,131 @@
                 android:id="@+id/titleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Listing title"
-                android:textSize="20sp" />
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:text="@string/listing_title"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/titleSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fillListing_inter_space_small"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:importantForAutofill="no"
+                tools:ignore="LabelFor" />
 
             <TextView
-                android:id="@+id/categoryTextCiew"
+                android:id="@+id/categoryTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Category"
-                android:textSize="20sp" />
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:text="@string/category"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/categorySelector"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fillListing_inter_space_small"/>
 
             <TextView
                 android:id="@+id/descriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description"
-                android:textSize="20sp" />
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:text="@string/description"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/descriptionSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginTop="@dimen/fillListing_inter_space_small"
                 android:ems="10"
                 android:gravity="start|top"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:importantForAutofill="no"
+                tools:ignore="LabelFor" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/priceTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Price"
-                    android:textSize="20sp" />
-
-                <Space
-                    android:layout_width="22dp"
-                    android:layout_height="10dp"
-                    android:layout_weight="1" />
-
-                <Switch
-                    android:id="@+id/freeSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="@dimen/offset"
-                    android:text="Free"
-                    android:textSize="20sp" />
-
-                <Space
-                    android:layout_width="214dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/priceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:text="@string/price"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/priceSelector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginTop="@dimen/fillListing_inter_space_small"
                 android:ems="10"
-                android:inputType="numberDecimal" />
-
-            <Button
-                android:id="@+id/addMP"
+                android:inputType="numberDecimal"
+                android:importantForAutofill="no"
+                tools:ignore="LabelFor" />
+            <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/add_MP" />
+                android:layout_marginTop="@dimen/fillListing_inter_space_extra_large">
 
-            <TextView
-                android:id="@+id/meetingPointStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/MP_nok" />
+                <TextView
+                    android:id="@+id/setMeetingPointTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.1"
+                    android:text="@string/meeting_point"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/addMP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_weight="0.01"
+                    android:textSize="@dimen/small_button_text_size"
+                    android:text="@string/add_MP" />
+            </TableRow>
 
             <Button
                 android:id="@+id/submitListing"
-                android:layout_width="match_parent"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/submit_listing" />
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/fillListing_inter_space_extra_large"
+                android:layout_marginBottom="@dimen/fillListing_inter_space_extra_large"
+                android:background="@drawable/rounded_corner"
+                android:backgroundTint="@color/colorAccent"
+                android:text="@string/submit_listing"
+                android:textColor="@color/pureWhite"
+                android:textSize="@dimen/large_button_text_size" />
 
             <ImageView
                 android:id="@+id/picturePreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"/>
-
+                android:visibility="invisible"
+                android:contentDescription="@string/loading" />
 
         </LinearLayout>
     </ScrollView>

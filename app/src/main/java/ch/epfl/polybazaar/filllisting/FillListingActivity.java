@@ -64,14 +64,11 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private Button submitListing;
     private Button addMP;
     private ImageView pictureView;
-    private Switch freeSwitch;
     private TextView titleSelector;
-    private TextView meetingPointStatus;
     private EditText descriptionSelector;
     private EditText priceSelector;
     private Spinner categorySelector;
     private List<Spinner> spinnerList;
-    private String oldPrice;
     private List<String> listStringImage;
     //only used for edit to delete all images
     private List<String> listImageID;
@@ -96,14 +93,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         deleteImage = findViewById(R.id.deleteImage);
         modifyImage = findViewById(R.id.modifyImage);
         camera = findViewById(R.id.camera);
-        freeSwitch = findViewById(R.id.freeSwitch);
         uploadImage = findViewById(R.id.uploadImage);
         submitListing = findViewById(R.id.submitListing);
         titleSelector = findViewById(R.id.titleSelector);
         descriptionSelector = findViewById(R.id.descriptionSelector);
         priceSelector = findViewById(R.id.priceSelector);
         addMP = findViewById(R.id.addMP);
-        meetingPointStatus = findViewById(R.id.meetingPointStatus);
         pictureView = findViewById(R.id.picturePreview);
         categorySelector = findViewById(R.id.categorySelector);
         spinnerList = new ArrayList<>();
@@ -153,12 +148,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                     lng = data.getDoubleExtra(LNG, NOLNG);
                     lat = data.getDoubleExtra(LAT, NOLAT);
                     addMP.setText(R.string.change_MP);
-                    meetingPointStatus.setText(R.string.MP_ok);
                 } else {
                     lng = NOLNG;
                     lat = NOLAT;
                     addMP.setText(R.string.add_MP);
-                    meetingPointStatus.setText(R.string.MP_nok);
                 }
             }
         }
@@ -166,7 +159,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     private void addListeners(boolean edit){
         camera.setOnClickListener(v -> checkCameraPermission());
-        freeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> freezePriceSelector(isChecked));
         uploadImage.setOnClickListener(v -> imageManager.uploadImage());
         addMP.setOnClickListener(v -> {
             Intent defineMP = new Intent(this, MapsActivity.class);
@@ -197,20 +189,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             submitListing.setText(R.string.edit);
             submitListing.setOnClickListener(v ->
                     listingManager.deleteOldListingAndSubmitNewOne(spinnerList, listStringImage, stringThumbnail, lat, lng, listImageID));
-        }
-    }
-
-    private void freezePriceSelector(boolean isChecked){
-        if(isChecked){
-            if(priceSelector.getText().length() > 0) {
-                oldPrice = priceSelector.getText().toString();
-            }
-            priceSelector.setFocusable(false);
-            priceSelector.setText(Double.toString(0.00));
-        }
-        else{
-            priceSelector.setFocusableInTouchMode(true);
-            priceSelector.setText(oldPrice);
         }
     }
 
@@ -249,7 +227,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         imageManager.retrieveAllImages(listStringImage, listImageID, listingID);
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
-        freeSwitch.setChecked(listing.getPrice().equals("0.0"));
         priceSelector.setText(listing.getPrice());
         Category editedCategory = new StringCategory(listing.getCategory());
         traversingCategory = CategoryRepository.getCategoryContaining(editedCategory);
@@ -258,7 +235,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         lng = listing.getLongitude();
         if (lat != NOLAT && lng != NOLNG) {
             addMP.setText(R.string.change_MP);
-            meetingPointStatus.setText(R.string.MP_ok);
         }
         return true;
     }
