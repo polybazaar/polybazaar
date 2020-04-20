@@ -11,7 +11,6 @@ import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.testingUtilities.DatabaseChecksUtilities;
-import ch.epfl.polybazaar.testingUtilities.SignInUtilities;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -21,12 +20,11 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.polybazaar.category.RootCategoryFactory.useMockCategory;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
-import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.signInWithFromMainActivity;
 import static ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities.storeNewListing;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNot.not;
+import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.signInWithFromMainActivity;
+
 
 public class EditAndDeleteTest {
 
@@ -38,6 +36,7 @@ public class EditAndDeleteTest {
                 protected void beforeActivityLaunched() {
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                     useMockDataStore();
+                    useMockCategory();
                 }
                 @Override
                 protected void afterActivityFinished() {
@@ -75,7 +74,7 @@ public class EditAndDeleteTest {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText(), typeText(newTitle));
         closeSoftKeyboard();
         onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
-        onView(withText("Furniture")).perform(scrollTo(), click());
+        onView(withText("Others")).perform(scrollTo(), click());
         onView(withId(R.id.submitListing)).perform(scrollTo(), click());
 
         DatabaseChecksUtilities.assertDatabaseHasAtLeastOneEntryWithField(Listing.COLLECTION, "title", newTitle, Listing.class);

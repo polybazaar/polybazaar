@@ -1,12 +1,13 @@
 package ch.epfl.polybazaar.listing;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.listing.Listing;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
 public class ListingTest {
 
     private Listing listing1 = new Listing("Livre", "Livre d'algèbre linéaire", "22 CHF", "test.user@epfl.ch", "Furniture");
