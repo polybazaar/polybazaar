@@ -6,4 +6,5 @@
     <color name="pureWhite">#FFFFFF</color>
     <color name="pureBlack">#000000</color>
     <color name="grey">#858585</color>
+    <color name="almostWhite">#EFEFEF</color>
 </resources>
