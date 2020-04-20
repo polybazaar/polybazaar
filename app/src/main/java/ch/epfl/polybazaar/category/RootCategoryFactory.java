@@ -25,8 +25,15 @@ public class RootCategoryFactory {
      */
     public static void useJSONCategory(Context context) {
         if (dependency == null) {
-            dependency = RootCategory.getInstance(context);
+            dependency = JSONRootCategory.getInstance(context);
         }
+    }
+
+    /**
+     * Set the root category to null
+     */
+    public static void clear(){
+        dependency = null;
     }
 
 }

@@ -19,8 +19,8 @@ import java.util.List;
 
 import static java.lang.Math.max;
 
-public class RootCategory implements Category {
-    private static RootCategory root = null;
+public class JSONRootCategory implements Category {
+    private static JSONRootCategory root = null;
     private List<Category> nodes;
 
     /**
@@ -28,31 +28,31 @@ public class RootCategory implements Category {
      * @param context : application context
      * @return the root category, if JSON couldn't be parsed, return null
      */
-    public static RootCategory getInstance(Context context) {
+    public static JSONRootCategory getInstance(Context context) {
         if(root == null){
             try {
-                root = new RootCategory(context);
+                root = new JSONRootCategory(context);
             }
             catch (Exception e){
+                System.out.println("BUUUUUUUUUUUUUUUUUG");
                 root = null;
             }
         }
         return root;
     }
 
-    private RootCategory(Context context) throws IOException, JSONException {
+    private JSONRootCategory(Context context) throws IOException, JSONException {
         nodes = new ArrayList<>();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open("categories.json")));
-            String line = reader.readLine();
-            StringBuilder jsonBuilder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open("categories.json")));
 
-            while(line != null){
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while((line = reader.readLine()) != null){
                 jsonBuilder.append(line).append("\n");
-                line = reader.readLine();
             }
-            String json = jsonBuilder.toString();
-            JSONObject jsonObject = new JSONObject(new JSONTokener(json));
-            JSONToCategory(jsonObject, this);
+        String json = jsonBuilder.toString();
+        JSONObject jsonObject = new JSONObject(new JSONTokener(json));
+        JSONToCategory(jsonObject, this);
     }
 
 
