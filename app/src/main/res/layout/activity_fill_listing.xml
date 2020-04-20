@@ -124,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/fillListing_inter_space_small"
-                android:ems="10"
+                android:background="@drawable/boxed"
                 android:inputType="textPersonName"
                 android:importantForAutofill="no"
                 tools:ignore="LabelFor" />
@@ -144,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/fillListing_inter_space_small"
-                android:ems="10"
+                android:background="@drawable/boxed"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
                 android:importantForAutofill="no"
@@ -165,7 +165,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/fillListing_inter_space_small"
-                android:ems="10"
+                android:ems="6"
+                android:background="@drawable/boxed"
                 android:inputType="numberDecimal"
                 android:importantForAutofill="no"
                 tools:ignore="LabelFor" />
