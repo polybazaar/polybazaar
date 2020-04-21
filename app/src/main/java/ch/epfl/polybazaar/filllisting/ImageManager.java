@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
@@ -145,6 +146,14 @@ class ImageManager {
         });
     }
 
+    void updateViewPagerVisibility(List<String> listStringImage) {
+        if (listStringImage.isEmpty()) {
+            viewPager.setVisibility(View.GONE);
+        } else {
+            viewPager.setVisibility(View.VISIBLE);
+        }
+    }
+
     void setFirst(List<String> listStringImage) {
         int index = viewPager.getCurrentItem();
         if(index == 0) {
@@ -173,6 +182,7 @@ class ImageManager {
         if(listStringImage.size() > 0)
             listStringImage.remove(viewPager.getCurrentItem());
         drawImages(listStringImage);
+        updateViewPagerVisibility(listStringImage);
     }
 
 }

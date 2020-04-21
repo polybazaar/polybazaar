@@ -31,8 +31,8 @@ import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.map.MapsActivity;
+import ch.epfl.polybazaar.widgets.ImportImageDialog;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
-import ch.epfl.polybazaar.widgets.NotSignedIn;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
@@ -59,8 +59,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private ImageManager imageManager;
     private ListingManager listingManager;
     private CategoryManager categoryManager;
-    private Button uploadImage;
-    private Button camera;
+    private Button addImages;
+    private Button selectCategory;
     private Button submitListing;
     private Button addMP;
     private ImageView pictureView;
@@ -92,21 +92,30 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         rotateImageLeft = findViewById(R.id.rotateLeft);
         deleteImage = findViewById(R.id.deleteImage);
         modifyImage = findViewById(R.id.modifyImage);
-        camera = findViewById(R.id.camera);
-        uploadImage = findViewById(R.id.uploadImage);
+        addImages = findViewById(R.id.addImage);
         submitListing = findViewById(R.id.submitListing);
         titleSelector = findViewById(R.id.titleSelector);
         descriptionSelector = findViewById(R.id.descriptionSelector);
         priceSelector = findViewById(R.id.priceSelector);
+        selectCategory = findViewById(R.id.selectCategory);
         addMP = findViewById(R.id.addMP);
         pictureView = findViewById(R.id.picturePreview);
+
+        /**
+         * FOR TESTING PURPOSES ONLY:
+         */
         categorySelector = findViewById(R.id.categorySelector);
+
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
         RootCategoryFactory.useJSONCategory(this);
         categoryManager.setupSpinner(categorySelector, RootCategoryFactory.getDependency().subCategories() , spinnerList, traversingCategory);
         traversingCategory = categoryManager.getTraversingCategory();
         spinnerList = categoryManager.getSpinnerList();
+        /**
+         * ==========================
+         */
+
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
@@ -138,10 +147,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
             stringImage = convertBitmapToStringWithQuality(bitmap, QUALITY);
             imageManager.addImage(listStringImage, stringImage);
+            imageManager.updateViewPagerVisibility(listStringImage);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            stringImage = convertFileToStringWithQuality(imageManager.getPhotoFile(), QUALITY);
            imageManager.addImage(listStringImage, stringImage);
+           imageManager.updateViewPagerVisibility(listStringImage);
         }
         else if (requestCode == RESULT_ADD_MP) {
             if (data != null) {
@@ -159,8 +170,13 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     }
 
     private void addListeners(boolean edit){
-        camera.setOnClickListener(v -> checkCameraPermission());
-        uploadImage.setOnClickListener(v -> imageManager.uploadImage());
+        addImages.setOnClickListener(v -> {
+            ImportImageDialog dialog = new ImportImageDialog();
+            dialog.show(getSupportFragmentManager(), "select image import");
+        });
+        selectCategory.setOnClickListener(v -> {
+            // TODO : open category selection activity
+        });
         addMP.setOnClickListener(v -> {
             Intent defineMP = new Intent(this, MapsActivity.class);
             defineMP.putExtra(GIVE_LAT_LNG, false);
@@ -203,12 +219,18 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 startActivity(SalesOverviewIntent);
             }
         }
+        if (dialog instanceof ImportImageDialog) {
+            checkCameraPermission();
+        }
     }
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
         if(dialog instanceof NoConnectionForListingDialog){
             //do nothing
+        }
+        if (dialog instanceof ImportImageDialog) {
+            imageManager.uploadImage();
         }
     }
 
@@ -229,15 +251,23 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
         priceSelector.setText(listing.getPrice());
-        Category editedCategory = new NodeCategory(listing.getCategory());
-        Category root = RootCategoryFactory.getDependency();
-        traversingCategory = root.getSubCategoryContaining(editedCategory);
-        categorySelector.setSelection(root.indexOf(traversingCategory)+1);
         lat = listing.getLatitude();
         lng = listing.getLongitude();
         if (lat != NOLAT && lng != NOLNG) {
             addMP.setText(R.string.change_MP);
         }
+
+        /**
+         * FOR TESTING PURPOSES ONLY:
+         */
+        Category editedCategory = new NodeCategory(listing.getCategory());
+        Category root = RootCategoryFactory.getDependency();
+        traversingCategory = root.getSubCategoryContaining(editedCategory);
+        categorySelector.setSelection(root.indexOf(traversingCategory)+1);
+        /**
+         * ==========================
+         */
+
         return true;
     }
 
@@ -266,9 +296,9 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     }
 
     /**
-     * return the current StringImage displayed or null if there is no image
-     * @return
+     * FOR TESTING PURPOSES ONLY:
      */
+    // @return the current StringImage displayed or null if there is no image
     public String getCurrentStringImage() {
         if(listStringImage.size() > 0) {
             return listStringImage.get(((ViewPager2)findViewById(R.id.viewPager)).getCurrentItem());
@@ -276,5 +306,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             return null;
         }
     }
+    /**
+     * ==========================
+     */
 
 }

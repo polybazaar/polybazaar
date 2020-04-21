@@ -21,10 +21,34 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
+
+            <Button
+                android:id="@+id/addImage"
+                style="@android:style/Widget.Material.Light.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:background="@drawable/rounded_corner_button_red"
+                android:textColor="@color/pureWhite"
+                android:text="@string/add_image"
+                android:textSize="@dimen/default_button_text_size" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/viewpager_height"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"/>
+
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large">
 
                 <Button
                     style="?android:attr/buttonBarButtonStyle"
@@ -62,53 +86,6 @@
                     android:visibility="visible" />
 
             </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <Button
-                    android:id="@+id/camera"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/take_a_picture"
-                    android:textSize="@dimen/small_button_text_size"/>
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <Button
-                    android:id="@+id/uploadImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/upload_image"
-                    android:textSize="@dimen/small_button_text_size"/>
-
-            </TableRow>
-
-            <Button
-                android:id="@+id/addImages"
-                style="@android:style/Widget.Material.Light.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large"
-                android:background="@drawable/rounded_corner_button_red"
-                android:textColor="@color/pureWhite"
-                android:text="@string/add_images"
-                android:textSize="@dimen/default_button_text_size" />
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/viewpager_height"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="visible"/>
 
             <TextView
                 android:id="@+id/titleTextView"

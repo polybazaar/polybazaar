@@ -12,34 +12,43 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiSelector;
 
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -51,12 +60,15 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.polybazaar.category.RootCategoryFactory.useMockCategory;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
@@ -134,14 +146,14 @@ public class FillListingActivityTest {
     @BeforeClass
     public static void setupStubIntent(){
 
-        Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
+        Resources resources = getInstrumentation().getTargetContext().getResources();
         imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 resources.getResourcePackageName(R.mipmap.ic_launcher) + '/' +
                 resources.getResourceTypeName(R.mipmap.ic_launcher) + '/' +
                 resources.getResourceEntryName(R.mipmap.ic_launcher));
 
         imageBitmap = BitmapFactory.decodeResource(
-                InstrumentationRegistry.getInstrumentation().getTargetContext().getResources(),
+                getInstrumentation().getTargetContext().getResources(),
                 R.mipmap.ic_launcher);
 
         galleryIntent = new Intent();
@@ -333,16 +345,38 @@ public class FillListingActivityTest {
         Intents.init();
         expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intending(expectedCameraIntent).respondWith(cameraResult);
-
-        runOnUiThread(() -> {
-            Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.camera);
-            but.performClick();
-        });
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.addImage).performClick());
+        ViewInteraction appCompatButton2 = onView(
+                Matchers.allOf(withId(android.R.id.button1), withText(R.string.camera),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.ScrollView")),
+                                        0),
+                                3)));
+        appCompatButton2.perform(scrollTo(), click());
         fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         intended(expectedCameraIntent);
         Intents.release();
     }
 
+    private static Matcher<View> childAtPosition(
+            final Matcher<View> parentMatcher, final int position) {
+
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Child at position " + position + " in parent ");
+                parentMatcher.describeTo(description);
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                ViewParent parent = view.getParent();
+                return parent instanceof ViewGroup && parentMatcher.matches(parent)
+                        && view.equals(((ViewGroup) parent).getChildAt(position));
+            }
+        };
+    }
 
     @Test
     public void DialogAppearsWhenNoConnection() throws Throwable {
@@ -366,14 +400,12 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        Thread.sleep(SLEEP_TIME);
         runOnUiThread(() -> {
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
             AlertDialog dialog = (AlertDialog) dialogFragment.getDialog();
             Button posButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
             posButton.performClick();
         });
-        Thread.sleep(SLEEP_TIME);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
         useRealNetwork();
@@ -388,13 +420,11 @@ public class FillListingActivityTest {
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(SLEEP_TIME);
         runOnUiThread(() -> {
-
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
             AlertDialog dialog = (AlertDialog) dialogFragment.getDialog();
             Button negButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
             negButton.performClick();
         });
-
         Thread.sleep(SLEEP_TIME);
         hasComponent(FillListingActivity.class.getName());
         Intents.release();
@@ -450,8 +480,17 @@ public class FillListingActivityTest {
         intending(expectedGalleryIntent).respondWith(galleryResult);
         try {
             runOnUiThread(() -> {
-                fillSaleActivityTestRule.getActivity().findViewById(R.id.uploadImage).performClick();
+                fillSaleActivityTestRule.getActivity().findViewById(R.id.addImage).performClick();
             });
+            Thread.sleep(SLEEP_TIME);
+            ViewInteraction appCompatButton2 = onView(
+                    Matchers.allOf(withId(android.R.id.button2), withText(R.string.library),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withClassName(is("android.widget.ScrollView")),
+                                            0),
+                                    2)));
+            appCompatButton2.perform(scrollTo(), click());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -460,7 +499,7 @@ public class FillListingActivityTest {
     }
 
     private void uploadMultipleImages() {
-        Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
+        Resources resources = getInstrumentation().getTargetContext().getResources();
         imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 resources.getResourcePackageName(R.drawable.bicycle) + '/' +
                 resources.getResourceTypeName(R.drawable.bicycle) + '/' +
