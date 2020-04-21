@@ -24,8 +24,6 @@ android:orientation="vertical" >
         android:layout_marginEnd="@dimen/map_margin">
 
 
-
-
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +45,6 @@ android:orientation="vertical" >
 
             <Button
                 android:id="@+id/confirmMP"
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -55,7 +52,26 @@ android:orientation="vertical" >
                 android:layout_marginBottom="@dimen/button_shadow_margin"
                 android:background="@drawable/rounded_corner_button_red"
                 android:text="@string/confirm_MP"
-                android:textSize="@dimen/default_button_text_size" />
+                android:textSize="@dimen/default_button_text_size"
+                android:textColor="@color/pureWhite"/>
+
+            <Space
+                android:layout_width="@dimen/offset"
+                android:layout_height="wrap_content"
+                />
+
+            <Button
+                android:id="@+id/removeMP"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/button_shadow_margin"
+                android:layout_marginBottom="@dimen/button_shadow_margin"
+                android:background="@drawable/rounded_corner_button_red"
+                android:text="@string/remove_meeting_point"
+                android:textSize="@dimen/default_button_text_size"
+                android:textColor="@color/pureWhite"/>
         </TableRow>
 
     </LinearLayout>

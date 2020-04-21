@@ -86,6 +86,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double chosenLat = NOLAT;
     private boolean locationAvailability = false;
 
+    private Button removeMP;
+
     // in showMode, the user cannot select a meeting point
     private boolean showMode = true;
     private Intent returnIntent;
@@ -108,6 +110,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+        removeMP = findViewById(R.id.removeMP);
     }
 
 
@@ -224,21 +227,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void DefineMode(){
         findViewById(R.id.confirmMP).setVisibility(View.VISIBLE);
-        map.setOnMapClickListener(latLng -> {
-            if (meetingPointSet) {
-                map.clear();
-                chosenLat = NOLAT;
-                chosenLng = NOLNG;
-                meetingPointSet = false;
-                showToast(false);
-            }
+        removeMP.setOnClickListener(v -> {
+            removeMP.setVisibility(View.GONE);
+            map.clear();
+            chosenLat = NOLAT;
+            chosenLng = NOLNG;
+            meetingPointSet = false;
+            showToast(false);
         });
-        map.setOnMapLongClickListener(latLng -> {
+        map.setOnMapClickListener(latLng -> {
             map.clear();
             map.addMarker(new MarkerOptions().position(latLng).title("Meeting Point"));
             chosenLat = latLng.latitude;
             chosenLng = latLng.longitude;
             meetingPointSet = true;
+            removeMP.setVisibility(View.VISIBLE);
             showToast(true);
         });
     }
