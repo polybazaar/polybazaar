@@ -277,7 +277,6 @@ public class FillListingActivityTest {
         uploadMultipleImages();
         String firstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
         runOnUiThread(() -> {
-            fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).performClick();
         });
@@ -293,7 +292,6 @@ public class FillListingActivityTest {
 
         String beforeRotationImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
         runOnUiThread(() -> {
-            fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.rotate).performClick();
         });
@@ -307,14 +305,12 @@ public class FillListingActivityTest {
         uploadImage();
         //this do nothing because there only one image
         runOnUiThread(() -> {
-            fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.setMain).performClick();
         });
         uploadMultipleImages();
         String firstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
         runOnUiThread(() -> {
-            fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.setMain).performClick();
         });
