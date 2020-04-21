@@ -76,7 +76,8 @@
     <string name="none">none</string>
     <string name="default_not_logged_in_message">Please sign in to use this feature</string>
     <string name="sign_up">Sign Up</string>
-    <string name="dialog_add_image">Import image from:</string>
+    <string name="dialog_add_image">Import image from</string>
     <string name="camera">Camera</string>
     <string name="library">Library</string>
+    <string name="not_implemented">Unavailable</string>
 </resources>

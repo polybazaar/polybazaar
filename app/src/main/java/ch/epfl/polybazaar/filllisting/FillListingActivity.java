@@ -173,6 +173,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         });
         selectCategory.setOnClickListener(v -> {
             // TODO : open category selection activity
+            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
         });
         addMP.setOnClickListener(v -> {
             Intent defineMP = new Intent(this, MapsActivity.class);
