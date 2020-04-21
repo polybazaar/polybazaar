@@ -52,10 +52,9 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     public static final int RESULT_ADD_MP = 3;
     private final int QUALITY = 10;
 
-    private Button setImageFirst;
-    private Button rotateImageLeft;
+    private Button setMainImage;
+    private Button rotateImage;
     private Button deleteImage;
-    private Button modifyImage;
     private ImageManager imageManager;
     private ListingManager listingManager;
     private CategoryManager categoryManager;
@@ -88,10 +87,9 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         imageManager = new ImageManager(this);
         listingManager = new ListingManager(this);
         categoryManager = new CategoryManager(this);
-        setImageFirst = findViewById(R.id.setFirst);
-        rotateImageLeft = findViewById(R.id.rotateLeft);
+        setMainImage = findViewById(R.id.setMain);
+        rotateImage = findViewById(R.id.rotate);
         deleteImage = findViewById(R.id.deleteImage);
-        modifyImage = findViewById(R.id.modifyImage);
         addImages = findViewById(R.id.addImage);
         submitListing = findViewById(R.id.submitListing);
         titleSelector = findViewById(R.id.titleSelector);
@@ -144,7 +142,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 Toast.makeText(this, R.string.unable_load_image, Toast.LENGTH_SHORT).show();
                 return;
             }
-
             stringImage = convertBitmapToStringWithQuality(bitmap, QUALITY);
             imageManager.addImage(listStringImage, stringImage);
             imageManager.updateViewPagerVisibility(listStringImage);
@@ -184,16 +181,9 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             defineMP.putExtra(LNG, lng);
             startActivityForResult(defineMP, RESULT_ADD_MP);
         });
-        setImageFirst.setOnClickListener(v -> imageManager.setFirst(listStringImage));
-        rotateImageLeft.setOnClickListener(v -> imageManager.rotateLeft(listStringImage));
+        setMainImage.setOnClickListener(v -> imageManager.setFirst(listStringImage));
+        rotateImage.setOnClickListener(v -> imageManager.rotateLeft(listStringImage));
         deleteImage.setOnClickListener(v -> imageManager.deleteImage(listStringImage));
-        modifyImage.setOnClickListener(v -> {
-            if (setImageFirst.getVisibility() == View.INVISIBLE) {
-                showImagesButtons();
-            } else {
-                hideImagesButtons();
-            }
-        });
         if(!edit){
             submitListing.setOnClickListener(v -> {
                 if (!listingManager.submit(spinnerList, listStringImage, stringThumbnail, lat, lng)) {
@@ -284,14 +274,14 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     }
 
     private void hideImagesButtons() {
-        setImageFirst.setVisibility(View.INVISIBLE);
-        rotateImageLeft.setVisibility(View.INVISIBLE);
+        setMainImage.setVisibility(View.INVISIBLE);
+        rotateImage.setVisibility(View.INVISIBLE);
         deleteImage.setVisibility(View.INVISIBLE);
     }
 
     private void showImagesButtons() {
-        setImageFirst.setVisibility(View.VISIBLE);
-        rotateImageLeft.setVisibility(View.VISIBLE);
+        setMainImage.setVisibility(View.VISIBLE);
+        rotateImage.setVisibility(View.VISIBLE);
         deleteImage.setVisibility(View.VISIBLE);
     }
 

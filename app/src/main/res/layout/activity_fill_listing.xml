@@ -21,8 +21,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-
             <Button
                 android:id="@+id/addImage"
                 style="@android:style/Widget.Material.Light.Button"
@@ -45,45 +43,64 @@
                 android:visibility="gone"/>
 
             <TableRow
+                android:id="@+id/editButtons"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 android:layout_marginTop="@dimen/fillListing_inter_space_large">
 
-                <Button
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:id="@+id/setFirst"
+                <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/setMain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_shadow_margin"
+                    android:layout_marginBottom="@dimen/button_shadow_margin"
+                    android:background="@drawable/rounded_corner_button_grey"
                     android:text="@string/move_first"
                     android:visibility="visible"
                     android:textSize="12sp"/>
 
-                <Button
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:id="@+id/rotateLeft"
+                <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/rotate_left"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/rotate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_shadow_margin"
+                    android:layout_marginBottom="@dimen/button_shadow_margin"
+                    android:background="@drawable/rounded_corner_button_grey"
+                    android:text="@string/rotate"
                     android:textSize="12sp"
                     android:visibility="visible"/>
 
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
                 <Button
-                    style="?android:attr/buttonBarButtonStyle"
                     android:id="@+id/deleteImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_shadow_margin"
+                    android:layout_marginBottom="@dimen/button_shadow_margin"
+                    android:background="@drawable/rounded_corner_button_grey"
                     android:text="@string/delete_image"
                     android:textSize="12sp"
                     android:visibility="visible"/>
 
-                <Button
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:id="@+id/modifyImage"
+                <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/modify_image"
-                    android:visibility="visible" />
+                    android:layout_weight="1" />
 
             </TableRow>
 

@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
@@ -35,6 +37,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 class ImageManager {
 
     private ViewPager2 viewPager;
+    private TableRow editButtons;
     private Activity activity;
     private File photoFile;
 
@@ -46,6 +49,7 @@ class ImageManager {
     private void imageManagerFindViews() {
         if (activity != null) {
             viewPager = activity.findViewById(R.id.viewPager);
+            editButtons = activity.findViewById(R.id.editButtons);
         }
     }
 
@@ -147,10 +151,12 @@ class ImageManager {
     }
 
     void updateViewPagerVisibility(List<String> listStringImage) {
-        if (listStringImage.isEmpty()) {
+        if (listStringImage == null || listStringImage.isEmpty()) {
             viewPager.setVisibility(View.GONE);
+            editButtons.setVisibility(View.GONE);
         } else {
             viewPager.setVisibility(View.VISIBLE);
+            editButtons.setVisibility(View.VISIBLE);
         }
     }
 

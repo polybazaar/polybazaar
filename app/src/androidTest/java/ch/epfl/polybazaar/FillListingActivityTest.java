@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -23,12 +22,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiSelector;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Description;
@@ -43,7 +38,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
@@ -60,7 +54,6 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
-import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
@@ -302,7 +295,7 @@ public class FillListingActivityTest {
         runOnUiThread(() -> {
             fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
-            fillSaleActivityTestRule.getActivity().findViewById(R.id.rotateLeft).performClick();
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.rotate).performClick();
         });
         String afterRotationImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
 
@@ -316,14 +309,14 @@ public class FillListingActivityTest {
         runOnUiThread(() -> {
             fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
-            fillSaleActivityTestRule.getActivity().findViewById(R.id.setFirst).performClick();
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.setMain).performClick();
         });
         uploadMultipleImages();
         String firstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
         runOnUiThread(() -> {
             fillSaleActivityTestRule.getActivity().findViewById(R.id.modifyImage).performClick();
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
-            fillSaleActivityTestRule.getActivity().findViewById(R.id.setFirst).performClick();
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.setMain).performClick();
         });
         String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
         //check that it's equal because viewPager show the first image
