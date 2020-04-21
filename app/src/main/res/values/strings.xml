@@ -32,7 +32,7 @@
     <string name="permission_required_toast">Permission Required</string>
     <string name="permission_rationale_location">Permission Rationale Location</string>
     <string name="my_location">Find my location</string>
-    <string name="add_MP">Define Meeting Point</string>
+    <string name="add_MP">Define A Meeting Point</string>
     <string name="change_MP">Change/Remove Meeting Point</string>
     <string name="submit_listing">Submit Listing</string>
     <string name="see_MP">See Meeting Point</string>
@@ -74,4 +74,5 @@
     <string name="add_images">Add Images</string>
     <string name="select_a_category">Select a category</string>
     <string name="currency">CHF</string>
+    <string name="none">none</string>
 </resources>
