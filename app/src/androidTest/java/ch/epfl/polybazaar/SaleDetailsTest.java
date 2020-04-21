@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar;
 
 import android.content.Intent;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.test.rule.ActivityTestRule;
@@ -9,13 +10,12 @@ import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.polybazaar.UI.SaleDetails;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -26,8 +26,6 @@ import ch.epfl.polybazaar.user.User;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
@@ -38,6 +36,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class SaleDetailsTest {
+    public static final float DELTA = 0.1f;
     private static final int TOAST_LONG_DELAY = 3500;
     private final int SLEEP_TIME = 2000;
 
@@ -116,7 +115,7 @@ public class SaleDetailsTest {
     }
 
     @Test
-    public void favoriteButtonIsDisabledForUnauthenticatedUsers() throws ExecutionException, InterruptedException {
+    public void favoriteButtonIsDisabledForUnauthenticatedUsers() throws Throwable {
 
         Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
 
@@ -127,11 +126,11 @@ public class SaleDetailsTest {
 
         activityRule.launchActivity(intent);
 
-        onView(withText(R.string.add_favorite)).check(matches(not(isEnabled())));
+        runOnUiThread(() -> assertEquals(0f, ((RatingBar)activityRule.getActivity().findViewById(R.id.ratingBar2)).getRating(), DELTA));
     }
 
     @Test
-    public void favoriteButtonChangesFavorites() throws ExecutionException, InterruptedException {
+    public void favoriteButtonChangesFavorites() throws Throwable {
         Authenticator auth = AuthenticatorFactory.getDependency();
 
         Tasks.await(auth.createUser("user.test@epfl.ch", "usert", "abcdef"));
@@ -145,14 +144,14 @@ public class SaleDetailsTest {
 
         activityRule.launchActivity(intent);
 
-        onView(withText(R.string.add_favorite)).perform(click());
+        runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.ratingBar2).performClick());
 
         // we fetch after each click to make sure the data is actually saved to mock db
         User.fetch(MockAuthenticator.TEST_USER_EMAIL).addOnSuccessListener(user -> {
             assertTrue(user.getFavorites().contains(listing.getId()));
         });
 
-        onView(withText(R.string.remove_favorites)).perform(click());
+        runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.ratingBar2).performClick());
 
         User.fetch(MockAuthenticator.TEST_USER_EMAIL).addOnSuccessListener(user -> {
             assertFalse(user.getFavorites().contains(listing.getId()));

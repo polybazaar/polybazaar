@@ -16,7 +16,6 @@ import java.util.List;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.SaleDetails;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 

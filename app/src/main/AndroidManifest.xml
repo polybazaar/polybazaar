@@ -85,10 +85,10 @@
 
         <activity
             android:name=".ChatActivity"
-            android:parentActivityName=".SaleDetails"
+            android:parentActivityName=".UI.SaleDetails"
             android:label="Chat"/>
         <activity
-            android:name=".SaleDetails"
+            android:name=".UI.SaleDetails"
             android:parentActivityName=".UI.SalesOverview"
             android:exported="true"
             android:label="Details"/>

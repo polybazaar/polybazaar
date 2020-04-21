@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SaleDetails">
+    tools:context=".UI.SaleDetails">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -40,105 +40,151 @@
                     android:visibility="invisible" />
             </LinearLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPagerImageSlider"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/viewPager2_height"
+                android:layout_height="match_parent"
+                android:paddingBottom="16dp"
+                android:orientation="vertical">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPagerImageSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/viewPager2_height"
+                    android:background="@color/cardview_dark_background"
+                    android:visibility="invisible"/>
+
+                <ImageView
+                    android:id="@+id/loadingImage"
+                    android:layout_width="@dimen/loading_image_size"
+                    android:layout_height="@dimen/loading_image_size"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_launcher_background" />
+
+                <TextView
+                    android:id="@+id/pageNumber"
+                    android:layout_width="@dimen/page_number_width"
+                    android:layout_height="@dimen/page_number_height"
+                    android:alpha="0.5"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/page_number_margin_top"
+                    android:background="@drawable/rounded_corner"/>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/titre"
+                        android:textSize="30sp"
+                        android:visibility="invisible"
+                        android:layout_marginStart="@dimen/margin"/>
+
+                    <TextView
+                        android:id="@+id/price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/price"
+                        android:textSize="14sp"
+                        android:visibility="invisible"
+                        android:layout_marginStart="@dimen/margin"
+                        android:layout_marginTop="10dp"/>
+                </LinearLayout>
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.05"/>
+
+                <RatingBar
+                    android:id="@+id/ratingBar2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:isIndicator="true"
+                    android:clickable="true"
+                    android:numStars="1"
+                    android:focusable="true"
+                    android:visibility="invisible"
+                    android:layout_marginEnd="@dimen/margin"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/contactSel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin"
                 android:layout_marginTop="@dimen/margin"
-                android:layout_marginLeft="@dimen/margin"
-                android:layout_marginRight="@dimen/margin"/>
+                android:layout_marginEnd="@dimen/margin"
+                android:clickable="false"
+                android:text="@string/contact_the_seller"
+                android:textColor="@color/white"
+                android:visibility="invisible"
+                android:background="@color/colorPrimary"/>
 
-            <TextView
-                android:id="@+id/pageNumber"
-                android:layout_width="50dp"
-                android:layout_height="18dp"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginEnd="@dimen/margin"
                 android:alpha="0.7"
-                android:background="@drawable/rounded_corner" />
-
-            <ToggleButton
-                android:id="@+id/toggleFavoriteButton"
-                android:layout_width="216dp"
-                android:layout_height="wrap_content"
-                android:onClick="toggleFavorite"
-                android:text="ToggleButton"
-                android:textOff="@string/add_favorite"
-                android:textOn="@string/remove_favorites" />
+                android:background="@android:color/darker_gray"/>
 
             <TextView
-                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/titre"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="invisible"
-                android:layout_marginStart="20dp"/>
-
-            <TextView
-                android:id="@+id/category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/category"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="invisible"
-                android:layout_marginStart="20dp"/>
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginTop="@dimen/margin"
+                android:textSize="20sp"
+                android:text="@string/description"
+                />
 
             <TextView
                 android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:textSize="15sp"
                 android:text="@string/description"
                 android:visibility="invisible"
-                android:layout_marginStart="20dp"/>
+                android:layout_marginStart="@dimen/margin"/>
 
-            <TextView
-                android:id="@+id/price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/price"
-                android:textSize="14sp"
-                android:visibility="invisible"
-                android:layout_marginStart="20dp"/>
-
-            <Button
-                android:id="@+id/contactSel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="76dp"
-                android:clickable="false"
-                android:text="@string/contact_the_seller"
-                android:visibility="invisible" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginEnd="@dimen/margin"
+                android:alpha="0.7"
+                android:background="@android:color/darker_gray"/>
 
             <Button
                 android:id="@+id/viewMP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:text="@string/see_MP" />
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginTop="@dimen/margin"
+                android:text="@string/see_MP"
+                android:textColor="@color/white"
+                android:background="@color/colorPrimary"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/userEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
-                android:layout_marginStart="20dp"/>
-
-            <ImageView
-                android:id="@+id/loadingImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_launcher_background" />
-
-
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginTop="@dimen/margin"/>
         </LinearLayout>
     </ScrollView>
 
