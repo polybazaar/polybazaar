@@ -51,9 +51,9 @@ android:orientation="vertical" >
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/rounded_corner"
-                android:backgroundTint="@color/colorAccent"
-                android:stateListAnimator="@null"
+                android:layout_marginTop="@dimen/button_shadow_margin"
+                android:layout_marginBottom="@dimen/button_shadow_margin"
+                android:background="@drawable/rounded_corner_button_red"
                 android:text="@string/confirm_MP"
                 android:textSize="@dimen/default_button_text_size" />
         </TableRow>

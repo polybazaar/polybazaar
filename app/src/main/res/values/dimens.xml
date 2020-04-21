@@ -22,4 +22,8 @@
     <dimen name="sales_overview_top_menu_text_size">16sp</dimen>
     <dimen name="viewpager_height">251dp</dimen>
     <dimen name="viewpager_margin">16dp</dimen>
+    <dimen name="button_radius_default">5dp</dimen>
+    <dimen name="button_radius_large">10dp</dimen>
+    <dimen name="button_radius_small">3dp</dimen>
+    <dimen name="button_shadow_margin">4dp</dimen>
 </resources>
