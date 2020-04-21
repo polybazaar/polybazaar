@@ -183,7 +183,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void setupDefineMode() {
+    private void setupDefineMode() { 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Define Meeting Point");
         }
