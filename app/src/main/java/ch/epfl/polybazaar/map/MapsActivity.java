@@ -171,9 +171,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }));
             Button confirmMP = findViewById(R.id.confirmMP);
-            confirmMP.setOnClickListener(v -> {
-                sendResponse();
-            });
+            confirmMP.setOnClickListener(v -> sendResponse());
             map.setBuildingsEnabled(true);
             map.setIndoorEnabled(true);
             if (!showMode) {
@@ -197,6 +195,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             map.addMarker(new MarkerOptions().position(meetingPoint).title("Meeting Point"));
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, VILLAGE_ZOOM));
             meetingPointSet = true;
+            removeMP.setVisibility(View.VISIBLE);
         } else {
             goToEPFL();
             meetingPointSet = false;
