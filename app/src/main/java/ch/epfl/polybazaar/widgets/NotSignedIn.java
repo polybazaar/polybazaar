@@ -9,21 +9,23 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.login.SignInActivity;
 import ch.epfl.polybazaar.login.SignUpActivity;
 
-public class NotLoggedIn extends AppCompatActivity {
+public class NotSignedIn extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_not_logged_in);
-        findViewById(R.id.logInButton).setOnClickListener(v -> {
+        findViewById(R.id.signInButton).setOnClickListener(v -> {
             // TODO: launch the correct activity
             Intent target = new Intent(this, SignInActivity.class);
-            getParent().startActivity(target);
+            startActivity(target);
+            finish();
         });
         findViewById(R.id.signUpButton).setOnClickListener(v -> {
             // TODO: launch the correct activity
             Intent target = new Intent(this, SignUpActivity.class);
-            getParent().startActivity(target);
+            startActivity(target);
+            finish();
         });
     }
 }

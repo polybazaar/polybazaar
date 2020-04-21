@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +32,7 @@ import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
+import ch.epfl.polybazaar.widgets.NotSignedIn;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
