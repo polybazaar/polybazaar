@@ -36,9 +36,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class SaleDetailsTest {
-    public static final float DELTA = 0.1f;
     private static final int TOAST_LONG_DELAY = 3500;
-    private final int SLEEP_TIME = 2000;
+    public static final float DELTA = 0.1f;
 
     @Rule
     public final ActivityTestRule<SaleDetails> activityRule =

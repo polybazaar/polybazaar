@@ -42,6 +42,7 @@ import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 
 public class SaleDetails extends AppCompatActivity {
+    public static final int SIZE = 20;
     private Button editButton;
     private Button deleteButton;
     private AlertDialog deleteDialog;
@@ -251,7 +252,7 @@ public class SaleDetails extends AppCompatActivity {
                 //Set the price
                 TextView price_txt = findViewById(R.id.price);
                 price_txt.setVisibility(View.VISIBLE);
-                price_txt.setTextSize(20);
+                price_txt.setTextSize(SIZE);
                 price_txt.setText(String.format("CHF %s", listing.getPrice()));
 
                 Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
@@ -320,38 +321,19 @@ public class SaleDetails extends AppCompatActivity {
         }
     }
 
-
     private void showContactButton() {
         contactSelButton.setVisibility(View.VISIBLE);
         contactSelButton.setClickable(true);
     }
 
-
     /**
      * Adds the listing to favorites, or removes it from the user's favorites if it is already
      * a favorite
-     * @param view button that triggers the action
      */
-    public void toggleFavorite(View view) {
-        ToggleButton button = (ToggleButton) view;
-        Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
-
-        if (authUser != null) {
-            authUser.getUserData().addOnSuccessListener(user -> {
-                if (button.isChecked()) {
-                    user.addFavorite(listing);
-                } else {
-                    user.removeFavorite(listing);
-                }
-
-                user.save();
-            });
-        }
-    }
-
     public void favorite() {
         Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
 
+        //if it's 0 set 1 and vice versa
         ratingBar.setRating((ratingBar.getRating() + 1) % 2);
 
         //must be connected
