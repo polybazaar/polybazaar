@@ -209,6 +209,10 @@ public class FillListingActivityTest {
         Thread.sleep(SLEEP_TIME);
     }
 
+    /**
+     * Category should de optional and default to, say, none
+     */
+    /*
     @Test
     public void toastAppearsWhenNoCategoryIsSelected() throws Throwable {
         Thread.sleep(SLEEP_TIME);
@@ -218,8 +222,7 @@ public class FillListingActivityTest {
         submitListingAndCheckIncorrectToast();
         Thread.sleep(SLEEP_TIME);
     }
-
-
+     */
 
     @Test
     public void testNoPictureIsDisplayedWhenNoPictureIsTaken() throws Throwable {
@@ -280,8 +283,8 @@ public class FillListingActivityTest {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).performClick();
         });
+        Thread.sleep(SLEEP_TIME);
         String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
-
         //check that it delete last image
         assertNotEquals(newFirstImage, firstImage);
     }
@@ -289,14 +292,13 @@ public class FillListingActivityTest {
     @Test
     public void testRotateImage() throws Throwable {
         uploadMultipleImages();
-
         String beforeRotationImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.rotate).performClick();
         });
+        Thread.sleep(SLEEP_TIME);
         String afterRotationImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
-
         assertNotEquals(afterRotationImage, beforeRotationImage);
     }
 
@@ -308,18 +310,18 @@ public class FillListingActivityTest {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.setMain).performClick();
         });
+        Thread.sleep(SLEEP_TIME);
         uploadMultipleImages();
         String firstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.setMain).performClick();
         });
+        Thread.sleep(SLEEP_TIME);
         String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
         //check that it's equal because viewPager show the first image
         assertEquals(newFirstImage, firstImage);
-
         fillListing();
-
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(SLEEP_TIME);
@@ -343,7 +345,9 @@ public class FillListingActivityTest {
                                         0),
                                 3)));
         appCompatButton2.perform(scrollTo(), click());
+        Thread.sleep(SLEEP_TIME);
         fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        Thread.sleep(SLEEP_TIME);
         intended(expectedCameraIntent);
         Intents.release();
     }
@@ -389,12 +393,14 @@ public class FillListingActivityTest {
         useMockDataStore();
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
+        Thread.sleep(SLEEP_TIME);
         runOnUiThread(() -> {
             DialogFragment dialogFragment = (DialogFragment)fillSaleActivityTestRule.getActivity().getSupportFragmentManager().findFragmentByTag("noConnectionDialog");
             AlertDialog dialog = (AlertDialog) dialogFragment.getDialog();
             Button posButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
             posButton.performClick();
         });
+        Thread.sleep(SLEEP_TIME);
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
         useRealNetwork();
@@ -480,6 +486,7 @@ public class FillListingActivityTest {
                                             0),
                                     2)));
             appCompatButton2.perform(scrollTo(), click());
+            Thread.sleep(SLEEP_TIME);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -493,21 +500,16 @@ public class FillListingActivityTest {
                 resources.getResourcePackageName(R.drawable.bicycle) + '/' +
                 resources.getResourceTypeName(R.drawable.bicycle) + '/' +
                 resources.getResourceEntryName(R.drawable.bicycle));
-
         galleryIntent = new Intent();
         galleryIntent.setData(imageUri);
-
         galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
         uploadImage();
-
         imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 resources.getResourcePackageName(R.drawable.algebre_lin) + '/' +
                 resources.getResourceTypeName(R.drawable.algebre_lin) + '/' +
                 resources.getResourceEntryName(R.drawable.algebre_lin));
-
         galleryIntent = new Intent();
         galleryIntent.setData(imageUri);
-
         galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
         uploadImage();
     }
@@ -521,11 +523,11 @@ public class FillListingActivityTest {
                 but.performClick();
             }
         });
-
+        Thread.sleep(SLEEP_TIME);
         onView(withText(R.string.incorrect_fields))
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_TIME);
     }
 
     private void checkNoImageUploaded(){
@@ -541,6 +543,7 @@ public class FillListingActivityTest {
         onData(hasToString(cat)).perform(click());
          */
     }
+
     private void fillListing() throws Throwable {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
