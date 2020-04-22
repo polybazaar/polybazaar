@@ -10,10 +10,10 @@
 
     <LinearLayout
         android:id="@+id/salesOverviewTopMenu"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="@dimen/sales_overview_top_menu_height"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/searchOverview"
@@ -21,8 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="@dimen/overview_text_size"
-            android:text="@string/search" />
+            android:text="@string/select_category"
+            android:textSize="@dimen/overview_text_size" />
 
         <TextView
             android:id="@+id/filterOverview"
@@ -30,26 +30,26 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="@dimen/overview_text_size"
-            android:text="@string/filter" />
+            android:text="@string/filter"
+            android:textSize="@dimen/overview_text_size" />
 
         <TextView
             android:id="@+id/favoritesOverview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
             android:clickable="true"
-            android:textSize="@dimen/overview_text_size"
-            android:text="@string/favorites" />
+            android:gravity="center"
+            android:text="@string/favorites"
+            android:textSize="@dimen/overview_text_size" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLiteListings"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/general_margin"
         android:layout_marginStart="@dimen/general_margin"
+        android:layout_marginEnd="@dimen/general_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
