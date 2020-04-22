@@ -110,7 +110,7 @@ public class SaleDetailsTest {
         ListingImage newImage1 = new ListingImage(strImg, nextId);
         newImage1.setId(newListing.getId());
         ListingImage newImage2 = new ListingImage(strImg, "");
-        newImage1.setId(nextId);
+        newImage2.setId(nextId);
         Tasks.whenAll(newImage1.save(), newImage2.save());
 
         //recreate to load images
