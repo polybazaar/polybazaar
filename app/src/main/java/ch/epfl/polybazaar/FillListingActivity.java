@@ -140,7 +140,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         spinnerList.add(categorySelector);
 
         setupSpinner(categorySelector, categoriesWithDefaultText(CategoryRepository.getCategories()));
-        
+
         listStringImage = new ArrayList<>();
         listImageIds = new ArrayList<>();
 
