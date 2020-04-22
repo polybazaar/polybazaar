@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar.testingUtilities;
 
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Timestamp;
 
 import java.util.Date;
 
@@ -30,7 +31,7 @@ public abstract  class DatabaseStoreUtilities {
     }
 
     public static void storeNewMessage(String sender, String receiver, String listingID, String message){
-        ChatMessage chatMessage = new ChatMessage(sender, receiver, listingID, message, new Date(System.currentTimeMillis()));
+        ChatMessage chatMessage = new ChatMessage(sender, receiver, listingID, message, new Timestamp(new Date(System.currentTimeMillis())));
         Tasks.whenAll(chatMessage.save()).addOnFailureListener(e -> {
             throw new AssertionError();
         });
