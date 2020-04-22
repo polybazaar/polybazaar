@@ -195,8 +195,8 @@ public class FillListingActivityTest {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText());
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
-        submitListingAndCheckIncorrectToast();
         Thread.sleep(SLEEP_TIME);
+        submitListingAndCheckIncorrectToast();
         }
 
     @Test
@@ -205,8 +205,8 @@ public class FillListingActivityTest {
         onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
         closeSoftKeyboard();
         onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
-        submitListingAndCheckIncorrectToast();
         Thread.sleep(SLEEP_TIME);
+        submitListingAndCheckIncorrectToast();
     }
 
     /**
@@ -516,14 +516,9 @@ public class FillListingActivityTest {
 
 
     private void submitListingAndCheckIncorrectToast() throws Throwable {
-        runOnUiThread(new Runnable(){
-            @Override
-            public void run() {
-                Button but = fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing);
-                but.performClick();
-            }
+        runOnUiThread(() -> {
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick();
         });
-        Thread.sleep(SLEEP_TIME);
         onView(withText(R.string.incorrect_fields))
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
