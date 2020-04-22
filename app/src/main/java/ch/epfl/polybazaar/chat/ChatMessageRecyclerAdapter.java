@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.message;
+package ch.epfl.polybazaar.chat;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -31,7 +31,7 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter<ChatMessage
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChatMessageRecyclerAdapter.ViewHolder holder, int position) {
         ChatMessage chatMessage = messages.get(position);
         holder.messageSender.setText(chatMessage.getSender() + " : ");
         holder.messageText.setText(chatMessage.getMessage());

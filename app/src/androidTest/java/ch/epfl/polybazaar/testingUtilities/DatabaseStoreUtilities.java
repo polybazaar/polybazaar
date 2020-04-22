@@ -1,16 +1,12 @@
 package ch.epfl.polybazaar.testingUtilities;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import java.util.Date;
 
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.message.ChatMessage;
+import ch.epfl.polybazaar.chat.ChatMessage;
 
 import static java.util.UUID.randomUUID;
 
