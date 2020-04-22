@@ -347,7 +347,7 @@ public class FillListingActivityTest {
                                 3)));
         cameraOption.perform(scrollTo(), click());
         Thread.sleep(SLEEP_TIME);
-        fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        //fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         Thread.sleep(SLEEP_TIME);
         intended(expectedCameraIntent);
         Intents.release();

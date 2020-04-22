@@ -10,4 +10,6 @@
     <color name="veryLightGrey">#CCCCCC</color>
     <color name="almostWhite">#EFEFEF</color>
     <color name="pureWhite">#FFFFFF</color>
+    <color name="boxRedStroke">#DA0000</color>
+    <color name="boxRedInside">#FFD6D6</color>
 </resources>
