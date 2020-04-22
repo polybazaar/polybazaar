@@ -66,7 +66,7 @@ public class LiteListingAdapter extends
                 public void onClick(View v) {
                     // Triggers click upwards to the adapter on click
                     if (listener != null) {
-                        listener.onItemClick(itemView);
+                        listener.onItemClick(thumbnail);
                     }
                 }
             });
