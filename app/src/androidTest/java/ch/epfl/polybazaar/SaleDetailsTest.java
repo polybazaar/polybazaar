@@ -1,16 +1,13 @@
 package ch.epfl.polybazaar;
 
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.net.Uri;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
@@ -18,7 +15,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.UI.SaleDetails;
@@ -26,6 +22,7 @@ import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.login.AuthenticatorResult;
 import ch.epfl.polybazaar.login.LoginTest;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.user.User;
@@ -37,10 +34,10 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertDrawableToBitma
 import static java.util.UUID.randomUUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class SaleDetailsTest {
-    private static final int TOAST_LONG_DELAY = 3500;
     public static final float DELTA = 0.1f;
 
     @Rule
@@ -49,22 +46,6 @@ public class SaleDetailsTest {
                     SaleDetails.class,
                     true,
                     false);
-
-    /**
-     * This test will not be relevant with the new UI anymore
-     */
-    /*
-    @Test
-    public void testNoBundlePassed () throws InterruptedException {
-        Thread.sleep(SLEEP_TIME);
-        activityRule.launchActivity(new Intent());
-
-        onView(withText(R.string.object_not_found))
-                .inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
-        Thread.sleep(TOAST_LONG_DELAY);
-    }
-    */
 
     @Before
     public void init() {
@@ -170,5 +151,30 @@ public class SaleDetailsTest {
             assertFalse(user.getFavorites().contains(listing.getId()));
         });
     }
+
+    @Test
+    public void testPutInFavorite() throws Throwable {
+        MockAuthenticator auth = MockAuthenticator.getInstance();
+
+        Tasks.await(auth.createUser("user.test@epfl.ch", "usert", "abcdef"));
+
+        Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
+
+        Tasks.await(listing.save());
+        String id = listing.getId();
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+
+        activityRule.launchActivity(intent);
+
+        runOnUiThread(() -> {
+            activityRule.getActivity().favorite();
+            assertNotEquals(0f, (((RatingBar)activityRule.getActivity().findViewById(R.id.ratingBar2)).getRating()));
+        });
+
+
+
+    }
+
 }
 
