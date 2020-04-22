@@ -329,7 +329,7 @@ public class SaleDetails extends AppCompatActivity {
      * Adds the listing to favorites, or removes it from the user's favorites if it is already
      * a favorite
      */
-    public void favorite() {
+    private void favorite() {
         Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
 
         //if it's 0 set 1 and vice versa
