@@ -337,14 +337,14 @@ public class FillListingActivityTest {
         expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intending(expectedCameraIntent).respondWith(cameraResult);
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.addImage).performClick());
-        ViewInteraction appCompatButton2 = onView(
+        ViewInteraction cameraOption = onView(
                 Matchers.allOf(withId(android.R.id.button1), withText(R.string.camera),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.ScrollView")),
                                         0),
                                 3)));
-        appCompatButton2.perform(scrollTo(), click());
+        cameraOption.perform(scrollTo(), click());
         Thread.sleep(SLEEP_TIME);
         fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         Thread.sleep(SLEEP_TIME);
@@ -478,14 +478,14 @@ public class FillListingActivityTest {
                 fillSaleActivityTestRule.getActivity().findViewById(R.id.addImage).performClick();
             });
             Thread.sleep(SLEEP_TIME);
-            ViewInteraction appCompatButton2 = onView(
+            ViewInteraction libraryOption = onView(
                     Matchers.allOf(withId(android.R.id.button2), withText(R.string.library),
                             childAtPosition(
                                     childAtPosition(
                                             withClassName(is("android.widget.ScrollView")),
                                             0),
                                     2)));
-            appCompatButton2.perform(scrollTo(), click());
+            libraryOption.perform(scrollTo(), click());
             Thread.sleep(SLEEP_TIME);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
