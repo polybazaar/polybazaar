@@ -5,14 +5,16 @@
     android:layout_width="@dimen/sales_overview_cell_width"
     android:layout_height="@dimen/sales_overview_cell_width"
     android:layout_margin= "@dimen/sales_overview_cell_margin"
-    android:clickable="true">
+    android:clickable="true"
+    android:background="@drawable/gridcell_background"
+    android:elevation="@dimen/sales_overview_cell_elevation">
 
     <ImageView
         android:id="@+id/liteListingGridThumbnail"
         android:layout_width="@dimen/grid_thumbnail_size"
         android:layout_height="@dimen/grid_thumbnail_size"
         android:clickable="false"
-        android:scaleType="fitStart"
+        android:scaleType="centerInside"
         android:layout_gravity="center"
         />
 
@@ -24,7 +26,7 @@
         android:clickable="false"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="@dimen/overview_text_size" />
+        android:textSize="@dimen/overview_grid_text_size" />
 
     <TextView
         android:id="@+id/liteListingGridPrice"
@@ -33,7 +35,7 @@
         android:layout_weight="1"
         android:clickable="false"
         android:ellipsize="end"
-        android:textSize="@dimen/overview_text_size"
+        android:textSize="@dimen/overview_grid_text_size"
         android:textStyle="bold"/>
 
 </LinearLayout>
