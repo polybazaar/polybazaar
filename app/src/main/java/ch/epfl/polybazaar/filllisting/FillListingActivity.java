@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 import ch.epfl.polybazaar.R;
@@ -181,6 +184,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             defineMP.putExtra(LAT, lat);
             defineMP.putExtra(LNG, lng);
             startActivityForResult(defineMP, RESULT_ADD_MP);
+        });
+        titleSelector.setOnFocusChangeListener((v, hasFocus) -> {
+            titleSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
+        });
+        priceSelector.setOnFocusChangeListener((v, hasFocus) -> {
+            priceSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
         });
         setMainImage.setOnClickListener(v -> imageManager.setFirst(listStringImage));
         rotateImage.setOnClickListener(v -> imageManager.rotateLeft(listStringImage));
