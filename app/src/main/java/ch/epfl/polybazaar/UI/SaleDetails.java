@@ -214,7 +214,6 @@ public class SaleDetails extends AppCompatActivity {
                     textPageNumber.setText(String.format("%s/%s", Integer.toString(viewPager2.getCurrentItem() + 1), Integer.toString(listStringImage.size())));
                     textPageNumber.setGravity(Gravity.CENTER);
                 }
-
             });
         });
     }

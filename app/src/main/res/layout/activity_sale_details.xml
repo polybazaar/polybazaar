@@ -28,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:isScrollContainer="false"
-                    android:text="Edit"
+                    android:text="@string/edit"
                     android:visibility="invisible" />
 
                 <Button
@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="false"
-                    android:text="Delete"
+                    android:text="@string/delete"
                     android:visibility="invisible" />
             </LinearLayout>
 
@@ -87,7 +87,7 @@
                         android:text="@string/titre"
                         android:textSize="30sp"
                         android:visibility="invisible"
-                        android:layout_marginStart="@dimen/margin"/>
+                        android:layout_marginStart="@dimen/page_margin"/>
 
                     <TextView
                         android:id="@+id/price"
@@ -96,7 +96,7 @@
                         android:text="@string/price"
                         android:textSize="14sp"
                         android:visibility="invisible"
-                        android:layout_marginStart="@dimen/margin"
+                        android:layout_marginStart="@dimen/page_margin"
                         android:layout_marginTop="10dp"/>
                 </LinearLayout>
 
@@ -115,16 +115,16 @@
                     android:numStars="1"
                     android:focusable="true"
                     android:visibility="invisible"
-                    android:layout_marginEnd="@dimen/margin"/>
+                    android:layout_marginEnd="@dimen/page_margin"/>
             </LinearLayout>
 
             <Button
                 android:id="@+id/contactSel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"
-                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginStart="@dimen/page_margin"
+                android:layout_marginTop="@dimen/page_margin"
+                android:layout_marginEnd="@dimen/page_margin"
                 android:clickable="false"
                 android:text="@string/contact_the_seller"
                 android:textColor="@color/white"
@@ -134,17 +134,17 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"
-                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginStart="@dimen/page_margin"
+                android:layout_marginTop="@dimen/page_margin"
+                android:layout_marginEnd="@dimen/page_margin"
                 android:alpha="0.7"
                 android:background="@android:color/darker_gray"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"
+                android:layout_marginStart="@dimen/page_margin"
+                android:layout_marginTop="@dimen/page_margin"
                 android:textSize="20sp"
                 android:text="@string/description"
                 />
@@ -157,14 +157,14 @@
                 android:textSize="15sp"
                 android:text="@string/description"
                 android:visibility="invisible"
-                android:layout_marginStart="@dimen/margin"/>
+                android:layout_marginStart="@dimen/page_margin"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"
-                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginStart="@dimen/page_margin"
+                android:layout_marginTop="@dimen/page_margin"
+                android:layout_marginEnd="@dimen/page_margin"
                 android:alpha="0.7"
                 android:background="@android:color/darker_gray"/>
 
@@ -172,8 +172,8 @@
                 android:id="@+id/viewMP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"
+                android:layout_marginStart="@dimen/page_margin"
+                android:layout_marginTop="@dimen/page_margin"
                 android:text="@string/see_MP"
                 android:textColor="@color/white"
                 android:background="@color/colorPrimary"
@@ -183,8 +183,8 @@
                 android:id="@+id/userEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"/>
+                android:layout_marginStart="@dimen/page_margin"
+                android:layout_marginTop="@dimen/page_margin"/>
         </LinearLayout>
     </ScrollView>
 
