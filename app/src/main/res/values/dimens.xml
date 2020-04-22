@@ -10,8 +10,12 @@
     <dimen name="offset">30dp</dimen>
     <dimen name="page_margin_and_offset">50dp</dimen>
     <dimen name="thumbnail_size">80dp</dimen>
+    <dimen name="grid_thumbnail_size">110dp</dimen>
     <dimen name="sales_overview_top_menu_height">28dp</dimen>
     <dimen name="sales_overview_top_menu_text_size">16sp</dimen>
+    <dimen name="sales_overview_cell_padding">10dp</dimen>
+    <dimen name="sales_overview_cell_width">170dp</dimen>
+    <dimen name="sales_overview_cell_margin">20dp</dimen>
     <dimen name="viewpager_height">251dp</dimen>
     <dimen name="viewpager_margin">16dp</dimen>
 </resources>
