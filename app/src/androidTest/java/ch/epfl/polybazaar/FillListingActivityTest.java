@@ -337,6 +337,7 @@ public class FillListingActivityTest {
         expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intending(expectedCameraIntent).respondWith(cameraResult);
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.addImage).performClick());
+        Thread.sleep(SLEEP_TIME);
         ViewInteraction cameraOption = onView(
                 Matchers.allOf(withId(android.R.id.button1), withText(R.string.camera),
                         childAtPosition(
