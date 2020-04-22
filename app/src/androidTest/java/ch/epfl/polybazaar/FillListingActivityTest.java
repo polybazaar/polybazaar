@@ -519,6 +519,7 @@ public class FillListingActivityTest {
         runOnUiThread(() -> {
             fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick();
         });
+        Thread.sleep(SLEEP_TIME/2);
         onView(withText(R.string.incorrect_fields))
                 .inRoot(withDecorView(not(is(fillSaleActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
