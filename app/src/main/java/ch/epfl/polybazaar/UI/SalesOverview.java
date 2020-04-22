@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +27,7 @@ import static ch.epfl.polybazaar.Utilities.getUser;
 public class SalesOverview extends AppCompatActivity {
 
     private static final int EXTRALOAD = 20;
+    private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
     private List<String> IDList;
     private List<LiteListing> liteListingList;
@@ -60,11 +62,11 @@ public class SalesOverview extends AppCompatActivity {
         // Attach the adapter to the recyclerview to populate items
         rvLiteListings.setAdapter(adapter);
         // Set layout manager to position the items
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rvLiteListings.setLayoutManager(linearLayoutManager);
+        LinearLayoutManager mGridLayoutManager = new GridLayoutManager(this, NUMBEROFCOLUMNS);
+        rvLiteListings.setLayoutManager(mGridLayoutManager);
 
         // Triggered only when new data needs to be appended to the list
-        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(mGridLayoutManager) {
             @Override
             public void onLoadMore() {
                 // Triggered only when new data needs to be appended to the list
