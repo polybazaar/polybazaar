@@ -207,6 +207,15 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             submitListing.setOnClickListener(v ->
                     listingManager.deleteOldListingAndSubmitNewOne(spinnerList, listStringImage, stringThumbnail, lat, lng, listImageID));
         }
+
+        /**
+         * FOR TESTING PURPOSES ONLY:
+         */
+        findViewById(R.id.addImageFromCamera).setOnClickListener(v -> checkCameraPermission());
+        findViewById(R.id.addImageFromLibrary).setOnClickListener(v -> imageManager.uploadImage());
+        /**
+         * ==========================
+         */
     }
 
     @Override

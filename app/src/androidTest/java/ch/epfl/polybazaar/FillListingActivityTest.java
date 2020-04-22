@@ -329,6 +329,15 @@ public class FillListingActivityTest {
         Intents.release();
     }
 
+    @Test
+    public void pressAddImage() throws Throwable {
+        Thread.sleep(SLEEP_TIME);
+        runOnUiThread(() -> {
+            fillSaleActivityTestRule.getActivity().findViewById(R.id.addImage).performClick();
+        });
+        Thread.sleep(SLEEP_TIME);
+        fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+    }
 
     public void cancelTakingPicture() throws Throwable {
         cameraResult = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, cameraIntent);
@@ -336,40 +345,12 @@ public class FillListingActivityTest {
         Intents.init();
         expectedCameraIntent = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intending(expectedCameraIntent).respondWith(cameraResult);
-        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.addImage).performClick());
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.addImageFromCamera).performClick());
         Thread.sleep(SLEEP_TIME);
-        ViewInteraction cameraOption = onView(
-                Matchers.allOf(withId(android.R.id.button1), withText(R.string.camera),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                3)));
-        cameraOption.perform(scrollTo(), click());
-        Thread.sleep(SLEEP_TIME);
-        //fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        fillSaleActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         Thread.sleep(SLEEP_TIME);
         intended(expectedCameraIntent);
         Intents.release();
-    }
-
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
     }
 
     @Test
@@ -476,17 +457,8 @@ public class FillListingActivityTest {
         intending(expectedGalleryIntent).respondWith(galleryResult);
         try {
             runOnUiThread(() -> {
-                fillSaleActivityTestRule.getActivity().findViewById(R.id.addImage).performClick();
+                fillSaleActivityTestRule.getActivity().findViewById(R.id.addImageFromLibrary).performClick();
             });
-            Thread.sleep(SLEEP_TIME);
-            ViewInteraction libraryOption = onView(
-                    Matchers.allOf(withId(android.R.id.button2), withText(R.string.library),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withClassName(is("android.widget.ScrollView")),
-                                            0),
-                                    2)));
-            libraryOption.perform(scrollTo(), click());
             Thread.sleep(SLEEP_TIME);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
