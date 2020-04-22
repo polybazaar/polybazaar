@@ -186,10 +186,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             startActivityForResult(defineMP, RESULT_ADD_MP);
         });
         titleSelector.setOnFocusChangeListener((v, hasFocus) -> {
-            titleSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
+            if (!titleSelector.getText().toString().equals("")) titleSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
         });
         priceSelector.setOnFocusChangeListener((v, hasFocus) -> {
-            priceSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
+            if (!priceSelector.getText().toString().equals("")) priceSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
         });
         setMainImage.setOnClickListener(v -> imageManager.setFirst(listStringImage));
         rotateImage.setOnClickListener(v -> imageManager.rotateLeft(listStringImage));
