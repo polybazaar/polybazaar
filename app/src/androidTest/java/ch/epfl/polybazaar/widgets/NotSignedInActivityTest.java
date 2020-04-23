@@ -9,12 +9,12 @@ import ch.epfl.polybazaar.R;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
-public class NotSignedInTest {
+public class NotSignedInActivityTest {
 
     @Rule
-    public final ActivityTestRule<NotSignedIn> activityRule =
+    public final ActivityTestRule<NotSignedInActivity> activityRule =
             new ActivityTestRule<>(
-                    NotSignedIn.class,
+                    NotSignedInActivity.class,
                     true,
                     true);
 

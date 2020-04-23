@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +22,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 import ch.epfl.polybazaar.R;
@@ -34,7 +31,7 @@ import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.map.MapsActivity;
-import ch.epfl.polybazaar.widgets.ImportImageDialog;
+import ch.epfl.polybazaar.widgets.AddImageDialog;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
@@ -171,7 +168,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
     private void addListeners(boolean edit){
         addImages.setOnClickListener(v -> {
-            ImportImageDialog dialog = new ImportImageDialog();
+            AddImageDialog dialog = new AddImageDialog();
             dialog.show(getSupportFragmentManager(), "select image import");
         });
         selectCategory.setOnClickListener(v -> {
@@ -228,7 +225,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 startActivity(SalesOverviewIntent);
             }
         }
-        if (dialog instanceof ImportImageDialog) {
+        if (dialog instanceof AddImageDialog) {
             checkCameraPermission();
         }
     }
@@ -238,7 +235,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         if(dialog instanceof NoConnectionForListingDialog){
             //do nothing
         }
-        if (dialog instanceof ImportImageDialog) {
+        if (dialog instanceof AddImageDialog) {
             imageManager.uploadImage();
         }
     }

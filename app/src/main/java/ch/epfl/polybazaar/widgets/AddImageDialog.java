@@ -9,7 +9,7 @@ import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.polybazaar.R;
 
-public class ImportImageDialog extends DialogFragment {
+public class AddImageDialog extends DialogFragment {
 
     NoticeDialogListener listener;
 
@@ -32,8 +32,8 @@ public class ImportImageDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.dialog_add_image)
-                .setPositiveButton(R.string.camera, (dialog, which) -> listener.onDialogPositiveClick(ImportImageDialog.this))
-                .setNegativeButton(R.string.library, (dialog, which) -> listener.onDialogNegativeClick(ImportImageDialog.this));
+                .setPositiveButton(R.string.camera, (dialog, which) -> listener.onDialogPositiveClick(AddImageDialog.this))
+                .setNegativeButton(R.string.library, (dialog, which) -> listener.onDialogNegativeClick(AddImageDialog.this));
         return builder.create();
     }
 

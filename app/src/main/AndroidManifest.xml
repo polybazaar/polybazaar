@@ -38,7 +38,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".widgets.NotSignedIn"
+            android:name=".widgets.NotSignedInActivity"
             android:label="Not Signed In" />
 
         <activity

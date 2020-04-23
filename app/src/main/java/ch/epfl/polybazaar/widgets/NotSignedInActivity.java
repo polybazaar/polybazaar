@@ -9,7 +9,7 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.login.SignInActivity;
 import ch.epfl.polybazaar.login.SignUpActivity;
 
-public class NotSignedIn extends AppCompatActivity {
+public class NotSignedInActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
