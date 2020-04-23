@@ -85,9 +85,9 @@
         <activity
             android:name=".chat.ChatActivity"
             android:label="Chat"
-            android:parentActivityName=".SaleDetails" />
+            android:parentActivityName=".UI.SaleDetails" />
         <activity
-            android:name=".SaleDetails"
+            android:name=".UI.SaleDetails"
             android:exported="true"
             android:label="Details"
             android:parentActivityName=".UI.SalesOverview" />

@@ -29,6 +29,11 @@
     <dimen name="sales_overview_cell_elevation">10dp</dimen>
     <dimen name="viewpager_height">251dp</dimen>
     <dimen name="viewpager_margin">16dp</dimen>
+    <dimen name="viewPager2_height">290dp</dimen>
+    <dimen name="page_number_margin_top">265dp</dimen>
+    <dimen name="loading_image_size">100dp</dimen>
+    <dimen name="page_number_width">52dp</dimen>
+    <dimen name="page_number_height">18dp</dimen>
     <dimen name="button_radius_default">5dp</dimen>
     <dimen name="button_radius_large">10dp</dimen>
     <dimen name="button_radius_small">3dp</dimen>
