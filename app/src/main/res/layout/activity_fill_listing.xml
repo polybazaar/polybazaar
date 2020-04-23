@@ -8,10 +8,12 @@
     tools:context=".filllisting.FillListingActivity">
 
     <ScrollView
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_marginStart="@dimen/general_margin"
-        android:layout_marginEnd="@dimen/general_margin">
+        android:layout_marginEnd="@dimen/general_margin"
+        tools:ignore="UselessParent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/fillListingLinearLayout"
@@ -19,76 +21,99 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <Button
+                android:id="@+id/addImageFromLibrary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_image"
+                android:visibility="gone"/>
+            <Button
+                android:id="@+id/addImageFromCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_image"
+                android:visibility="gone"/>
 
-                <Button
-                    android:id="@+id/setFirst"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/move_first"
-                    android:visibility="invisible"
-                    android:textSize="12sp"/>
-
-                <Button
-                    android:id="@+id/rotateLeft"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rotate_left"
-                    android:textSize="12sp"
-                    android:visibility="invisible"/>
-
-                <Button
-                    android:id="@+id/deleteImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/delete_image"
-                    android:textSize="12sp"
-                    android:visibility="invisible"/>
-
-                <Button
-                    android:id="@+id/modifyImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/modify_image"
-                    android:visibility="visible" />
-
-            </TableRow>
+            <Button
+                android:id="@+id/addImage"
+                style="@android:style/Widget.Material.Light.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:background="@drawable/rounded_corner_button_red"
+                android:textColor="@color/white"
+                android:text="@string/add_image"
+                android:textSize="@dimen/default_button_text_size" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/viewpager_height"
-                android:layout_marginTop="@dimen/viewpager_margin"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
                 android:clickable="true"
-                android:focusable="true"/>
+                android:focusable="true"
+                android:visibility="gone"/>
 
             <TableRow
+                android:id="@+id/editButtons"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5" />
-
-                <Button
-                    android:id="@+id/camera"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Take a picture" />
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large">
 
                 <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.05" />
+                    android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/uploadImage"
+                    android:id="@+id/setMain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="upload image" />
+                    android:layout_marginTop="@dimen/button_shadow_margin"
+                    android:layout_marginBottom="@dimen/button_shadow_margin"
+                    android:background="@drawable/rounded_corner_button_grey"
+                    android:text="@string/move_first"
+                    android:visibility="visible"
+                    android:textSize="12sp"/>
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/rotate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_shadow_margin"
+                    android:layout_marginBottom="@dimen/button_shadow_margin"
+                    android:background="@drawable/rounded_corner_button_grey"
+                    android:text="@string/rotate"
+                    android:textSize="12sp"
+                    android:visibility="visible"/>
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/deleteImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_shadow_margin"
+                    android:layout_marginBottom="@dimen/button_shadow_margin"
+                    android:background="@drawable/rounded_corner_button_grey"
+                    android:text="@string/delete_image"
+                    android:textSize="12sp"
+                    android:visibility="visible"/>
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
             </TableRow>
 
@@ -96,111 +121,200 @@
                 android:id="@+id/titleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Listing title"
-                android:textSize="20sp" />
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:text="@string/listing_title"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="@dimen/default_textView_text_size"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/titleSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName" />
-
-            <TextView
-                android:id="@+id/categoryTextCiew"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Category"
-                android:textSize="20sp" />
-
-            <Spinner
-                android:id="@+id/categorySelector"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_marginTop="@dimen/fillListing_inter_space_small"
+                android:background="@drawable/boxed"
+                android:maxLines="1"
+                android:maxLength="50"
+                android:inputType="textPersonName"
+                android:importantForAutofill="no"
+                tools:ignore="LabelFor" />
 
             <TextView
                 android:id="@+id/descriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description"
-                android:textSize="20sp" />
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:text="@string/description"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="@dimen/default_textView_text_size"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/descriptionSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
+                android:layout_marginTop="@dimen/fillListing_inter_space_small"
+                android:background="@drawable/boxed"
                 android:gravity="start|top"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:importantForAutofill="no"
+                tools:ignore="LabelFor" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fillListing_inter_space_large">
 
-                <TextView
-                    android:id="@+id/priceTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Price"
-                    android:textSize="20sp" />
+            <TextView
+                android:id="@+id/priceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:layout_weight="0.1"
+                android:text="@string/price"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="@dimen/default_textView_text_size"
+                android:textStyle="bold" />
 
-                <Space
-                    android:layout_width="22dp"
-                    android:layout_height="10dp"
-                    android:layout_weight="1" />
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
-                <Switch
-                    android:id="@+id/freeSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="@dimen/offset"
-                    android:text="Free"
-                    android:textSize="20sp" />
-
-                <Space
-                    android:layout_width="214dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/priceCurrency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="3dp"
+                android:layout_weight="0.01"
+                android:text="@string/currency"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="@dimen/default_textView_text_size" />
 
             <EditText
                 android:id="@+id/priceSelector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="numberDecimal" />
+                android:layout_gravity="end|center_vertical"
+                android:layout_weight="0.01"
+                android:ems="7"
+                android:maxLength="7"
+                android:maxLines="1"
+                android:background="@drawable/boxed"
+                android:inputType="numberDecimal"
+                android:importantForAutofill="no"
+                tools:ignore="LabelFor" />
 
-            <Button
-                android:id="@+id/addMP"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/add_MP" />
+        </TableRow>
 
             <TextView
-                android:id="@+id/meetingPointStatus"
+                android:id="@+id/categoryTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/MP_nok" />
+                android:layout_marginTop="@dimen/fillListing_inter_space_extra_large"
+                android:text="@string/category"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="@dimen/default_textView_text_size"
+                android:textStyle="bold" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.001" />
+
+                <TextView
+                    android:id="@+id/selectedCategoryTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_weight="0.1"
+                    android:text="@string/none"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="@dimen/default_textView_text_size" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/selectCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginTop="@dimen/button_shadow_margin"
+                    android:layout_marginBottom="@dimen/button_shadow_margin"
+                    android:background="@drawable/rounded_corner_button_grey"
+                    android:layout_weight="0.01"
+                    android:textSize="@dimen/small_button_text_size"
+                    android:text="@string/select_a_category" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fillListing_inter_space_large">
+
+                <TextView
+                    android:id="@+id/setMeetingPointTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_weight="0.1"
+                    android:text="@string/meeting_point"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="@dimen/default_textView_text_size"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/addMP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginTop="@dimen/button_shadow_margin"
+                    android:layout_marginBottom="@dimen/button_shadow_margin"
+                    android:background="@drawable/rounded_corner_button_grey"
+                    android:layout_weight="0.01"
+                    android:textSize="@dimen/small_button_text_size"
+                    android:text="@string/add_MP" />
+            </TableRow>
 
             <Button
                 android:id="@+id/submitListing"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/submit_listing" />
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/fillListing_inter_space_extra_large"
+                android:layout_marginBottom="@dimen/fillListing_inter_space_extra_large"
+                android:background="@drawable/rounded_corner_button_red"
+                android:text="@string/submit_listing"
+                android:textColor="@color/white"
+                android:textSize="@dimen/large_button_text_size" />
 
             <ImageView
                 android:id="@+id/picturePreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"/>
+                android:visibility="invisible"
+                android:contentDescription="@string/loading" />
 
+            <Spinner
+                android:id="@+id/categorySelector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"/>
 
         </LinearLayout>
     </ScrollView>

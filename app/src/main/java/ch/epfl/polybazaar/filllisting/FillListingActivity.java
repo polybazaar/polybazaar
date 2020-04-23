@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +31,7 @@ import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.map.MapsActivity;
+import ch.epfl.polybazaar.widgets.AddImageDialog;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
@@ -52,26 +52,22 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     public static final int RESULT_ADD_MP = 3;
     private final int QUALITY = 10;
 
-    private Button setImageFirst;
-    private Button rotateImageLeft;
+    private Button setMainImage;
+    private Button rotateImage;
     private Button deleteImage;
-    private Button modifyImage;
     private ImageManager imageManager;
     private ListingManager listingManager;
     private CategoryManager categoryManager;
-    private Button uploadImage;
-    private Button camera;
+    private Button addImages;
+    private Button selectCategory;
     private Button submitListing;
     private Button addMP;
     private ImageView pictureView;
-    private Switch freeSwitch;
     private TextView titleSelector;
-    private TextView meetingPointStatus;
     private EditText descriptionSelector;
     private EditText priceSelector;
     private Spinner categorySelector;
     private List<Spinner> spinnerList;
-    private String oldPrice;
     private List<String> listStringImage;
     //only used for edit to delete all images
     private List<String> listImageID;
@@ -91,27 +87,33 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         imageManager = new ImageManager(this);
         listingManager = new ListingManager(this);
         categoryManager = new CategoryManager(this);
-        setImageFirst = findViewById(R.id.setFirst);
-        rotateImageLeft = findViewById(R.id.rotateLeft);
+        setMainImage = findViewById(R.id.setMain);
+        rotateImage = findViewById(R.id.rotate);
         deleteImage = findViewById(R.id.deleteImage);
-        modifyImage = findViewById(R.id.modifyImage);
-        camera = findViewById(R.id.camera);
-        freeSwitch = findViewById(R.id.freeSwitch);
-        uploadImage = findViewById(R.id.uploadImage);
+        addImages = findViewById(R.id.addImage);
         submitListing = findViewById(R.id.submitListing);
         titleSelector = findViewById(R.id.titleSelector);
         descriptionSelector = findViewById(R.id.descriptionSelector);
         priceSelector = findViewById(R.id.priceSelector);
+        selectCategory = findViewById(R.id.selectCategory);
         addMP = findViewById(R.id.addMP);
-        meetingPointStatus = findViewById(R.id.meetingPointStatus);
         pictureView = findViewById(R.id.picturePreview);
+
+        /**
+         * FOR TESTING PURPOSES ONLY:
+         */
         categorySelector = findViewById(R.id.categorySelector);
+
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
         RootCategoryFactory.useJSONCategory(this);
         categoryManager.setupSpinner(categorySelector, RootCategoryFactory.getDependency().subCategories() , spinnerList, traversingCategory);
         traversingCategory = categoryManager.getTraversingCategory();
         spinnerList = categoryManager.getSpinnerList();
+        /**
+         * ==========================
+         */
+
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
@@ -140,13 +142,14 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 Toast.makeText(this, R.string.unable_load_image, Toast.LENGTH_SHORT).show();
                 return;
             }
-
             stringImage = convertBitmapToStringWithQuality(bitmap, QUALITY);
             imageManager.addImage(listStringImage, stringImage);
+            imageManager.updateViewPagerVisibility(listStringImage);
         }
         else if (requestCode == RESULT_TAKE_PICTURE){
            stringImage = convertFileToStringWithQuality(imageManager.getPhotoFile(), QUALITY);
            imageManager.addImage(listStringImage, stringImage);
+           imageManager.updateViewPagerVisibility(listStringImage);
         }
         else if (requestCode == RESULT_ADD_MP) {
             if (data != null) {
@@ -154,21 +157,24 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                     lng = data.getDoubleExtra(LNG, NOLNG);
                     lat = data.getDoubleExtra(LAT, NOLAT);
                     addMP.setText(R.string.change_MP);
-                    meetingPointStatus.setText(R.string.MP_ok);
                 } else {
                     lng = NOLNG;
                     lat = NOLAT;
                     addMP.setText(R.string.add_MP);
-                    meetingPointStatus.setText(R.string.MP_nok);
                 }
             }
         }
     }
 
     private void addListeners(boolean edit){
-        camera.setOnClickListener(v -> checkCameraPermission());
-        freeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> freezePriceSelector(isChecked));
-        uploadImage.setOnClickListener(v -> imageManager.uploadImage());
+        addImages.setOnClickListener(v -> {
+            AddImageDialog dialog = new AddImageDialog();
+            dialog.show(getSupportFragmentManager(), "select image import");
+        });
+        selectCategory.setOnClickListener(v -> {
+            // TODO : open category selection activity
+            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
+        });
         addMP.setOnClickListener(v -> {
             Intent defineMP = new Intent(this, MapsActivity.class);
             defineMP.putExtra(GIVE_LAT_LNG, false);
@@ -176,16 +182,15 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             defineMP.putExtra(LNG, lng);
             startActivityForResult(defineMP, RESULT_ADD_MP);
         });
-        setImageFirst.setOnClickListener(v -> imageManager.setFirst(listStringImage));
-        rotateImageLeft.setOnClickListener(v -> imageManager.rotateLeft(listStringImage));
-        deleteImage.setOnClickListener(v -> imageManager.deleteImage(listStringImage));
-        modifyImage.setOnClickListener(v -> {
-            if (setImageFirst.getVisibility() == View.INVISIBLE) {
-                showImagesButtons();
-            } else {
-                hideImagesButtons();
-            }
+        titleSelector.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!titleSelector.getText().toString().equals("")) titleSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
         });
+        priceSelector.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!priceSelector.getText().toString().equals("")) priceSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
+        });
+        setMainImage.setOnClickListener(v -> imageManager.setFirst(listStringImage));
+        rotateImage.setOnClickListener(v -> imageManager.rotateLeft(listStringImage));
+        deleteImage.setOnClickListener(v -> imageManager.deleteImage(listStringImage));
         if(!edit){
             submitListing.setOnClickListener(v -> {
                 if (!listingManager.submit(spinnerList, listStringImage, stringThumbnail, lat, lng)) {
@@ -199,20 +204,15 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             submitListing.setOnClickListener(v ->
                     listingManager.deleteOldListingAndSubmitNewOne(spinnerList, listStringImage, stringThumbnail, lat, lng, listImageID));
         }
-    }
 
-    private void freezePriceSelector(boolean isChecked){
-        if(isChecked){
-            if(priceSelector.getText().length() > 0) {
-                oldPrice = priceSelector.getText().toString();
-            }
-            priceSelector.setFocusable(false);
-            priceSelector.setText(Double.toString(0.00));
-        }
-        else{
-            priceSelector.setFocusableInTouchMode(true);
-            priceSelector.setText(oldPrice);
-        }
+        /**
+         * FOR TESTING PURPOSES ONLY:
+         */
+        findViewById(R.id.addImageFromCamera).setOnClickListener(v -> checkCameraPermission());
+        findViewById(R.id.addImageFromLibrary).setOnClickListener(v -> imageManager.uploadImage());
+        /**
+         * ==========================
+         */
     }
 
     @Override
@@ -225,12 +225,18 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
                 startActivity(SalesOverviewIntent);
             }
         }
+        if (dialog instanceof AddImageDialog) {
+            checkCameraPermission();
+        }
     }
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
         if(dialog instanceof NoConnectionForListingDialog){
             //do nothing
+        }
+        if (dialog instanceof AddImageDialog) {
+            imageManager.uploadImage();
         }
     }
 
@@ -250,18 +256,24 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         imageManager.retrieveAllImages(listStringImage, listImageID, listingID);
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
-        freeSwitch.setChecked(listing.getPrice().equals("0.0"));
         priceSelector.setText(listing.getPrice());
-        Category editedCategory = new NodeCategory(listing.getCategory());
-        Category root = RootCategoryFactory.getDependency();
-        traversingCategory = root.getSubCategoryContaining(editedCategory);
-        categorySelector.setSelection(root.indexOf(traversingCategory)+1);
         lat = listing.getLatitude();
         lng = listing.getLongitude();
         if (lat != NOLAT && lng != NOLNG) {
             addMP.setText(R.string.change_MP);
-            meetingPointStatus.setText(R.string.MP_ok);
         }
+
+        /**
+         * FOR TESTING PURPOSES ONLY:
+         */
+        Category editedCategory = new NodeCategory(listing.getCategory());
+        Category root = RootCategoryFactory.getDependency();
+        traversingCategory = root.getSubCategoryContaining(editedCategory);
+        categorySelector.setSelection(root.indexOf(traversingCategory)+1);
+        /**
+         * ==========================
+         */
+
         return true;
     }
 
@@ -278,21 +290,21 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     }
 
     private void hideImagesButtons() {
-        setImageFirst.setVisibility(View.INVISIBLE);
-        rotateImageLeft.setVisibility(View.INVISIBLE);
+        setMainImage.setVisibility(View.INVISIBLE);
+        rotateImage.setVisibility(View.INVISIBLE);
         deleteImage.setVisibility(View.INVISIBLE);
     }
 
     private void showImagesButtons() {
-        setImageFirst.setVisibility(View.VISIBLE);
-        rotateImageLeft.setVisibility(View.VISIBLE);
+        setMainImage.setVisibility(View.VISIBLE);
+        rotateImage.setVisibility(View.VISIBLE);
         deleteImage.setVisibility(View.VISIBLE);
     }
 
     /**
-     * return the current StringImage displayed or null if there is no image
-     * @return
+     * FOR TESTING PURPOSES ONLY:
      */
+    // @return the current StringImage displayed or null if there is no image
     public String getCurrentStringImage() {
         if(listStringImage.size() > 0) {
             return listStringImage.get(((ViewPager2)findViewById(R.id.viewPager)).getCurrentItem());
@@ -300,5 +312,8 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             return null;
         }
     }
+    /**
+     * ==========================
+     */
 
 }

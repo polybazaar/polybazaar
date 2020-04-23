@@ -3,6 +3,8 @@ package ch.epfl.polybazaar.filllisting;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -34,7 +36,6 @@ class ListingManager {
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
-
     private Activity activity;
 
     ListingManager(Activity activity) {
@@ -98,6 +99,9 @@ class ListingManager {
     }
 
     private boolean checkFields(List<Spinner> spinnerList){
+        checkTitle();
+        checkPrice();
+        checkCategory(spinnerList);
         return checkTitle() && checkPrice() && checkCategory(spinnerList);
     }
 
@@ -106,11 +110,23 @@ class ListingManager {
     }
 
     private boolean checkPrice() {
-        return !priceSelector.getText().toString().isEmpty();
+        boolean ok = !priceSelector.getText().toString().isEmpty();
+        if (!ok) {
+            priceSelector.setBackground(activity.getResources().getDrawable(R.drawable.boxed_red, activity.getTheme()));
+        } else {
+            priceSelector.setBackground(activity.getResources().getDrawable(R.drawable.boxed, activity.getTheme()));
+        }
+        return ok;
     }
 
     private boolean checkTitle() {
-        return !titleSelector.getText().toString().isEmpty();
+        boolean ok = !titleSelector.getText().toString().isEmpty();
+        if (!ok) {
+            titleSelector.setBackground(activity.getResources().getDrawable(R.drawable.boxed_red, activity.getTheme()));
+        } else {
+            titleSelector.setBackground(activity.getResources().getDrawable(R.drawable.boxed, activity.getTheme()));
+        }
+        return ok;
     }
 
     Listing makeListing(Double lat, Double lng, List<Spinner> spinnerList) {
