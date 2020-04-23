@@ -53,7 +53,7 @@ android:orientation="vertical" >
                 android:background="@drawable/rounded_corner_button_red"
                 android:text="@string/confirm_MP"
                 android:textSize="@dimen/default_button_text_size"
-                android:textColor="@color/pureWhite"/>
+                android:textColor="@color/white"/>
 
             <Space
                 android:layout_width="@dimen/offset"
@@ -71,7 +71,7 @@ android:orientation="vertical" >
                 android:background="@drawable/rounded_corner_button_red"
                 android:text="@string/remove_meeting_point"
                 android:textSize="@dimen/default_button_text_size"
-                android:textColor="@color/pureWhite"/>
+                android:textColor="@color/white"/>
         </TableRow>
 
     </LinearLayout>

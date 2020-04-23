@@ -9,7 +9,7 @@
     <color name="lightGrey">#B1B1B1</color>
     <color name="veryLightGrey">#CCCCCC</color>
     <color name="almostWhite">#EFEFEF</color>
-    <color name="pureWhite">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="boxRedStroke">#DA0000</color>
     <color name="boxRedInside">#FFD6D6</color>
 </resources>

@@ -40,7 +40,7 @@
             android:layout_gravity="center"
             android:background="@drawable/rounded_corner_button_red"
             android:text="@string/sign_in"
-            android:textColor="@color/pureWhite"
+            android:textColor="@color/white"
             android:textSize="@dimen/default_button_text_size" />
 
         <Button
@@ -51,7 +51,7 @@
             android:layout_marginTop="@dimen/fillListing_inter_space_large"
             android:background="@drawable/rounded_corner_button_red"
             android:text="@string/sign_up"
-            android:textColor="@color/pureWhite"
+            android:textColor="@color/white"
             android:textSize="@dimen/default_button_text_size" />
 
 

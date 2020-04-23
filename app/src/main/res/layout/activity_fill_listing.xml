@@ -42,7 +42,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/fillListing_inter_space_large"
                 android:background="@drawable/rounded_corner_button_red"
-                android:textColor="@color/pureWhite"
+                android:textColor="@color/white"
                 android:text="@string/add_image"
                 android:textSize="@dimen/default_button_text_size" />
 
@@ -299,7 +299,7 @@
                 android:layout_marginBottom="@dimen/fillListing_inter_space_extra_large"
                 android:background="@drawable/rounded_corner_button_red"
                 android:text="@string/submit_listing"
-                android:textColor="@color/pureWhite"
+                android:textColor="@color/white"
                 android:textSize="@dimen/large_button_text_size" />
 
             <ImageView
