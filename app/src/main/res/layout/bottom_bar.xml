@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="wrap_content" android:layout_width="wrap_content">
+
     <item
-        android:id="@+id/action_android"
+        android:id="@+id/action_home"
         android:enabled="true"
-        android:icon="@drawable/ic_android_white_24dp"
-        android:title="@string/bottom_navigation_menu_android"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/baseline_home_black_18dp"
+        android:title="@string/bottom_navigation_home" />
     <item
-        android:id="@+id/action_logo"
+        android:id="@+id/action_add_item"
         android:enabled="true"
-        android:icon="@drawable/ic_pets_white_24dp"
-        android:title="@string/bottom_navigation_menu_logos"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/baseline_add_circle_black_18dp"
+        android:title="@string/bottom_navigation_add_item" />
     <item
-        android:id="@+id/action_landscape"
+        android:id="@+id/action_messages"
         android:enabled="true"
-        android:icon="@drawable/ic_filter_hdr_white_24dp"
-        android:title="@string/bottom_navigation_menu_landscape"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/baseline_chat_black_18dp"
+        android:title="@string/bottom_navigation_messages" />
+    <item
+        android:id="@+id/action_profile"
+        android:enabled="true"
+        android:icon="@drawable/baseline_person_black_18dp"
+        android:title="@string/bottom_navigation_profile" />
 </menu>

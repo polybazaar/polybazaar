@@ -64,6 +64,12 @@
     <string name="default_spinner_text">Select category...</string>
     <string name="object_not_found">Object not found</string>
 
+    //bottom navigation bar
+    <string name="bottom_navigation_home">Home</string>
+    <string name="bottom_navigation_add_item">Add item</string>
+    <string name="bottom_navigation_messages">Messages</string>
+    <string name="bottom_navigation_profile">Profile</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
