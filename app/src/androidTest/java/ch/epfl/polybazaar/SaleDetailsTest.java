@@ -22,7 +22,6 @@ import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.login.AuthenticatorResult;
 import ch.epfl.polybazaar.login.LoginTest;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.user.User;
