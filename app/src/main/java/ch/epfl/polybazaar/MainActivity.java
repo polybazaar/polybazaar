@@ -1,6 +1,5 @@
 package ch.epfl.polybazaar;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.UI.bottomBar;
+
+import ch.epfl.polybazaar.conversationOverview.ConversationOverview;
+import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
+import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
@@ -32,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         authenticator = AuthenticatorFactory.getDependency();
-        BottomNavigationView bottomView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomView.setOnNavigationItemSelectedListener(item ->bottomBar.updateActivity(item.getItemId(),MainActivity.this));
     }
 
     public void toSalesOverview(View view) {
@@ -68,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void toConversationOverview(View viw){
+        Intent intent = new Intent(MainActivity.this, ConversationOverviewActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -79,14 +84,18 @@ public class MainActivity extends AppCompatActivity {
     private void updateUserButtons() {
         Button signInBut = findViewById(R.id.authenticationButton);
         Button profileBut = findViewById(R.id.profileButton);
+        Button conversationOverviewButton = findViewById(R.id.conversationOverviewButton);
+
         if (user != null) {
             signInBut.setText(R.string.sign_out);
             profileBut.setClickable(true);
             profileBut.setVisibility(View.VISIBLE);
+            conversationOverviewButton.setVisibility(View.VISIBLE);
         } else {
             signInBut.setText(R.string.sign_in);
             profileBut.setClickable(false);
             profileBut.setVisibility(View.INVISIBLE);
+            conversationOverviewButton.setVisibility(View.INVISIBLE);
         }
     }
 }

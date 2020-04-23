@@ -1,14 +1,16 @@
-package ch.epfl.polybazaar;
+package ch.epfl.polybazaar.UI;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,9 +23,8 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.UI.SliderAdapter;
-import ch.epfl.polybazaar.UI.SliderItem;
+import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.chat.ChatActivity;
 import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
@@ -32,17 +33,24 @@ import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
 
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 public class SaleDetails extends AppCompatActivity {
+    public static final int SIZE = 20;
     private Button editButton;
     private Button deleteButton;
     private AlertDialog deleteDialog;
+    //used for favorite
+    private RatingBar ratingBar;
+    private ImageView imageLoading;
+    private Button contactSelButton;
+    private TextView userEmailTextView;
+    private Button viewMP;
 
     private String listingID;
     private String sellerEmail;
@@ -56,17 +64,30 @@ public class SaleDetails extends AppCompatActivity {
 
     private Listing listing;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_details);
 
-        findViewById(R.id.viewMP).setVisibility(View.INVISIBLE);
+        editButton = findViewById(R.id.editButton);
+        deleteButton = findViewById(R.id.deleteButton);
+        imageLoading = findViewById(R.id.loadingImage);
+        contactSelButton = findViewById(R.id.contactSel);
+        viewPager2 = findViewById(R.id.viewPagerImageSlider);
+        userEmailTextView = findViewById(R.id.userEmail);
+        viewMP = findViewById(R.id.viewMP);
+        ratingBar = findViewById(R.id.ratingBar2);
+        ratingBar.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                favorite();
+            }
+            return true;
+        });
 
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
 
-        final ImageView imageLoading = findViewById(R.id.loadingImage);
         Glide.with(this).load(R.drawable.loading).into(imageLoading);
 
         retrieveListingFromListingID();
@@ -76,22 +97,17 @@ public class SaleDetails extends AppCompatActivity {
 
     private void getSellerInformation() {
         runOnUiThread(() -> {
-            Button get_seller = findViewById(R.id.contactSel);
-            get_seller.setOnClickListener(view -> {
+            contactSelButton.setOnClickListener(view -> {
                 Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
                 intent.putExtra(ChatActivity.bundleLisitngId, listingID);
                 intent.putExtra(ChatActivity.bundleReceiverEmail, sellerEmail);
                 startActivity(intent);
-                if (mpLat != NOLAT && mpLng != NOLNG) {
-                    findViewById(R.id.viewMP).setVisibility(View.VISIBLE);
-                }
                 //TODO: The map is not displayed anymore. Another method should be found
             });
         });
     }
 
     private void viewMP() {
-        Button viewMP = findViewById(R.id.viewMP);
         viewMP.setOnClickListener(view -> {
             //TODO check that user is connected
             Intent viewMPIntent = new Intent(this, MapsActivity.class);
@@ -121,12 +137,17 @@ public class SaleDetails extends AppCompatActivity {
         Listing.fetch(listingID).addOnSuccessListener(result -> {
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
             if(!(fbAuth.getCurrentUser() == null)){
-                this.sellerEmail = result.getUserEmail();
-                if(fbAuth.getCurrentUser().getEmail().equals(result.getUserEmail())){
+                sellerEmail = result.getUserEmail();
+                if(fbAuth.getCurrentUser().getEmail().equals(sellerEmail)){
                     createEditAndDeleteActions(result, listingID);
+                    //it doesn't take place
+                    contactSelButton.setVisibility(View.GONE);
                 }
                 else{
                     showContactButton();
+                    //They don't take place anymore in layout
+                    editButton.setVisibility(View.GONE);
+                    deleteButton.setVisibility(View.GONE);
                 }
             }
 
@@ -134,6 +155,9 @@ public class SaleDetails extends AppCompatActivity {
 
             this.listingID = listingID;
             fillWithListing(result);
+            imageLoading.setVisibility(View.GONE);
+            viewPager2.setVisibility(View.VISIBLE);
+            ratingBar.setVisibility(View.VISIBLE);
         });
     }
 
@@ -162,10 +186,6 @@ public class SaleDetails extends AppCompatActivity {
 
     private void drawImages() {
         runOnUiThread (()-> {
-            final ImageView imageLoading = findViewById(R.id.loadingImage);
-            imageLoading.setVisibility(View.INVISIBLE);
-            viewPager2 = findViewById(R.id.viewPagerImageSlider);
-
             List<SliderItem> sliderItems = new ArrayList<>();
             for(String strImg: listStringImage) {
                 sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
@@ -193,7 +213,6 @@ public class SaleDetails extends AppCompatActivity {
                     textPageNumber.setText(String.format("%s/%s", Integer.toString(viewPager2.getCurrentItem() + 1), Integer.toString(listStringImage.size())));
                     textPageNumber.setGravity(Gravity.CENTER);
                 }
-
             });
         });
     }
@@ -213,17 +232,15 @@ public class SaleDetails extends AppCompatActivity {
             //Set Meeting Point
             mpLat = listing.getLatitude();
             mpLng = listing.getLongitude();
+            if (mpLat != NOLAT && mpLng != NOLNG) {
+                viewMP.setVisibility(View.VISIBLE);
+            }
 
             runOnUiThread(() -> {
                 //Set the title
                 TextView title_txt = findViewById(R.id.title);
                 title_txt.setVisibility(View.VISIBLE);
                 title_txt.setText(listing.getTitle());
-
-                //Set the category
-                TextView category_txt = findViewById(R.id.category);
-                category_txt.setVisibility(View.VISIBLE);
-                category_txt.setText(String.format("Category: %s", listing.getCategory()));
 
                 //Set the description
                 TextView description_txt = findViewById(R.id.description);
@@ -233,24 +250,22 @@ public class SaleDetails extends AppCompatActivity {
                 //Set the price
                 TextView price_txt = findViewById(R.id.price);
                 price_txt.setVisibility(View.VISIBLE);
-                price_txt.setTextSize(20);
+                price_txt.setTextSize(SIZE);
                 price_txt.setText(String.format("CHF %s", listing.getPrice()));
 
-                //Set email
-                TextView userEmailTextView = findViewById(R.id.userEmail);
-                userEmailTextView.setText(listing.getUserEmail());
-                userEmailTextView.setVisibility(View.INVISIBLE);
-
-                ToggleButton toggleFavorite = findViewById(R.id.toggleFavoriteButton);
                 Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
 
                 if (authUser != null) {
+                    //Set email
+                    userEmailTextView.setText(listing.getUserEmail());
                     authUser.getUserData().addOnSuccessListener(user -> {
                         List<String> favorites = user.getFavorites();
-                        toggleFavorite.setChecked(favorites.contains(listing.getId()));
+                        if (favorites.contains(listing.getId())){
+                            ratingBar.setRating(1);
+                        }
                     });
                 } else {
-                    toggleFavorite.setEnabled(false);
+                    ratingBar.setEnabled(false);
                 }
             });
         }
@@ -258,9 +273,6 @@ public class SaleDetails extends AppCompatActivity {
 
 
     private void createEditAndDeleteActions(Listing listing, String listingID) {
-        editButton = findViewById(R.id.editButton);
-        deleteButton = findViewById(R.id.deleteButton);
-
         editButton.setVisibility(View.VISIBLE);
         deleteButton.setVisibility(View.VISIBLE);
 
@@ -307,9 +319,7 @@ public class SaleDetails extends AppCompatActivity {
         }
     }
 
-
     private void showContactButton() {
-        Button contactSelButton = findViewById(R.id.contactSel);
         contactSelButton.setVisibility(View.VISIBLE);
         contactSelButton.setClickable(true);
     }
@@ -317,15 +327,17 @@ public class SaleDetails extends AppCompatActivity {
     /**
      * Adds the listing to favorites, or removes it from the user's favorites if it is already
      * a favorite
-     * @param view button that triggers the action
      */
-    public void toggleFavorite(View view) {
-        ToggleButton button = (ToggleButton) view;
+    public void favorite() {
         Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
 
+        //if it's 0 set 1 and vice versa
+        ratingBar.setRating((ratingBar.getRating() + 1) % 2);
+
+        //must be connected
         if (authUser != null) {
             authUser.getUserData().addOnSuccessListener(user -> {
-                if (button.isChecked()) {
+                if (ratingBar.getRating() == 1) {
                     user.addFavorite(listing);
                 } else {
                     user.removeFavorite(listing);
