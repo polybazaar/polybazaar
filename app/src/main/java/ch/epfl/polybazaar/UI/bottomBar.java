@@ -2,17 +2,17 @@ package ch.epfl.polybazaar.UI;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.widget.Toast;
 
-import ch.epfl.polybazaar.ChatActivity;
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UserProfileActivity;
+import ch.epfl.polybazaar.conversationOverview.ConversationOverview;
+import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
 import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.login.SignInActivity;
+import ch.epfl.polybazaar.widgets.NotSignedInActivity;
 
 public abstract class bottomBar {
 
@@ -23,6 +23,7 @@ public abstract class bottomBar {
                 //no login needed to go home
                 Intent intent = new Intent(activity,MainActivity.class);
                 activity.startActivity(intent);
+                activity.overridePendingTransition(0, 0);
                 break;
 
             case R.id.action_add_item:
@@ -30,7 +31,7 @@ public abstract class bottomBar {
                 break;
 
             case R.id.action_messages:
-                toActivity(activity,ChatActivity.class);
+                toActivity(activity, ConversationOverviewActivity.class);
                 break;
             case R.id.action_profile:
                 toActivity(activity, UserProfileActivity.class);
@@ -48,11 +49,12 @@ public abstract class bottomBar {
         //toast.show();
         Intent intent;
         if(user == null){
-            intent = new Intent(currentActivity, SignInActivity.class);
+            intent = new Intent(currentActivity, NotSignedInActivity.class);
         }else{
             intent = new Intent(currentActivity,c);
         }
         currentActivity.startActivity(intent);
+        currentActivity.overridePendingTransition(0, 0);
 
     }
 }
