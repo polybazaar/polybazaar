@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar;
+package ch.epfl.polybazaar.chat;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -11,14 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
+import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.message.ChatMessage;
-import ch.epfl.polybazaar.message.ChatMessageRecyclerAdapter;
 
 import static java.util.UUID.randomUUID;
 
@@ -68,13 +69,7 @@ public class ChatActivity extends AppCompatActivity {
         Tasks.whenAll(fetchReceiverMessages, fetchSenderMessages).addOnSuccessListener(aVoid -> {
             //Sort the conversation by the time the messages were sent
             if(conversation != null){
-                Collections.sort(conversation, (o1, o2) -> {
-                    if(o1.getTime().getTime() < o2.getTime().getTime()){
-                        return -1;
-                    } else{
-                        return 1;
-                    }
-                });
+                Collections.sort(conversation, (o1, o2) -> o1.getTime().compareTo(o2.getTime()));
             }
             chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
             messageRecycler.setAdapter(chatMessageRecyclerAdapter);
@@ -84,7 +79,7 @@ public class ChatActivity extends AppCompatActivity {
     private void sendMessage() {
 
         String messageText = messageEditor.getText().toString();
-        ChatMessage message = new ChatMessage(senderEmail, receiverEmail, listingID, messageText, new Date(System.currentTimeMillis()));
+        ChatMessage message = new ChatMessage(senderEmail, receiverEmail, listingID, messageText, new Timestamp(new Date(System.currentTimeMillis())));
         final String newMessageID = randomUUID().toString();
         message.setId(newMessageID);
 
