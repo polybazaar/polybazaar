@@ -56,23 +56,12 @@ public class LiteListingAdapter extends
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            titleView = itemView.findViewById(R.id.liteListingTitle);
-            priceView = itemView.findViewById(R.id.liteListingPrice);
-            thumbnail = itemView.findViewById(R.id.liteListingThumbnail);
+            titleView = itemView.findViewById(R.id.liteListingGridTitle);
+            priceView = itemView.findViewById(R.id.liteListingGridPrice);
+            thumbnail = itemView.findViewById(R.id.liteListingGridThumbnail);
 
-            // Setup the click listener on LiteListing title
-            titleView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Triggers click upwards to the adapter on click
-                    if (listener != null) {
-                        listener.onItemClick(titleView);
-                    }
-                }
-            });
-
-            // Setup the click listener on LiteListing thumbnail
-            thumbnail.setOnClickListener(new View.OnClickListener() {
+            // Setup the click listener on itemView
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Triggers click upwards to the adapter on click
@@ -97,7 +86,7 @@ public class LiteListingAdapter extends
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View liteListingView = inflater.inflate(R.layout.item_litelisting, parent, false);
+        View liteListingView = inflater.inflate(R.layout.item_gridcell_litelisting, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(liteListingView);
