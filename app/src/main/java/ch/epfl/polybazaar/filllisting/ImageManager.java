@@ -48,7 +48,6 @@ class ImageManager extends AppCompatActivity {
         viewPager.setCurrentItem(listStringImage.size() - 1, false);
     }
 
-
     /**
      * recursive function to retrieve all images
      * @param listingID ID of the image
@@ -122,11 +121,9 @@ class ImageManager extends AppCompatActivity {
         }
         int index = viewPager.getCurrentItem();
         Bitmap bitmap = convertStringToBitmap(listStringImage.get(index));
-
         Matrix matrix = new Matrix();
         matrix.postRotate(-90);
         listStringImage.set(index, convertBitmapToStringWithQuality(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true), 100));
-
         drawImages(listStringImage);
         viewPager.setCurrentItem(index);
     }

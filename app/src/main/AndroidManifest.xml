@@ -79,6 +79,9 @@
             android:label="Listing Editor"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".utilities.ImageTaker"
+            android:exported="false" />
+        <activity
             android:name=".UI.SalesOverview"
             android:label="Browse Listings"
             android:parentActivityName=".MainActivity" />

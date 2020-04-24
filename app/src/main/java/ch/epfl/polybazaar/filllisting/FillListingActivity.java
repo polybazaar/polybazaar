@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,7 +37,10 @@ import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.map.MapsActivity.VALID;
+import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_OK;
+import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_PREFS;
+import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
@@ -146,12 +150,16 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         }
     }
 
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        intent.putExtra(CODE, requestCode);
+        super.startActivityForResult(intent, requestCode);
+    }
+
     private void getNewImage(Intent data) {
         boolean bitmapOK = data.getBooleanExtra(BITMAP_OK, false);
-        Bitmap bitmap;
         if (bitmapOK) {
-            bitmap = imageTaker.getImage();
-            stringImage = convertBitmapToStringWithQuality(bitmap, QUALITY);
+            String stringImage = this.getSharedPreferences(BITMAP_PREFS, MODE_PRIVATE).getString(BITMAP_IMAGE, null);
             imageManager.addImage(listStringImage, stringImage);
             imageManager.updateViewPagerVisibility(listStringImage);
         }

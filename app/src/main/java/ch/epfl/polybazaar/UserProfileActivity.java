@@ -34,10 +34,14 @@ import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 import static ch.epfl.polybazaar.Utilities.displayToast;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.filllisting.FillListingActivity.QUALITY;
+import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_OK;
+import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_PREFS;
+import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class UserProfileActivity extends AppCompatActivity implements NoticeDialogListener {
@@ -94,18 +98,27 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
         }
     }
 
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        intent.putExtra(CODE, requestCode);
+        super.startActivityForResult(intent, requestCode);
+    }
+
     private void getNewImage(Intent data) {
         boolean bitmapOK = data.getBooleanExtra(BITMAP_OK, false);
-        Bitmap bitmap;
         if (bitmapOK) {
-            bitmap = imageTaker.getImage();
-            ImageView profilePic = findViewById(R.id.profilePicture);
-            profilePic.setImageBitmap(bitmap);
-            String stringImage = convertBitmapToStringWithQuality(bitmap, QUALITY);
-            // TODO : send new profile pic
-            makeDialog(UserProfileActivity.this, R.string.profile_picture_updated);
+            String stringImage = this.getSharedPreferences(BITMAP_PREFS, MODE_PRIVATE).getString(BITMAP_IMAGE, null);
+            if (stringImage != null) {
+                ImageView profilePic = findViewById(R.id.profilePicture);
+                profilePic.setImageBitmap(convertStringToBitmap(stringImage));
+                // TODO : send new profile pic
+                makeDialog(UserProfileActivity.this, R.string.profile_picture_updated);
+            } else {
+                makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
+            }
+        } else {
+            makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
         }
-        makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
     }
 
     @Override
@@ -197,7 +210,7 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
                     ArrayList<String> favoritesIds = authUser.getFavorites();
             // the list of user-created listings is empty
             if (favoritesIds == null || favoritesIds.isEmpty()) {
-                displayToast(this, R.string.no_created_listings, Gravity.CENTER);
+                displayToast(this, R.string.no_favorites, Gravity.CENTER);
                 // we relaunch the SalesOverview activity with the list of favorites in the bundle
             } else {
                 displaySavedListings(this, favoritesIds);

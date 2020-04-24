@@ -2,11 +2,13 @@ package ch.epfl.polybazaar.utilities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,9 +27,12 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
 import static ch.epfl.polybazaar.filllisting.FillListingActivity.QUALITY;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 
 public class ImageTaker extends AppCompatActivity {
 
+    public static final String BITMAP_IMAGE = "bitmap_image";
+    public static final String BITMAP_PREFS = "bitmap_prefs";
     public static final String CODE = "request_code";
     public static final int LOAD_IMAGE = 3;
     public static final int TAKE_IMAGE = 4;
@@ -41,7 +46,6 @@ public class ImageTaker extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Tags are set only for testing purposes using Espresso
         if(resultCode == Activity.RESULT_OK) {
             if (requestCode == RESULT_LOAD_IMAGE) {
                 if (data == null) {
@@ -66,16 +70,18 @@ public class ImageTaker extends AppCompatActivity {
                 image.compress(Bitmap.CompressFormat.JPEG, QUALITY, bin);
                 image = BitmapFactory.decodeStream(new ByteArrayInputStream(bin.toByteArray()));
                 success();
+            } else {
+                failure();
             }
-            failure();
-        }
-        else {
+        } else {
             failure();
         }
     }
 
     private void success() {
         Intent returnIntent = new Intent();
+        SharedPreferences myPrefs = this.getSharedPreferences(BITMAP_PREFS, MODE_PRIVATE);
+        myPrefs.edit().putString(BITMAP_IMAGE, convertBitmapToStringWithQuality(image, QUALITY)).apply();
         returnIntent.putExtra(BITMAP_OK, true);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
@@ -89,12 +95,6 @@ public class ImageTaker extends AppCompatActivity {
     }
 
     @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        intent.putExtra(CODE, requestCode);
-        super.startActivityForResult(intent, requestCode);
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         int requestCode = getIntent().getIntExtra(CODE, -1);
@@ -105,10 +105,6 @@ public class ImageTaker extends AppCompatActivity {
         } else {
             failure();
         }
-    }
-
-    public Bitmap getImage() {
-        return image;
     }
 
     //Function taken from https://developer.android.com/training/camera/photobasics
@@ -160,6 +156,8 @@ public class ImageTaker extends AppCompatActivity {
         cameraPermissionRequest = new PermissionRequest(this, "CAMERA", "Camera access is required to take pictures", null, result -> {
             if (result) {
                 takeCameraPicture();
+            } else {
+                finish();
             }
         });
         cameraPermissionRequest.assertPermission();
