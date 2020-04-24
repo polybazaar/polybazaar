@@ -21,10 +21,75 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/profilePicture"
+                android:layout_width="@dimen/profile_picture_size"
+                android:layout_height="@dimen/profile_picture_size"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
+                android:contentDescription="@string/profile_picture"
+                android:src="@drawable/default_user"/>
+
+            <TableRow
+                android:id="@+id/listingAccessButtons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large">
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/viewOwnListingsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/button_shadow_margin"
+                    android:layout_marginBottom="@dimen/button_shadow_margin"
+                    android:background="@drawable/rounded_corner_button_red"
+                    android:textColor="@color/white"
+                    android:onClick="viewOwnListings"
+                    android:text="@string/my_listings" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/viewFavoritesButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/button_shadow_margin"
+                    android:layout_marginBottom="@dimen/button_shadow_margin"
+                    android:background="@drawable/rounded_corner_button_red"
+                    android:textColor="@color/white"
+                    android:onClick="viewFavorites"
+                    android:text="@string/my_favorites" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+            </TableRow>
+
+            <View
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.7"
+                android:background="@android:color/darker_gray" />
+
             <TextView
                 android:id="@+id/personalDetailsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:text="@string/personal_details"
                 android:textColor="@android:color/secondary_text_light"
@@ -35,6 +100,7 @@
                 android:id="@+id/nicknameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:text="@string/nickname"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/small_textView_text_size"/>
@@ -43,7 +109,8 @@
                 android:id="@+id/nicknameSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:layout_marginTop="@dimen/userProfile_inter_space_small"
+                android:background="@drawable/boxed"
                 android:hint="@string/nickname"
                 android:inputType="textPersonName"
                 android:importantForAutofill="no" />
@@ -52,6 +119,7 @@
                 android:id="@+id/firstNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:text="@string/first_name"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/small_textView_text_size"/>
@@ -60,7 +128,8 @@
                 android:id="@+id/firstNameSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:layout_marginTop="@dimen/userProfile_inter_space_small"
+                android:background="@drawable/boxed"
                 android:hint="@string/first_name"
                 android:inputType="textPersonName"
                 android:importantForAutofill="no" />
@@ -69,6 +138,7 @@
                 android:id="@+id/lastNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:text="@string/last_name"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/small_textView_text_size"/>
@@ -77,24 +147,17 @@
                 android:id="@+id/lastNameSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:layout_marginTop="@dimen/userProfile_inter_space_small"
+                android:background="@drawable/boxed"
                 android:hint="@string/last_name"
                 android:inputType="textPersonName"
                 android:importantForAutofill="no" />
 
             <TextView
-                android:id="@+id/contactDetailsTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/contact_details"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/default_textView_text_size"
-                android:textStyle="bold"/>
-
-            <TextView
                 android:id="@+id/phoneNumberTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:text="@string/phone_number"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/small_textView_text_size"/>
@@ -103,46 +166,47 @@
                 android:id="@+id/phoneNumberSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:layout_marginTop="@dimen/userProfile_inter_space_small"
+                android:background="@drawable/boxed"
                 android:inputType="phone"
+                android:maxLength="17"
                 android:hint="@string/phone_number"
                 android:importantForAutofill="no" />
 
             <Button
                 android:id="@+id/saveProfileButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
+                android:background="@drawable/rounded_corner_button_red"
+                android:textColor="@color/white"
                 android:onClick="editProfile"
                 android:text="@string/save_profile" />
 
-            <Button
-                android:id="@+id/viewOwnListingsButton"
+            <View
+                android:layout_marginTop="@dimen/userProfile_inter_space_extra_large"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="viewOwnListings"
-                android:text="@string/view_my_listings" />
+                android:layout_height="1dp"
+                android:alpha="0.7"
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:id="@+id/passwordTextView"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:text="@string/password"
                 android:textSize="@dimen/default_textView_text_size"
                 android:textColor="@android:color/secondary_text_light"
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/changePasswordTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/change_password_notice"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/small_textView_text_size"/>
-
-            <TextView
                 android:id="@+id/currentPasswordTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:text="@string/current_password"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/small_textView_text_size"/>
@@ -151,7 +215,8 @@
                 android:id="@+id/currentPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:layout_marginTop="@dimen/userProfile_inter_space_small"
+                android:background="@drawable/boxed"
                 android:inputType="textPassword"
                 android:importantForAutofill="no"
                 tools:ignore="LabelFor" />
@@ -160,6 +225,7 @@
                 android:id="@+id/newPasswordTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:text="@string/new_password"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/small_textView_text_size" />
@@ -168,7 +234,8 @@
                 android:id="@+id/newPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:layout_marginTop="@dimen/userProfile_inter_space_small"
+                android:background="@drawable/boxed"
                 android:inputType="textPassword"
                 android:importantForAutofill="no"
                 tools:ignore="LabelFor" />
@@ -177,6 +244,7 @@
                 android:id="@+id/confirmNewPasswordTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:text="@string/confirm_password"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/small_textView_text_size" />
@@ -185,15 +253,21 @@
                 android:id="@+id/confirmNewPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:layout_marginTop="@dimen/userProfile_inter_space_small"
+                android:background="@drawable/boxed"
                 android:inputType="textPassword"
                 android:importantForAutofill="no"
                 tools:ignore="LabelFor" />
 
             <Button
                 android:id="@+id/savePassword"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/userProfile_inter_space_large"
+                android:layout_marginBottom="@dimen/userProfile_inter_space_extra_large"
+                android:background="@drawable/rounded_corner_button_red"
+                android:textColor="@color/white"
                 android:onClick="editPassword"
                 android:text="@string/save_password" />
 

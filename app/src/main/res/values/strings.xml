@@ -60,7 +60,7 @@
     <string name="take_picture_fail">Unable to take picture</string>
     <string name="edit">Edit</string>
     <string name="incorrect_fields">One or more fields are missing</string>
-    <string name="default_spinner_text">Select category...</string>
+    <string name="default_spinner_text">Select category…</string>
     <string name="object_not_found">Object not found</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -84,19 +84,19 @@
     <string name="library">Library</string>
     <string name="not_implemented">Unavailable</string>
     <string name="remove_meeting_point">Remove</string>
-    <string name="save_profile">Save profile</string>
-    <string name="view_my_listings">View my listings</string>
+    <string name="save_profile">Save Profile</string>
+    <string name="my_listings">Listings</string>
     <string name="password">Password</string>
-    <string name="change_password_notice">If you want to change your password, please re-enter your current password below and then type your new password twice</string>
-    <string name="current_password">Current password</string>
-    <string name="new_password">New password</string>
-    <string name="confirm_password">Confirm password</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm New Password</string>
     <string name="save_password">Save Password</string>
-    <string name="phone_number">Phone number</string>
-    <string name="contact_details">Contact details</string>
-    <string name="last_name">Last name</string>
-    <string name="first_name">First name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="contact_details">Contact Details</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
     <string name="nickname">Nickname</string>
-    <string name="personal_details">Personal details</string>
-    <string name="my_profile">My Profile</string>
+    <string name="personal_details">Personal Details</string>
+    <string name="my_favorites">Favorites</string>
+    <string name="profile_picture">Profile Picture</string>
 </resources>

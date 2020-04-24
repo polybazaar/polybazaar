@@ -138,7 +138,7 @@
                 android:layout_marginTop="@dimen/page_margin"
                 android:layout_marginEnd="@dimen/page_margin"
                 android:alpha="0.7"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="wrap_content"

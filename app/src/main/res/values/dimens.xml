@@ -42,4 +42,5 @@
     <dimen name="userProfile_inter_space_extra_large">50dp</dimen>
     <dimen name="userProfile_inter_space_large">30dp</dimen>
     <dimen name="userProfile_inter_space_small">7dp</dimen>
+    <dimen name="profile_picture_size">200dp</dimen>
 </resources>
