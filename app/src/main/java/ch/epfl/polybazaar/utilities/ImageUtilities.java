@@ -4,6 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
@@ -141,4 +144,43 @@ public final class ImageUtilities {
         matrix.postScale(scaleWidth, scaleHeight);
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
     }
+
+    /**
+     * Crops a bitmap to a square centered on the image
+     * @param bitmap the bitmap
+     * @return the cropped bitmap
+     */
+    public static Bitmap cropToSquare(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int centerX = width >> 1;
+        int centerY = height >> 1;
+        int smallestSide = Math.min(width, height);
+        return Bitmap.createBitmap(bitmap, centerX - (smallestSide >> 1), centerY - (smallestSide >> 1),
+                smallestSide, smallestSide);
+    }
+
+    /**
+     * Crop a bitmap to circle centered on the image
+     * @param bitmap the bitmap
+     * @return the cropped bitmap
+     */
+    public static Bitmap getRoundedCroppedBitmap(Bitmap bitmap) {
+        bitmap = cropToSquare(bitmap);
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int centerX = width >> 1;
+        int centerY = height >> 1;
+        int radius = (width < height) ? centerX : centerY;
+        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+        Paint paintColor = new Paint();
+        paintColor.setFlags(Paint.ANTI_ALIAS_FLAG);
+        canvas.drawCircle(centerX, centerY, radius, paintColor);
+        Paint paintImage = new Paint();
+        paintImage.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
+        canvas.drawBitmap(bitmap, 0, 0, paintImage);
+        return output;
+    }
+
 }

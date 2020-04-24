@@ -42,6 +42,7 @@ import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.getRoundedCroppedBitmap;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class UserProfileActivity extends AppCompatActivity implements NoticeDialogListener {
@@ -110,8 +111,10 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
             String stringImage = this.getSharedPreferences(BITMAP_PREFS, MODE_PRIVATE).getString(BITMAP_IMAGE, null);
             if (stringImage != null) {
                 ImageView profilePic = findViewById(R.id.profilePicture);
-                profilePic.setImageBitmap(convertStringToBitmap(stringImage));
-                // TODO : send new profile pic
+                Bitmap image = getRoundedCroppedBitmap(convertStringToBitmap(stringImage));
+                profilePic.setImageBitmap(image);
+                stringImage = convertBitmapToStringWithQuality(image, QUALITY);
+                // TODO : send new profile pic (stringImage)
                 makeDialog(UserProfileActivity.this, R.string.profile_picture_updated);
             } else {
                 makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
@@ -218,25 +221,4 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
         });
     }
 
-    // taken from: https://stackoverflow.com/questions/12944275/crop-image-as-circle-in-android
-    private Bitmap getRoundedCroppedBitmap(Bitmap bitmap) {
-        int widthLight = bitmap.getWidth();
-        int heightLight = bitmap.getHeight();
-
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(output);
-        Paint paintColor = new Paint();
-        paintColor.setFlags(Paint.ANTI_ALIAS_FLAG);
-
-        RectF rectF = new RectF(new Rect(0, 0, widthLight, heightLight));
-
-        canvas.drawRoundRect(rectF, widthLight / 2 ,heightLight / 2,paintColor);
-
-        Paint paintImage = new Paint();
-        paintImage.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
-        canvas.drawBitmap(bitmap, 0, 0, paintImage);
-
-        return output;
-    }
 }
