@@ -17,6 +17,7 @@
     <dimen name="large_button_text_size">18sp</dimen>
     <dimen name="small_button_text_size">12sp</dimen>
     <dimen name="default_textView_text_size">20sp</dimen>
+    <dimen name="small_textView_text_size">15sp</dimen>
     <dimen name="page_margin_and_offset">50dp</dimen>
     <dimen name="thumbnail_size">80dp</dimen>
     <dimen name="grid_thumbnail_size">110dp</dimen>
@@ -38,4 +39,7 @@
     <dimen name="button_radius_large">10dp</dimen>
     <dimen name="button_radius_small">3dp</dimen>
     <dimen name="button_shadow_margin">4dp</dimen>
+    <dimen name="userProfile_inter_space_extra_large">50dp</dimen>
+    <dimen name="userProfile_inter_space_large">30dp</dimen>
+    <dimen name="userProfile_inter_space_small">7dp</dimen>
 </resources>
