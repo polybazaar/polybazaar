@@ -87,7 +87,6 @@ public class SalesOverview extends AppCompatActivity {
                 Account user = getUser();
                 user.getUserData().addOnSuccessListener(authUser -> {
                     ArrayList<String> favoritesIds = authUser.getFavorites();
-
                     // the list of favorites of the user is empty
                     if (favoritesIds == null || favoritesIds.isEmpty()) {
                         Toast.makeText(getApplicationContext(), R.string.no_favorites, Toast.LENGTH_SHORT).show() ;

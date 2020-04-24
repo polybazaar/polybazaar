@@ -130,7 +130,18 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     public void viewFavorites(View view) {
-
+        Account user = getUser();
+        if(user == null) return;
+        user.getUserData().addOnSuccessListener(authUser -> {
+                    ArrayList<String> favoritesIds = authUser.getFavorites();
+            // the list of user-created listings is empty
+            if (favoritesIds == null || favoritesIds.isEmpty()) {
+                displayToast(this, R.string.no_created_listings, Gravity.CENTER);
+                // we relaunch the SalesOverview activity with the list of favorites in the bundle
+            } else {
+                displaySavedListings(this, favoritesIds);
+            }
+        });
     }
 
     // taken from: https://stackoverflow.com/questions/12944275/crop-image-as-circle-in-android
