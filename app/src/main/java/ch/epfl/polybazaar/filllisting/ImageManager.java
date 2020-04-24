@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TableRow;
 import android.widget.Toast;
 
@@ -114,6 +113,7 @@ class ImageManager {
             //check if Listing contains image
             if(result == null) {
                 drawImages(listStringImage);
+                updateViewPagerVisibility(listStringImage);
                 return;
             }
             listStringImage.add(result.getImage());
@@ -121,6 +121,7 @@ class ImageManager {
                 retrieveAllImages(listStringImage, listImageID, result.getRefNextImg());
             } else {
                 drawImages(listStringImage);
+                updateViewPagerVisibility(listStringImage);
             }
         });
     }
