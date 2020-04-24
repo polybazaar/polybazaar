@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="@dimen/sales_overview_cell_padding"
+    android:layout_width="@dimen/sales_overview_cell_width"
+    android:layout_height="@dimen/sales_overview_cell_width"
+    android:layout_margin= "@dimen/sales_overview_cell_margin"
+    android:clickable="true"
+    android:background="@drawable/gridcell_background"
+    android:elevation="@dimen/sales_overview_cell_elevation">
+
+    <ImageView
+        android:id="@+id/liteListingGridThumbnail"
+        android:layout_width="@dimen/grid_thumbnail_size"
+        android:layout_height="@dimen/grid_thumbnail_size"
+        android:clickable="false"
+        android:scaleType="centerInside"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/liteListingGridTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="false"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/overview_grid_text_size" />
+
+    <TextView
+        android:id="@+id/liteListingGridPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="false"
+        android:ellipsize="end"
+        android:textSize="@dimen/overview_grid_text_size"
+        android:textStyle="bold"/>
+
+</LinearLayout>
