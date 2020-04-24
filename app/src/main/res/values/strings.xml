@@ -42,15 +42,14 @@
     <string name="MP_removed">Meeting Point removed</string>
     <string name="MP_set">Meeting Point set</string>
     <string name="title_activity_user_profile">Profile</string>
-    <string name="modify_image">modify image</string>
     <string name="move_first">Set As Main Image</string>
     <string name="rotate">Rotate Image</string>
     <string name="delete_image">Delete Image</string>
     <string name="invalid_first_name">Please enter a valid first name</string>
     <string name="invalid_last_name">Please enter a valid last name</string>
-    <string name="invalid_current_password">The current password is incorrect</string>
-    <string name="password_updated">Your password has successfully been updated</string>
-    <string name="profile_updated">Your profile has successfully been updated</string>
+    <string name="invalid_current_password">Current password incorrect</string>
+    <string name="password_updated">Your password has been updated</string>
+    <string name="profile_updated">Your profile has been updated</string>
     <string name="MP_ok">Meeting Point defined</string>
     <string name="MP_nok">Meeting Point not defined</string>
     <string name="location_unavailable">Location services are unavailable</string>
@@ -99,4 +98,6 @@
     <string name="personal_details">Personal Details</string>
     <string name="my_favorites">Favorites</string>
     <string name="profile_picture">Profile Picture</string>
+    <string name="profile_picture_not_updated">Failed to update profile picture</string>
+    <string name="profile_picture_updated">Profile picture updated</string>
 </resources>

@@ -4,41 +4,31 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.TableRow;
-import android.widget.Toast;
-
-import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listingImage.ListingImage;
-import static ch.epfl.polybazaar.filllisting.FillListingActivity.RESULT_LOAD_IMAGE;
-import static ch.epfl.polybazaar.filllisting.FillListingActivity.RESULT_TAKE_PICTURE;
+
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
-class ImageManager {
+class ImageManager extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private TableRow editButtons;
     private Activity activity;
-    private File photoFile;
 
     ImageManager(Activity activity) {
         this.activity = activity;
@@ -58,50 +48,6 @@ class ImageManager {
         viewPager.setCurrentItem(listStringImage.size() - 1, false);
     }
 
-    //Function taken from https://developer.android.com/training/camera/photobasics
-    File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        return File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-    }
-
-    //Function taken from https://developer.android.com/training/camera/photobasics
-    void takePicture() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-            photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ignored) {
-                Toast.makeText(activity, R.string.take_picture_fail, Toast.LENGTH_SHORT).show();
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                try{
-                    Uri photoURI = FileProvider.getUriForFile(activity,"ch.epfl.polybazaar.fileprovider", photoFile);
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                } catch (IllegalArgumentException ignored) {
-                    //Picture has been canceled by the user
-                }
-                activity.startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
-            }
-        }
-    }
-
-    File getPhotoFile() {
-        return photoFile;
-    }
-
-    void uploadImage() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        activity.startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-    }
 
     /**
      * recursive function to retrieve all images

@@ -28,7 +28,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:contentDescription="@string/profile_picture"
-                android:src="@drawable/default_user"/>
+                android:src="@drawable/default_user"
+                android:onClick="changeProfilePicture"/>
 
             <TableRow
                 android:id="@+id/listingAccessButtons"

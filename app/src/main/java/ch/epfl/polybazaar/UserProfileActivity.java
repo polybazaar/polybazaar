@@ -1,5 +1,7 @@
 package ch.epfl.polybazaar;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -11,9 +13,12 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 
@@ -21,18 +26,26 @@ import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.user.User;
+import ch.epfl.polybazaar.utilities.ImageTaker;
+import ch.epfl.polybazaar.widgets.AddImageDialog;
+import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 
 import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 import static ch.epfl.polybazaar.Utilities.displayToast;
 import static ch.epfl.polybazaar.Utilities.getUser;
+import static ch.epfl.polybazaar.filllisting.FillListingActivity.QUALITY;
+import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_OK;
+import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends AppCompatActivity implements NoticeDialogListener {
 
     private Authenticator authenticator;
     private Account account;
     private User user;
-
+    private ImageTaker imageTaker;
 
     private EditText nicknameSelector;
     private EditText firstNameSelector;
@@ -48,6 +61,7 @@ public class UserProfileActivity extends AppCompatActivity {
         firstNameSelector = findViewById(R.id.firstNameSelector);
         lastNameSelector = findViewById(R.id.lastNameSelector);
         phoneNumberSelector = findViewById(R.id.phoneNumberSelector);
+        imageTaker = new ImageTaker();
 
     }
 
@@ -64,6 +78,53 @@ public class UserProfileActivity extends AppCompatActivity {
                 lastNameSelector.setText(user.getLastName());
                 phoneNumberSelector.setText(user.getPhoneNumber());
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == LOAD_IMAGE) {
+                getNewImage(data);
+            } else if (requestCode == TAKE_IMAGE) {
+                getNewImage(data);
+            } else {
+                makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
+            }
+        }
+    }
+
+    private void getNewImage(Intent data) {
+        boolean bitmapOK = data.getBooleanExtra(BITMAP_OK, false);
+        Bitmap bitmap;
+        if (bitmapOK) {
+            bitmap = imageTaker.getImage();
+            ImageView profilePic = findViewById(R.id.profilePicture);
+            profilePic.setImageBitmap(bitmap);
+            String stringImage = convertBitmapToStringWithQuality(bitmap, QUALITY);
+            // TODO : send new profile pic
+            makeDialog(UserProfileActivity.this, R.string.profile_picture_updated);
+        }
+        makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        if (dialog instanceof AddImageDialog) {
+            startActivityForResult(new Intent(this, ImageTaker.class), TAKE_IMAGE);
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        if (dialog instanceof AddImageDialog) {
+            startActivityForResult(new Intent(this, ImageTaker.class), LOAD_IMAGE);
+        }
+    }
+
+    public void changeProfilePicture(View view) {
+        AddImageDialog dialog = new AddImageDialog();
+        dialog.show(getSupportFragmentManager(), "select image import");
     }
 
     public void editProfile(View view){
