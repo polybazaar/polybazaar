@@ -6,7 +6,6 @@ import android.content.Intent;
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UserProfileActivity;
-import ch.epfl.polybazaar.conversationOverview.ConversationOverview;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
 import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.login.Account;
@@ -21,7 +20,7 @@ public abstract class bottomBar {
         switch (i){
             case R.id.action_home:
                 //no login needed to go home
-                Intent intent = new Intent(activity,MainActivity.class);
+                Intent intent = new Intent(activity,SalesOverview.class);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
                 break;
@@ -42,12 +41,9 @@ public abstract class bottomBar {
 
     private static void toActivity(Activity currentActivity,Class c){
         Authenticator authenticator = AuthenticatorFactory.getDependency();
-        //authenticator.signOut();
         Account user = authenticator.getCurrentUser();
-
-        //Toast toast = Toast.makeText(currentActivity, user.getEmail(), Toast.LENGTH_LONG);
-        //toast.show();
         Intent intent;
+
         if(user == null){
             intent = new Intent(currentActivity, NotSignedInActivity.class);
         }else{
