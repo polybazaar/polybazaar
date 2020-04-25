@@ -132,13 +132,9 @@ public class SaleDetails extends AppCompatActivity {
 
         Listing.fetch(listingID).addOnSuccessListener(result -> {
             listing = result;
-            if (listing.getStringImage() != null) {
-                findViewById(R.id.imageDisplay).setVisibility(View.VISIBLE);
-                retrieveImages(listingID);
-            }
             this.listingID = listingID;
+            retrieveImages(listingID);
             fillWithListing(result);
-            imageLoading.setVisibility(View.GONE);
         });
     }
 
@@ -168,33 +164,40 @@ public class SaleDetails extends AppCompatActivity {
     private void drawImages() {
         runOnUiThread (()-> {
             List<SliderItem> sliderItems = new ArrayList<>();
-            for(String strImg: listStringImage) {
-                sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
-            }
-
-            viewPager2.setAdapter(new SliderAdapter(sliderItems, viewPager2));
-
-            viewPager2.setClipToPadding(false);
-            viewPager2.setClipChildren(false);
-            viewPager2.setOffscreenPageLimit(3);
-            viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
-
-            CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
-            compositePageTransformer.addTransformer((page, position) -> {
-                float r = 1 - Math.abs(position);
-                page.setScaleY(0.85f + r * 0.15f);
-            });
-            viewPager2.setPageTransformer(compositePageTransformer);
-
-            viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageSelected(int position) {
-                    super.onPageSelected(position);
-                    TextView textPageNumber = findViewById(R.id.pageNumber);
-                    textPageNumber.setText(String.format("%s/%s", Integer.toString(viewPager2.getCurrentItem() + 1), Integer.toString(listStringImage.size())));
-                    textPageNumber.setGravity(Gravity.CENTER);
+            if (!listStringImage.isEmpty()) {
+                viewPager2.setVisibility(View.VISIBLE);
+                imageLoading.setVisibility(View.GONE);
+                findViewById(R.id.pageNumber).setVisibility(View.VISIBLE);
+                for (String strImg : listStringImage) {
+                    sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
                 }
-            });
+
+                viewPager2.setAdapter(new SliderAdapter(sliderItems, viewPager2));
+
+                viewPager2.setClipToPadding(false);
+                viewPager2.setClipChildren(false);
+                viewPager2.setOffscreenPageLimit(3);
+                viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+
+                CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+                compositePageTransformer.addTransformer((page, position) -> {
+                    float r = 1 - Math.abs(position);
+                    page.setScaleY(0.85f + r * 0.15f);
+                });
+                viewPager2.setPageTransformer(compositePageTransformer);
+
+                viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        super.onPageSelected(position);
+                        TextView textPageNumber = findViewById(R.id.pageNumber);
+                        textPageNumber.setText(String.format("%s/%s", Integer.toString(viewPager2.getCurrentItem() + 1), Integer.toString(listStringImage.size())));
+                        textPageNumber.setGravity(Gravity.CENTER);
+                    }
+                });
+            } else {
+                findViewById(R.id.imageDisplay).setVisibility(View.GONE);
+            }
         });
     }
 

@@ -23,7 +23,7 @@
                 android:id="@+id/imageDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_marginTop="@dimen/saleDetails_inter_space_large"
                 android:paddingBottom="16dp"
                 android:orientation="vertical">
@@ -32,6 +32,7 @@
                     android:id="@+id/viewPagerImageSlider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/viewPager2_height"
+                    android:visibility="gone"
                     tools:ignore="PrivateResource" />
 
                 <ImageView
@@ -40,6 +41,7 @@
                     android:layout_height="@dimen/loading_image_size"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
+                    android:visibility="visible"
                     app:srcCompat="@drawable/ic_launcher_background"
                     android:contentDescription="@string/loading" />
 
@@ -50,6 +52,7 @@
                     android:alpha="0.5"
                     android:gravity="center"
                     android:layout_centerHorizontal="true"
+                    android:visibility="gone"
                     android:layout_marginTop="@dimen/page_number_margin_top"
                     android:background="@drawable/rounded_corner"/>
             </RelativeLayout>
