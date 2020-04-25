@@ -112,7 +112,8 @@
                 android:layout_marginTop="@dimen/saleDetails_inter_space_large"
                 android:text="@string/contact_the_seller"
                 android:visibility="gone"
-                android:background="@drawable/rounded_corner_button_colored"/>
+                android:background="@drawable/rounded_corner_button_colored"
+                android:textColor="@color/white"/>
 
             <LinearLayout
                 android:id="@+id/descriptionLayout"
