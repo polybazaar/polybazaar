@@ -45,7 +45,7 @@ import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
 
 
-    public static final int RESULT_ADD_MP = 3;
+    public static final int ADD_MP = 3;
 
     private Button setMainImage;
     private Button rotateImage;
@@ -126,19 +126,19 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             getNewImage(data);
         }
         else if (requestCode == TAKE_IMAGE){
-           getNewImage(data);
-        }
-        else if (requestCode == RESULT_ADD_MP) {
             if (data != null) {
-                if (data.getBooleanExtra(VALID, false)) {
-                    lng = data.getDoubleExtra(LNG, NOLNG);
-                    lat = data.getDoubleExtra(LAT, NOLAT);
-                    addMP.setText(R.string.change_MP);
-                } else {
-                    lng = NOLNG;
-                    lat = NOLAT;
-                    addMP.setText(R.string.add_MP);
-                }
+                getNewImage(data);
+            }
+        }
+        if (resultCode == Activity.RESULT_OK && ADD_MP == requestCode) {
+            if (data.getBooleanExtra(VALID, false)) {
+                lng = data.getDoubleExtra(LNG, NOLNG);
+                lat = data.getDoubleExtra(LAT, NOLAT);
+                addMP.setText(R.string.change_MP);
+            } else {
+                lng = NOLNG;
+                lat = NOLAT;
+                addMP.setText(R.string.add_MP);
             }
         }
     }
@@ -172,7 +172,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             defineMP.putExtra(GIVE_LAT_LNG, false);
             defineMP.putExtra(LAT, lat);
             defineMP.putExtra(LNG, lng);
-            startActivityForResult(defineMP, RESULT_ADD_MP);
+            startActivityForResult(defineMP, ADD_MP);
         });
         titleSelector.setOnFocusChangeListener((v, hasFocus) -> {
             if (!titleSelector.getText().toString().equals("")) titleSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
