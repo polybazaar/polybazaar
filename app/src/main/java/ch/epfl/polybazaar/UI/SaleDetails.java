@@ -20,6 +20,7 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -307,6 +308,9 @@ public class SaleDetails extends AppCompatActivity {
 
                 authAccount.getUserData().addOnSuccessListener(user -> {
                     user.deleteOwnListing(listingID);
+                    user.save().addOnSuccessListener(aVoid -> {
+                        // nothing
+                    });
                 });
 
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
