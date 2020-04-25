@@ -23,7 +23,7 @@
                 android:id="@+id/imageDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/saleDetails_inter_space_large"
                 android:paddingBottom="16dp"
                 android:orientation="vertical">
@@ -58,20 +58,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/saleDetails_inter_space_large"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
                         android:text="@string/title"
-                        android:textSize="@dimen/large_textView_text_size"
+                        android:textSize="@dimen/extra_large_textView_text_size"
                         android:textStyle="bold"
                         android:textColor="@android:color/secondary_text_light"/>
 
@@ -98,6 +98,7 @@
                     android:isIndicator="true"
                     android:clickable="true"
                     android:numStars="1"
+                    android:visibility="invisible"
                     android:focusable="true"/>
             </LinearLayout>
 
@@ -107,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/saleDetails_inter_space_large"
                 android:text="@string/contact_the_seller"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:background="@drawable/rounded_corner_button_grey"/>
 
             <LinearLayout
@@ -115,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/saleDetails_inter_space_large"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <View
@@ -154,7 +155,7 @@
                 android:layout_marginTop="@dimen/saleDetails_inter_space_large"
                 android:text="@string/see_MP"
                 android:background="@drawable/rounded_corner_button_grey"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <View
                 android:layout_width="match_parent"
@@ -198,7 +199,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/saleDetails_inter_space_large"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <View
@@ -211,8 +212,7 @@
                     android:id="@+id/editButtons"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/saleDetails_inter_space_large"
-                    android:layout_marginBottom="@dimen/saleDetails_inter_space_extra_large">
+                    android:layout_marginTop="@dimen/saleDetails_inter_space_large">
 
                     <Space
                         android:layout_width="wrap_content"
@@ -250,6 +250,10 @@
                 </TableRow>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/saleDetails_inter_space_extra_large" />
 
         </LinearLayout>
     </ScrollView>

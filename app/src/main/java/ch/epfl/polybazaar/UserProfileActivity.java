@@ -70,7 +70,7 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
             firstNameSelector.setText(user.getFirstName());
             lastNameSelector.setText(user.getLastName());
             phoneNumberSelector.setText(user.getPhoneNumber());
-            if (user.getProfilePicture() != User.NO_PROFILE_PICTURE) {
+            if (!user.getProfilePicture().equals(User.NO_PROFILE_PICTURE)) {
                 profilePicView.setImageBitmap(convertStringToBitmap(user.getProfilePicture()));
                 profilePicChanged = true;
             }
@@ -87,9 +87,13 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == LOAD_IMAGE) {
-                getNewImage(data);
+                if (data != null) {
+                    getNewImage(data);
+                }
             } else if (requestCode == TAKE_IMAGE) {
-                getNewImage(data);
+                if (data != null) {
+                    getNewImage(data);
+                }
             } else {
                 makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
             }

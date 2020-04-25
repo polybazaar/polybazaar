@@ -48,5 +48,6 @@
     <dimen name="userProfile_inter_space_small">7dp</dimen>
     <dimen name="profile_picture_size">200dp</dimen>
     <dimen name="large_textView_text_size">20sp</dimen>
+    <dimen name="extra_large_textView_text_size">25sp</dimen>
     <dimen name="seller_image_size">120dp</dimen>
 </resources>
