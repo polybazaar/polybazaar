@@ -47,15 +47,12 @@ public class SalesOverview extends AppCompatActivity {
         // Create adapter passing in the sample LiteListing data
         adapter = new LiteListingAdapter(liteListingList);
 
-        adapter.setOnItemClickListener(new LiteListingAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view) {
-                int viewID = view.getId();
-                String listingID = adapter.getListingID(viewID);
-                Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-                intent.putExtra("listingID", listingID);
-                startActivity(intent);
-            }
+        adapter.setOnItemClickListener(view -> {
+            int viewID = view.getId();
+            String listingID = adapter.getListingID(viewID);
+            Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
+            intent.putExtra("listingID", listingID);
+            startActivity(intent);
         });
 
         // Attach the adapter to the recyclerview to populate items

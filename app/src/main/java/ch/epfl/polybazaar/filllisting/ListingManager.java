@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +16,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.listing.Listing;
@@ -28,6 +28,9 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToString;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.cropToSize;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
 import static java.util.UUID.randomUUID;
 
@@ -55,6 +58,7 @@ class ListingManager {
             return;
         }
         newListing.setId(newListingID);
+        // Send Listing & LiteListing
         LiteListing newLiteListing = new LiteListing(newListingID, newListing.getTitle(), newListing.getPrice(),
                 newListing.getCategory(), stringThumbnail);
         newLiteListing.setId(newListingID);
