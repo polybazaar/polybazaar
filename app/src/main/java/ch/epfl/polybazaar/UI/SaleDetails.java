@@ -77,7 +77,7 @@ public class SaleDetails extends AppCompatActivity {
         viewPager2 = findViewById(R.id.viewPagerImageSlider);
         userEmailTextView = findViewById(R.id.userEmail);
         viewMP = findViewById(R.id.viewMP);
-        ratingBar = findViewById(R.id.ratingBar2);
+        ratingBar = findViewById(R.id.ratingBar);
         ratingBar.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 favorite();

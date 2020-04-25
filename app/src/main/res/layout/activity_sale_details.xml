@@ -1,48 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".UI.SaleDetails">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0">
+        android:layout_height="fill_parent"
+        android:layout_marginStart="@dimen/general_margin"
+        android:layout_marginEnd="@dimen/general_margin"
+        tools:ignore="UselessParent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/editButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:isScrollContainer="false"
-                    android:text="@string/edit"
-                    android:visibility="invisible" />
-
-                <Button
-                    android:id="@+id/deleteButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:text="@string/delete"
-                    android:visibility="invisible" />
-            </LinearLayout>
-
             <RelativeLayout
+                android:id="@+id/imageDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="visible"
+                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
                 android:paddingBottom="16dp"
                 android:orientation="vertical">
 
@@ -50,8 +32,7 @@
                     android:id="@+id/viewPagerImageSlider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/viewPager2_height"
-                    android:background="@color/cardview_dark_background"
-                    android:visibility="invisible"/>
+                    tools:ignore="PrivateResource" />
 
                 <ImageView
                     android:id="@+id/loadingImage"
@@ -59,7 +40,8 @@
                     android:layout_height="@dimen/loading_image_size"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    app:srcCompat="@drawable/ic_launcher_background" />
+                    app:srcCompat="@drawable/ic_launcher_background"
+                    android:contentDescription="@string/loading" />
 
                 <TextView
                     android:id="@+id/pageNumber"
@@ -71,10 +53,13 @@
                     android:layout_marginTop="@dimen/page_number_margin_top"
                     android:background="@drawable/rounded_corner"/>
             </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:orientation="horizontal"
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -84,20 +69,20 @@
                         android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/titre"
-                        android:textSize="30sp"
-                        android:visibility="invisible"
-                        android:layout_marginStart="@dimen/page_margin"/>
+                        android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
+                        android:text="@string/title"
+                        android:textSize="@dimen/large_textView_text_size"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/secondary_text_light"/>
 
                     <TextView
                         android:id="@+id/price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/price"
-                        android:textSize="14sp"
-                        android:visibility="invisible"
-                        android:layout_marginStart="@dimen/page_margin"
-                        android:layout_marginTop="10dp"/>
+                        android:textSize="@dimen/default_textView_text_size"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:layout_marginTop="@dimen/saleDetails_inter_space_small"/>
                 </LinearLayout>
 
                 <androidx.legacy.widget.Space
@@ -106,87 +91,168 @@
                     android:layout_weight="0.05"/>
 
                 <RatingBar
-                    android:id="@+id/ratingBar2"
+                    android:id="@+id/ratingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:isIndicator="true"
                     android:clickable="true"
                     android:numStars="1"
-                    android:focusable="true"
-                    android:visibility="invisible"
-                    android:layout_marginEnd="@dimen/page_margin"/>
+                    android:focusable="true"/>
             </LinearLayout>
 
             <Button
                 android:id="@+id/contactSel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/page_margin"
-                android:layout_marginTop="@dimen/page_margin"
-                android:layout_marginEnd="@dimen/page_margin"
-                android:clickable="false"
+                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
                 android:text="@string/contact_the_seller"
-                android:textColor="@color/white"
-                android:visibility="invisible"
-                android:background="@color/colorPrimary"/>
+                android:visibility="visible"
+                android:background="@drawable/rounded_corner_button_grey"/>
 
-            <View
+            <LinearLayout
+                android:id="@+id/descriptionLayout"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/page_margin"
-                android:layout_marginTop="@dimen/page_margin"
-                android:layout_marginEnd="@dimen/page_margin"
-                android:alpha="0.7"
-                android:background="@android:color/darker_gray" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/page_margin"
-                android:layout_marginTop="@dimen/page_margin"
-                android:textSize="20sp"
-                android:text="@string/description"
-                />
+                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:visibility="visible"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="15sp"
-                android:text="@string/description"
-                android:visibility="invisible"
-                android:layout_marginStart="@dimen/page_margin"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:alpha="0.7"
+                    android:background="@android:color/darker_gray" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/page_margin"
-                android:layout_marginTop="@dimen/page_margin"
-                android:layout_marginEnd="@dimen/page_margin"
-                android:alpha="0.7"
-                android:background="@android:color/darker_gray"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="@dimen/large_textView_text_size"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:text="@string/description"
+                    />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/saleDetails_inter_space_small"
+                    android:textSize="@dimen/small_textView_text_size"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:text="@string/description"/>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/viewMP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/page_margin"
-                android:layout_marginTop="@dimen/page_margin"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
                 android:text="@string/see_MP"
-                android:textColor="@color/white"
-                android:background="@color/colorPrimary"
-                android:visibility="invisible"/>
+                android:background="@drawable/rounded_corner_button_grey"
+                android:visibility="visible"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:alpha="0.7"
+                android:background="@android:color/darker_gray"/>
 
             <TextView
-                android:id="@+id/userEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/page_margin"
-                android:layout_marginTop="@dimen/page_margin"/>
+                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/large_textView_text_size"
+                android:textStyle="bold"
+                android:textColor="@android:color/secondary_text_light"
+                android:text="@string/seller" />
+
+            <ImageView
+                android:id="@+id/sellerProfilePicture"
+                android:layout_width="@dimen/seller_image_size"
+                android:layout_height="@dimen/seller_image_size"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/saleDetails_inter_space_small"
+                android:src="@drawable/default_user"
+                android:contentDescription="@string/profile_picture" />
+
+            <TextView
+                android:id="@+id/sellerNickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/saleDetails_inter_space_small"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/small_textView_text_size"
+                android:textColor="@android:color/secondary_text_light"
+                android:text="@string/nickname"/>
+
+            <LinearLayout
+                android:id="@+id/editButtonsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:visibility="visible"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:alpha="0.7"
+                    android:background="@android:color/darker_gray" />
+
+                <TableRow
+                    android:id="@+id/editButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                    android:layout_marginBottom="@dimen/saleDetails_inter_space_extra_large">
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/editButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/button_shadow_margin"
+                        android:layout_marginBottom="@dimen/button_shadow_margin"
+                        android:background="@drawable/rounded_corner_button_grey"
+                        android:text="@string/edit" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/deleteButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/button_shadow_margin"
+                        android:layout_marginBottom="@dimen/button_shadow_margin"
+                        android:background="@drawable/rounded_corner_button_grey"
+                        android:text="@string/delete"/>
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                </TableRow>
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
 
-</LinearLayout>
+</RelativeLayout>

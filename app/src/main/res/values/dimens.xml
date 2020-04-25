@@ -13,6 +13,9 @@
     <dimen name="fillListing_inter_space_extra_large">50dp</dimen>
     <dimen name="fillListing_inter_space_large">30dp</dimen>
     <dimen name="fillListing_inter_space_small">7dp</dimen>
+    <dimen name="saleDetails_inter_space_extra_large">50dp</dimen>
+    <dimen name="saleDetails_inter_space_large">30dp</dimen>
+    <dimen name="saleDetails_inter_space_small">7dp</dimen>
     <dimen name="default_button_text_size">14sp</dimen>
     <dimen name="large_button_text_size">18sp</dimen>
     <dimen name="small_button_text_size">12sp</dimen>
@@ -35,7 +38,7 @@
     <dimen name="page_number_margin_top">265dp</dimen>
     <dimen name="loading_image_size">100dp</dimen>
     <dimen name="page_number_width">52dp</dimen>
-    <dimen name="page_number_height">18dp</dimen>
+    <dimen name="page_number_height">20dp</dimen>
     <dimen name="button_radius_default">5dp</dimen>
     <dimen name="button_radius_large">10dp</dimen>
     <dimen name="button_radius_small">3dp</dimen>
@@ -44,4 +47,6 @@
     <dimen name="userProfile_inter_space_large">30dp</dimen>
     <dimen name="userProfile_inter_space_small">7dp</dimen>
     <dimen name="profile_picture_size">200dp</dimen>
+    <dimen name="large_textView_text_size">20sp</dimen>
+    <dimen name="seller_image_size">120dp</dimen>
 </resources>
