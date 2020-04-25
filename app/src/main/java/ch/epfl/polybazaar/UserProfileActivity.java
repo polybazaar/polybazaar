@@ -28,14 +28,13 @@ import ch.epfl.polybazaar.widgets.PublishProfileDialog;
 import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 import static ch.epfl.polybazaar.Utilities.displayToast;
 import static ch.epfl.polybazaar.Utilities.getUser;
-import static ch.epfl.polybazaar.filllisting.FillListingActivity.QUALITY;
 import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_OK;
 import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
 import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringPNG;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.getRoundedCroppedBitmap;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
@@ -110,7 +109,7 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
             if (stringImage != null) {
                 Bitmap bitmap = getRoundedCroppedBitmap(convertStringToBitmap(stringImage));
                 profilePicView.setImageBitmap(bitmap);
-                String profilePic = convertBitmapToStringWithQuality(bitmap, QUALITY);
+                String profilePic = convertBitmapToStringPNG(bitmap);
                 this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).edit().putString(STRING_IMAGE, profilePic).apply();
                 profilePicChanged = true;
             } else {

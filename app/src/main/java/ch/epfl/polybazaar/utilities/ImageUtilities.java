@@ -41,7 +41,7 @@ public final class ImageUtilities {
         // inspired from https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa/18052269
         if(imageFile != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            BitmapFactory.decodeFile(imageFile.getAbsolutePath()).compress(Bitmap.CompressFormat.PNG, quality, baos);
+            BitmapFactory.decodeFile(imageFile.getAbsolutePath()).compress(Bitmap.CompressFormat.JPEG, quality, baos);
             tempStringImg = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         }
         return tempStringImg;
@@ -87,7 +87,24 @@ public final class ImageUtilities {
             return null;
         }
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, quality, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        byte [] b=baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+    /**
+     * Convert a PNG Bitmap to String
+     * @param bitmap
+     * @return a String
+     * taken from Stackoverflow
+     */
+    public static String convertBitmapToStringPNG(Bitmap bitmap){
+        if(bitmap == null) {
+            return null;
+        }
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte [] b=baos.toByteArray();
         String temp = Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
@@ -146,22 +163,35 @@ public final class ImageUtilities {
     }
 
     /**
-     * Crops a bitmap to a square centered on the image
+     * Crops a bitmap to a given ratio centered on the image
      * @param bitmap the bitmap
      * @param sizeX horizontal target length, in length units, relative
      * @param sizeY vertical target length, in length units, relative
      * @return the cropped bitmap
      */
     public static Bitmap cropToSize(Bitmap bitmap, int sizeX, int sizeY) {
+        double targetRatio = ((double)sizeX)/((double)sizeY);
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        int targetWidth = Math.min(sizeX, width);
-        int targetHeight = Math.min(sizeY, height);
-        int centerX = targetWidth >> 1;
-        int centerY = targetHeight >> 1;
-        int smallestSide = Math.min(width, height);
-        return Bitmap.createBitmap(bitmap, centerX - (smallestSide >> 1), centerY - (smallestSide >> 1),
-                smallestSide, smallestSide);
+        double imageRatio = ((double)width)/((double)height);
+        int targetWidth;
+        int targetHeight;
+        if ((imageRatio>=1 && targetRatio>=1 && targetRatio >= imageRatio)     // Landscape into Landscape wide
+            || (imageRatio<1 && targetRatio>=1 )                             // Portrait into Landscape
+            || (imageRatio<1 && targetRatio>=1 && targetRatio >= imageRatio)) // Portrait into Portrait wide
+        {
+            targetWidth = width;
+            targetHeight = (int)Math.floor(targetWidth * (1.0/targetRatio));
+            targetHeight = Math.min(targetHeight, height);
+        } else {
+            targetHeight = height;
+            targetWidth = (int)Math.floor(targetHeight * (targetRatio));
+            targetWidth = Math.min(targetWidth, width);
+        }
+        int centerX = width >> 1;
+        int centerY = height >> 1;
+        return Bitmap.createBitmap(bitmap, centerX - (targetWidth >> 1), centerY - (targetHeight >> 1),
+                targetWidth, targetHeight);
     }
 
     /**
@@ -170,13 +200,7 @@ public final class ImageUtilities {
      * @return the cropped bitmap
      */
     public static Bitmap cropToSquare(Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        int centerX = width >> 1;
-        int centerY = height >> 1;
-        int smallestSide = Math.min(width, height);
-        return Bitmap.createBitmap(bitmap, centerX - (smallestSide >> 1), centerY - (smallestSide >> 1),
-                smallestSide, smallestSide);
+        return cropToSize(bitmap, 1, 1);
     }
 
     /**

@@ -46,7 +46,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
 
     public static final int RESULT_ADD_MP = 3;
-    public static final int QUALITY = 10;
 
     private Button setMainImage;
     private Button rotateImage;

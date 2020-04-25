@@ -25,11 +25,11 @@ import java.util.Date;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
-import static ch.epfl.polybazaar.filllisting.FillListingActivity.QUALITY;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 
 public class ImageTaker extends AppCompatActivity {
 
+    public static final int QUALITY = 25;
     public static final String STRING_IMAGE = "bitmap_image";
     public static final String PICTURE_PREFS = "bitmap_prefs";
     public static final String CODE = "request_code";
@@ -110,11 +110,11 @@ public class ImageTaker extends AppCompatActivity {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "PNG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".png",         /* suffix */
                 storageDir      /* directory */
         );
     }
