@@ -50,7 +50,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/button_shadow_margin"
                     android:layout_marginBottom="@dimen/button_shadow_margin"
-                    android:background="@drawable/rounded_corner_button_red"
+                    android:background="@drawable/rounded_corner_button_colored"
                     android:textColor="@color/white"
                     android:onClick="viewOwnListings"
                     android:text="@string/my_listings" />
@@ -67,7 +67,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/button_shadow_margin"
                     android:layout_marginBottom="@dimen/button_shadow_margin"
-                    android:background="@drawable/rounded_corner_button_red"
+                    android:background="@drawable/rounded_corner_button_colored"
                     android:textColor="@color/white"
                     android:onClick="viewFavorites"
                     android:text="@string/my_favorites" />
@@ -180,7 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/userProfile_inter_space_large"
-                android:background="@drawable/rounded_corner_button_red"
+                android:background="@drawable/rounded_corner_button_colored"
                 android:textColor="@color/white"
                 android:onClick="editProfile"
                 android:text="@string/save_profile" />
@@ -267,7 +267,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/userProfile_inter_space_large"
                 android:layout_marginBottom="@dimen/userProfile_inter_space_extra_large"
-                android:background="@drawable/rounded_corner_button_red"
+                android:background="@drawable/rounded_corner_button_colored"
                 android:textColor="@color/white"
                 android:onClick="editPassword"
                 android:text="@string/save_password" />
