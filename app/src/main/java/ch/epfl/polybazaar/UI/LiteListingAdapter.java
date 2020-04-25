@@ -112,6 +112,7 @@ public class LiteListingAdapter extends
         priceView.setId(View.generateViewId());
 
         ImageView thumbnail = viewHolder.thumbnail;
+        thumbnail.setScaleType(ImageView.ScaleType.FIT_XY);
         String stringThumbnail = liteListing.getStringThumbnail();
         Bitmap bitmapThumbnail = convertStringToBitmap(stringThumbnail);
         if(bitmapThumbnail == null) {
