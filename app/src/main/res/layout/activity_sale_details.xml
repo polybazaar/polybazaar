@@ -32,7 +32,7 @@
                     android:id="@+id/viewPagerImageSlider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/viewPager2_height"
-                    android:visibility="gone"
+                    android:visibility="invisible"
                     tools:ignore="PrivateResource" />
 
                 <ImageView
