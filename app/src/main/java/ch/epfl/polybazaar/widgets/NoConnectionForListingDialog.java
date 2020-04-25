@@ -31,7 +31,7 @@ public class NoConnectionForListingDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("No Internet connection found")
                 .setTitle("Information")
-                .setPositiveButton("send as soon as connection is available", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Send as soon as connection is available", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         listener.onDialogPositiveClick(NoConnectionForListingDialog.this);

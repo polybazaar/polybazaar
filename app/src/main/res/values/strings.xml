@@ -99,5 +99,6 @@
     <string name="my_favorites">Favorites</string>
     <string name="profile_picture">Profile Picture</string>
     <string name="profile_picture_not_updated">Failed to update profile picture</string>
-    <string name="profile_picture_updated">Profile picture updated</string>
+    <string name="profile_picture_updated">Profile picture updated</string>publish_picture
+    <string name="publish_picture">Your new profile picture will be publicly visible</string>
 </resources>

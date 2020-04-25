@@ -3,12 +3,6 @@ package ch.epfl.polybazaar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -29,14 +23,15 @@ import ch.epfl.polybazaar.user.User;
 import ch.epfl.polybazaar.utilities.ImageTaker;
 import ch.epfl.polybazaar.widgets.AddImageDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
+import ch.epfl.polybazaar.widgets.PublishProfileDialog;
 
 import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 import static ch.epfl.polybazaar.Utilities.displayToast;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.filllisting.FillListingActivity.QUALITY;
-import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_IMAGE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_OK;
-import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_PREFS;
+import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
 import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
@@ -50,7 +45,8 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
     private Authenticator authenticator;
     private Account account;
     private User user;
-    private ImageTaker imageTaker;
+    private ImageView profilePicView;
+    private boolean profilePicChanged;
 
     private EditText nicknameSelector;
     private EditText firstNameSelector;
@@ -61,28 +57,30 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
         nicknameSelector = findViewById(R.id.nicknameSelector);
         firstNameSelector = findViewById(R.id.firstNameSelector);
         lastNameSelector = findViewById(R.id.lastNameSelector);
         phoneNumberSelector = findViewById(R.id.phoneNumberSelector);
-        imageTaker = new ImageTaker();
-
+        profilePicView = findViewById(R.id.profilePicture);
+        profilePicChanged = false;
+        authenticator = AuthenticatorFactory.getDependency();
+        account = authenticator.getCurrentUser();
+        User.fetch(account.getEmail()).addOnSuccessListener(returnedUser -> {
+            user = returnedUser;
+            nicknameSelector.setText(user.getNickName());
+            firstNameSelector.setText(user.getFirstName());
+            lastNameSelector.setText(user.getLastName());
+            phoneNumberSelector.setText(user.getPhoneNumber());
+            if (user.getProfilePicture() != User.NO_PROFILE_PICTURE) {
+                profilePicView.setImageBitmap(convertStringToBitmap(user.getProfilePicture()));
+                profilePicChanged = true;
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        authenticator = AuthenticatorFactory.getDependency();
-        account = authenticator.getCurrentUser();
-
-        User.fetch(account.getEmail()).addOnSuccessListener(returnedUser -> {
-                user = returnedUser;
-                nicknameSelector.setText(user.getNickName());
-                firstNameSelector.setText(user.getFirstName());
-                lastNameSelector.setText(user.getLastName());
-                phoneNumberSelector.setText(user.getPhoneNumber());
-        });
     }
 
     @Override
@@ -108,14 +106,13 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
     private void getNewImage(Intent data) {
         boolean bitmapOK = data.getBooleanExtra(BITMAP_OK, false);
         if (bitmapOK) {
-            String stringImage = this.getSharedPreferences(BITMAP_PREFS, MODE_PRIVATE).getString(BITMAP_IMAGE, null);
+            String stringImage = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
             if (stringImage != null) {
-                ImageView profilePic = findViewById(R.id.profilePicture);
-                Bitmap image = getRoundedCroppedBitmap(convertStringToBitmap(stringImage));
-                profilePic.setImageBitmap(image);
-                stringImage = convertBitmapToStringWithQuality(image, QUALITY);
-                // TODO : send new profile pic (stringImage)
-                makeDialog(UserProfileActivity.this, R.string.profile_picture_updated);
+                Bitmap bitmap = getRoundedCroppedBitmap(convertStringToBitmap(stringImage));
+                profilePicView.setImageBitmap(bitmap);
+                String profilePic = convertBitmapToStringWithQuality(bitmap, QUALITY);
+                this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).edit().putString(STRING_IMAGE, profilePic).apply();
+                profilePicChanged = true;
             } else {
                 makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
             }
@@ -129,12 +126,31 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
         if (dialog instanceof AddImageDialog) {
             startActivityForResult(new Intent(this, ImageTaker.class), TAKE_IMAGE);
         }
+        if (dialog instanceof PublishProfileDialog) {
+            String newNickname = nicknameSelector.getText().toString();
+            String newFirstName = firstNameSelector.getText().toString();
+            String newLastName = lastNameSelector.getText().toString();
+            String newPhoneNumber = phoneNumberSelector.getText().toString();
+            User editedUser;
+            if (profilePicChanged) {
+                String profilePic = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
+                editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber, profilePic);
+            } else {
+                editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
+            }
+            editedUser.save().addOnSuccessListener(aVoid -> {
+                Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
+            }).addOnSuccessListener(aVoid -> account.updateNickname(newNickname));
+        }
     }
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
         if (dialog instanceof AddImageDialog) {
             startActivityForResult(new Intent(this, ImageTaker.class), LOAD_IMAGE);
+        }
+        if (dialog instanceof PublishProfileDialog) {
+            // Do nothing
         }
     }
 
@@ -147,7 +163,6 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
         String newNickname = nicknameSelector.getText().toString();
         String newFirstName = firstNameSelector.getText().toString();
         String newLastName = lastNameSelector.getText().toString();
-        String newPhoneNumber = phoneNumberSelector.getText().toString();
 
         if(!Utilities.nickNameIsValid(newNickname)){
             makeDialog(UserProfileActivity.this, R.string.signup_nickname_invalid);
@@ -159,10 +174,8 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
             makeDialog(UserProfileActivity.this, R.string.invalid_last_name);
         }
         else{
-            User editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
-            editedUser.save().addOnSuccessListener(aVoid -> {
-                Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
-            }).addOnSuccessListener(aVoid -> account.updateNickname(newNickname));
+            PublishProfileDialog dialog = new PublishProfileDialog();
+            dialog.show(getSupportFragmentManager(), "select image import");
         }
     }
 

@@ -2,9 +2,7 @@ package ch.epfl.polybazaar.filllisting;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,13 +35,12 @@ import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.map.MapsActivity.VALID;
-import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_IMAGE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_OK;
-import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_PREFS;
+import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
 import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 
 public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
 
@@ -55,7 +52,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private Button rotateImage;
     private Button deleteImage;
     private ImageManager imageManager;
-    private ImageTaker imageTaker;
     private ListingManager listingManager;
     private CategoryManager categoryManager;
     private Button addImages;
@@ -71,7 +67,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private List<String> listStringImage;
     //only used for edit to delete all images
     private List<String> listImageID;
-    private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
     private double lat = NOLAT;
@@ -83,7 +78,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_listing);
         imageManager = new ImageManager(this);
-        imageTaker = new ImageTaker();
         listingManager = new ListingManager(this);
         categoryManager = new CategoryManager(this);
         setMainImage = findViewById(R.id.setMain);
@@ -159,7 +153,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private void getNewImage(Intent data) {
         boolean bitmapOK = data.getBooleanExtra(BITMAP_OK, false);
         if (bitmapOK) {
-            String stringImage = this.getSharedPreferences(BITMAP_PREFS, MODE_PRIVATE).getString(BITMAP_IMAGE, null);
+            String stringImage = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
             imageManager.addImage(listStringImage, stringImage);
             imageManager.updateViewPagerVisibility(listStringImage);
         }

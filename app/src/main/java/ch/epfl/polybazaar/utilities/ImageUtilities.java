@@ -41,7 +41,7 @@ public final class ImageUtilities {
         // inspired from https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa/18052269
         if(imageFile != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            BitmapFactory.decodeFile(imageFile.getAbsolutePath()).compress(Bitmap.CompressFormat.JPEG, quality, baos);
+            BitmapFactory.decodeFile(imageFile.getAbsolutePath()).compress(Bitmap.CompressFormat.PNG, quality, baos);
             tempStringImg = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         }
         return tempStringImg;
@@ -87,7 +87,7 @@ public final class ImageUtilities {
             return null;
         }
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality, baos);
         byte [] b=baos.toByteArray();
         String temp = Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
@@ -143,6 +143,25 @@ public final class ImageUtilities {
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+    }
+
+    /**
+     * Crops a bitmap to a square centered on the image
+     * @param bitmap the bitmap
+     * @param sizeX horizontal target length, in length units, relative
+     * @param sizeY vertical target length, in length units, relative
+     * @return the cropped bitmap
+     */
+    public static Bitmap cropToSize(Bitmap bitmap, int sizeX, int sizeY) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int targetWidth = Math.min(sizeX, width);
+        int targetHeight = Math.min(sizeY, height);
+        int centerX = targetWidth >> 1;
+        int centerY = targetHeight >> 1;
+        int smallestSide = Math.min(width, height);
+        return Bitmap.createBitmap(bitmap, centerX - (smallestSide >> 1), centerY - (smallestSide >> 1),
+                smallestSide, smallestSide);
     }
 
     /**

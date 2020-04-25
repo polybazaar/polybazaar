@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,8 +30,8 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringW
 
 public class ImageTaker extends AppCompatActivity {
 
-    public static final String BITMAP_IMAGE = "bitmap_image";
-    public static final String BITMAP_PREFS = "bitmap_prefs";
+    public static final String STRING_IMAGE = "bitmap_image";
+    public static final String PICTURE_PREFS = "bitmap_prefs";
     public static final String CODE = "request_code";
     public static final int LOAD_IMAGE = 3;
     public static final int TAKE_IMAGE = 4;
@@ -80,8 +79,8 @@ public class ImageTaker extends AppCompatActivity {
 
     private void success() {
         Intent returnIntent = new Intent();
-        SharedPreferences myPrefs = this.getSharedPreferences(BITMAP_PREFS, MODE_PRIVATE);
-        myPrefs.edit().putString(BITMAP_IMAGE, convertBitmapToStringWithQuality(image, QUALITY)).apply();
+        SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
+        myPrefs.edit().putString(STRING_IMAGE, convertBitmapToStringWithQuality(image, QUALITY)).apply();
         returnIntent.putExtra(BITMAP_OK, true);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
