@@ -219,4 +219,5 @@
         app:itemIconTint="@color/bottomBarContent"
         app:itemTextColor="@color/bottomBarContent"
         app:menu="@layout/bottom_bar" />
+
 </RelativeLayout>
