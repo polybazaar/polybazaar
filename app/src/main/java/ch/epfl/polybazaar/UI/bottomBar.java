@@ -3,7 +3,6 @@ package ch.epfl.polybazaar.UI;
 import android.app.Activity;
 import android.content.Intent;
 
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UserProfileActivity;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
@@ -15,6 +14,12 @@ import ch.epfl.polybazaar.widgets.NotSignedInActivity;
 
 public abstract class bottomBar {
 
+    /** method called when an item on the bar is selected
+     *
+     * @param i id of the button
+     * @param activity activity where the bar is
+     * @return
+     */
     public static boolean updateActivity(Integer i,Activity activity){
 
         switch (i){
@@ -39,6 +44,11 @@ public abstract class bottomBar {
         return true;
     }
 
+    /**
+     * get to the desired activity if user is logged, get to NotSignedInActivity otherwise
+     * @param currentActivity activity where the method is called
+     * @param c the class to go to
+     */
     private static void toActivity(Activity currentActivity,Class c){
         Authenticator authenticator = AuthenticatorFactory.getDependency();
         Account user = authenticator.getCurrentUser();

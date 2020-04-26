@@ -1,32 +1,20 @@
 package ch.epfl.polybazaar.widgets;
 
-import android.app.Activity;
-import android.content.Intent;
-
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UserProfileActivity;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverview;
 import ch.epfl.polybazaar.filllisting.FillListingActivity;
-import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.login.MockAuthenticator;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
-import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
 
 public class bottomBarTest {
 
