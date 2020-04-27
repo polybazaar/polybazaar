@@ -31,6 +31,7 @@ import ch.epfl.polybazaar.widgets.PublishProfileDialog;
 import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 import static ch.epfl.polybazaar.Utilities.displayToast;
 import static ch.epfl.polybazaar.Utilities.getUser;
+import static ch.epfl.polybazaar.user.User.NO_PROFILE_PICTURE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_OK;
 import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
@@ -77,7 +78,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
             firstNameSelector.setText(user.getFirstName());
             lastNameSelector.setText(user.getLastName());
             phoneNumberSelector.setText(user.getPhoneNumber());
-            if (!user.getProfilePicture().equals(User.NO_PROFILE_PICTURE)) {
+            if (!user.getProfilePicture().equals(NO_PROFILE_PICTURE)) {
                 profilePicView.setImageBitmap(convertStringToBitmap(user.getProfilePicture()));
                 SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
                 myPrefs.edit().putString(STRING_IMAGE, user.getProfilePicture()).apply();
@@ -163,12 +164,13 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         String newLastName = lastNameSelector.getText().toString();
         String newPhoneNumber = phoneNumberSelector.getText().toString();
         User editedUser;
+        String profilePic;
         if (profilePicChanged) {
-            String profilePic = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
-            editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber, profilePic);
+            profilePic = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
         } else {
-            editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
+            profilePic = NO_PROFILE_PICTURE;
         }
+        editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber, profilePic, user.getOwnListings(), user.getFavorites());
         editedUser.save().addOnSuccessListener(aVoid -> {
             Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
         }).addOnSuccessListener(aVoid -> account.updateNickname(newNickname));

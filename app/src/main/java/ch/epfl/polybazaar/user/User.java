@@ -95,27 +95,15 @@ public final class User extends Model {
      * @param phoneNumber User's phone number
      * @param profilePicture StringImage that is the user's profile Picture
      */
-    public User(String nickName, String email, String firstName, String lastName, String phoneNumber, String profilePicture){
+    public User(String nickName, String email, String firstName, String lastName, String phoneNumber,
+                String profilePicture, ArrayList<String> ownListings, ArrayList<String> favorites){
         this(nickName, email);
         this.firstName.set(firstName);
         this.lastName.set(lastName);
         this.phoneNumber.set(phoneNumber);
         this.profilePicture.set(profilePicture);
-    }
-
-    /**
-     * User contructor where names and phone number can be specified
-     * @param nickName name displayed on listing
-     * @param email email address, unique identifier (key)
-     * @param firstName User's first name
-     * @param lastName User's last name
-     * @param phoneNumber User's phone number
-     */
-    public User(String nickName, String email, String firstName, String lastName, String phoneNumber){
-        this(nickName, email);
-        this.firstName.set(firstName);
-        this.lastName.set(lastName);
-        this.phoneNumber.set(phoneNumber);
+        this.ownListings.set(ownListings);
+        this.favorites.set(favorites);
     }
 
     @Override

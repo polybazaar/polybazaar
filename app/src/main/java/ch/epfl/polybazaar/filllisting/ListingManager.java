@@ -29,6 +29,7 @@ import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvaila
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.scaleBitmap;
 import static java.util.UUID.randomUUID;
 
 public class ListingManager {
@@ -59,11 +60,7 @@ public class ListingManager {
         newListing.setId(newListingID);
         // Send Listing & LiteListing
         Bitmap bitmap = convertStringToBitmap(stringThumbnail);
-        double ratio = ((double)bitmap.getHeight())/((double)bitmap.getWidth());
-        int widthFactor = (int)Math.floor(((double)THUMBNAIL_SIZE)/((double)bitmap.getWidth()));
-        int heightFactor = (int)Math.floor((((double)THUMBNAIL_SIZE) * ratio)/((double)bitmap.getHeight()));
-        Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * widthFactor,
-                bitmap.getHeight() * heightFactor, true);
+        bitmap = scaleBitmap(bitmap, THUMBNAIL_SIZE);
         stringThumbnail = convertBitmapToStringWithQuality(bitmap, 100);
         LiteListing newLiteListing = new LiteListing(newListingID, newListing.getTitle(), newListing.getPrice(),
                 newListing.getCategory(), stringThumbnail);

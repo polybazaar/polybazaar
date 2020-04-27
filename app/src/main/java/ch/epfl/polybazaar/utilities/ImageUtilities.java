@@ -226,4 +226,18 @@ public final class ImageUtilities {
         return output;
     }
 
+    /**
+     * Scales the resolution of a bitmap
+     * @param bitmap the source bitmap
+     * @param targetWidth the desired width, in pixels
+     * @return the scaled bitmap
+     */
+    public static Bitmap scaleBitmap(Bitmap bitmap, int targetWidth) {
+        double ratio = ((double)bitmap.getHeight())/((double)bitmap.getWidth());
+        int widthFactor = (int)Math.floor(((double)targetWidth)/((double)bitmap.getWidth()));
+        int heightFactor = (int)Math.floor((((double)targetWidth) * ratio)/((double)bitmap.getHeight()));
+        return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * widthFactor,
+                bitmap.getHeight() * heightFactor, true);
+    }
+
 }
