@@ -33,13 +33,12 @@ import static ch.epfl.polybazaar.Utilities.displayToast;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.user.User.NO_PROFILE_PICTURE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
-import static ch.epfl.polybazaar.utilities.ImageTaker.BITMAP_OK;
+import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
 import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringPNG;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.getRoundedCroppedBitmap;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
@@ -117,7 +116,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
     }
 
     private void getNewImage(Intent data) {
-        boolean bitmapOK = data.getBooleanExtra(BITMAP_OK, false);
+        boolean bitmapOK = data.getBooleanExtra(IMAGE_AVAILABLE, false);
         if (bitmapOK) {
             String stringImage = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
             if (stringImage != null) {

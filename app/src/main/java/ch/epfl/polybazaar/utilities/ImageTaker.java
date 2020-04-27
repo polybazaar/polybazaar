@@ -27,6 +27,16 @@ import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 
+
+/**
+ * TO TAKE OR IMPORT AN IMAGE:
+ * startActivityForResult with this activity as target and requestCode:
+ * LOAD_IMAGE to import picture from library
+ * TAKE_PICTURE to open the camera and take a picture
+ * to retrieve the image:
+ * upon onActivity result, if IMAGE_AVAILABLE is true, call:
+ * String stringImage = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
+ */
 public class ImageTaker extends AppCompatActivity {
 
     public static final int QUALITY = 25;
@@ -37,7 +47,7 @@ public class ImageTaker extends AppCompatActivity {
     public static final int TAKE_IMAGE = 4;
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final int RESULT_TAKE_PICTURE = 2;
-    public static final String BITMAP_OK = "bitmap_image_present";
+    public static final String IMAGE_AVAILABLE = "image_present";
     private File photoFile;
     private Bitmap image;
     private PermissionRequest cameraPermissionRequest;
@@ -83,14 +93,14 @@ public class ImageTaker extends AppCompatActivity {
         Intent returnIntent = new Intent();
         SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
         myPrefs.edit().putString(STRING_IMAGE, convertBitmapToStringWithQuality(image, QUALITY)).apply();
-        returnIntent.putExtra(BITMAP_OK, true);
+        returnIntent.putExtra(IMAGE_AVAILABLE, true);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
     private void failure() {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra(BITMAP_OK, false);
+        returnIntent.putExtra(IMAGE_AVAILABLE, false);
         setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
     }
