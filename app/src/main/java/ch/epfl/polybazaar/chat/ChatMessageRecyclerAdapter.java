@@ -24,6 +24,7 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
     private static final String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    public static final int START_YEAR = 1900;
 
     private Context context;
     private List<ChatMessage> messages;
@@ -152,7 +153,7 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
 
         if(index == 0 || messages.get(index -1).getTime().toDate().getMonth() != date.getMonth() || messages.get(index -1).getTime().toDate().getDate() != date.getDate()) {
             txt.setVisibility(View.VISIBLE);
-            txt.setText(String.format("%d %s %d", date.getDate(), monthNames[date.getMonth()], date.getYear() + 1900));
+            txt.setText(String.format("%d %s %d", date.getDate(), monthNames[date.getMonth()], date.getYear() + START_YEAR));
         }
     }
 }
