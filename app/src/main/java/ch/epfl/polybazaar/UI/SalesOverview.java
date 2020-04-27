@@ -28,6 +28,7 @@ public class SalesOverview extends AppCompatActivity {
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
+    public static final String LISTING_ID = "listingID";
     private List<String> IDList;
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
@@ -51,7 +52,7 @@ public class SalesOverview extends AppCompatActivity {
             int viewID = view.getId();
             String listingID = adapter.getListingID(viewID);
             Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-            intent.putExtra("listingID", listingID);
+            intent.putExtra(LISTING_ID, listingID);
             startActivity(intent);
         });
 

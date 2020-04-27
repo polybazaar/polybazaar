@@ -104,4 +104,7 @@
     <string name="thumbnail">thumbnail</string>
     <string name="seller">Seller</string>
     <string name="deleted_listing">Listing successfully deleted</string>
+    <string name="no_connection">No Internet connection</string>send_when_connected
+    <string name="send_when_connected">Send as soon as connection is available</string>
+    <string name="information">Information</string>
 </resources>

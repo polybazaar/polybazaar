@@ -170,28 +170,32 @@ public final class ImageUtilities {
      * @return the cropped bitmap
      */
     public static Bitmap cropToSize(Bitmap bitmap, int sizeX, int sizeY) {
-        double targetRatio = ((double)sizeX)/((double)sizeY);
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        double imageRatio = ((double)width)/((double)height);
-        int targetWidth;
-        int targetHeight;
-        if ((imageRatio>=1 && targetRatio>=1 && targetRatio >= imageRatio)     // Landscape into Landscape wide
-            || (imageRatio<1 && targetRatio>=1 )                             // Portrait into Landscape
-            || (imageRatio<1 && targetRatio>=1 && targetRatio >= imageRatio)) // Portrait into Portrait wide
-        {
-            targetWidth = width;
-            targetHeight = (int)Math.floor(targetWidth * (1.0/targetRatio));
-            targetHeight = Math.min(targetHeight, height);
+        if (bitmap != null) {
+            double targetRatio = ((double) sizeX) / ((double) sizeY);
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            double imageRatio = ((double) width) / ((double) height);
+            int targetWidth;
+            int targetHeight;
+            if ((imageRatio >= 1 && targetRatio >= 1 && targetRatio >= imageRatio)     // Landscape into Landscape wide
+                    || (imageRatio < 1 && targetRatio >= 1)                             // Portrait into Landscape
+                    || (imageRatio < 1 && targetRatio >= 1 && targetRatio >= imageRatio)) // Portrait into Portrait wide
+            {
+                targetWidth = width;
+                targetHeight = (int) Math.floor(targetWidth * (1.0 / targetRatio));
+                targetHeight = Math.min(targetHeight, height);
+            } else {
+                targetHeight = height;
+                targetWidth = (int) Math.floor(targetHeight * (targetRatio));
+                targetWidth = Math.min(targetWidth, width);
+            }
+            int centerX = width >> 1;
+            int centerY = height >> 1;
+            return Bitmap.createBitmap(bitmap, centerX - (targetWidth >> 1), centerY - (targetHeight >> 1),
+                    targetWidth, targetHeight);
         } else {
-            targetHeight = height;
-            targetWidth = (int)Math.floor(targetHeight * (targetRatio));
-            targetWidth = Math.min(targetWidth, width);
+            return null;
         }
-        int centerX = width >> 1;
-        int centerY = height >> 1;
-        return Bitmap.createBitmap(bitmap, centerX - (targetWidth >> 1), centerY - (targetHeight >> 1),
-                targetWidth, targetHeight);
     }
 
     /**
@@ -209,21 +213,25 @@ public final class ImageUtilities {
      * @return the cropped bitmap
      */
     public static Bitmap getRoundedCroppedBitmap(Bitmap bitmap) {
-        bitmap = cropToSquare(bitmap);
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        int centerX = width >> 1;
-        int centerY = height >> 1;
-        int radius = (width < height) ? centerX : centerY;
-        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-        Paint paintColor = new Paint();
-        paintColor.setFlags(Paint.ANTI_ALIAS_FLAG);
-        canvas.drawCircle(centerX, centerY, radius, paintColor);
-        Paint paintImage = new Paint();
-        paintImage.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
-        canvas.drawBitmap(bitmap, 0, 0, paintImage);
-        return output;
+        if (bitmap != null) {
+            bitmap = cropToSquare(bitmap);
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            int centerX = width >> 1;
+            int centerY = height >> 1;
+            int radius = (width < height) ? centerX : centerY;
+            Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(output);
+            Paint paintColor = new Paint();
+            paintColor.setFlags(Paint.ANTI_ALIAS_FLAG);
+            canvas.drawCircle(centerX, centerY, radius, paintColor);
+            Paint paintImage = new Paint();
+            paintImage.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
+            canvas.drawBitmap(bitmap, 0, 0, paintImage);
+            return output;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -233,11 +241,15 @@ public final class ImageUtilities {
      * @return the scaled bitmap
      */
     public static Bitmap scaleBitmap(Bitmap bitmap, int targetWidth) {
-        double ratio = ((double)bitmap.getHeight())/((double)bitmap.getWidth());
-        int widthFactor = (int)Math.floor(((double)targetWidth)/((double)bitmap.getWidth()));
-        int heightFactor = (int)Math.floor((((double)targetWidth) * ratio)/((double)bitmap.getHeight()));
-        return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * widthFactor,
-                bitmap.getHeight() * heightFactor, true);
+        if (bitmap != null) {
+            double ratio = ((double) bitmap.getHeight()) / ((double) bitmap.getWidth());
+            int widthFactor = (int) Math.floor(((double) targetWidth) / ((double) bitmap.getWidth()));
+            int heightFactor = (int) Math.floor((((double) targetWidth) * ratio) / ((double) bitmap.getHeight()));
+            return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * widthFactor,
+                    bitmap.getHeight() * heightFactor, true);
+        } else {
+            return null;
+        }
     }
 
 }
