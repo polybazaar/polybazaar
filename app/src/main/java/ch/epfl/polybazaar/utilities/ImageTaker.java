@@ -30,7 +30,6 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringW
 public class ImageTaker extends AppCompatActivity {
 
     public static final int QUALITY = 25;
-    public static final int CAMERA_QUALITY = 25;
     public static final String STRING_IMAGE = "bitmap_image";
     public static final String PICTURE_PREFS = "bitmap_prefs";
     public static final String CODE = "request_code";
@@ -69,7 +68,7 @@ public class ImageTaker extends AppCompatActivity {
             } else if (requestCode == RESULT_TAKE_PICTURE) {
                 ByteArrayOutputStream bin = new ByteArrayOutputStream();
                 image = BitmapFactory.decodeFile(getPhotoFile().getAbsolutePath());
-                image.compress(Bitmap.CompressFormat.JPEG, CAMERA_QUALITY, bin);
+                image.compress(Bitmap.CompressFormat.JPEG, QUALITY, bin);
                 image = BitmapFactory.decodeStream(new ByteArrayInputStream(bin.toByteArray()));
                 success();
             } else {
