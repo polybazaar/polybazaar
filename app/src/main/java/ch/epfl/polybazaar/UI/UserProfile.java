@@ -2,6 +2,7 @@ package ch.epfl.polybazaar.UI;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -37,6 +38,7 @@ import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringPNG;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.getRoundedCroppedBitmap;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
@@ -74,7 +76,9 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
             phoneNumberSelector.setText(user.getPhoneNumber());
             if (!user.getProfilePicture().equals(User.NO_PROFILE_PICTURE)) {
                 profilePicView.setImageBitmap(convertStringToBitmap(user.getProfilePicture()));
-                profilePicChanged = true;
+                SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
+                myPrefs.edit().putString(STRING_IMAGE, user.getProfilePicture()).apply();
+                profilePicChanged = false;
             }
         });
     }
@@ -114,6 +118,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
             String stringImage = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
             if (stringImage != null) {
                 Bitmap bitmap = getRoundedCroppedBitmap(convertStringToBitmap(stringImage));
+                bitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false);
                 profilePicView.setImageBitmap(bitmap);
                 String profilePic = convertBitmapToStringPNG(bitmap);
                 this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).edit().putString(STRING_IMAGE, profilePic).apply();
@@ -132,20 +137,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
             startActivityForResult(new Intent(this, ImageTaker.class), TAKE_IMAGE);
         }
         if (dialog instanceof PublishProfileDialog) {
-            String newNickname = nicknameSelector.getText().toString();
-            String newFirstName = firstNameSelector.getText().toString();
-            String newLastName = lastNameSelector.getText().toString();
-            String newPhoneNumber = phoneNumberSelector.getText().toString();
-            User editedUser;
-            if (profilePicChanged) {
-                String profilePic = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
-                editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber, profilePic);
-            } else {
-                editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
-            }
-            editedUser.save().addOnSuccessListener(aVoid -> {
-                Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
-            }).addOnSuccessListener(aVoid -> account.updateNickname(newNickname));
+            applyEditProfile();
         }
     }
 
@@ -154,14 +146,28 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         if (dialog instanceof AddImageDialog) {
             startActivityForResult(new Intent(this, ImageTaker.class), LOAD_IMAGE);
         }
-        if (dialog instanceof PublishProfileDialog) {
-            // Do nothing
-        }
     }
 
     public void changeProfilePicture(View view) {
         AddImageDialog dialog = new AddImageDialog();
         dialog.show(getSupportFragmentManager(), "select image import");
+    }
+
+    private void applyEditProfile() {
+        String newNickname = nicknameSelector.getText().toString();
+        String newFirstName = firstNameSelector.getText().toString();
+        String newLastName = lastNameSelector.getText().toString();
+        String newPhoneNumber = phoneNumberSelector.getText().toString();
+        User editedUser;
+        if (profilePicChanged) {
+            String profilePic = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
+            editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber, profilePic);
+        } else {
+            editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber);
+        }
+        editedUser.save().addOnSuccessListener(aVoid -> {
+            Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
+        }).addOnSuccessListener(aVoid -> account.updateNickname(newNickname));
     }
 
     public void editProfile(View view){
@@ -179,8 +185,12 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
             makeDialog(UserProfile.this, R.string.invalid_last_name);
         }
         else{
-            PublishProfileDialog dialog = new PublishProfileDialog();
-            dialog.show(getSupportFragmentManager(), "select image import");
+            if (profilePicChanged) {
+                PublishProfileDialog dialog = new PublishProfileDialog();
+                dialog.show(getSupportFragmentManager(), "select image import");
+            } else {
+                applyEditProfile();
+            }
         }
     }
 

@@ -30,6 +30,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringW
 public class ImageTaker extends AppCompatActivity {
 
     public static final int QUALITY = 25;
+    public static final int CAMERA_QUALITY = 25;
     public static final String STRING_IMAGE = "bitmap_image";
     public static final String PICTURE_PREFS = "bitmap_prefs";
     public static final String CODE = "request_code";
@@ -49,24 +50,26 @@ public class ImageTaker extends AppCompatActivity {
             if (requestCode == RESULT_LOAD_IMAGE) {
                 if (data == null) {
                     failure();
-                    return;
                 }
-                Uri selectedImage = data.getData();
-                Bitmap bitmap;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, R.string.unable_load_image, Toast.LENGTH_SHORT).show();
+                if (data != null) {
+                    Uri selectedImage = data.getData();
+                    Bitmap bitmap;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                        image = bitmap;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, R.string.unable_load_image, Toast.LENGTH_SHORT).show();
+                        failure();
+                    }
+                    success();
+                } else {
                     failure();
-                    return;
                 }
-                image = bitmap;
-                success();
             } else if (requestCode == RESULT_TAKE_PICTURE) {
                 ByteArrayOutputStream bin = new ByteArrayOutputStream();
                 image = BitmapFactory.decodeFile(getPhotoFile().getAbsolutePath());
-                image.compress(Bitmap.CompressFormat.JPEG, QUALITY, bin);
+                image.compress(Bitmap.CompressFormat.JPEG, CAMERA_QUALITY, bin);
                 image = BitmapFactory.decodeStream(new ByteArrayInputStream(bin.toByteArray()));
                 success();
             } else {
@@ -137,14 +140,14 @@ public class ImageTaker extends AppCompatActivity {
                 } catch (IllegalArgumentException ignored) {
                     //Picture has been canceled by the user
                 }
-                startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
+                this.startActivityForResult(takePictureIntent, RESULT_TAKE_PICTURE);
             }
         }
     }
 
     private void takeLibraryPicture() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+        this.startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
     }
 
     private File getPhotoFile() {

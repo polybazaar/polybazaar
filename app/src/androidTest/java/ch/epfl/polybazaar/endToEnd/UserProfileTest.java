@@ -1,15 +1,21 @@
 package ch.epfl.polybazaar.endToEnd;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Tasks;
 
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import ch.epfl.polybazaar.MainActivity;
@@ -25,12 +31,19 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+
 public class UserProfileTest {
 
     private static Authenticator authenticator;
@@ -75,7 +88,6 @@ public class UserProfileTest {
         });
     }
 
-    /*
     @Test
     public void testPasswordChangeWorks() throws InterruptedException {
         String newPassword = "mynewpassword";
@@ -93,16 +105,11 @@ public class UserProfileTest {
         closeSoftKeyboard();
         onView(withId(R.id.savePassword)).perform(scrollTo(), click());
         signedInFlag = false;
-        Tasks.whenAll(authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true)).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                assertThat(signedInFlag, is(true));
-            }
-        });
+        Tasks.whenAll(authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, newPassword).addOnSuccessListener(authenticatorResult -> signedInFlag = true)).
+            addOnSuccessListener(aVoid -> assertThat(signedInFlag, is(true)));
     }
-     */
 
-    /*@Test
+    @Test
     public void userHasNoOwnListings() {
         signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         onView(withId(R.id.profileButton)).perform(click());
@@ -112,28 +119,7 @@ public class UserProfileTest {
         onView(withText(R.string.no_created_listings))
                 .inRoot(withDecorView(not(is(activityRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
-    }*/
-
-    /*@Test
-    public void userHasOwnListings() {
-        authenticator.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
-        AppUser authAccount = authenticator.getCurrentUser();
-        authAccount.getUserData().addOnSuccessListener(user -> {
-            if (user != null) {
-                user.addOwnListing("listing_1");
-            }
-        });
-        authenticator.signOut();
-        signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
-        onView(withId(R.id.profileButton)).perform(click());
-        closeSoftKeyboard();
-        onView(withId(R.id.viewOwnListingsButton)).perform(click());
-        Activity activity = getActivityInstance();
-        Intent intent = activity.getIntent();
-        Bundle bundle = intent.getExtras();
-        ArrayList<String> ownListings = bundle.getStringArrayList(bundleKey);
-        assertEquals("listing_1", ownListings.get(0));
-    }*/
+    }
 
     private void signInWithFromMainActivity(String email, String password){
         onView(withId(R.id.authenticationButton)).perform(click());
@@ -144,7 +130,6 @@ public class UserProfileTest {
         onView(withId(R.id.loginButton)).perform(click());
         onView(withId(R.id.toMainButton)).perform(click());
 }
-
 
     Activity currentActivity = null;
 

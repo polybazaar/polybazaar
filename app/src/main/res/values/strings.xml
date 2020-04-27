@@ -103,4 +103,5 @@
     <string name="publish_picture">Your new profile picture will be publicly visible</string>
     <string name="thumbnail">thumbnail</string>
     <string name="seller">Seller</string>
+    <string name="deleted_listing">Listing successfully deleted</string>
 </resources>

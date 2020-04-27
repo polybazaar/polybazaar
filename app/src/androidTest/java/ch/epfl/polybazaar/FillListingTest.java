@@ -31,6 +31,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -68,6 +70,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertFileToString;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
+import static com.google.android.gms.tasks.Tasks.whenAll;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -401,7 +404,7 @@ public class FillListingTest {
         useRealNetwork();
     }
 
-   /* @Test
+    @Test
     public void newListingIsAddedToUserOwnListings() throws Throwable {
         auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         fillListing();
@@ -412,36 +415,13 @@ public class FillListingTest {
                 but.performClick();
             }
         });
-        AppUser authAccount = auth.getCurrentUser();
-        authAccount.getUserData().addOnSuccessListener(user -> {
+        auth.getCurrentUser().getUserData().addOnSuccessListener(user -> {
             if (user != null) {
                 ArrayList<String> ownListings = user.getOwnListings();
                 assertNotEquals(null, ownListings.get(0));
             }
         });
-    }*/
-
-
-    /**
-     * This test will no longer be relevant with the new UI
-     */
-   /*
-    @Test
-    public void testCreateAndSendListingWhenUserNull() throws Throwable {
-        MockAuthenticator.getInstance().signOut();
-        fillListing();
-
-        Intents.init();
-        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        //wait for MainActivity
-        Thread.sleep(SLEEP_TIME);
-        intended(hasComponent(MainActivity.class.getName()));
-        Intents.release();
-
-        //sign in again for remaining tests
-        whenAll(MockAuthenticator.getInstance().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD));
     }
-    */
 
     private void uploadImage(){
         closeSoftKeyboard();
@@ -458,7 +438,8 @@ public class FillListingTest {
                 Log.d("HERE", " h4");
             });
             Log.d("HERE", " h5");
-            //Thread.sleep(SLEEP_TIME);
+            Thread.sleep(SLEEP_TIME);
+            Log.d("HERE", " h5a");
         } catch (Throwable throwable) {
             Log.d("HERE", " h6");
             throwable.printStackTrace();
