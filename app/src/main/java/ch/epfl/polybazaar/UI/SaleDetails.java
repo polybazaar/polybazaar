@@ -20,14 +20,12 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.chat.ChatActivity;
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Account;
@@ -293,7 +291,7 @@ public class SaleDetails extends AppCompatActivity {
         });
 
         editButton.setOnClickListener(v -> {
-            Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
+            Intent intent = new Intent(SaleDetails.this, FillListing.class);
             intent.putExtra("listingID", listingID);
             intent.putExtra("listing", listing);
             startActivity(intent);

@@ -3,9 +3,6 @@ package ch.epfl.polybazaar.filllisting;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,20 +25,17 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToString;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.cropToSize;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
 import static java.util.UUID.randomUUID;
 
-class ListingManager {
+public class ListingManager {
 
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
     private Activity activity;
 
-    ListingManager(Activity activity) {
+    public ListingManager(Activity activity) {
         this.activity = activity;
         if (activity != null) {
             titleSelector = activity.findViewById(R.id.titleSelector);
@@ -50,7 +44,7 @@ class ListingManager {
         }
     }
 
-    void createAndSendListing(Listing newListing, List<String> listStringImage, String stringThumbnail) {
+    public void createAndSendListing(Listing newListing, List<String> listStringImage, String stringThumbnail) {
         final String newListingID = randomUUID().toString();
         Authenticator fbAuth = AuthenticatorFactory.getDependency();
         if(fbAuth.getCurrentUser() == null) {
@@ -133,7 +127,7 @@ class ListingManager {
         return ok;
     }
 
-    Listing makeListing(Double lat, Double lng, List<Spinner> spinnerList) {
+    public Listing makeListing(Double lat, Double lng, List<Spinner> spinnerList) {
         String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
         Authenticator fbAuth = AuthenticatorFactory.getDependency();
         if (fbAuth.getCurrentUser() != null) {
@@ -145,7 +139,7 @@ class ListingManager {
     }
 
     //returns false if the listing can't be submitted
-    boolean submit(List<Spinner> spinnerList, List<String> listStringImage, String stringThumbnail, Double lat, Double lng) {
+    public boolean submit(List<Spinner> spinnerList, List<String> listStringImage, String stringThumbnail, Double lat, Double lng) {
         if(!listStringImage.isEmpty()) {
             stringThumbnail = resizeStringImageThumbnail(listStringImage.get(0));
         }
@@ -170,7 +164,7 @@ class ListingManager {
         return true;
     }
 
-    void deleteOldListingAndSubmitNewOne(List<Spinner> spinnerList, List<String> listStringImage, String stringThumbnail, Double lat, Double lng, List<String> listImageID) {
+    public void deleteOldListingAndSubmitNewOne(List<Spinner> spinnerList, List<String> listStringImage, String stringThumbnail, Double lat, Double lng, List<String> listImageID) {
         if (!checkFields(spinnerList)) {
             Toast.makeText(activity.getApplicationContext(), R.string.incorrect_fields, Toast.LENGTH_SHORT).show();
         }

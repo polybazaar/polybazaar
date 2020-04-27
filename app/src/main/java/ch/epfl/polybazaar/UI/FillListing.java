@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.filllisting;
+package ch.epfl.polybazaar.UI;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,10 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
+import ch.epfl.polybazaar.filllisting.CategoryManager;
+import ch.epfl.polybazaar.filllisting.ImageManager;
+import ch.epfl.polybazaar.filllisting.ListingManager;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.utilities.ImageTaker;
@@ -42,7 +44,7 @@ import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 
-public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
+public class FillListing extends AppCompatActivity implements NoticeDialogListener {
 
 
     public static final int ADD_MP = 3;
@@ -217,7 +219,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             Listing newListing = listingManager.makeListing(lat, lng, spinnerList);
             if (newListing != null) {
                 listingManager.createAndSendListing(newListing, listStringImage, stringThumbnail);
-                Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+                Intent SalesOverviewIntent = new Intent(FillListing.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
             }
         }

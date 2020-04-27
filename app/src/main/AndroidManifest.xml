@@ -46,7 +46,7 @@
             android:name=".map.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".UI.UserProfile"
             android:label="@string/title_activity_user_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -74,7 +74,7 @@
         </provider>
 
         <activity
-            android:name=".filllisting.FillListingActivity"
+            android:name=".UI.FillListing"
             android:exported="true"
             android:label="Listing Editor"
             android:parentActivityName=".MainActivity" />

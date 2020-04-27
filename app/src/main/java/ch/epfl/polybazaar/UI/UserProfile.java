@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar;
+package ch.epfl.polybazaar.UI;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 
+import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.Utilities;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -39,7 +41,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.getRoundedCroppedBitmap;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
-public class UserProfileActivity extends AppCompatActivity implements NoticeDialogListener {
+public class UserProfile extends AppCompatActivity implements NoticeDialogListener {
 
     private Authenticator authenticator;
     private Account account;
@@ -95,7 +97,7 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
                     getNewImage(data);
                 }
             } else {
-                makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
+                makeDialog(UserProfile.this, R.string.profile_picture_not_updated);
             }
         }
     }
@@ -117,10 +119,10 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
                 this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).edit().putString(STRING_IMAGE, profilePic).apply();
                 profilePicChanged = true;
             } else {
-                makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
+                makeDialog(UserProfile.this, R.string.profile_picture_not_updated);
             }
         } else {
-            makeDialog(UserProfileActivity.this, R.string.profile_picture_not_updated);
+            makeDialog(UserProfile.this, R.string.profile_picture_not_updated);
         }
     }
 
@@ -168,13 +170,13 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
         String newLastName = lastNameSelector.getText().toString();
 
         if(!Utilities.nickNameIsValid(newNickname)){
-            makeDialog(UserProfileActivity.this, R.string.signup_nickname_invalid);
+            makeDialog(UserProfile.this, R.string.signup_nickname_invalid);
         }
         else if (!Utilities.nameIsValid(newFirstName)){
-            makeDialog(UserProfileActivity.this, R.string.invalid_first_name);
+            makeDialog(UserProfile.this, R.string.invalid_first_name);
         }
         else if (!Utilities.nameIsValid(newLastName)){
-            makeDialog(UserProfileActivity.this, R.string.invalid_last_name);
+            makeDialog(UserProfile.this, R.string.invalid_last_name);
         }
         else{
             PublishProfileDialog dialog = new PublishProfileDialog();
@@ -188,10 +190,10 @@ public class UserProfileActivity extends AppCompatActivity implements NoticeDial
         String confirmNewPassword = ((EditText)findViewById(R.id.confirmNewPassword)).getText().toString();
 
         if (!newPassword.equals(confirmNewPassword)) {
-            makeDialog(UserProfileActivity.this, R.string.signup_passwords_not_matching);
+            makeDialog(UserProfile.this, R.string.signup_passwords_not_matching);
         }
         else if (!Utilities.passwordIsValid(newPassword)){
-            makeDialog(UserProfileActivity.this, R.string.signup_passwords_weak);
+            makeDialog(UserProfile.this, R.string.signup_passwords_weak);
         }
         else{
             authenticator.signIn(user.getEmail(), currentPassword).addOnSuccessListener(authenticatorResult -> {

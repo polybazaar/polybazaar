@@ -3,13 +3,11 @@ package ch.epfl.polybazaar;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.login.SignInActivity;
@@ -50,7 +48,7 @@ public class MainActivityTest{
     public void authenticatedUsersCanEnterFillListing() {
         signInAndBack();
         onView(withId(R.id.addListing)).perform(click());
-        hasComponent(FillListingActivity.class.getName());
+        hasComponent(FillListing.class.getName());
     }
 
     @Test

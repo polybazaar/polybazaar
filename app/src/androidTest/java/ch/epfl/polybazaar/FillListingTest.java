@@ -12,24 +12,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -38,7 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
@@ -56,7 +50,6 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -87,7 +80,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
-public class FillListingActivityTest {
+public class FillListingTest {
 
     private final int SLEEP_TIME = 2000;
 
@@ -105,7 +98,7 @@ public class FillListingActivityTest {
 
 
     @Rule
-    public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<FillListingActivity>(FillListingActivity.class) {
+    public final ActivityTestRule<FillListing> fillSaleActivityTestRule = new ActivityTestRule<FillListing>(FillListing.class) {
 
 
     @Override
@@ -403,7 +396,7 @@ public class FillListingActivityTest {
             negButton.performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        hasComponent(FillListingActivity.class.getName());
+        hasComponent(FillListing.class.getName());
         Intents.release();
         useRealNetwork();
     }
@@ -453,17 +446,26 @@ public class FillListingActivityTest {
     private void uploadImage(){
         closeSoftKeyboard();
         expectedGalleryIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+        Log.d("HERE", " h0");
         Intents.init();
+        Log.d("HERE", " h1");
         intending(expectedGalleryIntent).respondWith(galleryResult);
+        Log.d("HERE", " h2");
         try {
             runOnUiThread(() -> {
+                Log.d("HERE", " h3");
                 fillSaleActivityTestRule.getActivity().findViewById(R.id.addImageFromLibrary).performClick();
+                Log.d("HERE", " h4");
             });
-            Thread.sleep(SLEEP_TIME);
+            Log.d("HERE", " h5");
+            //Thread.sleep(SLEEP_TIME);
         } catch (Throwable throwable) {
+            Log.d("HERE", " h6");
             throwable.printStackTrace();
         }
+        Log.d("HERE", " h7");
         intended(expectedGalleryIntent);
+        Log.d("HERE", " h8");
         Intents.release();
     }
 

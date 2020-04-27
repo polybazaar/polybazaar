@@ -1,10 +1,8 @@
 package ch.epfl.polybazaar.filllisting;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.TableRow;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,13 +22,13 @@ import ch.epfl.polybazaar.listingImage.ListingImage;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
-class ImageManager extends AppCompatActivity {
+public class ImageManager extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private TableRow editButtons;
     private Activity activity;
 
-    ImageManager(Activity activity) {
+    public ImageManager(Activity activity) {
         this.activity = activity;
         imageManagerFindViews();
     }
@@ -42,7 +40,7 @@ class ImageManager extends AppCompatActivity {
         }
     }
 
-    void addImage(List<String> listStringImage, String stringImage) {
+    public void addImage(List<String> listStringImage, String stringImage) {
         listStringImage.add(stringImage);
         drawImages(listStringImage);
         viewPager.setCurrentItem(listStringImage.size() - 1, false);
@@ -52,7 +50,7 @@ class ImageManager extends AppCompatActivity {
      * recursive function to retrieve all images
      * @param listingID ID of the image
      */
-    void retrieveAllImages(List<String> listStringImage, List<String> listImageID, String listingID) {
+    public void retrieveAllImages(List<String> listStringImage, List<String> listImageID, String listingID) {
         listImageID.add(listingID);
         ListingImage.fetch(listingID).addOnSuccessListener(result -> {
             //check if Listing contains image
@@ -71,7 +69,7 @@ class ImageManager extends AppCompatActivity {
         });
     }
 
-    void drawImages(List<String> listStringImage) {
+    public void drawImages(List<String> listStringImage) {
         List<SliderItem> sliderItems = new ArrayList<>();
         for(String strImg: listStringImage) {
             sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
@@ -96,7 +94,7 @@ class ImageManager extends AppCompatActivity {
         });
     }
 
-    void updateViewPagerVisibility(List<String> listStringImage) {
+    public void updateViewPagerVisibility(List<String> listStringImage) {
         if (listStringImage == null || listStringImage.isEmpty()) {
             viewPager.setVisibility(View.GONE);
             editButtons.setVisibility(View.GONE);
@@ -106,7 +104,7 @@ class ImageManager extends AppCompatActivity {
         }
     }
 
-    void setFirst(List<String> listStringImage) {
+    public void setFirst(List<String> listStringImage) {
         int index = viewPager.getCurrentItem();
         if(index == 0) {
             return;
@@ -115,7 +113,7 @@ class ImageManager extends AppCompatActivity {
         drawImages(listStringImage);
     }
 
-    void rotateLeft(List<String> listStringImage) {
+    public void rotateLeft(List<String> listStringImage) {
         if(listStringImage.isEmpty()) {
             return;
         }
@@ -128,7 +126,7 @@ class ImageManager extends AppCompatActivity {
         viewPager.setCurrentItem(index);
     }
 
-    void deleteImage(List<String> listStringImage) {
+    public void deleteImage(List<String> listStringImage) {
         if(listStringImage.size() > 0)
             listStringImage.remove(viewPager.getCurrentItem());
         drawImages(listStringImage);
