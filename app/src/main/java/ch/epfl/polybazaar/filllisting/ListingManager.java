@@ -3,6 +3,7 @@ package ch.epfl.polybazaar.filllisting;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,11 +26,15 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
 import static java.util.UUID.randomUUID;
 
 public class ListingManager {
 
+    // Desired thumbnail width:
+    public static final int THUMBNAIL_SIZE = 500;
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
@@ -53,6 +58,10 @@ public class ListingManager {
         }
         newListing.setId(newListingID);
         // Send Listing & LiteListing
+        Bitmap bitmap = convertStringToBitmap(stringThumbnail);
+        Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * (THUMBNAIL_SIZE/bitmap.getWidth()),
+                bitmap.getHeight() * (THUMBNAIL_SIZE*(bitmap.getHeight()/bitmap.getWidth())/bitmap.getHeight()), true);
+        stringThumbnail = convertBitmapToStringWithQuality(bitmap, 100);
         LiteListing newLiteListing = new LiteListing(newListingID, newListing.getTitle(), newListing.getPrice(),
                 newListing.getCategory(), stringThumbnail);
         newLiteListing.setId(newListingID);

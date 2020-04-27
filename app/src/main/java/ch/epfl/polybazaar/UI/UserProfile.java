@@ -45,11 +45,13 @@ import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class UserProfile extends AppCompatActivity implements NoticeDialogListener {
 
+    public static final int PROFILE_PIC_SIZE = 500;
     private Authenticator authenticator;
     private Account account;
     private User user;
     private ImageView profilePicView;
     private boolean profilePicChanged;
+    private boolean showNewPicDialog;
 
     private EditText nicknameSelector;
     private EditText firstNameSelector;
@@ -66,6 +68,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         phoneNumberSelector = findViewById(R.id.phoneNumberSelector);
         profilePicView = findViewById(R.id.profilePicture);
         profilePicChanged = false;
+        showNewPicDialog = false;
         authenticator = AuthenticatorFactory.getDependency();
         account = authenticator.getCurrentUser();
         User.fetch(account.getEmail()).addOnSuccessListener(returnedUser -> {
@@ -78,7 +81,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
                 profilePicView.setImageBitmap(convertStringToBitmap(user.getProfilePicture()));
                 SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
                 myPrefs.edit().putString(STRING_IMAGE, user.getProfilePicture()).apply();
-                profilePicChanged = false;
+                profilePicChanged = true;
             }
         });
     }
@@ -118,11 +121,12 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
             String stringImage = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
             if (stringImage != null) {
                 Bitmap bitmap = getRoundedCroppedBitmap(convertStringToBitmap(stringImage));
-                bitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false);
+                bitmap = Bitmap.createScaledBitmap(bitmap, PROFILE_PIC_SIZE, PROFILE_PIC_SIZE, true);
                 profilePicView.setImageBitmap(bitmap);
                 String profilePic = convertBitmapToStringPNG(bitmap);
                 this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).edit().putString(STRING_IMAGE, profilePic).apply();
                 profilePicChanged = true;
+                showNewPicDialog = true;
             } else {
                 makeDialog(UserProfile.this, R.string.profile_picture_not_updated);
             }
@@ -185,7 +189,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
             makeDialog(UserProfile.this, R.string.invalid_last_name);
         }
         else{
-            if (profilePicChanged) {
+            if (showNewPicDialog) {
                 PublishProfileDialog dialog = new PublishProfileDialog();
                 dialog.show(getSupportFragmentManager(), "select image import");
             } else {
