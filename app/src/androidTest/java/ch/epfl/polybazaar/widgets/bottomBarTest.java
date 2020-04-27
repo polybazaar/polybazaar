@@ -10,22 +10,27 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UserProfileActivity;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverview;
+import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
 import ch.epfl.polybazaar.filllisting.FillListingActivity;
 
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.polybazaar.category.RootCategoryFactory.useMockCategory;
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 
 public class bottomBarTest {
 
     int SLEEP_TIME = 2000;
 
     @Rule
-    public final ActivityTestRule<NotSignedInActivity> activityRule =
-            new ActivityTestRule<>(
-                    NotSignedInActivity.class,
-                    true,
-                    true);
+    public final ActivityTestRule<SalesOverview> activityRule = new ActivityTestRule<SalesOverview>(SalesOverview.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            useMockCategory();
+            useMockDataStore();
+        }
+    };
 
 
     @Test
@@ -49,7 +54,7 @@ public class bottomBarTest {
         Intents.init();
         runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.action_messages).performClick());
         Thread.sleep(SLEEP_TIME);
-        intended(hasComponent(ConversationOverview.class.getName()));
+        intended(hasComponent(ConversationOverviewActivity.class.getName()));
         Intents.release();
     }
     @Test
