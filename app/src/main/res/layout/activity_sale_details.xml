@@ -185,7 +185,7 @@
                 android:layout_height="@dimen/seller_image_size"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/saleDetails_inter_space_small"
-                android:src="@drawable/default_user"
+                android:src="@drawable/no_user"
                 android:contentDescription="@string/profile_picture" />
 
             <TextView
