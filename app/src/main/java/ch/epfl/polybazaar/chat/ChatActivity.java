@@ -12,6 +12,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import com.google.firebase.Timestamp;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -58,6 +62,17 @@ public class ChatActivity extends AppCompatActivity {
 
         sendMessageButton.setOnClickListener(v -> sendMessage());
 
+        KeyboardVisibilityEvent.setEventListener(
+               this,
+                new KeyboardVisibilityEventListener() {
+                    @Override
+                    public void onVisibilityChanged(boolean isOpen) {
+                        if(isOpen) {
+                            messageRecycler.scrollToPosition(conversation.size() - 1);
+                        }
+                    }
+                });
+
         loadConversation();
     }
 
@@ -73,6 +88,7 @@ public class ChatActivity extends AppCompatActivity {
             }
             chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
             messageRecycler.setAdapter(chatMessageRecyclerAdapter);
+            messageRecycler.scrollToPosition(conversation.size() - 1);
         });
     }
 
@@ -84,11 +100,11 @@ public class ChatActivity extends AppCompatActivity {
         message.setId(newMessageID);
 
         message.save().addOnSuccessListener(aVoid -> {
-            //TODO: It would be nice to have the keyboard close when the message is sent
            conversation.add(message);
            messageEditor.setText("");
            chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
            messageRecycler.setAdapter(chatMessageRecyclerAdapter);
+           messageRecycler.scrollToPosition(conversation.size() - 1);
         });
     }
 }
