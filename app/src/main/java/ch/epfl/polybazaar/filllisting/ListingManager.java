@@ -59,8 +59,11 @@ public class ListingManager {
         newListing.setId(newListingID);
         // Send Listing & LiteListing
         Bitmap bitmap = convertStringToBitmap(stringThumbnail);
-        Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * (THUMBNAIL_SIZE/bitmap.getWidth()),
-                bitmap.getHeight() * (THUMBNAIL_SIZE*(bitmap.getHeight()/bitmap.getWidth())/bitmap.getHeight()), true);
+        double ratio = ((double)bitmap.getHeight())/((double)bitmap.getWidth());
+        int widthFactor = (int)Math.floor(((double)THUMBNAIL_SIZE)/((double)bitmap.getWidth()));
+        int heightFactor = (int)Math.floor((((double)THUMBNAIL_SIZE) * ratio)/((double)bitmap.getHeight()));
+        Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * widthFactor,
+                bitmap.getHeight() * heightFactor, true);
         stringThumbnail = convertBitmapToStringWithQuality(bitmap, 100);
         LiteListing newLiteListing = new LiteListing(newListingID, newListing.getTitle(), newListing.getPrice(),
                 newListing.getCategory(), stringThumbnail);
