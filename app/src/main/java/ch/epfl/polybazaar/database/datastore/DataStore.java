@@ -64,4 +64,15 @@ public interface DataStore {
      * @return task that fails if the database is unreachable
      */
     Task<CollectionSnapshot> fetchWithEqualsMultiple(String collectionPath, List<String> fields, List<String> values);
+
+
+    /**
+     * Updates a field of the document with the given ID from the given collection with a new value
+     * @param collectionPath collection
+     * @param id the id of the document to update
+     * @param field field to update
+     * @param updatedValue new value to put in the field
+     * @return void task
+     */
+    <T> Task<Void> updateField (String collectionPath, String id, String field, T updatedValue);
 }

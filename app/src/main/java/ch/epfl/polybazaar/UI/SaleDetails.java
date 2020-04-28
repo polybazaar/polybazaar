@@ -39,7 +39,7 @@ import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
-
+import android.provider.Settings.Secure;
 public class SaleDetails extends AppCompatActivity {
     public static final int SIZE = 20;
     private Button editButton;
@@ -51,6 +51,7 @@ public class SaleDetails extends AppCompatActivity {
     private Button contactSelButton;
     private TextView userEmailTextView;
     private Button viewMP;
+
 
     private String listingID;
     private String sellerEmail;
@@ -131,10 +132,12 @@ public class SaleDetails extends AppCompatActivity {
             fillWithListing(null);
             return;
         }
+        this.listingID = listingID;
 
         retrieveImages(listingID);
 
         Listing.fetch(listingID).addOnSuccessListener(result -> {
+            listing = result;
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
             if(!(fbAuth.getCurrentUser() == null)){
                 sellerEmail = result.getUserEmail();
@@ -151,9 +154,16 @@ public class SaleDetails extends AppCompatActivity {
                 }
             }
 
-            listing = result;
 
-            this.listingID = listingID;
+            String android_id = Secure.getString(getApplication().getContentResolver(), Secure.ANDROID_ID);
+            String haveSeenUsers = listing.getHaveSeenUsers();
+            if(!haveSeenUsers.contains(android_id)){
+                listing.updateField("views", listing.getViews()+1);
+                listing.updateField("haveSeenUsers", haveSeenUsers + android_id);
+            }
+
+
+
             fillWithListing(result);
             imageLoading.setVisibility(View.GONE);
             viewPager2.setVisibility(View.VISIBLE);

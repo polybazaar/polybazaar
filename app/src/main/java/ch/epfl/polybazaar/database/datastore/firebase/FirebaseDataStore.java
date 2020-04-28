@@ -82,5 +82,11 @@ public class FirebaseDataStore implements DataStore {
                 Tasks.forResult(new FirebaseCollectionSnapshot(queryDocumentSnapshots))
         ));
     }
+
+    @Override
+    public <T> Task<Void> updateField(String collectionPath, String id, String field, T updatedValue) {
+        return database.collection(collectionPath).document(id).update(field, updatedValue);
+    }
+
 }
 
