@@ -300,6 +300,7 @@ public class FillListingTest {
 
     @Test
     public void testMoveImageFirstAndSubmit() throws Throwable {
+        galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
         uploadImage();
         //this do nothing because there only one image
         runOnUiThread(() -> {
@@ -426,27 +427,17 @@ public class FillListingTest {
     private void uploadImage(){
         closeSoftKeyboard();
         expectedGalleryIntent = allOf(hasAction(Intent.ACTION_PICK), hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-        Log.d("HERE", " h0");
         Intents.init();
-        Log.d("HERE", " h1");
         intending(expectedGalleryIntent).respondWith(galleryResult);
-        Log.d("HERE", " h2");
         try {
             runOnUiThread(() -> {
-                Log.d("HERE", " h3");
                 fillSaleActivityTestRule.getActivity().findViewById(R.id.addImageFromLibrary).performClick();
-                Log.d("HERE", " h4");
             });
-            Log.d("HERE", " h5");
             Thread.sleep(SLEEP_TIME);
-            Log.d("HERE", " h5a");
         } catch (Throwable throwable) {
-            Log.d("HERE", " h6");
             throwable.printStackTrace();
         }
-        Log.d("HERE", " h7");
         intended(expectedGalleryIntent);
-        Log.d("HERE", " h8");
         Intents.release();
     }
 
