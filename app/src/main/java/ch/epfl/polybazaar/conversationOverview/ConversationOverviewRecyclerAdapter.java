@@ -56,8 +56,10 @@ public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<Co
         ConversationOverview conversationOverview = conversationOverviews.get(position);
 
         LiteListing.fetch(conversationOverview.getListingID()).addOnSuccessListener(result -> {
-            holder.title.setText(result.getTitle());
-            holder.thumbnail.setImageBitmap(convertStringToBitmap(result.getStringThumbnail()));
+            if(result != null) {
+                holder.title.setText(result.getTitle());
+                holder.thumbnail.setImageBitmap(convertStringToBitmap(result.getStringThumbnail()));
+            }
         });
 
         holder.otherUser.setText(String.format("Seller : %s", conversationOverview.getOtherUser()));

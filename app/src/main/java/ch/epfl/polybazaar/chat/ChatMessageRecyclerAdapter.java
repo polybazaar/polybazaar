@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        ChatMessage message = (ChatMessage) messages.get(position);
+        ChatMessage message = messages.get(position);
         Account user = AuthenticatorFactory.getDependency().getCurrentUser();
         assert(user != null);
 
@@ -82,13 +81,11 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         //public TextView messageSender;
         public TextView messageText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            //messageSender = itemView.findViewById(R.id.messageSender);
             messageText = itemView.findViewById(R.id.text_message_body);
         }
     }
@@ -107,18 +104,13 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
         @SuppressLint("DefaultLocale")
         void bind(ChatMessage message) {
             messageText.setText(message.getMessage());
-
-            // Format the stored timestamp into a readable String using method.
-            Date date = message.getTime().toDate();
-            timeText.setText(String.format("%dh%d", date.getHours(), date.getMinutes()));
-
+            setHourMessage(timeText, message);
             setDateMessage(dateSent, messages.indexOf(message));
         }
     }
 
     private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText, nameText, dateReceived;
-        //ImageView profileImage;
 
         ReceivedMessageHolder(View itemView) {
             super(itemView);
@@ -127,24 +119,25 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
             timeText = itemView.findViewById(R.id.text_message_time);
             nameText = itemView.findViewById(R.id.text_message_name);
             dateReceived = itemView.findViewById(R.id.date_received);
-            //profileImage = (ImageView) itemView.findViewById(R.id.image_message_profile);
         }
 
         @SuppressLint("DefaultLocale")
         void bind(ChatMessage message) {
             messageText.setText(message.getMessage());
-
-            // Format the stored timestamp into a readable String using method.
-            Date date = message.getTime().toDate();
-            timeText.setText(String.format("%dh%d", date.getHours(), date.getMinutes()));
-
-           setDateMessage(dateReceived, messages.indexOf(message));
-
-            fetch(message.getSender()).addOnSuccessListener(r -> nameText.setText(r.getNickName()));
-
-            // Insert the profile image from the URL into the ImageView.
-            //Utils.displayRoundImageFromUrl(mContext, message.getSender().getProfileUrl(), profileImage);
+            setHourMessage(timeText, message);
+            setDateMessage(dateReceived, messages.indexOf(message));
+            fetch(message.getSender()).addOnSuccessListener(result -> {
+                if(result != null) {
+                    nameText.setText(result.getNickName());
+                }
+            });
         }
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void setHourMessage(TextView timeTxt, ChatMessage message) {
+        Date date = message.getTime().toDate();
+        timeTxt.setText(String.format("%02dh%02d", date.getHours(), date.getMinutes()));
     }
 
     @SuppressLint("DefaultLocale")

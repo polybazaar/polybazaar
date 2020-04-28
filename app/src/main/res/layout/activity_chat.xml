@@ -20,7 +20,7 @@
 
     <View
         android:layout_width="0dp"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/line_thickness"
         android:background="@color/cardview_dark_background"
         app:layout_constraintBottom_toTopOf="@id/layout_chatEdit"
         app:layout_constraintRight_toRightOf="parent"/>
@@ -40,8 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="Type your message"
+            android:hint="@string/type_your_message"
             android:inputType="textPersonName" />
 
         <Button
@@ -49,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Send" />
+            android:text="@string/send" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

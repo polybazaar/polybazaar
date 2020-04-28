@@ -84,4 +84,6 @@
     <string name="library">Library</string>
     <string name="not_implemented">Unavailable</string>
     <string name="remove_meeting_point">Remove</string>
+    <string name="type_your_message">Type your message</string>
+    <string name="send">Send</string>
 </resources>
