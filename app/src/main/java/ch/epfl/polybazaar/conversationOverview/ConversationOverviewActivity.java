@@ -2,8 +2,6 @@ package ch.epfl.polybazaar.conversationOverview;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.ArraySet;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,7 +11,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
