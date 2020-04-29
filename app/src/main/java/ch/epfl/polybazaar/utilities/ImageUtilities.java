@@ -14,6 +14,8 @@ import android.util.Base64;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+import static ch.epfl.polybazaar.filllisting.ListingManager.THUMBNAIL_SIZE;
+
 /**
  * Provides utilities to manipulate images
  */
@@ -136,9 +138,9 @@ public final class ImageUtilities {
         if(input == null || input.equals("")) {
             return null;
         }
-        Bitmap b = convertStringToBitmap(input);
-        int width = b.getWidth() * 240 / b.getHeight();
-        return convertBitmapToStringWithQuality(Bitmap.createScaledBitmap(b, width, 240, false), 100);
+        Bitmap bitmap = convertStringToBitmap(input);
+        bitmap = scaleBitmap(bitmap, THUMBNAIL_SIZE);
+        return convertBitmapToStringWithQuality(bitmap, 100);
     }
 
     /**
@@ -243,10 +245,10 @@ public final class ImageUtilities {
     public static Bitmap scaleBitmap(Bitmap bitmap, int targetWidth) {
         if (bitmap != null) {
             double ratio = ((double) bitmap.getHeight()) / ((double) bitmap.getWidth());
-            int widthFactor = (int) Math.floor(((double) targetWidth) / ((double) bitmap.getWidth()));
-            int heightFactor = (int) Math.floor((((double) targetWidth) * ratio) / ((double) bitmap.getHeight()));
-            return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * widthFactor,
-                    bitmap.getHeight() * heightFactor, true);
+            double widthFactor = ((double) targetWidth) / ((double) bitmap.getWidth());
+            double heightFactor = (((double) targetWidth) * ratio) / ((double) bitmap.getHeight());
+            return Bitmap.createScaledBitmap(bitmap, (int)Math.floor(((double)bitmap.getWidth()) * widthFactor),
+                    (int)Math.floor(((double)bitmap.getHeight()) * heightFactor), true);
         } else {
             return null;
         }

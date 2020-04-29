@@ -59,9 +59,6 @@ public class ListingManager {
         }
         newListing.setId(newListingID);
         // Send Listing & LiteListing
-        Bitmap bitmap = convertStringToBitmap(stringThumbnail);
-        bitmap = scaleBitmap(bitmap, THUMBNAIL_SIZE);
-        stringThumbnail = convertBitmapToStringWithQuality(bitmap, 100);
         LiteListing newLiteListing = new LiteListing(newListingID, newListing.getTitle(), newListing.getPrice(),
                 newListing.getCategory(), stringThumbnail);
         newLiteListing.setId(newListingID);
