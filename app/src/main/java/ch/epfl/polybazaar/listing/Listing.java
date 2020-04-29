@@ -145,8 +145,9 @@ public class Listing extends Model implements Serializable {
         });
     }
 
-    public <T> Task<Void> updateField(String field, T updatedValue) {
-        return ModelTransaction.updateField(COLLECTION, id.get(), field, updatedValue);
+    public static <T> Task<Void> updateField(String field, String id, T updatedValue) {
+
+        return ModelTransaction.updateField(COLLECTION, id, field, updatedValue);
     }
 
     /**

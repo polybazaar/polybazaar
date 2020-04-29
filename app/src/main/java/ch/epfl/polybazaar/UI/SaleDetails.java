@@ -154,12 +154,11 @@ public class SaleDetails extends AppCompatActivity {
                 }
             }
 
-
             String android_id = Secure.getString(getApplication().getContentResolver(), Secure.ANDROID_ID);
             String haveSeenUsers = listing.getHaveSeenUsers();
             if(!haveSeenUsers.contains(android_id)){
-                listing.updateField("views", listing.getViews()+1);
-                listing.updateField("haveSeenUsers", haveSeenUsers + android_id);
+                Listing.updateField("views", this.listingID, listing.getViews()+1);
+                Listing.updateField("haveSeenUsers", this.listingID, haveSeenUsers + android_id);
             }
 
 

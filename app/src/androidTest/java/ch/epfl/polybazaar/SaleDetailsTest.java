@@ -24,6 +24,7 @@ import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.LoginTest;
 import ch.epfl.polybazaar.login.MockAuthenticator;
+import ch.epfl.polybazaar.testingUtilities.DatabaseChecksUtilities;
 import ch.epfl.polybazaar.user.User;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
@@ -112,7 +113,7 @@ public class SaleDetailsTest {
 
         Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
 
-        Tasks.await(listing.save());
+        Tasks.whenAll(listing.save());
         String id = listing.getId();
         Intent intent = new Intent();
         intent.putExtra("listingID", id);
