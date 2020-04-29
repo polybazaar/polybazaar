@@ -102,12 +102,16 @@ public class UserProfileTest {
         getActivityInstance();
         onView(withId(R.id.profilePicture)).perform(click());
         Thread.sleep(SLEEP_TIME);
+        Thread.sleep(SLEEP_TIME);
+        Thread.sleep(SLEEP_TIME);
         onView(withText(R.string.library))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()))
                 .perform(click());
         intended(expectedGalleryIntent);
         Intents.release();
+        Thread.sleep(SLEEP_TIME);
+        Thread.sleep(SLEEP_TIME);
         Thread.sleep(SLEEP_TIME);
         onView(withText(R.string.alert_close))
                 .inRoot(isDialog())
