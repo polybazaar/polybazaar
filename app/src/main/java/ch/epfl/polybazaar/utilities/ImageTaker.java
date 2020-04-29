@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
@@ -103,6 +105,11 @@ public class ImageTaker extends AppCompatActivity {
         returnIntent.putExtra(IMAGE_AVAILABLE, false);
         setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
     }
 
     @Override
