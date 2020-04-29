@@ -8,8 +8,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 
+import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -41,6 +44,10 @@ public class UserProfileActivity extends AppCompatActivity {
         firstNameSelector = findViewById(R.id.firstNameSelector);
         lastNameSelector = findViewById(R.id.lastNameSelector);
         phoneNumberSelector = findViewById(R.id.phoneNumberSelector);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_profile);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(),UserProfileActivity.this));
 
     }
 

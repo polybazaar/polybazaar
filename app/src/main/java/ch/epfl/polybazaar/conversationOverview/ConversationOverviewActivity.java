@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.chat.ChatActivity;
 import ch.epfl.polybazaar.chat.ChatMessage;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -40,6 +43,10 @@ public class ConversationOverviewActivity extends AppCompatActivity {
         conversationOverviews = new HashSet<>();
 
         loadConversationOverview();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_messages);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), ConversationOverviewActivity.this));
     }
 
     private void loadConversationOverview() {
