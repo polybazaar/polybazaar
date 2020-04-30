@@ -7,15 +7,12 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.UI.SaleDetails;
 import ch.epfl.polybazaar.listing.Listing;
@@ -120,7 +117,7 @@ public class SaleDetailsTest {
 
         activityRule.launchActivity(intent);
 
-        runOnUiThread(() -> assertEquals(0f, ((RatingBar)activityRule.getActivity().findViewById(R.id.ratingBar2)).getRating(), DELTA));
+        runOnUiThread(() -> assertEquals(0f, ((RatingBar)activityRule.getActivity().findViewById(R.id.ratingBar)).getRating(), DELTA));
     }
 
     @Test
@@ -138,14 +135,14 @@ public class SaleDetailsTest {
 
         activityRule.launchActivity(intent);
 
-        runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.ratingBar2).performClick());
+        runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.ratingBar).performClick());
 
         // we fetch after each click to make sure the data is actually saved to mock db
         User.fetch(MockAuthenticator.TEST_USER_EMAIL).addOnSuccessListener(user -> {
             assertTrue(user.getFavorites().contains(listing.getId()));
         });
 
-        runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.ratingBar2).performClick());
+        runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.ratingBar).performClick());
 
         User.fetch(MockAuthenticator.TEST_USER_EMAIL).addOnSuccessListener(user -> {
             assertFalse(user.getFavorites().contains(listing.getId()));
@@ -169,7 +166,7 @@ public class SaleDetailsTest {
 
         runOnUiThread(() -> {
             activityRule.getActivity().favorite();
-            assertNotEquals(0f, (((RatingBar)activityRule.getActivity().findViewById(R.id.ratingBar2)).getRating()));
+            assertNotEquals(0f, (((RatingBar)activityRule.getActivity().findViewById(R.id.ratingBar)).getRating()));
         });
 
 

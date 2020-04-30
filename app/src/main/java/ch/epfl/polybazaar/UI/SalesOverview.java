@@ -12,10 +12,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.polybazaar.DataHolder;
+import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
@@ -28,6 +31,7 @@ public class SalesOverview extends AppCompatActivity {
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
+    public static final String LISTING_ID = "listingID";
     private List<String> IDList;
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
@@ -47,15 +51,12 @@ public class SalesOverview extends AppCompatActivity {
         // Create adapter passing in the sample LiteListing data
         adapter = new LiteListingAdapter(liteListingList);
 
-        adapter.setOnItemClickListener(new LiteListingAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view) {
-                int viewID = view.getId();
-                String listingID = adapter.getListingID(viewID);
-                Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-                intent.putExtra("listingID", listingID);
-                startActivity(intent);
-            }
+        adapter.setOnItemClickListener(view -> {
+            int viewID = view.getId();
+            String listingID = adapter.getListingID(viewID);
+            Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
+            intent.putExtra(LISTING_ID, listingID);
+            startActivity(intent);
         });
 
         // Attach the adapter to the recyclerview to populate items
@@ -74,6 +75,10 @@ public class SalesOverview extends AppCompatActivity {
         };
         // Adds the scroll listener to RecyclerView
         rvLiteListings.addOnScrollListener(scrollListener);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SalesOverview.this));
     }
 
     @Override
@@ -87,7 +92,6 @@ public class SalesOverview extends AppCompatActivity {
                 Account user = getUser();
                 user.getUserData().addOnSuccessListener(authUser -> {
                     ArrayList<String> favoritesIds = authUser.getFavorites();
-
                     // the list of favorites of the user is empty
                     if (favoritesIds == null || favoritesIds.isEmpty()) {
                         Toast.makeText(getApplicationContext(), R.string.no_favorites, Toast.LENGTH_SHORT).show() ;

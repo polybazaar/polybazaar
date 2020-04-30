@@ -22,10 +22,12 @@ public final class User extends Model {
     private final SimpleField<String> firstName = new SimpleField<>("firstName");
     private final SimpleField<String> lastName = new SimpleField<>("lastName");
     private final SimpleField<String> phoneNumber = new SimpleField<>("phoneNumber");
+    private final SimpleField<String> profilePicture = new SimpleField<>("profilePicture");
     private final SimpleField<ArrayList<String>> ownListings = new SimpleField<>("ownListings", new ArrayList<>());
     private final SimpleField<ArrayList<String>> favorites = new SimpleField<>("favorites", new ArrayList<>());
 
     private final static String COLLECTION = "users";
+    public final static String NO_PROFILE_PICTURE = "no_picture";
 
     public String getNickName() {
         return nickName.get();
@@ -47,9 +49,17 @@ public final class User extends Model {
         return phoneNumber.get();
     }
 
+    public String getProfilePicture(){
+        if (profilePicture.get() != null) {
+            return profilePicture.get();
+        } else {
+            return NO_PROFILE_PICTURE;
+        }
+    }
+
     // no-argument constructor so that instances can be created by ModelTransaction
     public User() {
-        registerFields(nickName, email, firstName, lastName, phoneNumber, ownListings, favorites);
+        registerFields(nickName, email, firstName, lastName, phoneNumber, profilePicture, ownListings, favorites);
     }
 
     /**
@@ -70,10 +80,10 @@ public final class User extends Model {
         } else {
             throw new IllegalArgumentException("email has invalid format");
         }
-
         firstName.set(capitalize(email.substring(0, email.indexOf("."))));
         lastName.set(capitalize(email.substring(email.indexOf(".")+1, email.indexOf("@"))));
         phoneNumber.set("");
+        profilePicture.set(NO_PROFILE_PICTURE);
     }
 
     /**
@@ -83,12 +93,17 @@ public final class User extends Model {
      * @param firstName User's first name
      * @param lastName User's last name
      * @param phoneNumber User's phone number
+     * @param profilePicture StringImage that is the user's profile Picture
      */
-    public User(String nickName, String email, String firstName, String lastName, String phoneNumber){
+    public User(String nickName, String email, String firstName, String lastName, String phoneNumber,
+                String profilePicture, ArrayList<String> ownListings, ArrayList<String> favorites){
         this(nickName, email);
         this.firstName.set(firstName);
         this.lastName.set(lastName);
         this.phoneNumber.set(phoneNumber);
+        this.profilePicture.set(profilePicture);
+        this.ownListings.set(ownListings);
+        this.favorites.set(favorites);
     }
 
     @Override

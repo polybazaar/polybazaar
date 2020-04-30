@@ -49,7 +49,7 @@ public class ConversationOverviewTest {
         SignInUtilities.signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         DatabaseStoreUtilities.storeNewMessage(otherUserEmail, MockAuthenticator.TEST_USER_EMAIL, id, message);
         DatabaseStoreUtilities.storeNewMessage(MockAuthenticator.TEST_USER_EMAIL, otherUserEmail, id, message2);
-        onView(withId(R.id.conversationOverviewButton)).perform(click());
+        onView(withId(R.id.action_messages)).perform(click());
         onView(withText(otherUserEmail)).perform(scrollTo(), click());
         onView(withText(message)).check(matches(isDisplayed()));
         onView(withText(message2)).check(matches(isDisplayed()));
