@@ -124,6 +124,15 @@ public class UserProfileTest {
      */
 
     @Test
+    public void pressSignOutTest() {
+        signInWithFromMainActivity();
+        onView(withId(R.id.action_profile)).perform(click());
+        onView(withId(R.id.signOutButton)).perform(scrollTo(), click());
+        onView(withId(R.id.action_profile)).perform(click());
+        onView(withId(R.id.signUpButton)).perform(click());
+    }
+
+    @Test
     public void testNameChangesWorks() throws InterruptedException {
         String newNickname = "new Nickname";
         String newFirstName = "Aurelien";
