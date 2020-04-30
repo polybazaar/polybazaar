@@ -67,12 +67,6 @@ public final class ModelTransaction {
                 .onSuccessTask(querySnapshot -> Tasks.forResult(toModels(querySnapshot, clazz)));
     }
 
-    public static <T> Task<Void> updateField(String collectionPath, String id, String field, T updatedValue) {
-        DataStore db = DataStoreFactory.getDependency();
-        return db.updateField(collectionPath, id, field, updatedValue)
-                .onSuccessTask(querySnapshot -> Tasks.forResult(null));
-    }
-
     /**
      * Updates the given field of the document with the updated value
      * @param collectionPath name of the collection
