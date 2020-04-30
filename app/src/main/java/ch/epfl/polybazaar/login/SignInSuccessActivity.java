@@ -10,6 +10,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.bottomBar;
 
 public class SignInSuccessActivity extends AppCompatActivity {
@@ -56,7 +57,7 @@ public class SignInSuccessActivity extends AppCompatActivity {
      * @param view view that triggers the action
      */
     public void toMain(View view) {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SalesOverview.class);
         startActivity(intent);
     }
 }
