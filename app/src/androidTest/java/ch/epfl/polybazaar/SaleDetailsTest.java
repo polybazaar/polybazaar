@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
@@ -21,6 +22,8 @@ import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.LoginTest;
 import ch.epfl.polybazaar.login.MockAuthenticator;
+import ch.epfl.polybazaar.testingUtilities.DatabaseChecksUtilities;
+import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
 import ch.epfl.polybazaar.user.User;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
@@ -56,10 +59,13 @@ public class SaleDetailsTest {
 
     @Test
     public void testFillWithListingAndGetSellerInfo() throws Throwable {
+        final Listing listing = new Listing("Algebre linéaire by David C. Lay", "Very good book.", "23", "gu.vrut@epfl.ch", "Furniture");
+        Tasks.await(listing.save());
         Intent intent = new Intent();
+        intent.putExtra("listingID", listing.getId());
         activityRule.launchActivity(intent);
 
-        final Listing listing = new Listing("Algebre linéaire by David C. Lay", "Very good book.", "23", "gu.vrut@epfl.ch", "Furniture");
+
         runOnUiThread(() -> activityRule.getActivity().fillWithListing(listing));
 
         TextView textTitle = activityRule.getActivity().findViewById(R.id.title);
@@ -109,7 +115,7 @@ public class SaleDetailsTest {
 
         Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
 
-        Tasks.await(listing.save());
+        Tasks.whenAll(listing.save());
         String id = listing.getId();
         Intent intent = new Intent();
         intent.putExtra("listingID", id);
@@ -167,9 +173,22 @@ public class SaleDetailsTest {
             activityRule.getActivity().favorite();
             assertNotEquals(0f, (((RatingBar)activityRule.getActivity().findViewById(R.id.ratingBar)).getRating()));
         });
+    }
 
 
+    @Test
+    public void viewsIncrementCorrectly() throws Throwable {
+        MockAuthenticator auth = MockAuthenticator.getInstance();
+        auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
+        String id = "myid";
+        DatabaseStoreUtilities.storeNewListing("My listing",  MockAuthenticator.TEST_USER_EMAIL, id);
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
 
+        activityRule.launchActivity(intent);
+        runOnUiThread(() -> assertEquals("1", ((TextView)activityRule.getActivity().findViewById(R.id.nbViews)).getText()));
+
+        auth.signOut();
     }
 
 }

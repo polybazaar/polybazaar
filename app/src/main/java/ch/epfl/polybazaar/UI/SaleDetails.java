@@ -40,7 +40,7 @@ import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
-
+import android.provider.Settings.Secure;
 public class SaleDetails extends AppCompatActivity {
     private Button editButton;
     private Button deleteButton;
@@ -49,12 +49,18 @@ public class SaleDetails extends AppCompatActivity {
     private RatingBar ratingBar;
     private ImageView imageLoading;
     private Button contactSelButton;
+
+    private TextView userEmailTextView;
+    private TextView viewsTextView;
+    private TextView nbViewsTextView;
+
     private Button viewMP;
 
     private String listingID;
 
     private double mpLat = NOLAT;
     private double mpLng = NOLNG;
+    private int viewIncrement = 0;
 
     private ViewPager2 viewPager2;
     private List<String> listStringImage;
@@ -74,7 +80,11 @@ public class SaleDetails extends AppCompatActivity {
         contactSelButton = findViewById(R.id.contactSel);
         viewPager2 = findViewById(R.id.viewPagerImageSlider);
         viewMP = findViewById(R.id.viewMP);
+        viewsTextView = findViewById(R.id.viewsLabel);
+        nbViewsTextView = findViewById(R.id.nbViews);
+
         ratingBar = findViewById(R.id.ratingBar);
+
         ratingBar.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 favorite();
@@ -136,7 +146,6 @@ public class SaleDetails extends AppCompatActivity {
             fillWithListing(result);
         });
     }
-
 
     /**
      * recursive function to retrieve all images
@@ -213,6 +222,15 @@ public class SaleDetails extends AppCompatActivity {
             startActivity(intent);
         } else {
 
+            //Updates the number of listing's views once per phone
+            String android_id = Secure.getString(getApplication().getContentResolver(), Secure.ANDROID_ID);
+            String haveSeenUsers = listing.getHaveSeenUsers();
+            if(!haveSeenUsers.contains(android_id)){
+                Listing.updateField("views", this.listingID, listing.getViews()+1);
+                Listing.updateField("haveSeenUsers", this.listingID, haveSeenUsers + android_id);
+                viewIncrement = 1;
+            }
+
             //Set Meeting Point
             mpLat = listing.getLatitude();
             mpLng = listing.getLongitude();
@@ -265,6 +283,7 @@ public class SaleDetails extends AppCompatActivity {
                     if(authUser.getEmail().equals(sellerEmail)){
                         createEditAndDeleteActions(listing, listingID);
                         contactSelButton.setVisibility(View.GONE);
+                        setupNbViews(listing);
                     } else{
                         contactSelButton.setVisibility(View.VISIBLE);
                         findViewById(R.id.editButtonsLayout).setVisibility(View.GONE);
@@ -325,6 +344,13 @@ public class SaleDetails extends AppCompatActivity {
             ListingImage.delete(id);
         }
     }
+
+    private void setupNbViews(Listing listing) {
+        viewsTextView.setVisibility(View.VISIBLE);
+        nbViewsTextView.setVisibility(View.VISIBLE);
+        nbViewsTextView.setText(Long.toString(listing.getViews()+viewIncrement));
+    }
+
 
     /**
      * Adds the listing to favorites, or removes it from the user's favorites if it is already
