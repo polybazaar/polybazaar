@@ -18,8 +18,8 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <Button
@@ -71,6 +71,7 @@
                     android:layout_marginTop="@dimen/page_number_margin_top"
                     android:background="@drawable/rounded_corner"/>
             </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,6 +99,34 @@
                         android:visibility="invisible"
                         android:layout_marginStart="@dimen/page_margin"
                         android:layout_marginTop="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/viewsLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/page_margin"
+                            android:layout_marginTop="@dimen/page_margin"
+                            android:text="@string/views"
+                            android:textSize="20sp"
+                            android:visibility="invisible" />
+
+                        <TextView
+                            android:id="@+id/nbViews"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/page_margin"
+                            android:layout_marginTop="@dimen/page_margin"
+                            android:layout_weight="1"
+                            android:textSize="20sp"
+                            android:visibility="invisible" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <androidx.legacy.widget.Space
@@ -116,6 +145,7 @@
                     android:focusable="true"
                     android:visibility="invisible"
                     android:layout_marginEnd="@dimen/page_margin"/>
+
             </LinearLayout>
 
             <Button

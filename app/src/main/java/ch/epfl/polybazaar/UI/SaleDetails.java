@@ -50,6 +50,8 @@ public class SaleDetails extends AppCompatActivity {
     private ImageView imageLoading;
     private Button contactSelButton;
     private TextView userEmailTextView;
+    private TextView viewsTextView;
+    private TextView nbViewsTextView;
     private Button viewMP;
 
 
@@ -58,6 +60,7 @@ public class SaleDetails extends AppCompatActivity {
 
     private double mpLat = NOLAT;
     private double mpLng = NOLNG;
+    private int viewIncrement = 0;
 
     private ViewPager2 viewPager2;
     private List<String> listStringImage;
@@ -78,6 +81,8 @@ public class SaleDetails extends AppCompatActivity {
         viewPager2 = findViewById(R.id.viewPagerImageSlider);
         userEmailTextView = findViewById(R.id.userEmail);
         viewMP = findViewById(R.id.viewMP);
+        viewsTextView = findViewById(R.id.viewsLabel);
+        nbViewsTextView = findViewById(R.id.nbViews);
         ratingBar = findViewById(R.id.ratingBar2);
         ratingBar.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -138,36 +143,47 @@ public class SaleDetails extends AppCompatActivity {
 
         Listing.fetch(listingID).addOnSuccessListener(result -> {
             listing = result;
-            Authenticator fbAuth = AuthenticatorFactory.getDependency();
-            if(!(fbAuth.getCurrentUser() == null)){
-                sellerEmail = result.getUserEmail();
-                if(fbAuth.getCurrentUser().getEmail().equals(sellerEmail)){
-                    createEditAndDeleteActions(result, listingID);
-                    //it doesn't take place
-                    contactSelButton.setVisibility(View.GONE);
-                }
-                else{
-                    showContactButton();
-                    //They don't take place anymore in layout
-                    editButton.setVisibility(View.GONE);
-                    deleteButton.setVisibility(View.GONE);
-                }
-            }
 
+            //Updates the number of listing's views once per phone
             String android_id = Secure.getString(getApplication().getContentResolver(), Secure.ANDROID_ID);
             String haveSeenUsers = listing.getHaveSeenUsers();
             if(!haveSeenUsers.contains(android_id)){
                 Listing.updateField("views", this.listingID, listing.getViews()+1);
                 Listing.updateField("haveSeenUsers", this.listingID, haveSeenUsers + android_id);
+                viewIncrement = 1;
             }
 
-
+            Authenticator fbAuth = AuthenticatorFactory.getDependency();
+            if(!(fbAuth.getCurrentUser() == null)){
+                sellerEmail = result.getUserEmail();
+                if(fbAuth.getCurrentUser().getEmail().equals(sellerEmail)){
+                    createEditAndDeleteActions(listing, listingID);
+                    setupNbViews(listing);
+                    contactSelButton.setVisibility(View.GONE);
+                }
+                else{
+                    showContactButton();
+                }
+            }
+            else{
+                contactSelButton.setVisibility(View.GONE);
+                editButton.setVisibility(View.GONE);
+                deleteButton.setVisibility(View.GONE);
+                viewsTextView.setVisibility(View.GONE);
+                nbViewsTextView.setVisibility(View.GONE);
+            }
 
             fillWithListing(result);
             imageLoading.setVisibility(View.GONE);
             viewPager2.setVisibility(View.VISIBLE);
             ratingBar.setVisibility(View.VISIBLE);
         });
+    }
+
+    private void setupNbViews(Listing listing) {
+        viewsTextView.setVisibility(View.VISIBLE);
+        nbViewsTextView.setVisibility(View.VISIBLE);
+        nbViewsTextView.setText(Long.toString(listing.getViews()+viewIncrement));
     }
 
 
