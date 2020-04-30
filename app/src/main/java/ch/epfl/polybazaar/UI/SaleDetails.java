@@ -103,7 +103,7 @@ public class SaleDetails extends AppCompatActivity {
         runOnUiThread(() -> {
             contactSelButton.setOnClickListener(view -> {
                 Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
-                intent.putExtra(ChatActivity.bundleLisitngId, listingID);
+                intent.putExtra(ChatActivity.bundleListingId, listingID);
                 intent.putExtra(ChatActivity.bundleReceiverEmail, sellerEmail);
                 startActivity(intent);
                 //TODO: The map is not displayed anymore. Another method should be found
