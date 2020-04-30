@@ -7,16 +7,18 @@
     android:layout_margin= "@dimen/sales_overview_cell_margin"
     android:clickable="true"
     android:background="@drawable/gridcell_background"
-    android:elevation="@dimen/sales_overview_cell_elevation">
+    android:elevation="@dimen/sales_overview_cell_elevation"
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/liteListingGridThumbnail"
-        android:layout_width="@dimen/grid_thumbnail_size"
-        android:layout_height="@dimen/grid_thumbnail_size"
+        android:layout_width="@dimen/grid_thumbnail_width"
+        android:layout_height="@dimen/grid_thumbnail_height"
+        android:layout_marginTop="@dimen/sales_overview_cell_padding"
         android:clickable="false"
         android:scaleType="centerInside"
         android:layout_gravity="center"
-        />
+        android:contentDescription="@string/thumbnail" />
 
     <TextView
         android:id="@+id/liteListingGridTitle"

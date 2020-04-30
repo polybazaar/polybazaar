@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 
+import ch.epfl.polybazaar.R;
+
 public class NoConnectionForListingDialog extends DialogFragment {
 
     NoticeDialogListener listener;
@@ -29,15 +31,15 @@ public class NoConnectionForListingDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("No Internet connection found")
-                .setTitle("Information")
-                .setPositiveButton("send as soon as connection is available", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.no_connection)
+                .setTitle(R.string.information)
+                .setPositiveButton(R.string.send_when_connected, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         listener.onDialogPositiveClick(NoConnectionForListingDialog.this);
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         listener.onDialogNegativeClick(NoConnectionForListingDialog.this);

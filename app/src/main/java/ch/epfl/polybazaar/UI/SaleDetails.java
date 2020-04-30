@@ -8,10 +8,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,7 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -26,13 +29,13 @@ import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.chat.ChatActivity;
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
+import ch.epfl.polybazaar.user.User;
 
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
@@ -42,7 +45,6 @@ import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 public class SaleDetails extends AppCompatActivity {
-    public static final int SIZE = 20;
     private Button editButton;
     private Button deleteButton;
     private AlertDialog deleteDialog;
@@ -50,11 +52,9 @@ public class SaleDetails extends AppCompatActivity {
     private RatingBar ratingBar;
     private ImageView imageLoading;
     private Button contactSelButton;
-    private TextView userEmailTextView;
     private Button viewMP;
 
     private String listingID;
-    private String sellerEmail;
 
     private double mpLat = NOLAT;
     private double mpLng = NOLNG;
@@ -76,18 +76,14 @@ public class SaleDetails extends AppCompatActivity {
         imageLoading = findViewById(R.id.loadingImage);
         contactSelButton = findViewById(R.id.contactSel);
         viewPager2 = findViewById(R.id.viewPagerImageSlider);
-        userEmailTextView = findViewById(R.id.userEmail);
         viewMP = findViewById(R.id.viewMP);
-        ratingBar = findViewById(R.id.ratingBar2);
+        ratingBar = findViewById(R.id.ratingBar);
         ratingBar.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 favorite();
             }
             return true;
         });
-        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_add_item);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SaleDetails.this));
 
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
@@ -95,25 +91,25 @@ public class SaleDetails extends AppCompatActivity {
         Glide.with(this).load(R.drawable.loading).into(imageLoading);
 
         retrieveListingFromListingID();
-        viewMP();
-        getSellerInformation();
+        setupViewMP();
+        setupSellerContact();
     }
 
-    private void getSellerInformation() {
+    private void setupSellerContact() {
         runOnUiThread(() -> {
             contactSelButton.setOnClickListener(view -> {
                 Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
+
                 intent.putExtra(ChatActivity.bundleListingId, listingID);
-                intent.putExtra(ChatActivity.bundleReceiverEmail, sellerEmail);
+                intent.putExtra(ChatActivity.bundleReceiverEmail, listing.getUserEmail());
                 startActivity(intent);
-                //TODO: The map is not displayed anymore. Another method should be found
             });
         });
+
     }
 
-    private void viewMP() {
+    private void setupViewMP() {
         viewMP.setOnClickListener(view -> {
-            //TODO check that user is connected
             Intent viewMPIntent = new Intent(this, MapsActivity.class);
             Bundle extras = new Bundle();
             extras.putBoolean(GIVE_LAT_LNG, true);
@@ -136,32 +132,11 @@ public class SaleDetails extends AppCompatActivity {
             return;
         }
 
-        retrieveImages(listingID);
-
         Listing.fetch(listingID).addOnSuccessListener(result -> {
-            Authenticator fbAuth = AuthenticatorFactory.getDependency();
-            if(!(fbAuth.getCurrentUser() == null)){
-                sellerEmail = result.getUserEmail();
-                if(fbAuth.getCurrentUser().getEmail().equals(sellerEmail)){
-                    createEditAndDeleteActions(result, listingID);
-                    //it doesn't take place
-                    contactSelButton.setVisibility(View.GONE);
-                }
-                else{
-                    showContactButton();
-                    //They don't take place anymore in layout
-                    editButton.setVisibility(View.GONE);
-                    deleteButton.setVisibility(View.GONE);
-                }
-            }
-
             listing = result;
-
             this.listingID = listingID;
+            retrieveImages(listingID);
             fillWithListing(result);
-            imageLoading.setVisibility(View.GONE);
-            viewPager2.setVisibility(View.VISIBLE);
-            ratingBar.setVisibility(View.VISIBLE);
         });
     }
 
@@ -191,33 +166,40 @@ public class SaleDetails extends AppCompatActivity {
     private void drawImages() {
         runOnUiThread (()-> {
             List<SliderItem> sliderItems = new ArrayList<>();
-            for(String strImg: listStringImage) {
-                sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
-            }
-
-            viewPager2.setAdapter(new SliderAdapter(sliderItems, viewPager2));
-
-            viewPager2.setClipToPadding(false);
-            viewPager2.setClipChildren(false);
-            viewPager2.setOffscreenPageLimit(3);
-            viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
-
-            CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
-            compositePageTransformer.addTransformer((page, position) -> {
-                float r = 1 - Math.abs(position);
-                page.setScaleY(0.85f + r * 0.15f);
-            });
-            viewPager2.setPageTransformer(compositePageTransformer);
-
-            viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageSelected(int position) {
-                    super.onPageSelected(position);
-                    TextView textPageNumber = findViewById(R.id.pageNumber);
-                    textPageNumber.setText(String.format("%s/%s", Integer.toString(viewPager2.getCurrentItem() + 1), Integer.toString(listStringImage.size())));
-                    textPageNumber.setGravity(Gravity.CENTER);
+            if (!listStringImage.isEmpty()) {
+                viewPager2.setVisibility(View.VISIBLE);
+                imageLoading.setVisibility(View.GONE);
+                findViewById(R.id.pageNumber).setVisibility(View.VISIBLE);
+                for (String strImg : listStringImage) {
+                    sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
                 }
-            });
+
+                viewPager2.setAdapter(new SliderAdapter(sliderItems, viewPager2));
+
+                viewPager2.setClipToPadding(false);
+                viewPager2.setClipChildren(false);
+                viewPager2.setOffscreenPageLimit(3);
+                viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+
+                CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+                compositePageTransformer.addTransformer((page, position) -> {
+                    float r = 1 - Math.abs(position);
+                    page.setScaleY(0.85f + r * 0.15f);
+                });
+                viewPager2.setPageTransformer(compositePageTransformer);
+
+                viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        super.onPageSelected(position);
+                        TextView textPageNumber = findViewById(R.id.pageNumber);
+                        textPageNumber.setText(String.format("%s/%s", Integer.toString(viewPager2.getCurrentItem() + 1), Integer.toString(listStringImage.size())));
+                        textPageNumber.setGravity(Gravity.CENTER);
+                    }
+                });
+            } else {
+                findViewById(R.id.imageDisplay).setVisibility(View.GONE);
+            }
         });
     }
 
@@ -233,6 +215,7 @@ public class SaleDetails extends AppCompatActivity {
             Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
             startActivity(intent);
         } else {
+
             //Set Meeting Point
             mpLat = listing.getLatitude();
             mpLng = listing.getLongitude();
@@ -243,33 +226,58 @@ public class SaleDetails extends AppCompatActivity {
             runOnUiThread(() -> {
                 //Set the title
                 TextView title_txt = findViewById(R.id.title);
-                title_txt.setVisibility(View.VISIBLE);
                 title_txt.setText(listing.getTitle());
 
                 //Set the description
+                LinearLayout description = findViewById(R.id.descriptionLayout);
                 TextView description_txt = findViewById(R.id.description);
-                description_txt.setVisibility(View.VISIBLE);
-                description_txt.setText(listing.getDescription());
+                if (!(listing.getDescription().trim().length() == 0
+                        || listing.getDescription().isEmpty()
+                        || listing.getDescription() == null )) {
+                    description.setVisibility(View.VISIBLE);
+                    description_txt.setText(listing.getDescription());
+                }
 
                 //Set the price
                 TextView price_txt = findViewById(R.id.price);
-                price_txt.setVisibility(View.VISIBLE);
-                price_txt.setTextSize(SIZE);
                 price_txt.setText(String.format("CHF %s", listing.getPrice()));
 
-                Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
+                // Set seller information
+                ImageView sellerPicture  = findViewById(R.id.sellerProfilePicture);
+                TextView sellerNickname  = findViewById(R.id.sellerNickname);
+                User.fetch(listing.getUserEmail()).addOnSuccessListener(result -> {
+                    if (!result.getProfilePicture().equals(User.NO_PROFILE_PICTURE)) {
+                        sellerPicture.setImageBitmap(convertStringToBitmap(result.getProfilePicture()));
+                    }
+                    if (result.getNickName() != null) {
+                        sellerNickname.setText(result.getNickName());
+                    }
+                });
 
-                if (authUser != null) {
-                    //Set email
-                    userEmailTextView.setText(listing.getUserEmail());
+                // Enable logged in features
+                Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
+                if(authUser != null){
+                    ratingBar.setVisibility(View.VISIBLE);
+                    String sellerEmail = listing.getUserEmail();
                     authUser.getUserData().addOnSuccessListener(user -> {
                         List<String> favorites = user.getFavorites();
                         if (favorites.contains(listing.getId())){
                             ratingBar.setRating(1);
                         }
                     });
+                    if(authUser.getEmail().equals(sellerEmail)){
+                        createEditAndDeleteActions(listing, listingID);
+                        contactSelButton.setVisibility(View.GONE);
+                    } else{
+                        contactSelButton.setVisibility(View.VISIBLE);
+                        findViewById(R.id.editButtonsLayout).setVisibility(View.GONE);
+                    }
                 } else {
-                    ratingBar.setEnabled(false);
+                    contactSelButton.setVisibility(View.VISIBLE);
+                    contactSelButton.setClickable(false);
+                    contactSelButton.setText(R.string.sign_in_to_contact);
+                    ratingBar.setVisibility(View.INVISIBLE);
+                    ratingBar.setClickable(false);
                 }
             });
         }
@@ -277,13 +285,10 @@ public class SaleDetails extends AppCompatActivity {
 
 
     private void createEditAndDeleteActions(Listing listing, String listingID) {
-        editButton.setVisibility(View.VISIBLE);
-        deleteButton.setVisibility(View.VISIBLE);
+        findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
 
-        editButton.setClickable(true);
-        deleteButton.setClickable(true);
-
-        deleteButton.setOnClickListener(v -> { //TODO: This could be refactored to use utility functions from package widget
+        deleteButton.setOnClickListener(v -> { 
+            //TODO: This could be refactored to use utility functions from package widget
             AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetails.this);
             builder.setTitle("Delete this listing")
                     .setMessage("You are about to delete this listing. Are you sure you want to continue?")
@@ -294,7 +299,7 @@ public class SaleDetails extends AppCompatActivity {
         });
 
         editButton.setOnClickListener(v -> {
-            Intent intent = new Intent(SaleDetails.this, FillListingActivity.class);
+            Intent intent = new Intent(SaleDetails.this, FillListing.class);
             intent.putExtra("listingID", listingID);
             intent.putExtra("listing", listing);
             startActivity(intent);
@@ -303,7 +308,7 @@ public class SaleDetails extends AppCompatActivity {
 
     private void deleteCurrentListing(String listingID) {
         Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-                Toast toast = Toast.makeText(getApplicationContext(),"Listing successfully deleted", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
 
@@ -312,6 +317,7 @@ public class SaleDetails extends AppCompatActivity {
 
                 authAccount.getUserData().addOnSuccessListener(user -> {
                     user.deleteOwnListing(listingID);
+                    user.save();
                 });
 
                 Intent SalesOverviewIntent = new Intent(SaleDetails.this, SalesOverview.class);
@@ -323,21 +329,14 @@ public class SaleDetails extends AppCompatActivity {
         }
     }
 
-    private void showContactButton() {
-        contactSelButton.setVisibility(View.VISIBLE);
-        contactSelButton.setClickable(true);
-    }
-
     /**
      * Adds the listing to favorites, or removes it from the user's favorites if it is already
      * a favorite
      */
     public void favorite() {
         Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
-
         //if it's 0 set 1 and vice versa
         ratingBar.setRating((ratingBar.getRating() + 1) % 2);
-
         //must be connected
         if (authUser != null) {
             authUser.getUserData().addOnSuccessListener(user -> {
@@ -346,7 +345,6 @@ public class SaleDetails extends AppCompatActivity {
                 } else {
                     user.removeFavorite(listing);
                 }
-
                 user.save();
             });
         }

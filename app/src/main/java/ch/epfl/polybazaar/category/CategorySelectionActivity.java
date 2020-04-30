@@ -14,7 +14,7 @@ public class CategorySelectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_not_logged_in);
+        setContentView(R.layout.activity_not_signed_in);
         findViewById(R.id.signInButton).setOnClickListener(v -> {
             // TODO: launch the correct activity
             Intent target = new Intent(this, SignInActivity.class);

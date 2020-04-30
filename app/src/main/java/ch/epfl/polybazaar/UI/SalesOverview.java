@@ -31,6 +31,7 @@ public class SalesOverview extends AppCompatActivity {
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
+    public static final String LISTING_ID = "listingID";
     private List<String> IDList;
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
@@ -50,15 +51,12 @@ public class SalesOverview extends AppCompatActivity {
         // Create adapter passing in the sample LiteListing data
         adapter = new LiteListingAdapter(liteListingList);
 
-        adapter.setOnItemClickListener(new LiteListingAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view) {
-                int viewID = view.getId();
-                String listingID = adapter.getListingID(viewID);
-                Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-                intent.putExtra("listingID", listingID);
-                startActivity(intent);
-            }
+        adapter.setOnItemClickListener(view -> {
+            int viewID = view.getId();
+            String listingID = adapter.getListingID(viewID);
+            Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
+            intent.putExtra(LISTING_ID, listingID);
+            startActivity(intent);
         });
 
         // Attach the adapter to the recyclerview to populate items
@@ -94,7 +92,6 @@ public class SalesOverview extends AppCompatActivity {
                 Account user = getUser();
                 user.getUserData().addOnSuccessListener(authUser -> {
                     ArrayList<String> favoritesIds = authUser.getFavorites();
-
                     // the list of favorites of the user is empty
                     if (favoritesIds == null || favoritesIds.isEmpty()) {
                         Toast.makeText(getApplicationContext(), R.string.no_favorites, Toast.LENGTH_SHORT).show() ;

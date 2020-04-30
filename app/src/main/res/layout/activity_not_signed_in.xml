@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".widgets.NotSignedInActivity">
+    tools:context=".UI.NotSignedIn">
 
     <LinearLayout
         android:id="@+id/notLoggedInLinearLayout"
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/rounded_corner_button_red"
+            android:background="@drawable/rounded_corner_button_colored"
             android:text="@string/sign_in"
             android:textColor="@color/white"
             android:textSize="@dimen/default_button_text_size" />
@@ -49,29 +49,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/fillListing_inter_space_large"
-            android:background="@drawable/rounded_corner_button_red"
+            android:background="@drawable/rounded_corner_button_colored"
             android:text="@string/sign_up"
             android:textColor="@color/white"
             android:textSize="@dimen/default_button_text_size" />
-
-
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-
-
     </LinearLayout>
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/activity_main_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:background="@color/bottomBarBackground"
-        app:itemIconTint="@color/bottomBarContent"
-        app:itemTextColor="@color/bottomBarContent"
-        app:menu="@layout/bottom_bar" />
+
 </RelativeLayout>

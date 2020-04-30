@@ -81,7 +81,6 @@ public class EmailVerificationActivity extends AppCompatActivity {
      */
     public void signOut(View view) {
         authenticator.signOut();
-
         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(intent);
     }

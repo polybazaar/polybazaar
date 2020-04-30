@@ -14,8 +14,8 @@
     <string name="verification_email_sent">Verification e-mail sent</string>
     <string name="verification_email_fail">Unable to send verification e-mail</string>
     <string name="reload_fail">Unable to reload</string>
-    <string name="contact_the_seller">Contact the seller</string>
-    <string name="titre">Titre</string>
+    <string name="contact_the_seller">Contact Seller</string>
+    <string name="title">Listing Title</string>
     <string name="sales_overview">Sales overview</string>
     <string name="add_new_listing">Add new listing</string>
     <string name="sign_in">Sign In</string>
@@ -42,15 +42,14 @@
     <string name="MP_removed">Meeting Point removed</string>
     <string name="MP_set">Meeting Point set</string>
     <string name="title_activity_user_profile">Profile</string>
-    <string name="modify_image">modify image</string>
     <string name="move_first">Set As Main Image</string>
     <string name="rotate">Rotate Image</string>
     <string name="delete_image">Delete Image</string>
     <string name="invalid_first_name">Please enter a valid first name</string>
     <string name="invalid_last_name">Please enter a valid last name</string>
-    <string name="invalid_current_password">The current password is incorrect</string>
-    <string name="password_updated">Your password has successfully been updated</string>
-    <string name="profile_updated">Your profile has successfully been updated</string>
+    <string name="invalid_current_password">Current password incorrect</string>
+    <string name="password_updated">Your password has been updated</string>
+    <string name="profile_updated">Your profile has been updated</string>
     <string name="MP_ok">Meeting Point defined</string>
     <string name="MP_nok">Meeting Point not defined</string>
     <string name="location_unavailable">Location services are unavailable</string>
@@ -60,7 +59,7 @@
     <string name="take_picture_fail">Unable to take picture</string>
     <string name="edit">Edit</string>
     <string name="incorrect_fields">One or more fields are missing</string>
-    <string name="default_spinner_text">Select category...</string>
+    <string name="default_spinner_text">Select category…</string>
     <string name="object_not_found">Object not found</string>
 
     //bottom navigation bar
@@ -93,4 +92,29 @@
     <string name="remove_meeting_point">Remove</string>
     <string name="type_your_message">Type your message</string>
     <string name="send">Send</string>
+    <string name="save_profile">Save Profile</string>
+    <string name="my_listings">Listings</string>
+    <string name="password">Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm New Password</string>
+    <string name="save_password">Save Password</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="contact_details">Contact Details</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="nickname">Nickname</string>
+    <string name="personal_details">Personal Details</string>
+    <string name="my_favorites">Favorites</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="profile_picture_not_updated">Failed to update profile picture</string>
+    <string name="profile_picture_updated">Profile picture updated</string>publish_picture
+    <string name="publish_picture">Your new profile picture will be publicly visible</string>
+    <string name="thumbnail">thumbnail</string>
+    <string name="seller">Seller</string>
+    <string name="deleted_listing">Listing successfully deleted</string>
+    <string name="no_connection">No Internet connection</string>send_when_connected
+    <string name="send_when_connected">Send as soon as connection is available</string>
+    <string name="information">Information</string>sign_in_to_contact
+    <string name="sign_in_to_contact">Sign In To Contact Seller</string>
 </resources>

@@ -16,7 +16,9 @@ import java.util.TreeMap;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToString;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.cropToSize;
 
 
 /**
@@ -110,11 +112,14 @@ public class LiteListingAdapter extends
         priceView.setId(View.generateViewId());
 
         ImageView thumbnail = viewHolder.thumbnail;
+        thumbnail.setScaleType(ImageView.ScaleType.FIT_XY);
         String stringThumbnail = liteListing.getStringThumbnail();
         Bitmap bitmapThumbnail = convertStringToBitmap(stringThumbnail);
         if(bitmapThumbnail == null) {
             thumbnail.setImageResource(R.drawable.no_image_thumbnail);
         } else {
+            // Fix aspect ratio of Thumbnail
+            bitmapThumbnail = cropToSize(bitmapThumbnail, 4, 3);
             thumbnail.setImageBitmap(bitmapThumbnail);
         }
         thumbnail.setId(View.generateViewId());
