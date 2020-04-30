@@ -52,16 +52,6 @@ public class MainActivityTest{
     }
 
     @Test
-    public void authenticatedUsersCanSignOut() {
-        signInAndBack();
-        onView(withText(R.string.sign_out)).check(matches(isDisplayed()));
-
-        onView(withId(R.id.authenticationButton)).perform(click());
-
-        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void accessesForNonAuthenticatedUserAreCorrect() {
         onView(withId(R.id.saleOverview)).perform(click());
         hasComponent(SalesOverview.class.getName());
