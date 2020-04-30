@@ -81,7 +81,13 @@
         <activity
             android:name=".UI.SalesOverview"
             android:label="Browse Listings"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".chat.ChatActivity"
             android:label="Chat"
@@ -92,12 +98,9 @@
             android:label="Details"
             android:parentActivityName=".UI.SalesOverview" />
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

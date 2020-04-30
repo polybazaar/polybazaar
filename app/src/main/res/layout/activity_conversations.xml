@@ -21,4 +21,15 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
     </ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/activity_main_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@color/bottomBarBackground"
+        app:itemIconTint="@color/bottomBarContent"
+        app:itemTextColor="@color/bottomBarContent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@layout/bottom_bar" />
 </androidx.constraintlayout.widget.ConstraintLayout>
