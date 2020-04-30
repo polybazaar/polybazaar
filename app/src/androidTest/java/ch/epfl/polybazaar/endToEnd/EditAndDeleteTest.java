@@ -52,9 +52,9 @@ public class EditAndDeleteTest {
         signInWithFromMainActivity(email, MockAuthenticator.TEST_USER_PASSWORD);
 
         onView(withId(R.id.action_home)).perform(click());
-        onView(withText(title))
-                .perform(scrollTo())
-                .perform(click());
+        //wait for the listing to be retrieved
+        Thread.sleep(500);
+        onView(withText(title)).perform(click());
         onView(withId(R.id.deleteButton)).perform(scrollTo(), click());
         onView(withText("Yes")).perform(click());
 
