@@ -279,6 +279,23 @@
                 android:onClick="editPassword"
                 android:text="@string/save_password" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.7"
+                android:background="@android:color/darker_gray" />
+
+            <Button
+                android:id="@+id/signOutButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/userProfile_inter_space_extra_large"
+                android:layout_marginBottom="@dimen/userProfile_inter_space_extra_large"
+                android:background="@drawable/rounded_corner_button_colored"
+                android:textColor="@color/white"
+                android:text="@string/sign_out" />
+
         </LinearLayout>
     </ScrollView>
 
