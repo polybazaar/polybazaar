@@ -50,29 +50,32 @@
         <activity
             android:name=".map.MapsActivity"
             android:label="@string/title_activity_maps" />
+
         <activity
             android:name=".UI.UserProfile"
             android:label="@string/title_activity_user_profile"
             android:theme="@style/AppTheme.NoActionBar"
             android:noHistory="false"/>
+
         <activity
             android:name=".login.EmailVerificationActivity"
             android:label="Verify E-mail" />
+
         <activity
             android:name=".login.SignUpActivity"
             android:label="Sign Up" />
+
         <activity
             android:name=".login.SignInSuccessActivity"
             android:label="Sign In" />
+
         <activity
             android:name=".login.SignInActivity"
-            android:exported="true"
             android:label="Sign In" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="ch.epfl.polybazaar.fileprovider"
-            android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
@@ -81,9 +84,9 @@
 
         <activity
             android:name=".UI.FillListing"
-            android:exported="true"
             android:label="Listing Editor"
             android:noHistory="false"/>
+
         <activity
             android:name=".UI.SalesOverview"
             android:label="Browse Listings"
@@ -94,6 +97,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".chat.ChatActivity"
             android:label="Chat"
@@ -101,9 +105,9 @@
 
         <activity
             android:name=".UI.SaleDetails"
-            android:exported="true"
             android:label="Details"
             android:parentActivityName=".UI.SalesOverview" />
+
         <activity android:name=".MainActivity">
 
         </activity>

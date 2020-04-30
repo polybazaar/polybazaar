@@ -84,9 +84,6 @@ public class SaleDetails extends AppCompatActivity {
             }
             return true;
         });
-        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SaleDetails.this));
 
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
