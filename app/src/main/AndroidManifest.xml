@@ -82,12 +82,11 @@
             android:name=".UI.FillListing"
             android:exported="true"
             android:label="Listing Editor"
-            android:parentActivityName=".MainActivity"
             android:noHistory="false"/>
         <activity
             android:name=".UI.SalesOverview"
             android:label="Browse Listings"
-            android:parentActivityName=".MainActivity" >
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -97,7 +96,8 @@
         <activity
             android:name=".chat.ChatActivity"
             android:label="Chat"
-            android:parentActivityName=".UI.SaleDetails" />
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".UI.SaleDetails"
             android:exported="true"

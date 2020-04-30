@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.UserProfileActivity;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -31,14 +29,14 @@ public abstract class bottomBar {
                 break;
 
             case R.id.action_add_item:
-                    toActivity(activity,FillListingActivity.class);
+                    toActivity(activity,FillListing.class);
                 break;
 
             case R.id.action_messages:
                 toActivity(activity, ConversationOverviewActivity.class);
                 break;
             case R.id.action_profile:
-                toActivity(activity, UserProfileActivity.class);
+                toActivity(activity, UserProfile.class);
                 break;
         }
         return true;

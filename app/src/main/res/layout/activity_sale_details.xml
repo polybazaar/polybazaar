@@ -7,6 +7,7 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/saleDetails_inter_space_extra_large"
     tools:context=".UI.SaleDetails">
 
     <ScrollView
@@ -265,9 +266,6 @@
         </LinearLayout>
     </ScrollView>
 
-
-<<<<<<< HEAD
-=======
 </LinearLayout>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/activity_main_bottom_navigation"
@@ -280,5 +278,4 @@
         app:itemTextColor="@color/bottomBarContent"
         app:menu="@layout/bottom_bar" />
 
->>>>>>> 5d86af3ae660f16ede64521f324e1b2833187fa9
 </RelativeLayout>
