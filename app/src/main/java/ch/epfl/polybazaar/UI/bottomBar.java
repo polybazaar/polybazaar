@@ -8,7 +8,6 @@ import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.widgets.NotSignedInActivity;
 
 public abstract class bottomBar {
 
@@ -53,7 +52,7 @@ public abstract class bottomBar {
         Intent intent;
 
         if(user == null){
-            intent = new Intent(currentActivity, NotSignedInActivity.class);
+            intent = new Intent(currentActivity, NotSignedIn.class);
         }else{
             intent = new Intent(currentActivity,c);
         }

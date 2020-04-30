@@ -294,6 +294,7 @@
                 android:layout_marginBottom="@dimen/userProfile_inter_space_extra_large"
                 android:background="@drawable/rounded_corner_button_colored"
                 android:textColor="@color/white"
+                android:onClick="signOutUser"
                 android:text="@string/sign_out" />
 
         </LinearLayout>

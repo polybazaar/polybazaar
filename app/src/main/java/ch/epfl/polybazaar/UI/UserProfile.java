@@ -64,32 +64,36 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        nicknameSelector = findViewById(R.id.nicknameSelector);
-        firstNameSelector = findViewById(R.id.firstNameSelector);
-        lastNameSelector = findViewById(R.id.lastNameSelector);
-        phoneNumberSelector = findViewById(R.id.phoneNumberSelector);
-        profilePicView = findViewById(R.id.profilePicture);
-        profilePicChanged = false;
-        showNewPicDialog = false;
         authenticator = AuthenticatorFactory.getDependency();
-        account = authenticator.getCurrentUser();
-        User.fetch(account.getEmail()).addOnSuccessListener(returnedUser -> {
-            user = returnedUser;
-            nicknameSelector.setText(user.getNickName());
-            firstNameSelector.setText(user.getFirstName());
-            lastNameSelector.setText(user.getLastName());
-            phoneNumberSelector.setText(user.getPhoneNumber());
-            if (!user.getProfilePicture().equals(NO_PROFILE_PICTURE)) {
-                profilePicView.setImageBitmap(convertStringToBitmap(user.getProfilePicture()));
-                SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
-                myPrefs.edit().putString(STRING_IMAGE, user.getProfilePicture()).apply();
-                profilePicChanged = true;
-            }
-        });
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_profile);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), UserProfile.this));
+        if (authenticator.getCurrentUser() == null) {
+            Intent notSignedIn = new Intent(this, NotSignedIn.class);
+            startActivity(notSignedIn);
+        } else {
+            nicknameSelector = findViewById(R.id.nicknameSelector);
+            firstNameSelector = findViewById(R.id.firstNameSelector);
+            lastNameSelector = findViewById(R.id.lastNameSelector);
+            phoneNumberSelector = findViewById(R.id.phoneNumberSelector);
+            profilePicView = findViewById(R.id.profilePicture);
+            profilePicChanged = false;
+            showNewPicDialog = false;
+            account = authenticator.getCurrentUser();
+            User.fetch(account.getEmail()).addOnSuccessListener(returnedUser -> {
+                user = returnedUser;
+                nicknameSelector.setText(user.getNickName());
+                firstNameSelector.setText(user.getFirstName());
+                lastNameSelector.setText(user.getLastName());
+                phoneNumberSelector.setText(user.getPhoneNumber());
+                if (!user.getProfilePicture().equals(NO_PROFILE_PICTURE)) {
+                    profilePicView.setImageBitmap(convertStringToBitmap(user.getProfilePicture()));
+                    SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
+                    myPrefs.edit().putString(STRING_IMAGE, user.getProfilePicture()).apply();
+                    profilePicChanged = true;
+                }
+            });
+        }
     }
 
     @Override
@@ -260,4 +264,9 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         });
     }
 
+    public void signOutUser(View view) {
+        authenticator.signOut();
+        Intent notSignedIn = new Intent(getApplicationContext(), SalesOverview.class);
+        startActivity(notSignedIn);
+    }
 }

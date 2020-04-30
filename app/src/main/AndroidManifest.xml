@@ -43,8 +43,9 @@
             android:noHistory="false"/>
 
         <activity
-            android:name=".widgets.NotSignedInActivity"
-            android:label="Not Signed In" />
+            android:name=".UI.NotSignedIn"
+            android:label="Not Signed In"
+            android:parentActivityName=".UI.SalesOverview"/>
 
         <activity
             android:name=".map.MapsActivity"

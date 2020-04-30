@@ -85,7 +85,7 @@ public class SaleDetails extends AppCompatActivity {
             return true;
         });
         BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_add_item);
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SaleDetails.this));
 
         listStringImage = new ArrayList<>();
@@ -275,6 +275,9 @@ public class SaleDetails extends AppCompatActivity {
                         findViewById(R.id.editButtonsLayout).setVisibility(View.GONE);
                     }
                 } else {
+                    contactSelButton.setVisibility(View.VISIBLE);
+                    contactSelButton.setClickable(false);
+                    contactSelButton.setText(R.string.sign_in_to_contact);
                     ratingBar.setVisibility(View.INVISIBLE);
                     ratingBar.setClickable(false);
                 }
