@@ -2,12 +2,13 @@ package ch.epfl.polybazaar.litelisting;
 
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 
 import java.util.List;
 
-import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
+import ch.epfl.polybazaar.database.SimpleField;
 
 /**
  * If you attributes of this class, also change its CallbackAdapter and Utilities
@@ -18,12 +19,13 @@ public class LiteListing extends Model {
     private final SimpleField<String> price = new SimpleField<>("price");
     private final SimpleField<String> category = new SimpleField<>("category");
     private final SimpleField<String> stringThumbnail = new SimpleField<>("stringThumbnail");
+    private final SimpleField<Timestamp> timestamp = new SimpleField<>("timestamp");
 
     public static final String COLLECTION = "liteListings";
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public LiteListing() {
-        registerFields(listingID, title, price, category, stringThumbnail);
+        registerFields(listingID, title, price, category, stringThumbnail, timestamp);
     }
 
     public LiteListing(String listingID, String title, String price, String category, String stringThumbnail) {
@@ -33,6 +35,7 @@ public class LiteListing extends Model {
         this.price.set(price);
         this.category.set(category);
         this.stringThumbnail.set(stringThumbnail);
+        this.timestamp.set(Timestamp.now());
     }
 
     public LiteListing(String listingID, String title, String price, String category) {
@@ -58,6 +61,8 @@ public class LiteListing extends Model {
     public String getStringThumbnail() {
         return stringThumbnail.get();
     }
+
+    public Timestamp getTimestamp() { return timestamp.get(); }
 
     @Override
     public String collectionName() {

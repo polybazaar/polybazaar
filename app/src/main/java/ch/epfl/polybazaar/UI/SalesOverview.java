@@ -12,8 +12,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Timestamp;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
@@ -28,6 +35,7 @@ public class SalesOverview extends AppCompatActivity {
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
+    private Map<Timestamp, String> listingTimeMap;
     private List<String> IDList;
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
@@ -38,6 +46,7 @@ public class SalesOverview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_overview2);
 
+        listingTimeMap = new TreeMap<>(Collections.reverseOrder());    // store LiteListing IDs in reverse order of creation (most recent first)
         IDList = new ArrayList<>();
         liteListingList = new ArrayList<>();
 
@@ -123,20 +132,27 @@ public class SalesOverview extends AppCompatActivity {
             if(IDList.isEmpty()) {
                 for (LiteListing l : result) {
                     if (l != null) {
-                        IDList.add(l.getId());      // create deep copy of ID list if list is empty
+                        if(l.getTimestamp() != null) {  // TODO: delete before merge
+                            listingTimeMap.put(l.getTimestamp(), l.getId());
+                        }
                     }
                 }
+                // retrieve values from Treemap: litelistings IDs in order: most recent first
+                IDList = new ArrayList<>(listingTimeMap.values());
             }
             int size = IDList.size();
+            List<Task<LiteListing>> taskList = new ArrayList<>();
+            // add fetch tasks in correct display order
             for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-                LiteListing.fetch(IDList.get(i)).addOnSuccessListener(result2 -> {
-                    if (result2 != null) {
-                        liteListingList.add(result2);
-                        adapter.notifyItemInserted(liteListingList.size() - 1);
-                    }
-                });
+                taskList.add(LiteListing.fetch(IDList.get(i)));
                 positionInIDList++;
             }
+            Tasks.<LiteListing>whenAllSuccess(taskList).addOnSuccessListener(list -> {
+                int start = liteListingList.size();
+                liteListingList.addAll(list);
+                int itemCount = liteListingList.size() - start;
+                adapter.notifyItemRangeInserted(start, itemCount);
+            });
         });
     }
 
