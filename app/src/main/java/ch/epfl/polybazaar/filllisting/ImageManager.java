@@ -27,6 +27,7 @@ public class ImageManager extends AppCompatActivity {
     private ViewPager2 viewPager;
     private TableRow editButtons;
     private Activity activity;
+    private boolean edited = false;
 
     public ImageManager(Activity activity) {
         this.activity = activity;
@@ -44,6 +45,7 @@ public class ImageManager extends AppCompatActivity {
         listStringImage.add(stringImage);
         drawImages(listStringImage);
         viewPager.setCurrentItem(listStringImage.size() - 1, false);
+        edited = true;
     }
 
     /**
@@ -111,6 +113,7 @@ public class ImageManager extends AppCompatActivity {
         }
         Collections.swap(listStringImage, 0, index);
         drawImages(listStringImage);
+        edited = true;
     }
 
     public void rotateLeft(List<String> listStringImage) {
@@ -124,6 +127,7 @@ public class ImageManager extends AppCompatActivity {
         listStringImage.set(index, convertBitmapToStringWithQuality(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true), 100));
         drawImages(listStringImage);
         viewPager.setCurrentItem(index);
+        edited = true;
     }
 
     public void deleteImage(List<String> listStringImage) {
@@ -131,6 +135,11 @@ public class ImageManager extends AppCompatActivity {
             listStringImage.remove(viewPager.getCurrentItem());
         drawImages(listStringImage);
         updateViewPagerVisibility(listStringImage);
+        edited = true;
+    }
+
+    public boolean isEdited() {
+        return edited;
     }
 
 }
