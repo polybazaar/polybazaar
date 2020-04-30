@@ -80,7 +80,7 @@ public class UserProfileTest {
     @Test
     public void ChangeProfilePictureTest() throws InterruptedException {
         signInWithFromMainActivity();
-        onView(withId(R.id.profileButton)).perform(click());
+        onView(withId(R.id.action_profile)).perform(click());
         addImage();
         onView(withId(R.id.saveProfileButton)).perform(scrollTo(), click());
         activityRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
@@ -125,7 +125,7 @@ public class UserProfileTest {
         String newFirstName = "Aurelien";
         String newLastName = "Queloz";
         signInWithFromMainActivity();
-        onView(withId(R.id.profileButton)).perform(click());
+        onView(withId(R.id.action_profile)).perform(click());
         onView(withId(R.id.nicknameSelector)).perform(scrollTo(), clearText(), typeText(newNickname));
         closeSoftKeyboard();
         onView(withId(R.id.firstNameSelector)).perform(scrollTo(), clearText(), typeText(newFirstName));
@@ -146,7 +146,7 @@ public class UserProfileTest {
     public void testPasswordChangeWorks() throws InterruptedException {
         String newPassword = "mynewpassword";
         signInWithFromMainActivity();
-        onView(withId(R.id.profileButton)).perform(click());
+        onView(withId(R.id.action_profile)).perform(click());
 
         onView(withId(R.id.newPassword)).perform(scrollTo());
         onView(withId(R.id.currentPassword)).perform(typeText(MockAuthenticator.TEST_USER_PASSWORD));
@@ -166,7 +166,7 @@ public class UserProfileTest {
     @Test
     public void userHasNoOwnListings() {
         signInWithFromMainActivity();
-        onView(withId(R.id.profileButton)).perform(click());
+        onView(withId(R.id.action_profile)).perform(click());
         closeSoftKeyboard();
         onView(withId(R.id.viewOwnListingsButton)).perform(click());
 

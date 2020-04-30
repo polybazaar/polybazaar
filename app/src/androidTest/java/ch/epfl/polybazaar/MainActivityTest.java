@@ -47,7 +47,7 @@ public class MainActivityTest{
     @Test
     public void authenticatedUsersCanEnterFillListing() {
         signInAndBack();
-        onView(withId(R.id.addListing)).perform(click());
+        onView(withId(R.id.action_add_item)).perform(click());
         hasComponent(FillListing.class.getName());
     }
 
