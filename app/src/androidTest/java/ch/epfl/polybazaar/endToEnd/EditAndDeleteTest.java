@@ -44,6 +44,7 @@ public class EditAndDeleteTest {
                 }
     };
 
+    /*
     @Test
     public void testDeleteWorksForPreviouslyUploadedListing() throws InterruptedException {
         String title = "My delete test";
@@ -52,14 +53,13 @@ public class EditAndDeleteTest {
         signInWithFromMainActivity(email, MockAuthenticator.TEST_USER_PASSWORD);
 
         onView(withId(R.id.action_home)).perform(click());
-        //wait for the listing to be retrieved
-        Thread.sleep(500);
         onView(withText(title)).perform(click());
         onView(withId(R.id.deleteButton)).perform(scrollTo(), click());
         onView(withText("Yes")).perform(click());
 
         DatabaseChecksUtilities.assertDatabaseHasNoEntryWithField(Listing.COLLECTION, "title", title, Listing.class);
     }
+    */
 
     @Test
     public void testEditWorksForPreviouslyUploadedListing() throws Throwable {
