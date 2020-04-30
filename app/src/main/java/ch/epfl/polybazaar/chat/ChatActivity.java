@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar.chat;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -22,10 +23,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.bottomBar;
-import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
 import static java.util.UUID.randomUUID;
@@ -44,7 +43,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private List<ChatMessage> conversation = new ArrayList<>();
 
-    public static final String bundleLisitngId = "listingID";
+    public static final String bundleListingId = "listingID";
     public static final String bundleReceiverEmail = "receiverEmail";
 
     @Override
@@ -53,12 +52,12 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        bottomNavigationView.setSelectedItemId(R.id.action_messages);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), ChatActivity.this));
 
         //TODO: What if the bundle is null ?
         Bundle bundle = getIntent().getExtras();
-        this.listingID = bundle.getString(bundleLisitngId);
+        this.listingID = bundle.getString(bundleListingId);
         this.receiverEmail = bundle.getString(bundleReceiverEmail);
         this.senderEmail = AuthenticatorFactory.getDependency().getCurrentUser().getEmail();
 
@@ -71,12 +70,12 @@ public class ChatActivity extends AppCompatActivity {
 
         KeyboardVisibilityEvent.setEventListener(
                this,
-                new KeyboardVisibilityEventListener() {
-                    @Override
-                    public void onVisibilityChanged(boolean isOpen) {
-                        if(isOpen) {
-                            messageRecycler.scrollToPosition(conversation.size() - 1);
-                        }
+                isOpen -> {
+                    if(isOpen) {
+                        messageRecycler.scrollToPosition(conversation.size() - 1);
+                        bottomNavigationView.setVisibility(View.GONE);
+                    } else {
+                        bottomNavigationView.setVisibility(View.VISIBLE);
                     }
                 });
 

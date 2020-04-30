@@ -51,14 +51,14 @@ public class SendChatForListingTest {
         onView(withId(R.id.saleOverview)).perform(click());
         onView(withText(title)).perform(click());
         onView(withId(R.id.contactSel)).perform(scrollTo(), click());
-        //onView(withId(R.id.messageEditor)).perform(typeText(message));
+        onView(withId(R.id.messageEditor)).perform(typeText(message));
         closeSoftKeyboard();
-        //onView(withId(R.id.sendMessageButton)).perform(click());
-        //DatabaseChecksUtilities.assertDatabaseHasAtLeastOneEntryWithField(ChatMessage.COLLECTION, "message", message, ChatMessage.class);
+        onView(withId(R.id.sendMessageButton)).perform(click());
+        DatabaseChecksUtilities.assertDatabaseHasAtLeastOneEntryWithField(ChatMessage.COLLECTION, "message", message, ChatMessage.class);
     }
 
     @Test
-    public void testMessagesAreDisplayedInChat() throws InterruptedException {
+    public void testMessagesAreDisplayedInChat() {
         String otherUserEmail = "otherother.user@epfl.ch";
         String title = "Send chat";
         String message = "Hello how are you?";
@@ -69,10 +69,10 @@ public class SendChatForListingTest {
         DatabaseStoreUtilities.storeNewMessage(MockAuthenticator.TEST_USER_EMAIL, otherUserEmail, id, message2);
         DatabaseStoreUtilities.storeNewListing(title, otherUserEmail, id);
         onView(withId(R.id.saleOverview)).perform(click());
-        //onView(withText(title)).perform(click());
-        //onView(withId(R.id.contactSel)).perform(scrollTo(), click());
+        onView(withText(title)).perform(click());
+        onView(withId(R.id.contactSel)).perform(scrollTo(), click());
 
-        //onView(withText(message)).check(matches(isDisplayed()));
-       // onView(withText(message2)).check(matches(isDisplayed()));
+        onView(withText(message)).check(matches(isDisplayed()));
+        onView(withText(message2)).check(matches(isDisplayed()));
     }
 }

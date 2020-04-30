@@ -80,16 +80,6 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
         return messages.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        //public TextView messageSender;
-        public TextView messageText;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            messageText = itemView.findViewById(R.id.text_message_body);
-        }
-    }
-
     private class SentMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText, dateSent;
 

@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.chat.ChatActivity;
@@ -64,7 +63,7 @@ public class ConversationOverviewActivity extends AppCompatActivity {
             conversationOverviewRecyclerAdapter.setOnItemClickListener(view -> {
                 int viewPosition = (int)view.getTag();
                 Intent intent = new Intent(ConversationOverviewActivity.this, ChatActivity.class);
-                intent.putExtra(ChatActivity.bundleLisitngId, conversationOverviewsList.get(viewPosition).getListingID());
+                intent.putExtra(ChatActivity.bundleListingId, conversationOverviewsList.get(viewPosition).getListingID());
                 intent.putExtra(ChatActivity.bundleReceiverEmail, conversationOverviewsList.get(viewPosition).getOtherUser());
                 startActivity(intent);
             });
