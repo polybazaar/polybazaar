@@ -146,7 +146,6 @@ public class MockDataStore implements DataStore {
         }
         return Tasks.forResult(null);
     }
-
     // Gets the requested collection if it already exists, otherwise creates a new one
     private Map<String, Map<String, Object>> getOrCreateCollection(String collectionPath) {
         Map<String, Map<String, Object>> collection = collections.get(collectionPath);

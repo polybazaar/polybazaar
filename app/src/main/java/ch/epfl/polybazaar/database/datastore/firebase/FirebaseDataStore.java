@@ -94,6 +94,5 @@ public class FirebaseDataStore implements DataStore {
         return database.collection(collectionPath).document(id).update(updated);
         //database.collection(collectionPath).document(id).u
     }
-
 }
 

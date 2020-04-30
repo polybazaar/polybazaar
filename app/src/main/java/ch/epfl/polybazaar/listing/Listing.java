@@ -177,6 +177,4 @@ public class Listing extends Model implements Serializable {
     public static Task<Void> updateMultipleFields(String id, Map<String, Object> updated){
        return ModelTransaction.updateMultipleFields(Listing.COLLECTION, id, updated);
     }
-
-
 }

@@ -179,7 +179,9 @@ public class SaleDetailsTest {
     @Test
     public void viewsIncrementCorrectly() throws Throwable {
         MockAuthenticator auth = MockAuthenticator.getInstance();
+
         Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+
         String id = "myid";
         DatabaseStoreUtilities.storeNewListing("My listing",  MockAuthenticator.TEST_USER_EMAIL, id);
         Intent intent = new Intent();
