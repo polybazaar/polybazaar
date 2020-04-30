@@ -1,17 +1,10 @@
 package ch.epfl.polybazaar.conversationOverview;
 
-import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -24,7 +17,6 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.AuthenticatorResult;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
-import static androidx.core.util.Preconditions.checkNotNull;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
