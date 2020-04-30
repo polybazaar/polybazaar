@@ -59,7 +59,6 @@ public class SaleDetails extends AppCompatActivity {
 
     private Button viewMP;
 
-
     private String listingID;
 
     private double mpLat = NOLAT;
@@ -86,7 +85,8 @@ public class SaleDetails extends AppCompatActivity {
         viewMP = findViewById(R.id.viewMP);
         viewsTextView = findViewById(R.id.viewsLabel);
         nbViewsTextView = findViewById(R.id.nbViews);
-        ratingBar = findViewById(R.id.ratingBar2);
+
+        ratingBar = findViewById(R.id.ratingBar);
 
         ratingBar.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -140,50 +140,14 @@ public class SaleDetails extends AppCompatActivity {
             fillWithListing(null);
             return;
         }
-        this.listingID = listingID;
 
         Listing.fetch(listingID).addOnSuccessListener(result -> {
             listing = result;
-
-            //Updates the number of listing's views once per phone
-            String android_id = Secure.getString(getApplication().getContentResolver(), Secure.ANDROID_ID);
-            String haveSeenUsers = listing.getHaveSeenUsers();
-            if(!haveSeenUsers.contains(android_id)){
-                Listing.updateField("views", this.listingID, listing.getViews()+1);
-                Listing.updateField("haveSeenUsers", this.listingID, haveSeenUsers + android_id);
-                viewIncrement = 1;
-            }
-
-            Authenticator fbAuth = AuthenticatorFactory.getDependency();
-            if(!(fbAuth.getCurrentUser() == null)){
-                sellerEmail = result.getUserEmail();
-                if(fbAuth.getCurrentUser().getEmail().equals(sellerEmail)){
-                    createEditAndDeleteActions(listing, listingID);
-                    setupNbViews(listing);
-                    contactSelButton.setVisibility(View.GONE);
-                }
-                else{
-                    showContactButton();
-                }
-            }
-            else{
-                contactSelButton.setVisibility(View.GONE);
-                editButton.setVisibility(View.GONE);
-                deleteButton.setVisibility(View.GONE);
-                viewsTextView.setVisibility(View.GONE);
-                nbViewsTextView.setVisibility(View.GONE);
-            }
+            this.listingID = listingID;
             retrieveImages(listingID);
             fillWithListing(result);
         });
     }
-
-    private void setupNbViews(Listing listing) {
-        viewsTextView.setVisibility(View.VISIBLE);
-        nbViewsTextView.setVisibility(View.VISIBLE);
-        nbViewsTextView.setText(Long.toString(listing.getViews()+viewIncrement));
-    }
-
 
     /**
      * recursive function to retrieve all images
@@ -260,6 +224,15 @@ public class SaleDetails extends AppCompatActivity {
             startActivity(intent);
         } else {
 
+            //Updates the number of listing's views once per phone
+            String android_id = Secure.getString(getApplication().getContentResolver(), Secure.ANDROID_ID);
+            String haveSeenUsers = listing.getHaveSeenUsers();
+            if(!haveSeenUsers.contains(android_id)){
+                Listing.updateField("views", this.listingID, listing.getViews()+1);
+                Listing.updateField("haveSeenUsers", this.listingID, haveSeenUsers + android_id);
+                viewIncrement = 1;
+            }
+
             //Set Meeting Point
             mpLat = listing.getLatitude();
             mpLng = listing.getLongitude();
@@ -312,6 +285,7 @@ public class SaleDetails extends AppCompatActivity {
                     if(authUser.getEmail().equals(sellerEmail)){
                         createEditAndDeleteActions(listing, listingID);
                         contactSelButton.setVisibility(View.GONE);
+                        setupNbViews(listing);
                     } else{
                         contactSelButton.setVisibility(View.VISIBLE);
                         findViewById(R.id.editButtonsLayout).setVisibility(View.GONE);
@@ -372,6 +346,13 @@ public class SaleDetails extends AppCompatActivity {
             ListingImage.delete(id);
         }
     }
+
+    private void setupNbViews(Listing listing) {
+        viewsTextView.setVisibility(View.VISIBLE);
+        nbViewsTextView.setVisibility(View.VISIBLE);
+        nbViewsTextView.setText(Long.toString(listing.getViews()+viewIncrement));
+    }
+
 
     /**
      * Adds the listing to favorites, or removes it from the user's favorites if it is already

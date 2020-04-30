@@ -19,28 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/editButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:isScrollContainer="false"
-                    android:text="@string/edit"
-                    android:visibility="invisible" />
-
-                <Button
-                    android:id="@+id/deleteButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:text="@string/delete"
-                    android:visibility="invisible" />
-            </LinearLayout>
             <RelativeLayout
                 android:id="@+id/imageDisplay"
                 android:layout_width="match_parent"
@@ -104,41 +83,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/price"
-                        android:visibility="invisible"
-                        android:layout_marginStart="@dimen/page_margin"
-            
-                  
                         android:textSize="@dimen/default_textView_text_size"
                         android:textColor="@android:color/secondary_text_light"
                         android:layout_marginTop="@dimen/saleDetails_inter_space_small"/>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/viewsLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/page_margin"
-                            android:layout_marginTop="@dimen/page_margin"
-                            android:text="@string/views"
-                            android:textSize="20sp"
-                            android:visibility="invisible" />
-
-                        <TextView
-                            android:id="@+id/nbViews"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/page_margin"
-                            android:layout_marginTop="@dimen/page_margin"
-                            android:layout_weight="1"
-                            android:textSize="20sp"
-                            android:visibility="invisible" />
-
-                    </LinearLayout>
-
                 </LinearLayout>
 
                 <androidx.legacy.widget.Space
@@ -155,7 +102,6 @@
                     android:clickable="true"
                     android:numStars="1"
                     android:visibility="invisible"
-                    android:layout_marginEnd="@dimen/page_margin"/>
                     android:focusable="true"/>
             </LinearLayout>
 
@@ -312,6 +258,36 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/saleDetails_inter_space_extra_large" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/viewsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                    android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
+                    android:text="@string/views"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="@dimen/large_textView_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/nbViews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                    android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="@dimen/large_textView_text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
