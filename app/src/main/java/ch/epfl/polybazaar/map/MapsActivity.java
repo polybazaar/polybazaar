@@ -24,12 +24,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.database.callback.SuccessCallback;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
@@ -111,6 +114,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapFragment.getMapAsync(this);
         }
         removeMP = findViewById(R.id.removeMP);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), MapsActivity.this));
     }
 
 

@@ -6,8 +6,11 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.bottomBar;
 
 public class SignInSuccessActivity extends AppCompatActivity {
     private Authenticator authenticator;
@@ -18,6 +21,10 @@ public class SignInSuccessActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in_success);
 
         authenticator = AuthenticatorFactory.getDependency();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(),SignInSuccessActivity.this));
 
     }
 

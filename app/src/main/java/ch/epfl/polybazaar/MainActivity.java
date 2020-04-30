@@ -10,9 +10,11 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.polybazaar.UI.SalesOverview;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.polybazaar.UI.UserProfile;
+import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.UI.FillListing;
@@ -31,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         authenticator = AuthenticatorFactory.getDependency();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(),MainActivity.this));
     }
 
     public void toSalesOverview(View view) {

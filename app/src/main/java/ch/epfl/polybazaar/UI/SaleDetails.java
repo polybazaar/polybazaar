@@ -22,6 +22,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,9 @@ public class SaleDetails extends AppCompatActivity {
             }
             return true;
         });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_add_item);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SaleDetails.this));
 
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
@@ -282,7 +286,8 @@ public class SaleDetails extends AppCompatActivity {
     private void createEditAndDeleteActions(Listing listing, String listingID) {
         findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
 
-        deleteButton.setOnClickListener(v -> { //TODO: This could be refactored to use utility functions from package widget
+        deleteButton.setOnClickListener(v -> { 
+            //TODO: This could be refactored to use utility functions from package widget
             AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetails.this);
             builder.setTitle("Delete this listing")
                     .setMessage("You are about to delete this listing. Are you sure you want to continue?")

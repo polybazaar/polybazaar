@@ -12,10 +12,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.polybazaar.DataHolder;
+import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
@@ -72,6 +75,10 @@ public class SalesOverview extends AppCompatActivity {
         };
         // Adds the scroll listener to RecyclerView
         rvLiteListings.addOnScrollListener(scrollListener);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SalesOverview.this));
     }
 
     @Override

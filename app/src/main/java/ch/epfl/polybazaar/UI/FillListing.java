@@ -15,10 +15,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
@@ -111,6 +117,11 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         listImageID = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_add_item);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), FillListingActivity.this));
+
     }
 
     @Override
