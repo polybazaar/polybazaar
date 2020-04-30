@@ -17,7 +17,7 @@ import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.listing.Listing;
 
 
-class CategoryManager {
+public class CategoryManager {
 
     private Activity activity;
     private Spinner categorySelector;
@@ -25,7 +25,7 @@ class CategoryManager {
     private Category traversingCategory;
     private List<Spinner> spinnerList;
 
-    CategoryManager(Activity activity) {
+    public CategoryManager(Activity activity) {
         this.activity = activity;
         if (activity != null) {
             categorySelector = activity.findViewById(R.id.categorySelector);
@@ -33,7 +33,7 @@ class CategoryManager {
         }
     }
 
-    void setupSpinner(Spinner spinner, List<Category> categoryList, List<Spinner> spinnerList, Category traversingCategory){
+    public void setupSpinner(Spinner spinner, List<Category> categoryList, List<Spinner> spinnerList, Category traversingCategory){
         this.spinnerList = spinnerList;
         this.traversingCategory = traversingCategory;
         List<Category> categories = categoriesWithDefaultText(categoryList);
@@ -79,11 +79,11 @@ class CategoryManager {
         }
     }
 
-    Category getTraversingCategory() {
+    public Category getTraversingCategory() {
         return traversingCategory;
     }
 
-    List<Spinner> getSpinnerList() {
+    public List<Spinner> getSpinnerList() {
         return spinnerList;
     }
 

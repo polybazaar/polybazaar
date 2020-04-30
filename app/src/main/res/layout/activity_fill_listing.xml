@@ -5,11 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".filllisting.FillListingActivity">
+    tools:context=".UI.FillListing">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/general_margin"
+        android:layout_marginStart="@dimen/general_margin"
         android:scrollbars="none"
         android:layout_above="@+id/activity_main_bottom_navigation"
         app:layout_constraintBottom_toTopOf="@+id/activity_main_bottom_navigation"
@@ -39,14 +41,13 @@
 
             <Button
                 android:id="@+id/addImage"
-                style="@android:style/Widget.Material.Light.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/fillListing_inter_space_large"
-                android:background="@drawable/rounded_corner_button_red"
-                android:text="@string/add_image"
+                android:background="@drawable/rounded_corner_button_colored"
                 android:textColor="@color/white"
+                android:text="@string/add_image"
                 android:textSize="@dimen/default_button_text_size" />
 
             <androidx.viewpager2.widget.ViewPager2
@@ -300,7 +301,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/fillListing_inter_space_extra_large"
                 android:layout_marginBottom="@dimen/fillListing_inter_space_extra_large"
-                android:background="@drawable/rounded_corner_button_red"
+                android:background="@drawable/rounded_corner_button_colored"
                 android:text="@string/submit_listing"
                 android:textColor="@color/white"
                 android:textSize="@dimen/large_button_text_size" />

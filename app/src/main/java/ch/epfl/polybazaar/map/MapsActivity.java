@@ -115,9 +115,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         removeMP = findViewById(R.id.removeMP);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), MapsActivity.this));
     }
 
 

@@ -12,11 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import ch.epfl.polybazaar.UI.UserProfile;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.login.Account;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.SignInActivity;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(MainActivity.this, R.string.sign_in_required, Toast.LENGTH_LONG);
             toast.show();
         } else {
-            Intent intent = new Intent(MainActivity.this, FillListingActivity.class);
+            Intent intent = new Intent(MainActivity.this, FillListing.class);
             startActivity(intent);
         }
     }
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toProfile(View view){
-        Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
+        Intent intent = new Intent(MainActivity.this, UserProfile.class);
         startActivity(intent);
     }
 

@@ -1,12 +1,8 @@
-package ch.epfl.polybazaar.filllisting;
+package ch.epfl.polybazaar.UI;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,7 +10,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
@@ -33,28 +28,32 @@ import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
+import ch.epfl.polybazaar.filllisting.CategoryManager;
+import ch.epfl.polybazaar.filllisting.ImageManager;
+import ch.epfl.polybazaar.filllisting.ListingManager;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.map.MapsActivity;
+import ch.epfl.polybazaar.utilities.ImageTaker;
 import ch.epfl.polybazaar.widgets.AddImageDialog;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
-import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
-
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.map.MapsActivity.VALID;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertFileToStringWithQuality;
+import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
+import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 
-public class FillListingActivity extends AppCompatActivity implements NoticeDialogListener {
+public class FillListing extends AppCompatActivity implements NoticeDialogListener {
 
-    public static final int RESULT_LOAD_IMAGE = 1;
-    public static final int RESULT_TAKE_PICTURE = 2;
-    public static final int RESULT_ADD_MP = 3;
-    private final int QUALITY = 10;
+
+    public static final int ADD_MP = 3;
 
     private Button setMainImage;
     private Button rotateImage;
@@ -75,13 +74,10 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
     private List<String> listStringImage;
     //only used for edit to delete all images
     private List<String> listImageID;
-    private String stringImage = "";
     private Category traversingCategory;
     private String stringThumbnail = "";
     private double lat = NOLAT;
     private double lng = NOLNG;
-
-    private PermissionRequest cameraPermissionRequest;
 
 
     @Override
@@ -107,7 +103,6 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
          * FOR TESTING PURPOSES ONLY:
          */
         categorySelector = findViewById(R.id.categorySelector);
-
         spinnerList = new ArrayList<>();
         spinnerList.add(categorySelector);
         RootCategoryFactory.useJSONCategory(this);
@@ -125,7 +120,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_add_item);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), FillListingActivity.this));
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), FillListing.this));
 
     }
 
@@ -136,41 +131,43 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         if(resultCode != Activity.RESULT_OK){
             pictureView.setTag(-1);
         }
-        else if (requestCode == RESULT_LOAD_IMAGE){
+        else if (requestCode == LOAD_IMAGE){
             if(data == null){
                 pictureView.setTag(-1);
                 return;
             }
-            Uri selectedImage = data.getData();
-            Bitmap bitmap;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, R.string.unable_load_image, Toast.LENGTH_SHORT).show();
-                return;
+            getNewImage(data);
+        }
+        else if (requestCode == TAKE_IMAGE){
+            if (data != null) {
+                getNewImage(data);
             }
-            stringImage = convertBitmapToStringWithQuality(bitmap, QUALITY);
+        }
+        if (resultCode == Activity.RESULT_OK && ADD_MP == requestCode) {
+            if (data.getBooleanExtra(VALID, false)) {
+                lng = data.getDoubleExtra(LNG, NOLNG);
+                lat = data.getDoubleExtra(LAT, NOLAT);
+                addMP.setText(R.string.change_MP);
+            } else {
+                lng = NOLNG;
+                lat = NOLAT;
+                addMP.setText(R.string.add_MP);
+            }
+        }
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        intent.putExtra(CODE, requestCode);
+        super.startActivityForResult(intent, requestCode);
+    }
+
+    private void getNewImage(Intent data) {
+        boolean bitmapOK = data.getBooleanExtra(IMAGE_AVAILABLE, false);
+        if (bitmapOK) {
+            String stringImage = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
             imageManager.addImage(listStringImage, stringImage);
             imageManager.updateViewPagerVisibility(listStringImage);
-        }
-        else if (requestCode == RESULT_TAKE_PICTURE){
-           stringImage = convertFileToStringWithQuality(imageManager.getPhotoFile(), QUALITY);
-           imageManager.addImage(listStringImage, stringImage);
-           imageManager.updateViewPagerVisibility(listStringImage);
-        }
-        else if (requestCode == RESULT_ADD_MP) {
-            if (data != null) {
-                if (data.getBooleanExtra(VALID, false)) {
-                    lng = data.getDoubleExtra(LNG, NOLNG);
-                    lat = data.getDoubleExtra(LAT, NOLAT);
-                    addMP.setText(R.string.change_MP);
-                } else {
-                    lng = NOLNG;
-                    lat = NOLAT;
-                    addMP.setText(R.string.add_MP);
-                }
-            }
         }
     }
 
@@ -188,7 +185,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             defineMP.putExtra(GIVE_LAT_LNG, false);
             defineMP.putExtra(LAT, lat);
             defineMP.putExtra(LNG, lng);
-            startActivityForResult(defineMP, RESULT_ADD_MP);
+            startActivityForResult(defineMP, ADD_MP);
         });
         titleSelector.setOnFocusChangeListener((v, hasFocus) -> {
             if (!titleSelector.getText().toString().equals("")) titleSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
@@ -216,8 +213,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         /**
          * FOR TESTING PURPOSES ONLY:
          */
-        findViewById(R.id.addImageFromCamera).setOnClickListener(v -> checkCameraPermission());
-        findViewById(R.id.addImageFromLibrary).setOnClickListener(v -> imageManager.uploadImage());
+        findViewById(R.id.addImageFromCamera).setOnClickListener(v -> {
+            startActivityForResult(new Intent(this, ImageTaker.class), TAKE_IMAGE);
+        });
+        findViewById(R.id.addImageFromLibrary).setOnClickListener(v -> {
+            startActivityForResult(new Intent(this, ImageTaker.class), LOAD_IMAGE);
+        });
         /**
          * ==========================
          */
@@ -229,12 +230,12 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             Listing newListing = listingManager.makeListing(lat, lng, spinnerList);
             if (newListing != null) {
                 listingManager.createAndSendListing(newListing, listStringImage, stringThumbnail);
-                Intent SalesOverviewIntent = new Intent(FillListingActivity.this, SalesOverview.class);
+                Intent SalesOverviewIntent = new Intent(FillListing.this, SalesOverview.class);
                 startActivity(SalesOverviewIntent);
             }
         }
         if (dialog instanceof AddImageDialog) {
-            checkCameraPermission();
+            startActivityForResult(new Intent(this, ImageTaker.class), TAKE_IMAGE);
         }
     }
 
@@ -244,7 +245,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
             //do nothing
         }
         if (dialog instanceof AddImageDialog) {
-            imageManager.uploadImage();
+            startActivityForResult(new Intent(this, ImageTaker.class), LOAD_IMAGE);
         }
     }
 
@@ -285,29 +286,7 @@ public class FillListingActivity extends AppCompatActivity implements NoticeDial
         return true;
     }
 
-    private void checkCameraPermission(){
-        cameraPermissionRequest = new PermissionRequest(this, "CAMERA", "Camera access is required to take pictures", null, result -> {
-            if (result) imageManager.takePicture();
-        });
-        cameraPermissionRequest.assertPermission();
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        cameraPermissionRequest.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    private void hideImagesButtons() {
-        setMainImage.setVisibility(View.INVISIBLE);
-        rotateImage.setVisibility(View.INVISIBLE);
-        deleteImage.setVisibility(View.INVISIBLE);
-    }
-
-    private void showImagesButtons() {
-        setMainImage.setVisibility(View.VISIBLE);
-        rotateImage.setVisibility(View.VISIBLE);
-        deleteImage.setVisibility(View.VISIBLE);
-    }
 
     /**
      * FOR TESTING PURPOSES ONLY:

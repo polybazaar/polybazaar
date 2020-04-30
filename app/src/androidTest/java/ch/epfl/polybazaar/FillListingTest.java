@@ -12,24 +12,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -37,8 +31,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
@@ -56,7 +52,6 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -75,6 +70,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertFileToString;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
+import static com.google.android.gms.tasks.Tasks.whenAll;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -87,7 +83,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
-public class FillListingActivityTest {
+public class FillListingTest {
 
     private final int SLEEP_TIME = 2000;
 
@@ -105,7 +101,7 @@ public class FillListingActivityTest {
 
 
     @Rule
-    public final ActivityTestRule<FillListingActivity> fillSaleActivityTestRule = new ActivityTestRule<FillListingActivity>(FillListingActivity.class) {
+    public final ActivityTestRule<FillListing> fillSaleActivityTestRule = new ActivityTestRule<FillListing>(FillListing.class) {
 
 
     @Override
@@ -304,6 +300,7 @@ public class FillListingActivityTest {
 
     @Test
     public void testMoveImageFirstAndSubmit() throws Throwable {
+        galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
         uploadImage();
         //this do nothing because there only one image
         runOnUiThread(() -> {
@@ -403,12 +400,12 @@ public class FillListingActivityTest {
             negButton.performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        hasComponent(FillListingActivity.class.getName());
+        hasComponent(FillListing.class.getName());
         Intents.release();
         useRealNetwork();
     }
 
-   /* @Test
+    @Test
     public void newListingIsAddedToUserOwnListings() throws Throwable {
         auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         fillListing();
@@ -419,36 +416,13 @@ public class FillListingActivityTest {
                 but.performClick();
             }
         });
-        AppUser authAccount = auth.getCurrentUser();
-        authAccount.getUserData().addOnSuccessListener(user -> {
+        auth.getCurrentUser().getUserData().addOnSuccessListener(user -> {
             if (user != null) {
                 ArrayList<String> ownListings = user.getOwnListings();
                 assertNotEquals(null, ownListings.get(0));
             }
         });
-    }*/
-
-
-    /**
-     * This test will no longer be relevant with the new UI
-     */
-   /*
-    @Test
-    public void testCreateAndSendListingWhenUserNull() throws Throwable {
-        MockAuthenticator.getInstance().signOut();
-        fillListing();
-
-        Intents.init();
-        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
-        //wait for MainActivity
-        Thread.sleep(SLEEP_TIME);
-        intended(hasComponent(MainActivity.class.getName()));
-        Intents.release();
-
-        //sign in again for remaining tests
-        whenAll(MockAuthenticator.getInstance().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD));
     }
-    */
 
     private void uploadImage(){
         closeSoftKeyboard();
