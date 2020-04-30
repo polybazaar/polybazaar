@@ -52,12 +52,11 @@ public class SendChatForListingTest {
         SignInUtilities.signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         DatabaseStoreUtilities.storeNewListing(title, otherUserEmail);
         onView(withId(R.id.saleOverview)).perform(click());
+        Thread.sleep(200);
         onView(withText(title)).perform(click());
+        Thread.sleep(200);
         onView(withId(R.id.contactSel)).perform(scrollTo(), click());
-        /*runOnUiThread(() -> {
-            ((TextView) activityRule.getActivity().findViewById(R.id.messageEditor)).setText(message);
-        });*/
-        Thread.sleep(1000);
+        Thread.sleep(200);
         onView(withId(R.id.messageEditor)).perform(typeText(message));
         closeSoftKeyboard();
         onView(withId(R.id.sendMessageButton)).perform(click());
@@ -76,10 +75,11 @@ public class SendChatForListingTest {
         DatabaseStoreUtilities.storeNewMessage(MockAuthenticator.TEST_USER_EMAIL, otherUserEmail, id, message2);
         DatabaseStoreUtilities.storeNewListing(title, otherUserEmail, id);
         onView(withId(R.id.saleOverview)).perform(click());
+        Thread.sleep(200);
         onView(withText(title)).perform(click());
         onView(withId(R.id.contactSel)).perform(scrollTo(), click());
+        Thread.sleep(200);
 
-        Thread.sleep(1000);
         onView(withText(message)).check(matches(isDisplayed()));
         onView(withText(message2)).check(matches(isDisplayed()));
     }
