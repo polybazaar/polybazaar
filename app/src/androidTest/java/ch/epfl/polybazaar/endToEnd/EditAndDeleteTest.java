@@ -75,8 +75,7 @@ public class EditAndDeleteTest {
         closeSoftKeyboard();
         onView(withId(R.id.selectCategory)).perform(scrollTo(), click());
         // TODO : implement the category selection
-        onView(withId(R.id.submitListing)).perform(scrollTo(), click());
-
+        onView(withId(R.id.submitListing)).perform(scrollTo(),click());
         DatabaseChecksUtilities.assertDatabaseHasAtLeastOneEntryWithField(Listing.COLLECTION, "title", newTitle, Listing.class);
         DatabaseChecksUtilities.assertDatabaseHasNoEntryWithField(Listing.COLLECTION, "title", oldTitle, Listing.class);
 

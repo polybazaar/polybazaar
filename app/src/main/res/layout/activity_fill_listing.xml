@@ -9,16 +9,18 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginStart="@dimen/general_margin"
-        android:layout_marginEnd="@dimen/general_margin"
-        tools:ignore="UselessParent"
-        android:scrollbars="none">
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_above="@+id/activity_main_bottom_navigation"
+        app:layout_constraintBottom_toTopOf="@+id/activity_main_bottom_navigation"
+        tools:ignore="UselessParent">
+
 
         <LinearLayout
             android:id="@+id/fillListingLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/activity_main_bottom_navigation"
             android:orientation="vertical">
 
             <Button
@@ -26,13 +28,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_image"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
             <Button
                 android:id="@+id/addImageFromCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_image"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/addImage"
@@ -42,8 +45,8 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/fillListing_inter_space_large"
                 android:background="@drawable/rounded_corner_button_red"
-                android:textColor="@color/white"
                 android:text="@string/add_image"
+                android:textColor="@color/white"
                 android:textSize="@dimen/default_button_text_size" />
 
             <androidx.viewpager2.widget.ViewPager2
@@ -53,14 +56,14 @@
                 android:layout_marginTop="@dimen/fillListing_inter_space_large"
                 android:clickable="true"
                 android:focusable="true"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TableRow
                 android:id="@+id/editButtons"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large">
+                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:visibility="gone">
 
                 <Space
                     android:layout_width="wrap_content"
@@ -75,8 +78,8 @@
                     android:layout_marginBottom="@dimen/button_shadow_margin"
                     android:background="@drawable/rounded_corner_button_grey"
                     android:text="@string/move_first"
-                    android:visibility="visible"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    android:visibility="visible" />
 
                 <Space
                     android:layout_width="wrap_content"
@@ -92,7 +95,7 @@
                     android:background="@drawable/rounded_corner_button_grey"
                     android:text="@string/rotate"
                     android:textSize="12sp"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
                 <Space
                     android:layout_width="wrap_content"
@@ -108,7 +111,7 @@
                     android:background="@drawable/rounded_corner_button_grey"
                     android:text="@string/delete_image"
                     android:textSize="12sp"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
                 <Space
                     android:layout_width="wrap_content"
@@ -133,10 +136,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/fillListing_inter_space_small"
                 android:background="@drawable/boxed"
-                android:maxLines="1"
-                android:maxLength="50"
-                android:inputType="textPersonName"
                 android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:maxLength="50"
+                android:maxLines="1"
                 tools:ignore="LabelFor" />
 
             <TextView
@@ -156,57 +159,57 @@
                 android:layout_marginTop="@dimen/fillListing_inter_space_small"
                 android:background="@drawable/boxed"
                 android:gravity="start|top"
+                android:importantForAutofill="no"
                 android:inputType="textMultiLine"
-                android:importantForAutofill="no"
                 tools:ignore="LabelFor" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fillListing_inter_space_large">
-
-            <TextView
-                android:id="@+id/priceTextView"
-                android:layout_width="wrap_content"
+            <TableRow
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:layout_weight="0.1"
-                android:text="@string/price"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/default_textView_text_size"
-                android:textStyle="bold" />
+                android:layout_marginTop="@dimen/fillListing_inter_space_large">
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                <TextView
+                    android:id="@+id/priceTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_weight="0.1"
+                    android:text="@string/price"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="@dimen/default_textView_text_size"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/priceCurrency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="3dp"
-                android:layout_weight="0.01"
-                android:text="@string/currency"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/default_textView_text_size" />
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
-            <EditText
-                android:id="@+id/priceSelector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:layout_weight="0.01"
-                android:ems="7"
-                android:maxLength="7"
-                android:maxLines="1"
-                android:background="@drawable/boxed"
-                android:inputType="numberDecimal"
-                android:importantForAutofill="no"
-                tools:ignore="LabelFor" />
+                <TextView
+                    android:id="@+id/priceCurrency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="3dp"
+                    android:layout_weight="0.01"
+                    android:text="@string/currency"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="@dimen/default_textView_text_size" />
 
-        </TableRow>
+                <EditText
+                    android:id="@+id/priceSelector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_weight="0.01"
+                    android:background="@drawable/boxed"
+                    android:ems="7"
+                    android:importantForAutofill="no"
+                    android:inputType="numberDecimal"
+                    android:maxLength="7"
+                    android:maxLines="1"
+                    tools:ignore="LabelFor" />
+
+            </TableRow>
 
             <TextView
                 android:id="@+id/categoryTextView"
@@ -249,10 +252,10 @@
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginTop="@dimen/button_shadow_margin"
                     android:layout_marginBottom="@dimen/button_shadow_margin"
-                    android:background="@drawable/rounded_corner_button_grey"
                     android:layout_weight="0.01"
-                    android:textSize="@dimen/small_button_text_size"
-                    android:text="@string/select_a_category" />
+                    android:background="@drawable/rounded_corner_button_grey"
+                    android:text="@string/select_a_category"
+                    android:textSize="@dimen/small_button_text_size" />
 
             </TableRow>
 
@@ -284,10 +287,10 @@
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginTop="@dimen/button_shadow_margin"
                     android:layout_marginBottom="@dimen/button_shadow_margin"
-                    android:background="@drawable/rounded_corner_button_grey"
                     android:layout_weight="0.01"
-                    android:textSize="@dimen/small_button_text_size"
-                    android:text="@string/add_MP" />
+                    android:background="@drawable/rounded_corner_button_grey"
+                    android:text="@string/add_MP"
+                    android:textSize="@dimen/small_button_text_size" />
             </TableRow>
 
             <Button
@@ -306,16 +309,26 @@
                 android:id="@+id/picturePreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
-                android:contentDescription="@string/loading" />
+                android:contentDescription="@string/loading"
+                android:visibility="invisible" />
 
             <Spinner
                 android:id="@+id/categorySelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/activity_main_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@color/bottomBarBackground"
+        app:itemIconTint="@color/bottomBarContent"
+        app:itemTextColor="@color/bottomBarContent"
+        app:menu="@layout/bottom_bar" />
 </RelativeLayout>
