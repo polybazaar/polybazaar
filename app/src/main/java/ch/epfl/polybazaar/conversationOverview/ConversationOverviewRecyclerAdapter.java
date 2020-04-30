@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.litelisting.LiteListing;
+
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<ConversationOverviewRecyclerAdapter.ViewHolder> {
 
@@ -50,7 +54,15 @@ public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<Co
     @Override
     public void onBindViewHolder(@NonNull ConversationOverviewRecyclerAdapter.ViewHolder holder, int position) {
         ConversationOverview conversationOverview = conversationOverviews.get(position);
-        holder.otherUser.setText(conversationOverview.getOtherUser());
+
+        LiteListing.fetch(conversationOverview.getListingID()).addOnSuccessListener(result -> {
+            if(result != null) {
+                holder.title.setText(result.getTitle());
+                holder.thumbnail.setImageBitmap(convertStringToBitmap(result.getStringThumbnail()));
+            }
+        });
+
+        holder.otherUser.setText(String.format("Seller : %s", conversationOverview.getOtherUser()));
         holder.item.setTag(position);
     }
 
@@ -60,13 +72,15 @@ public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<Co
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-
-        public TextView otherUser;
+        public ImageView thumbnail;
+        public TextView title, otherUser;
         public LinearLayout item;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            otherUser = itemView.findViewById(R.id.convOtherUser);
+            thumbnail = itemView.findViewById(R.id.liteListingThumbnail);
+            title = itemView.findViewById(R.id.title_conversation);
+            otherUser = itemView.findViewById(R.id.seller_email);
             item = itemView.findViewById(R.id.conversationItem);
 
             item.setOnClickListener(v -> {
