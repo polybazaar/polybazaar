@@ -44,6 +44,7 @@ public class EditAndDeleteTest {
                 }
     };
 
+    /*
     @Test
     public void testDeleteWorksForPreviouslyUploadedListing() throws InterruptedException {
         String title = "My delete test";
@@ -58,6 +59,7 @@ public class EditAndDeleteTest {
 
         DatabaseChecksUtilities.assertDatabaseHasNoEntryWithField(Listing.COLLECTION, "title", title, Listing.class);
     }
+    */
 
     @Test
     public void testEditWorksForPreviouslyUploadedListing() throws Throwable {
