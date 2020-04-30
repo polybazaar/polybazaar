@@ -3,7 +3,6 @@ package ch.epfl.polybazaar.UI;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.Timestamp;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +23,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
@@ -135,7 +133,9 @@ public class SalesOverview extends AppCompatActivity {
             if(IDList.isEmpty()) {
                 for (LiteListing l : result) {
                     if (l != null) {
-                        listingTimeMap.put(l.getTimestamp(), l.getId());
+                        if(l.getTimestamp() != null) { // TODO: delete before merge
+                            listingTimeMap.put(l.getTimestamp(), l.getId());
+                        }
                     }
                 }
                 // retrieve values from Treemap: litelistings IDs in order: most recent first
