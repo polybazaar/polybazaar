@@ -1,5 +1,7 @@
 package ch.epfl.polybazaar.endToEnd;
 
+import android.widget.TextView;
+
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
@@ -23,6 +25,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 
 public class SendChatForListingTest {
@@ -42,7 +45,7 @@ public class SendChatForListingTest {
 
 
     @Test
-    public void testUserCanSendMessageViaListing() throws InterruptedException {
+    public void testUserCanSendMessageViaListing() throws Throwable {
         String otherUserEmail = "otherother.user@epfl.ch";
         String title = "Send chat";
         String message = "Hello how are you?";
@@ -51,6 +54,10 @@ public class SendChatForListingTest {
         onView(withId(R.id.saleOverview)).perform(click());
         onView(withText(title)).perform(click());
         onView(withId(R.id.contactSel)).perform(scrollTo(), click());
+        /*runOnUiThread(() -> {
+            ((TextView) activityRule.getActivity().findViewById(R.id.messageEditor)).setText(message);
+        });*/
+        Thread.sleep(1000);
         onView(withId(R.id.messageEditor)).perform(typeText(message));
         closeSoftKeyboard();
         onView(withId(R.id.sendMessageButton)).perform(click());
@@ -58,7 +65,7 @@ public class SendChatForListingTest {
     }
 
     @Test
-    public void testMessagesAreDisplayedInChat() {
+    public void testMessagesAreDisplayedInChat() throws InterruptedException {
         String otherUserEmail = "otherother.user@epfl.ch";
         String title = "Send chat";
         String message = "Hello how are you?";
@@ -72,6 +79,7 @@ public class SendChatForListingTest {
         onView(withText(title)).perform(click());
         onView(withId(R.id.contactSel)).perform(scrollTo(), click());
 
+        Thread.sleep(1000);
         onView(withText(message)).check(matches(isDisplayed()));
         onView(withText(message2)).check(matches(isDisplayed()));
     }
