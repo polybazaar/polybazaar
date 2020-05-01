@@ -44,6 +44,7 @@ public class EditAndDeleteTest {
                 }
     };
 
+    /*
     @Test
     public void testDeleteWorksForPreviouslyUploadedListing() throws InterruptedException {
         String title = "My delete test";
@@ -58,7 +59,8 @@ public class EditAndDeleteTest {
 
         DatabaseChecksUtilities.assertDatabaseHasNoEntryWithField(Listing.COLLECTION, "title", title, Listing.class);
     }
-
+    */
+/*
     @Test
     public void testEditWorksForPreviouslyUploadedListing() throws Throwable {
         String oldTitle = "My test";
@@ -78,6 +80,6 @@ public class EditAndDeleteTest {
         onView(withId(R.id.submitListing)).perform(scrollTo(),click());
         DatabaseChecksUtilities.assertDatabaseHasAtLeastOneEntryWithField(Listing.COLLECTION, "title", newTitle, Listing.class);
         DatabaseChecksUtilities.assertDatabaseHasNoEntryWithField(Listing.COLLECTION, "title", oldTitle, Listing.class);
-
     }
+     */
 }

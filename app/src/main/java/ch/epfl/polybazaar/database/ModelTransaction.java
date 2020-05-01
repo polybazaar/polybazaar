@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Tasks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.polybazaar.database.datastore.CollectionSnapshot;
 import ch.epfl.polybazaar.database.datastore.DataSnapshot;
@@ -64,6 +65,26 @@ public final class ModelTransaction {
         DataStore db = DataStoreFactory.getDependency();
         return db.fetchWithEqualsMultiple(collection, fields, compareValues)
                 .onSuccessTask(querySnapshot -> Tasks.forResult(toModels(querySnapshot, clazz)));
+    }
+
+    /**
+     * Updates the given field of the document with the updated value
+     * @param collectionPath name of the collection
+     * @param id id of the document to modify
+     * @param field name of the field to update
+     * @param updatedValue new value to put in the field
+     * @return void task
+     */
+    public static <T> Task<Void> updateField(String collectionPath, String id, String field, T updatedValue) {
+        DataStore db = DataStoreFactory.getDependency();
+        return db.updateField(collectionPath, id, field, updatedValue)
+                .onSuccessTask(querySnapshot -> Tasks.forResult(null));
+    }
+
+    public static Task<Void> updateMultipleFields(String collectionPath, String id, Map<String, Object> updated) {
+        DataStore db = DataStoreFactory.getDependency();
+        return db.updateMultipleFields(collectionPath, id, updated)
+                .onSuccessTask(querySnapshot -> Tasks.forResult(null));
     }
 
     /**

@@ -12,7 +12,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
@@ -68,6 +74,23 @@ public class ListingManager {
             toast.show();
         });
         //store images (current has a ref to the next)
+        storeImages(listStringImage, newListingID);
+        newLiteListing.save()
+                .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
+                .addOnFailureListener(e -> Toast.makeText(activity.getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG).show());
+        Account authAccount = getUser();
+        // update own listings of (logged) user
+        if(authAccount != null) {
+            authAccount.getUserData().addOnSuccessListener(user -> {
+                if (user != null) {
+                    user.addOwnListing(newListingID);
+                    user.save();
+                }
+            });
+        }
+    }
+
+    private void storeImages(List<String> listStringImage, String newListingID) {
         if(listStringImage.size() > 0) {
             String currentId = newListingID;
             String nextId;
@@ -86,19 +109,6 @@ public class ListingManager {
             ListingImage newListingImage = new ListingImage(listStringImage.get(listStringImage.size() - 1), "");
             newListingImage.setId(currentId);
             newListingImage.save();
-        }
-        newLiteListing.save()
-                .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
-                .addOnFailureListener(e -> Toast.makeText(activity.getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG).show());
-        Account authAccount = getUser();
-        // update own listings of (logged) user
-        if(authAccount != null) {
-            authAccount.getUserData().addOnSuccessListener(user -> {
-                if (user != null) {
-                    user.addOwnListing(newListingID);
-                    user.save();
-                }
-            });
         }
     }
 
@@ -170,7 +180,7 @@ public class ListingManager {
         return true;
     }
 
-    public void deleteOldListingAndSubmitNewOne(List<Spinner> spinnerList, List<String> listStringImage, String stringThumbnail, Double lat, Double lng, List<String> listImageID) {
+    public void deleteOldListingAndSubmitNewOne(List<Spinner> spinnerList, List<String> listStringImage, Double lat, Double lng, List<String> listImageID, boolean imagesEdited) {
         if (!checkFields(spinnerList)) {
             Toast.makeText(activity.getApplicationContext(), R.string.incorrect_fields, Toast.LENGTH_SHORT).show();
         }
@@ -180,13 +190,57 @@ public class ListingManager {
                 return;
             }
             String listingID = bundle.getString("listingID");
+            Map<String, Object> listingUpdated = new HashMap<>();
+            Map<String, Object> liteListingUpdated = new HashMap<>();
+            Listing.fetch(listingID).addOnSuccessListener(listing -> {
+                if(!listing.getTitle().equals(titleSelector.getText())){
+                    listingUpdated.put("title", titleSelector.getText().toString());
+                    liteListingUpdated.put("title", titleSelector.getText().toString());
+                }
 
-            Listing.deleteWithLiteVersion(listingID)
-                    .addOnSuccessListener((v) -> submit(spinnerList, listStringImage, stringThumbnail, lat, lng));
+                if(!listing.getPrice().equals(priceSelector.getText())){
+                    listingUpdated.put("price", priceSelector.getText().toString());
+                    listingUpdated.put("price", priceSelector.getText().toString());
+                }
 
-            for(String id: listImageID) {
-                ListingImage.delete(id);
+                if(!listing.getDescription().equals(descriptionSelector.getText())){
+                    listingUpdated.put("description", descriptionSelector.getText().toString());
+                }
+
+                if(listing.getLatitude() != lat){
+                    listingUpdated.put("latitude", lat);
+                }
+
+                if(listing.getLongitude() != lng){
+                    listingUpdated.put("longitude", lng);
+                }
+                //TODO: Also edit the category. But this feature should wait to have the new category selector
+
+                Listing.updateMultipleFields(listingID, listingUpdated).addOnSuccessListener(aVoid -> LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
+                    String thumbnail = "NoThumbnail";
+
+                    if(!listStringImage.isEmpty()) {
+                        thumbnail = resizeStringImageThumbnail(listStringImage.get(0));
+                    }
+                    if(!liteListing.getStringThumbnail().equals(thumbnail) && !thumbnail.equals("NoThumbnail")){
+                        liteListingUpdated.put("stringThumbnail", thumbnail);
+                    }
+                    LiteListing.updateMultipleFields(listingID, liteListingUpdated);
+                }));
+            });
+
+            //TODO: This could be more optimized. All images shouldn't be reuploaded when only 1 is modified.
+            //TODO: Such an optimization however would require another PR
+            if(imagesEdited){
+                for(String id: listImageID) {
+                    ListingImage.delete(id);
+                }
+                storeImages(listStringImage, listingID);
             }
+
+            Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
+            activity.startActivity(SalesOverviewIntent);
+
         }
     }
 

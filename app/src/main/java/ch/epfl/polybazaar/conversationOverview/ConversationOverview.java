@@ -1,15 +1,5 @@
 package ch.epfl.polybazaar.conversationOverview;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-
-import java.util.Arrays;
-import java.util.List;
-
-import ch.epfl.polybazaar.chat.ChatMessage;
-import ch.epfl.polybazaar.database.ModelTransaction;
-
 public class ConversationOverview {
     private String otherUser;
     private String listingID;

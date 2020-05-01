@@ -90,6 +90,9 @@
     <string name="library">Library</string>
     <string name="not_implemented">Unavailable</string>
     <string name="remove_meeting_point">Remove</string>
+    <string name="views">Views :</string>
+    <string name="type_your_message">Type your message</string>
+    <string name="send">Send</string>
     <string name="save_profile">Save Profile</string>
     <string name="my_listings">Listings</string>
     <string name="password">Password</string>

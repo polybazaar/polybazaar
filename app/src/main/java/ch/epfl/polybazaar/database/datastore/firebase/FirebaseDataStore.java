@@ -8,6 +8,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,6 +82,17 @@ public class FirebaseDataStore implements DataStore {
         return query.get().onSuccessTask((queryDocumentSnapshots ->
                 Tasks.forResult(new FirebaseCollectionSnapshot(queryDocumentSnapshots))
         ));
+    }
+
+    @Override
+    public <T> Task<Void> updateField(String collectionPath, String id, String field, T updatedValue) {
+        return database.collection(collectionPath).document(id).update(field, updatedValue);
+    }
+
+    @Override
+    public Task<Void> updateMultipleFields(String collectionPath, String id, Map<String, Object> updated) {
+        return database.collection(collectionPath).document(id).update(updated);
+        //database.collection(collectionPath).document(id).u
     }
 }
 
