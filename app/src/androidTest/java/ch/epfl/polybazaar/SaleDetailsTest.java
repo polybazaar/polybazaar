@@ -115,7 +115,7 @@ public class SaleDetailsTest {
 
         Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
 
-        Tasks.whenAll(listing.save());
+        Tasks.await(listing.save());
         String id = listing.getId();
         Intent intent = new Intent();
         intent.putExtra("listingID", id);
@@ -179,7 +179,9 @@ public class SaleDetailsTest {
     @Test
     public void viewsIncrementCorrectly() throws Throwable {
         MockAuthenticator auth = MockAuthenticator.getInstance();
-        auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
+
+        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+
         String id = "myid";
         DatabaseStoreUtilities.storeNewListing("My listing",  MockAuthenticator.TEST_USER_EMAIL, id);
         Intent intent = new Intent();

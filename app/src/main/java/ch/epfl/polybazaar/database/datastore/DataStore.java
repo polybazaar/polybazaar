@@ -75,4 +75,13 @@ public interface DataStore {
      * @return void task
      */
     <T> Task<Void> updateField (String collectionPath, String id, String field, T updatedValue);
+
+    /**
+     * Updates multiple fields of the document with the given ID from the given collection with new values
+     * @param collectionPath collection
+     * @param id the id of the document to update
+     * @param updated keys are fields and values are updated field values
+     * @return void task
+     */
+    public Task<Void> updateMultipleFields(String collectionPath, String id, Map<String, Object> updated);
 }

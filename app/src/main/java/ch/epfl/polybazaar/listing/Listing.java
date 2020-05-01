@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.Tasks;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
@@ -173,5 +174,7 @@ public class Listing extends Model implements Serializable {
         return Tasks.whenAll(deleteListing, deleteLiteListing);
     }
 
-
+    public static Task<Void> updateMultipleFields(String id, Map<String, Object> updated){
+       return ModelTransaction.updateMultipleFields(Listing.COLLECTION, id, updated);
+    }
 }

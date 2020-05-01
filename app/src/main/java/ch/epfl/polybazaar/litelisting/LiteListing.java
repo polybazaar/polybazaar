@@ -4,10 +4,12 @@ package ch.epfl.polybazaar.litelisting;
 import com.google.android.gms.tasks.Task;
 
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
+import ch.epfl.polybazaar.listing.Listing;
 
 /**
  * If you attributes of this class, also change its CallbackAdapter and Utilities
@@ -91,5 +93,16 @@ public class LiteListing extends Model {
      */
     public static Task<List<LiteListing>> fetchAll() {
         return ModelTransaction.fetchAll(COLLECTION, LiteListing.class);
+    }
+
+
+    /**
+     * Updates multiple fields of a lite listing
+     * @param id the lite listing's id
+     * @param updated a map of fields and values to update
+     * @return a void task
+     */
+    public static Task<Void> updateMultipleFields(String id, Map<String, Object> updated){
+        return ModelTransaction.updateMultipleFields(LiteListing.COLLECTION, id, updated);
     }
 }

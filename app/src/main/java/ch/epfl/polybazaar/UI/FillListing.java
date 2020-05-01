@@ -207,7 +207,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         else{
             submitListing.setText(R.string.edit);
             submitListing.setOnClickListener(v ->
-                    listingManager.deleteOldListingAndSubmitNewOne(spinnerList, listStringImage, stringThumbnail, lat, lng, listImageID));
+                    listingManager.deleteOldListingAndSubmitNewOne(spinnerList, listStringImage, lat, lng, listImageID, imageManager.isEdited()));
         }
 
         /**
