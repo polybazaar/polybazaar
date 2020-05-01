@@ -287,6 +287,8 @@ public class SaleDetails extends AppCompatActivity {
                     } else{
                         contactSelButton.setVisibility(View.VISIBLE);
                         findViewById(R.id.editButtonsLayout).setVisibility(View.GONE);
+                        viewsTextView.setVisibility(View.GONE);
+                        nbViewsTextView.setVisibility(View.GONE);
                     }
                 } else {
                     contactSelButton.setVisibility(View.VISIBLE);
@@ -294,6 +296,8 @@ public class SaleDetails extends AppCompatActivity {
                     contactSelButton.setText(R.string.sign_in_to_contact);
                     ratingBar.setVisibility(View.INVISIBLE);
                     ratingBar.setClickable(false);
+                    viewsTextView.setVisibility(View.GONE);
+                    nbViewsTextView.setVisibility(View.GONE);
                 }
             });
         }
