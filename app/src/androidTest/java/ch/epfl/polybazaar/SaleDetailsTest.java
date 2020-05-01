@@ -5,6 +5,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Task;
@@ -179,16 +180,42 @@ public class SaleDetailsTest {
     @Test
     public void viewsIncrementCorrectly() throws Throwable {
         MockAuthenticator auth = MockAuthenticator.getInstance();
-
         Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
 
         String id = "myid";
         DatabaseStoreUtilities.storeNewListing("My listing",  MockAuthenticator.TEST_USER_EMAIL, id);
         Intent intent = new Intent();
         intent.putExtra("listingID", id);
-
         activityRule.launchActivity(intent);
+
         runOnUiThread(() -> assertEquals("1", ((TextView)activityRule.getActivity().findViewById(R.id.nbViews)).getText()));
+
+        auth.signOut();
+    }
+
+    @Test
+    public void viewLabelNotDisplayedWhenNotLoggedIn() throws Throwable {
+        String id = "myid";
+        DatabaseStoreUtilities.storeNewListing("My listing",  MockAuthenticator.TEST_USER_EMAIL, id);
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+        activityRule.launchActivity(intent);
+
+        runOnUiThread(() -> assertEquals(ViewMatchers.Visibility.GONE.getValue(), ((TextView)activityRule.getActivity().findViewById(R.id.nbViews)).getVisibility()));
+    }
+
+    @Test
+    public void viewLabelNotDisplayedForOtherUsers() throws Throwable {
+        MockAuthenticator auth = MockAuthenticator.getInstance();
+        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+
+        String id = "myid";
+        DatabaseStoreUtilities.storeNewListing("My listing",  "anotherepfl.user@epfl.ch", id);
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+        activityRule.launchActivity(intent);
+
+        runOnUiThread(() -> assertEquals(ViewMatchers.Visibility.GONE.getValue(), ((TextView)activityRule.getActivity().findViewById(R.id.nbViews)).getVisibility()));
 
         auth.signOut();
     }
