@@ -109,9 +109,9 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
             if (message.getMessage().startsWith(OFFER)) {
                 // if the message is an offer:
                 messageContent = context.getString(R.string.you_made_an_offer) +
-                        message.getMessage().replace(OFFER, "") +
+                        context.getString(R.string.currency) +
                         " " +
-                        context.getString(R.string.currency);
+                        message.getMessage().replace(OFFER, "");
             } else {
                 messageContent = message.getMessage();
             }
@@ -161,9 +161,9 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
         void bind(ChatMessage message) {
             messageText.setText(
                     context.getString(R.string.purchase_offer) +
-                    message.getMessage().replace(OFFER, "") +
+                    context.getString(R.string.currency) +
                     " " +
-                    context.getString(R.string.currency));
+                    message.getMessage().replace(OFFER, ""));
             setHourMessage(timeText, message);
             setDateMessage(dateReceived, messages.indexOf(message));
             fetch(message.getSender()).addOnSuccessListener(result -> {
