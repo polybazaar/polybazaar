@@ -19,7 +19,10 @@ public class ChatMessage extends Model {
     private SimpleField<Timestamp> time = new SimpleField<>("time");
 
     public static final String COLLECTION = "chatMessages";
-    public static final String OFFER = "make_offer";
+    public static final String OFFER_MADE = "make_offer_";
+    public static final String OFFER_PROCESSED = "process_offer_";
+    public static final String OFFER_ACCEPTED = "acc";
+    public static final String OFFER_REFUSED = "ref";
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public ChatMessage(){

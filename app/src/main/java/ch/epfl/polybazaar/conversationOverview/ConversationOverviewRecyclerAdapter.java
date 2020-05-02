@@ -62,7 +62,7 @@ public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<Co
             }
         });
 
-        holder.otherUser.setText(String.format("Seller : %s", conversationOverview.getOtherUser()));
+        holder.otherUser.setText(String.format("Seller : %s", conversationOverview.getSeller()));
         holder.item.setTag(position);
     }
 

@@ -51,11 +51,11 @@ public class ConversationOverviewActivity extends AppCompatActivity {
         Task<List<ChatMessage>> messagesToTask = ChatMessage.fetchMessagesTo(userEmail).addOnSuccessListener(chatMessages -> messagesTo.addAll(chatMessages));
         Tasks.whenAll(messagesFromTask, messagesToTask).addOnSuccessListener(aVoid -> {
             for(ChatMessage message : messagesFrom){
-                conversationOverviews.add(new ConversationOverview(message.getReceiver(), message.getListingID()));
+                conversationOverviews.add(new ConversationOverview(message.getListingID()));
             }
 
             for(ChatMessage message : messagesTo){
-                conversationOverviews.add(new ConversationOverview(message.getSender(), message.getListingID()));
+                conversationOverviews.add(new ConversationOverview(message.getListingID()));
             }
 
             ArrayList<ConversationOverview> conversationOverviewsList = new ArrayList<>(conversationOverviews);
@@ -64,7 +64,7 @@ public class ConversationOverviewActivity extends AppCompatActivity {
                 int viewPosition = (int)view.getTag();
                 Intent intent = new Intent(ConversationOverviewActivity.this, ChatActivity.class);
                 intent.putExtra(ChatActivity.bundleListingId, conversationOverviewsList.get(viewPosition).getListingID());
-                intent.putExtra(ChatActivity.bundleReceiverEmail, conversationOverviewsList.get(viewPosition).getOtherUser());
+                intent.putExtra(ChatActivity.bundleReceiverEmail, conversationOverviewsList.get(viewPosition).getSeller());
                 startActivity(intent);
             });
 
