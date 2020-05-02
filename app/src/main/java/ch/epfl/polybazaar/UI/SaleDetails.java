@@ -105,14 +105,17 @@ public class SaleDetails extends AppCompatActivity {
     private void setupSellerContact() {
         runOnUiThread(() -> {
             contactSelButton.setOnClickListener(view -> {
-                Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
-
-                intent.putExtra(ChatActivity.bundleListingId, listingID);
-                intent.putExtra(ChatActivity.bundleReceiverEmail, listing.getUserEmail());
-                startActivity(intent);
+                if (AuthenticatorFactory.getDependency().getCurrentUser() == null) {
+                    Intent notSignedIn = new Intent(getApplicationContext(), NotSignedIn.class);
+                    startActivity(notSignedIn);
+                } else {
+                    Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
+                    intent.putExtra(ChatActivity.bundleListingId, listingID);
+                    intent.putExtra(ChatActivity.bundleReceiverEmail, listing.getUserEmail());
+                    startActivity(intent);
+                }
             });
         });
-
     }
 
     private void setupViewMP() {
@@ -292,7 +295,6 @@ public class SaleDetails extends AppCompatActivity {
                     }
                 } else {
                     contactSelButton.setVisibility(View.VISIBLE);
-                    contactSelButton.setClickable(false);
                     contactSelButton.setText(R.string.sign_in_to_contact);
                     ratingBar.setVisibility(View.INVISIBLE);
                     ratingBar.setClickable(false);
