@@ -86,7 +86,7 @@ public class ListingManager {
             TextView nbViewsTextView = activity.findViewById(R.id.nbViews);
 
             Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
-            if(authUser != null){
+            if(authUser != null) {
                 // logged in, general:
                 ratingBar.setVisibility(View.VISIBLE);
                 String sellerEmail = listing.getUserEmail();
@@ -117,7 +117,7 @@ public class ListingManager {
                 contactSelButton.setVisibility(View.VISIBLE);
                 contactSelButton.setText(R.string.sign_in_to_contact);
                 makeOfferButton.setVisibility(View.VISIBLE);
-                contactSelButton.setText(R.string.sign_in_to_make_offer);
+                makeOfferButton.setText(R.string.sign_in_to_make_offer);
                 buyNowButton.setVisibility(View.GONE);
                 ratingBar.setVisibility(View.INVISIBLE);
                 ratingBar.setClickable(false);
