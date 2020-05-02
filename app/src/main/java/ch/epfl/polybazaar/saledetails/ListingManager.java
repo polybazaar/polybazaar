@@ -116,8 +116,7 @@ public class ListingManager {
                 // not logged in:
                 contactSelButton.setVisibility(View.VISIBLE);
                 contactSelButton.setText(R.string.sign_in_to_contact);
-                makeOfferButton.setVisibility(View.VISIBLE);
-                makeOfferButton.setText(R.string.sign_in_to_make_offer);
+                makeOfferButton.setVisibility(View.GONE);
                 buyNowButton.setVisibility(View.GONE);
                 ratingBar.setVisibility(View.INVISIBLE);
                 ratingBar.setClickable(false);
