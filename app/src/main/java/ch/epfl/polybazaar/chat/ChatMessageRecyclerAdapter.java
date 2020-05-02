@@ -17,11 +17,14 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
+import static ch.epfl.polybazaar.chat.ChatMessage.OFFER;
 import static ch.epfl.polybazaar.user.User.fetch;
 
 public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
+    private static final int VIEW_TYPE_OFFER_SENT = 3;
+    private static final int VIEW_TYPE_OFFER_RECEIVED = 4;
     private static final String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     public static final int START_YEAR = 1900;
 
@@ -43,15 +46,18 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
             // If the current user is the sender of the message
             return VIEW_TYPE_MESSAGE_SENT;
         } else {
+            if (message.getMessage().startsWith(OFFER)) {
+                return VIEW_TYPE_OFFER_RECEIVED;
+            }
             // If some other user sent the message
             return VIEW_TYPE_MESSAGE_RECEIVED;
         }
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-
         if (viewType == VIEW_TYPE_MESSAGE_SENT) {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_message_sent, parent, false);
@@ -60,6 +66,10 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_message_received, parent, false);
             return new ReceivedMessageHolder(view);
+        } else if (viewType == VIEW_TYPE_OFFER_RECEIVED) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_offer_received, parent, false);
+            return new ReceivedOfferHolder(view);
         }
         return null;
     }
@@ -70,8 +80,10 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
 
         if(holder.getItemViewType() == VIEW_TYPE_MESSAGE_SENT) {
             ((SentMessageHolder) holder).bind(chatMessage);
-        } else {
+        } else if(holder.getItemViewType() == VIEW_TYPE_MESSAGE_RECEIVED) {
             ((ReceivedMessageHolder) holder).bind(chatMessage);
+        } else if(holder.getItemViewType() == VIEW_TYPE_OFFER_RECEIVED) {
+            ((ReceivedOfferHolder) holder).bind(chatMessage);
         }
     }
 
@@ -114,6 +126,30 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
         @SuppressLint("DefaultLocale")
         void bind(ChatMessage message) {
             messageText.setText(message.getMessage());
+            setHourMessage(timeText, message);
+            setDateMessage(dateReceived, messages.indexOf(message));
+            fetch(message.getSender()).addOnSuccessListener(result -> {
+                if(result != null) {
+                    nameText.setText(result.getNickName());
+                }
+            });
+        }
+    }
+
+    private class ReceivedOfferHolder extends RecyclerView.ViewHolder {
+        TextView messageText, timeText, nameText, dateReceived;
+
+        ReceivedOfferHolder(View itemView) {
+            super(itemView);
+            messageText = itemView.findViewById(R.id.text_message_body);
+            timeText = itemView.findViewById(R.id.text_message_time);
+            nameText = itemView.findViewById(R.id.text_message_name);
+            dateReceived = itemView.findViewById(R.id.date_received);
+        }
+
+        @SuppressLint({"DefaultLocale", "SetTextI18n"})
+        void bind(ChatMessage message) {
+            messageText.setText(R.string.purchase_offer + message.getMessage().replace(OFFER, "") + R.string.currency);
             setHourMessage(timeText, message);
             setDateMessage(dateReceived, messages.indexOf(message));
             fetch(message.getSender()).addOnSuccessListener(result -> {

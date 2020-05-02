@@ -126,4 +126,6 @@
     <string name="offer_invalid">Offer Invalid</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="offer_sent">Offer Sent</string>
+    <string name="purchase_offer">"Purchase offer for "</string>
 </resources>

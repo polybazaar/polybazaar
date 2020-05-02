@@ -29,6 +29,8 @@ import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.saledetails.ImageManager;
 import ch.epfl.polybazaar.saledetails.ListingManager;
 
+import static ch.epfl.polybazaar.UI.SubmitOffer.LISTING;
+import static ch.epfl.polybazaar.UI.SubmitOffer.sendOffer;
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
@@ -138,6 +140,7 @@ public class SaleDetails extends AppCompatActivity {
 
     public void makeOffer(View v) {
         Intent makeOfferIntent = new Intent(this.getApplicationContext(), SubmitOffer.class);
+        makeOfferIntent.putExtra(LISTING, listing);
         startActivity(makeOfferIntent);
     }
 
@@ -147,7 +150,7 @@ public class SaleDetails extends AppCompatActivity {
                 .setMessage("Do you want to submit an offer at " + listing.getPrice() + " " +
                         getResources().getString(R.string.currency) + "?")
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    // TODO send offer at price
+                    sendOffer(Double.parseDouble(listing.getPrice()), listing, SaleDetails.this);
                     dialog.dismiss();
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
