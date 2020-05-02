@@ -40,35 +40,34 @@
 
         <activity
             android:name=".utilities.ImageTaker"
-            android:noHistory="false"/>
-
+            android:noHistory="false" />
+        <activity
+            android:name=".UI.SubmitOffer"
+            android:noHistory="false"
+            android:label="@string/submit_offer"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".UI.SalesOverview"/>
         <activity
             android:name=".UI.NotSignedIn"
             android:label="Not Signed In"
-            android:parentActivityName=".UI.SalesOverview"/>
-
+            android:parentActivityName=".UI.SalesOverview" />
         <activity
             android:name=".map.MapsActivity"
             android:label="@string/title_activity_maps" />
-
         <activity
             android:name=".UI.UserProfile"
             android:label="@string/title_activity_user_profile"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="false"/>
-
+            android:noHistory="false"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".login.EmailVerificationActivity"
             android:label="Verify E-mail" />
-
         <activity
             android:name=".login.SignUpActivity"
             android:label="Sign Up" />
-
         <activity
             android:name=".login.SignInSuccessActivity"
             android:label="Sign In" />
-
         <activity
             android:name=".login.SignInActivity"
             android:label="Sign In" />
@@ -85,33 +84,26 @@
         <activity
             android:name=".UI.FillListing"
             android:label="Listing Editor"
-            android:noHistory="false"/>
-
+            android:noHistory="false" />
         <activity
             android:name=".UI.SalesOverview"
             android:label="Browse Listings"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".chat.ChatActivity"
             android:label="Chat"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".UI.SaleDetails"
             android:label="Details"
             android:parentActivityName=".UI.SalesOverview" />
-
-        <activity android:name=".MainActivity">
-
-        </activity>
-
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

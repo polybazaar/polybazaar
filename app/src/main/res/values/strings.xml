@@ -121,4 +121,7 @@
     <string name="make_an_offer">Make an offer</string>
     <string name="sign_in_to_make_offer">Sign in to make an offer</string>
     <string name="buy_now">Buy now</string>
+    <string name="accept_offer">Accept Offer</string>
+    <string name="submit_offer">Submit Offer</string>
+    <string name="offer_invalid">Offer Invalid</string>
 </resources>

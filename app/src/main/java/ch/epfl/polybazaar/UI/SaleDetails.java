@@ -1,11 +1,14 @@
 package ch.epfl.polybazaar.UI;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,13 +54,12 @@ public class SaleDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sale_details);
 
         imageManager = new ImageManager(this);
         listingManager = new ListingManager(this);
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
-
-        setContentView(R.layout.activity_sale_details);
 
         findViewById(R.id.ratingBar).setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -135,12 +137,8 @@ public class SaleDetails extends AppCompatActivity {
     }
 
     public void makeOffer(View v) {
-        if (AuthenticatorFactory.getDependency().getCurrentUser() == null) {
-            Intent notSignedIn = new Intent(getApplicationContext(), NotSignedIn.class);
-            startActivity(notSignedIn);
-        } else {
-            // TODO : implement
-        }
+        Intent makeOfferIntent = new Intent(this.getApplicationContext(), SubmitOffer.class);
+        startActivity(makeOfferIntent);
     }
 
     public void buyNow(View view) {
