@@ -171,7 +171,7 @@ public class SaleDetailsTest {
         activityRule.launchActivity(intent);
 
         runOnUiThread(() -> {
-            activityRule.getActivity().applyFavorite(null);
+            activityRule.getActivity().applyFavorite(listing);
             assertNotEquals(0f, (((RatingBar)activityRule.getActivity().findViewById(R.id.ratingBar)).getRating()));
         });
     }
