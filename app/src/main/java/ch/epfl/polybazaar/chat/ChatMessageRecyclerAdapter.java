@@ -105,7 +105,17 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
 
         @SuppressLint("DefaultLocale")
         void bind(ChatMessage message) {
-            messageText.setText(message.getMessage());
+            String messageContent;
+            if (message.getMessage().startsWith(OFFER)) {
+                // if the message is an offer:
+                messageContent = context.getString(R.string.you_made_an_offer) +
+                        message.getMessage().replace(OFFER, "") +
+                        " " +
+                        context.getString(R.string.currency);
+            } else {
+                messageContent = message.getMessage();
+            }
+            messageText.setText(messageContent);
             setHourMessage(timeText, message);
             setDateMessage(dateSent, messages.indexOf(message));
         }
@@ -149,7 +159,11 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
 
         @SuppressLint({"DefaultLocale", "SetTextI18n"})
         void bind(ChatMessage message) {
-            messageText.setText(R.string.purchase_offer + message.getMessage().replace(OFFER, "") + R.string.currency);
+            messageText.setText(
+                    context.getString(R.string.purchase_offer) +
+                    message.getMessage().replace(OFFER, "") +
+                    " " +
+                    context.getString(R.string.currency));
             setHourMessage(timeText, message);
             setDateMessage(dateReceived, messages.indexOf(message));
             fetch(message.getSender()).addOnSuccessListener(result -> {

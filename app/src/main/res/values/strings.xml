@@ -128,4 +128,5 @@
     <string name="no">No</string>
     <string name="offer_sent">Offer Sent</string>
     <string name="purchase_offer">"Purchase offer for "</string>
+    <string name="you_made_an_offer">"You made an offer for "</string>
 </resources>
