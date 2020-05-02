@@ -61,8 +61,6 @@ public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<Co
                 holder.thumbnail.setImageBitmap(convertStringToBitmap(result.getStringThumbnail()));
             }
         });
-
-        holder.otherUser.setText(String.format("Seller : %s", conversationOverview.getSeller()));
         holder.item.setTag(position);
     }
 
@@ -80,7 +78,6 @@ public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<Co
             super(itemView);
             thumbnail = itemView.findViewById(R.id.liteListingThumbnail);
             title = itemView.findViewById(R.id.title_conversation);
-            otherUser = itemView.findViewById(R.id.seller_email);
             item = itemView.findViewById(R.id.conversationItem);
 
             item.setOnClickListener(v -> {

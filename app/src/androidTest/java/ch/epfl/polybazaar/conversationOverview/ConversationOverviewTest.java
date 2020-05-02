@@ -20,7 +20,7 @@ public class ConversationOverviewTest {
     @Test
     public void testGetterSetter() {
         ConversationOverview con = new ConversationOverview(otherUser, listingId);
-        assertEquals(otherUser, con.getSeller());
+        assertEquals(otherUser, con.getOtherUser());
         assertEquals(listingId, con.getListingID());
     }
 

@@ -1,22 +1,20 @@
 package ch.epfl.polybazaar.conversationOverview;
 
-import ch.epfl.polybazaar.listing.Listing;
-
 public class ConversationOverview {
-    private Listing listing;
+    private String otherUser;
+    private String listingID;
     
-    ConversationOverview(String listingID){
-        Listing.fetch(listingID).addOnSuccessListener(listing -> {
-            this.listing = listing;
-        });
+    ConversationOverview(String otherUser, String listingName){
+        this.otherUser = otherUser;
+        this.listingID = listingName;
     }
 
-    String getSeller(){
-        return listing.getUserEmail();
+    String getOtherUser(){
+        return otherUser;
     }
 
     String getListingID(){
-        return listing.getId();
+        return listingID;
     }
 
     @Override
@@ -28,12 +26,12 @@ public class ConversationOverview {
         if (getClass() != other.getClass())
             return false;
         ConversationOverview conv = (ConversationOverview) other;
-        return listing.getUserEmail().equals(conv.listing.getUserEmail()) && listing.getId().equals(conv.listing.getId());
+        return otherUser.equals(conv.otherUser) && listingID.equals(conv.listingID);
     }
 
     @Override
     public int hashCode() {
-        return listing.getUserEmail().hashCode() + listing.getId().hashCode();
+        return listingID.hashCode() + otherUser.hashCode();
     }
 
 }
