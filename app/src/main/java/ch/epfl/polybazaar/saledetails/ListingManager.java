@@ -79,12 +79,15 @@ public class ListingManager {
 
             // Enable logged in features
             Button contactSelButton = activity.findViewById(R.id.contactSel);
+            Button makeOfferButton = activity.findViewById(R.id.makeOffer);
+            Button buyNowButton = activity.findViewById(R.id.buyNow);
             RatingBar ratingBar = activity.findViewById(R.id.ratingBar);
             TextView viewsTextView = activity.findViewById(R.id.viewsLabel);
             TextView nbViewsTextView = activity.findViewById(R.id.nbViews);
 
             Account authUser = AuthenticatorFactory.getDependency().getCurrentUser();
             if(authUser != null){
+                // logged in, general:
                 ratingBar.setVisibility(View.VISIBLE);
                 String sellerEmail = listing.getUserEmail();
                 authUser.getUserData().addOnSuccessListener(user -> {
@@ -94,18 +97,28 @@ public class ListingManager {
                     }
                 });
                 if(authUser.getEmail().equals(sellerEmail)){
+                    // logged in and own listing:
                     activity.findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
                     contactSelButton.setVisibility(View.GONE);
+                    buyNowButton.setVisibility(View.GONE);
+                    makeOfferButton.setVisibility(View.GONE);
                     activity.setupNbViews(listing);
                 } else{
+                    //logged in, but not own listing:
                     contactSelButton.setVisibility(View.VISIBLE);
+                    makeOfferButton.setVisibility(View.VISIBLE);
+                    buyNowButton.setVisibility(View.VISIBLE);
                     activity.findViewById(R.id.editButtonsLayout).setVisibility(View.GONE);
                     viewsTextView.setVisibility(View.GONE);
                     nbViewsTextView.setVisibility(View.GONE);
                 }
             } else {
+                // not logged in:
                 contactSelButton.setVisibility(View.VISIBLE);
                 contactSelButton.setText(R.string.sign_in_to_contact);
+                makeOfferButton.setVisibility(View.VISIBLE);
+                contactSelButton.setText(R.string.sign_in_to_make_offer);
+                buyNowButton.setVisibility(View.GONE);
                 ratingBar.setVisibility(View.INVISIBLE);
                 ratingBar.setClickable(false);
                 viewsTextView.setVisibility(View.GONE);

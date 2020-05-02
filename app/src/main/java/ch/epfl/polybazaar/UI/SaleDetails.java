@@ -135,16 +135,16 @@ public class SaleDetails extends AppCompatActivity {
     }
 
     public void makeOffer(View v) {
-        // TODO : implement
         if (AuthenticatorFactory.getDependency().getCurrentUser() == null) {
             Intent notSignedIn = new Intent(getApplicationContext(), NotSignedIn.class);
             startActivity(notSignedIn);
         } else {
-            Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
-            intent.putExtra(ChatActivity.bundleListingId, listingID);
-            intent.putExtra(ChatActivity.bundleReceiverEmail, listing.getUserEmail());
-            startActivity(intent);
+            // TODO : implement
         }
+    }
+
+    public void buyNow(View view) {
+        // TODO : implement
     }
 
     public void viewMP(View v) {

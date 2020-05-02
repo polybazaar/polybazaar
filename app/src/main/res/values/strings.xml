@@ -119,4 +119,6 @@
     <string name="information">Information</string>sign_in_to_contact
     <string name="sign_in_to_contact">Sign In To Contact Seller</string>
     <string name="make_an_offer">Make an offer</string>
+    <string name="sign_in_to_make_offer">Sign in to make an offer</string>
+    <string name="buy_now">Buy now</string>
 </resources>
