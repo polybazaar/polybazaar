@@ -142,7 +142,16 @@ public class SaleDetails extends AppCompatActivity {
     }
 
     public void buyNow(View view) {
-        // TODO : implement
+        AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetails.this);
+        builder.setTitle(R.string.buy_now)
+                .setMessage("Do you want to submit an offer at " + listing.getPrice() + " " +
+                        getResources().getString(R.string.currency) + "?")
+                .setPositiveButton(R.string.yes, (dialog, id) -> {
+                    // TODO send offer at price
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
+        builder.create().show();
     }
 
     public void viewMP(View v) {
@@ -159,8 +168,8 @@ public class SaleDetails extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetails.this);
         builder.setTitle("Delete this listing")
                 .setMessage("You are about to delete this listing. Are you sure you want to continue?")
-                .setPositiveButton("Yes", (dialog, id) -> listingManager.deleteCurrentListing(listingID, listImageID))
-                .setNegativeButton("No", (dialog, id) -> dialog.cancel());
+                .setPositiveButton(R.string.yes, (dialog, id) -> listingManager.deleteCurrentListing(listingID, listImageID))
+                .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
         builder.create().show();
     }
 

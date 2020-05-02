@@ -135,9 +135,9 @@
                 android:layout_marginTop="@dimen/saleDetails_inter_space_small"
                 android:text="@string/buy_now"
                 android:visibility="invisible"
-                android:onClick="buyNow"
                 android:background="@drawable/rounded_corner_button_colored"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:onClick="buyNow"/>
 
             <LinearLayout
                 android:id="@+id/descriptionLayout"

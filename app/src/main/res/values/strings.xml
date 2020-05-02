@@ -124,4 +124,6 @@
     <string name="accept_offer">Accept Offer</string>
     <string name="submit_offer">Submit Offer</string>
     <string name="offer_invalid">Offer Invalid</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
