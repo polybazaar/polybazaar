@@ -1,9 +1,7 @@
 package ch.epfl.polybazaar.filllisting;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -12,15 +10,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
@@ -32,10 +27,7 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.scaleBitmap;
 import static java.util.UUID.randomUUID;
 
 public class ListingManager {
@@ -45,9 +37,9 @@ public class ListingManager {
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
-    private Activity activity;
+    private FillListing activity;
 
-    public ListingManager(Activity activity) {
+    public ListingManager(FillListing activity) {
         this.activity = activity;
         if (activity != null) {
             titleSelector = activity.findViewById(R.id.titleSelector);
