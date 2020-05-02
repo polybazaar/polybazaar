@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,13 +18,13 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
+import static ch.epfl.polybazaar.UI.SubmitOffer.acceptOffer;
 import static ch.epfl.polybazaar.chat.ChatMessage.OFFER;
 import static ch.epfl.polybazaar.user.User.fetch;
 
 public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
-    private static final int VIEW_TYPE_OFFER_SENT = 3;
     private static final int VIEW_TYPE_OFFER_RECEIVED = 4;
     private static final String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     public static final int START_YEAR = 1900;
@@ -148,6 +149,7 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
 
     private class ReceivedOfferHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText, nameText, dateReceived;
+        Button acceptOffer, refuseOffer;
 
         ReceivedOfferHolder(View itemView) {
             super(itemView);
@@ -155,6 +157,8 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
             timeText = itemView.findViewById(R.id.text_message_time);
             nameText = itemView.findViewById(R.id.text_message_name);
             dateReceived = itemView.findViewById(R.id.date_received);
+            acceptOffer = itemView.findViewById(R.id.accept_offer_button);
+            refuseOffer = itemView.findViewById(R.id.refuse_offer_button);
         }
 
         @SuppressLint({"DefaultLocale", "SetTextI18n"})
@@ -170,6 +174,18 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
                 if(result != null) {
                     nameText.setText(result.getNickName());
                 }
+            });
+            acceptOffer.setOnClickListener(v -> {
+                // TODO : implement
+                double offer = Double.parseDouble(message.getMessage().replace(OFFER, ""));
+                acceptOffer(offer, message);
+                acceptOffer.setVisibility(View.GONE);
+                refuseOffer.setVisibility(View.GONE);
+            });
+            refuseOffer.setOnClickListener(v -> {
+                // TODO : implement
+                acceptOffer.setVisibility(View.GONE);
+                refuseOffer.setVisibility(View.GONE);
             });
         }
     }
