@@ -212,4 +212,18 @@ public class SaleDetails extends AppCompatActivity {
         ((TextView)findViewById(R.id.nbViews)).setText(Long.toString(listing.getViews()+viewIncrement));
     }
 
+    /**
+     * ==============================================================
+     * For Testing Only :
+     * ==============================================================
+     */
+
+    public void applyFillWithListing(Listing listing) {
+        listingManager.fillWithListing(listing);
+    }
+
+    public void applyFavorite(Listing listing) {
+        listingManager.favorite(listing);
+    }
+
 }
