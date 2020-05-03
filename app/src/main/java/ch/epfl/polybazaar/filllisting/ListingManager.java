@@ -186,21 +186,21 @@ public class ListingManager {
             Map<String, Object> listingUpdated = new HashMap<>();
             Map<String, Object> liteListingUpdated = new HashMap<>();
             Listing.fetch(listingID).addOnSuccessListener(listing -> {
-                if(!listing.getTitle().equals(titleSelector.getText())){
+                if(!listing.getTitle().contentEquals(titleSelector.getText())){
                     listingUpdated.put(TITLE, titleSelector.getText().toString());
                     liteListingUpdated.put(TITLE, titleSelector.getText().toString());
                 }
 
-                if(!listing.getPrice().equals(priceSelector.getText())){
+                if(!listing.getPrice().contentEquals(priceSelector.getText())){
                     listingUpdated.put(PRICE, priceSelector.getText().toString());
                     if (!listing.getListingActive()) {
-                        liteListingUpdated.put(PRICE, R.string.sold);
+                        liteListingUpdated.put(PRICE, LiteListing.SOLD);
                     } else {
                         liteListingUpdated.put(PRICE, priceSelector.getText().toString());
                     }
                 }
 
-                if(!listing.getDescription().equals(descriptionSelector.getText())){
+                if(!listing.getDescription().contentEquals(descriptionSelector.getText())){
                     listingUpdated.put(DESCRIPTION, descriptionSelector.getText().toString());
                 }
 

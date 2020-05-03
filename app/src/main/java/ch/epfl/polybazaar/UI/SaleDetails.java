@@ -98,7 +98,7 @@ public class SaleDetails extends AppCompatActivity {
             listing = result;
             this.listingID = listingID;
             retrieveImages(listingID);
-            listingManager.fillWithListing(result);
+            listingManager.fillWithListing(listing);
         });
     }
 

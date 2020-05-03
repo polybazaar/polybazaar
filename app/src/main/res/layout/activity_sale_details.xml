@@ -282,22 +282,23 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/saleDetails_inter_space_extra_large" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:layout_marginBottom="@dimen/saleDetails_inter_space_extra_large"
                 android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5" />
 
                 <TextView
                     android:id="@+id/viewsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/saleDetails_inter_space_large"
-                    android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
                     android:text="@string/views"
                     android:textColor="@android:color/secondary_text_light"
                     android:textSize="@dimen/large_textView_text_size"
@@ -308,12 +309,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/saleDetails_inter_space_large"
-                    android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
-                    android:layout_weight="1"
+                    android:layout_marginStart="3dp"
                     android:textColor="@android:color/secondary_text_light"
+                    android:text="@string/zero"
                     android:textSize="@dimen/large_textView_text_size"
                     android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5" />
+
             </LinearLayout>
 
         </LinearLayout>
