@@ -136,8 +136,11 @@ public class Listing extends Model implements Serializable {
     }
 
     public Boolean getListingActive() {
-        return false;
-       // return listingActive.get();
+        // TODO : fix
+        if (listingActive.get() == null) {
+            return true;
+        }
+        return listingActive.get();
     }
 
     @Override
