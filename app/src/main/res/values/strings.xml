@@ -132,4 +132,5 @@
     <string name="refuse_offer">Refuse Offer</string>
     <string name="offer_accepted">This offer was accepted</string>
     <string name="offer_for">"Offer for CHF "</string>
+    <string name="sold">SOLD</string>
 </resources>

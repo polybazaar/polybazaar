@@ -16,13 +16,22 @@ import ch.epfl.polybazaar.listing.Listing;
  * If you attributes of this class, also change its CallbackAdapter and Utilities
  */
 public class LiteListing extends Model {
-    private final SimpleField<String> listingID = new SimpleField<>("listingID");
-    private final SimpleField<String> title = new SimpleField<>("title");
-    private final SimpleField<String> price = new SimpleField<>("price");
-    private final SimpleField<String> category = new SimpleField<>("category");
-    private final SimpleField<String> stringThumbnail = new SimpleField<>("stringThumbnail");
-    private final SimpleField<Timestamp> timestamp = new SimpleField<>("timestamp");
+    public static final String LISTING_ID = "listingID";
+    public static final String TITLE = "title";
+    public static final String PRICE = "price";
+    public static final String CATEGORY = "category";
+    public static final String STRING_THUMBNAIL = "stringThumbnail";
+    public static final String TIMESTAMP = "timestamp";
+    public static final String NO_THUMBNAIL = "NoThumbnail";
 
+    private final SimpleField<String> listingID = new SimpleField<>(LISTING_ID);
+    private final SimpleField<String> title = new SimpleField<>(TITLE);
+    private final SimpleField<String> price = new SimpleField<>(PRICE);
+    private final SimpleField<String> category = new SimpleField<>(CATEGORY);
+    private final SimpleField<String> stringThumbnail = new SimpleField<>(STRING_THUMBNAIL);
+    private final SimpleField<Timestamp> timestamp = new SimpleField<>(TIMESTAMP);
+
+    public static final String SOLD = "SOLD";
     public static final String COLLECTION = "liteListings";
 
     // no-argument constructor so that instances can be created by ModelTransaction
@@ -41,7 +50,7 @@ public class LiteListing extends Model {
     }
 
     public LiteListing(String listingID, String title, String price, String category) {
-        this(listingID, title, price, category, "");
+        this(listingID, title, price, category, NO_THUMBNAIL);
     }
 
     public String getTitle() {

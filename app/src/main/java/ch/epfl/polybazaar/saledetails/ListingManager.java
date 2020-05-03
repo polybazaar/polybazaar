@@ -63,7 +63,11 @@ public class ListingManager {
 
             //Set the price
             TextView price_txt = activity.findViewById(R.id.price);
-            price_txt.setText(String.format("CHF %s", listing.getPrice()));
+            if (listing.getPrice().equals(Listing.SOLD)) {
+                price_txt.setText(R.string.sold);
+            } else {
+                price_txt.setText(String.format("CHF %s", listing.getPrice()));
+            }
 
             // Set seller information
             ImageView sellerPicture  = activity.findViewById(R.id.sellerProfilePicture);
@@ -106,8 +110,13 @@ public class ListingManager {
                 } else{
                     //logged in, but not own listing:
                     contactSelButton.setVisibility(View.VISIBLE);
-                    makeOfferButton.setVisibility(View.VISIBLE);
-                    buyNowButton.setVisibility(View.VISIBLE);
+                    if (listing.getListingActive()) {
+                        makeOfferButton.setVisibility(View.VISIBLE);
+                        buyNowButton.setVisibility(View.VISIBLE);
+                    } else {
+                        makeOfferButton.setVisibility(View.GONE);
+                        buyNowButton.setVisibility(View.GONE);
+                    }
                     activity.findViewById(R.id.editButtonsLayout).setVisibility(View.GONE);
                     viewsTextView.setVisibility(View.GONE);
                     nbViewsTextView.setVisibility(View.GONE);

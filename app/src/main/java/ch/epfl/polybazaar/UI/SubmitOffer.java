@@ -11,22 +11,23 @@ import android.widget.Toast;
 import com.google.firebase.Timestamp;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.chat.ChatMessage;
 import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
 import static ch.epfl.polybazaar.chat.ChatMessage.OFFER_ACCEPTED;
 import static ch.epfl.polybazaar.chat.ChatMessage.OFFER_PROCESSED;
+import static ch.epfl.polybazaar.listing.Listing.SOLD;
 import static java.util.UUID.randomUUID;
 
 public class SubmitOffer extends AppCompatActivity {
 
     public static final String LISTING = "LISTING";
-    public static final String OFFER_MESSAGE_START = "Offer of CHF ";
-    public static final String OFFER_ACCEPTED_MESSAGE_END = " accepted";
-    public static final String OFFER_REFUSED_MESSAGE_END = " refused";
     private EditText inputOffer;
     private Listing listing;
 
@@ -87,6 +88,13 @@ public class SubmitOffer extends AppCompatActivity {
         final String newMessageID = randomUUID().toString();
         message.setId(newMessageID);
         message.save().addOnSuccessListener(aVoid -> receivedOfferMessage.delete());
-        // TODO : disable offer making and put sold banner
+        // disable offer making and put sold banner
+        if (offerStatus.equals(OFFER_ACCEPTED)) {
+            Listing.updateField(Listing.LISTING_ACTIVE, message.getListingID(), false);
+            Listing.updateField(Listing.PRICE, message.getListingID(), Listing.SOLD);
+            Map<String, Object> map =new HashMap<>();
+            map.put(LiteListing.PRICE, LiteListing.SOLD);
+            LiteListing.updateMultipleFields(message.getListingID(), map);
+        }
     }
 }

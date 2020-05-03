@@ -11,12 +11,19 @@ import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.database.SimpleField;
 
 public class ChatMessage extends Model {
-    private SimpleField<String> id = new SimpleField<>("id");
-    private SimpleField<String> sender = new SimpleField<>("sender");
-    private SimpleField<String> receiver = new SimpleField<>("receiver");
-    private SimpleField<String> listingID = new SimpleField<>("listingID");
-    private SimpleField<String> message = new SimpleField<>("message");
-    private SimpleField<Timestamp> time = new SimpleField<>("time");
+    public static final String ID = "id";
+    public static final String SENDER = "sender";
+    public static final String RECEIVER = "receiver";
+    public static final String LISTING_ID = "listingID";
+    public static final String MESSAGE = "message";
+    public static final String TIME = "time";
+
+    private SimpleField<String> id = new SimpleField<>(ID);
+    private SimpleField<String> sender = new SimpleField<>(SENDER);
+    private SimpleField<String> receiver = new SimpleField<>(RECEIVER);
+    private SimpleField<String> listingID = new SimpleField<>(LISTING_ID);
+    private SimpleField<String> message = new SimpleField<>(MESSAGE);
+    private SimpleField<Timestamp> time = new SimpleField<>(TIME);
 
     public static final String COLLECTION = "chatMessages";
     public static final String OFFER_MADE = "make_offer_";
