@@ -56,7 +56,7 @@ public class Listing extends Model implements Serializable {
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public Listing() {
-        registerFields(id, title, description, price, userEmail, stringImage, category, latitude, longitude, views, haveSeenUsers);
+        registerFields(id, title, description, price, userEmail, stringImage, category, latitude, longitude, views, haveSeenUsers, listingActive);
     }
 
     /**
@@ -136,7 +136,6 @@ public class Listing extends Model implements Serializable {
     }
 
     public Boolean getListingActive() {
-        // TODO : fix
         if (listingActive.get() == null) {
             return true;
         }
