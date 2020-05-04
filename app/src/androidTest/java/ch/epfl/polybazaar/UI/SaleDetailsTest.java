@@ -1,7 +1,6 @@
-package ch.epfl.polybazaar;
+package ch.epfl.polybazaar.UI;
 
 import android.content.Intent;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -10,7 +9,6 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
@@ -21,16 +19,13 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
-import ch.epfl.polybazaar.UI.FillListing;
-import ch.epfl.polybazaar.UI.SaleDetails;
-import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.LoginTest;
 import ch.epfl.polybazaar.login.MockAuthenticator;
-import ch.epfl.polybazaar.testingUtilities.DatabaseChecksUtilities;
 import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
 import ch.epfl.polybazaar.user.User;
 
@@ -44,7 +39,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.polybazaar.FillListingTest.expectedGalleryIntent;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToString;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertDrawableToBitmap;
@@ -52,7 +46,6 @@ import static java.util.UUID.randomUUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class SaleDetailsTest {
