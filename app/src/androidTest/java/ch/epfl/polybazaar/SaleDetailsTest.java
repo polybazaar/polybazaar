@@ -252,7 +252,7 @@ public class SaleDetailsTest {
         intent.putExtra("listingID", id);
         activityRule.launchActivity(intent);
 
-        onView(withId(R.id.contactSel)).perform(click());
+        onView(withId(R.id.contactSel)).perform(scrollTo(), click());
 
         //wait for Chat activity
         //Thread.sleep(1000);
