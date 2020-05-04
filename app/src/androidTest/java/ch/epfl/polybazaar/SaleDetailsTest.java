@@ -254,9 +254,6 @@ public class SaleDetailsTest {
 
         onView(withId(R.id.contactSel)).perform(scrollTo(), click());
 
-        //wait for Chat activity
-        //Thread.sleep(1000);
-
         onView(withText(message)).check(matches(isDisplayed()));
     }
 
@@ -304,6 +301,28 @@ public class SaleDetailsTest {
         onView(withId(R.id.editButton)).perform(scrollTo(), click());
         intended(hasComponent(FillListing.class.getName()));
         Intents.release();
+    }
+
+    @Test
+    public void testRemoveFromFavorite() throws Throwable {
+        MockAuthenticator auth = MockAuthenticator.getInstance();
+        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+
+        String id = "listingID";
+        Listing listing = new Listing("Title", "Description", "0", MockAuthenticator.TEST_USER_EMAIL, "");
+        listing.setId(id);
+        Tasks.await(listing.save());
+
+        Tasks.await(auth.getCurrentUser().getUserData().addOnSuccessListener(user -> user.addFavorite(listing)));
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+        activityRule.launchActivity(intent);
+
+        onView(withId(R.id.ratingBar)).perform(scrollTo(), click());
+
+        auth.getCurrentUser().getUserData().addOnSuccessListener(user -> {
+            assertFalse(user.getFavorites().contains(listing.getId()));
+        });
     }
 }
 
