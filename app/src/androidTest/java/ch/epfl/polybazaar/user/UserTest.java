@@ -5,13 +5,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
-import ch.epfl.polybazaar.user.User;
-
-import static ch.epfl.polybazaar.Utilities.*;
-
+import static ch.epfl.polybazaar.Utilities.isValidUser;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class UserTest {
@@ -49,5 +45,4 @@ public class UserTest {
         User user = new User("no1ody",  "me.help@efl.ch");
         assertThat(isValidUser(user), is(true));
     }
-
 }

@@ -6,8 +6,12 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.UI.bottomBar;
 
 public class SignInSuccessActivity extends AppCompatActivity {
     private Authenticator authenticator;
@@ -19,13 +23,17 @@ public class SignInSuccessActivity extends AppCompatActivity {
 
         authenticator = AuthenticatorFactory.getDependency();
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(),SignInSuccessActivity.this));
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        AppUser currentUser = authenticator.getCurrentUser();
+        Account currentUser = authenticator.getCurrentUser();
 
         if (currentUser != null && !currentUser.isEmailVerified()) {
             Intent intent = new Intent(getApplicationContext(), EmailVerificationActivity.class);
@@ -49,7 +57,7 @@ public class SignInSuccessActivity extends AppCompatActivity {
      * @param view view that triggers the action
      */
     public void toMain(View view) {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SalesOverview.class);
         startActivity(intent);
     }
 }

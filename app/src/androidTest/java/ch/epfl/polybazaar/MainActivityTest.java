@@ -7,6 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.login.SignInActivity;
@@ -46,18 +47,8 @@ public class MainActivityTest{
     @Test
     public void authenticatedUsersCanEnterFillListing() {
         signInAndBack();
-        onView(withId(R.id.addListing)).perform(click());
-        hasComponent(FillListingActivity.class.getName());
-    }
-
-    @Test
-    public void authenticatedUsersCanSignOut() {
-        signInAndBack();
-        onView(withText(R.string.sign_out)).check(matches(isDisplayed()));
-
-        onView(withId(R.id.authenticationButton)).perform(click());
-
-        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
+        onView(withId(R.id.action_add_item)).perform(click());
+        hasComponent(FillListing.class.getName());
     }
 
     @Test

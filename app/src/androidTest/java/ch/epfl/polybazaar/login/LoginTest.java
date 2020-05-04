@@ -6,9 +6,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.R;
 
@@ -27,9 +29,9 @@ import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest {
-    String EMAIL = "otheruser.test@epfl.ch";
-    String NICKNAME = "otheruser";
-    String PASSWORD = "abcdef";
+    public static final String EMAIL = "otheruser.test@epfl.ch";
+    public static final String NICKNAME = "otheruser";
+    public static final String PASSWORD = "abcdef";
 
     @Rule
     public final ActivityTestRule<SignInActivity> mActivityRule =

@@ -2,9 +2,10 @@
 
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -17,28 +18,62 @@ android:orientation="vertical" >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom|end"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_gravity="start|center_horizontal"
+        android:layout_marginStart="@dimen/map_margin"
+        android:layout_marginTop="@dimen/map_margin"
+        android:layout_marginBottom="@dimen/map_margin"
+        android:layout_marginEnd="@dimen/map_margin">
 
-        <ImageView
-            android:id="@+id/imgMyLocation"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:contentDescription="@string/my_location"
-            android:scaleType="fitXY"
-            android:src="@drawable/my_location" />
 
-        <Button
-            android:id="@+id/confirmMP"
-            android:layout_width="0dp"
+        <TableRow
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="100dp"
-            android:layout_weight="1"
-            android:text="@string/confirmMP" />
+            android:layout_gravity="bottom">
+
+            <ImageView
+                android:id="@+id/imgMyLocation"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom|start"
+                android:contentDescription="@string/my_location"
+                android:scaleType="fitXY"
+                android:src="@drawable/my_location" />
+
+            <Space
+                android:layout_width="@dimen/offset"
+                android:layout_height="wrap_content"
+                />
+
+            <Button
+                android:id="@+id/confirmMP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/button_shadow_margin"
+                android:layout_marginBottom="@dimen/button_shadow_margin"
+                android:background="@drawable/rounded_corner_button_colored"
+                android:text="@string/confirm_MP"
+                android:textSize="@dimen/default_button_text_size"
+                android:textColor="@color/white"/>
+
+            <Space
+                android:layout_width="@dimen/offset"
+                android:layout_height="wrap_content"
+                />
+
+            <Button
+                android:id="@+id/removeMP"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/button_shadow_margin"
+                android:layout_marginBottom="@dimen/button_shadow_margin"
+                android:background="@drawable/rounded_corner_button_colored"
+                android:text="@string/remove_meeting_point"
+                android:textSize="@dimen/default_button_text_size"
+                android:textColor="@color/white"/>
+        </TableRow>
 
     </LinearLayout>
 

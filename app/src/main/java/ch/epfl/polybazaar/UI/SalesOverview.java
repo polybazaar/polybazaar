@@ -1,60 +1,59 @@
 package ch.epfl.polybazaar.UI;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
+import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.SaleDetails;
-import ch.epfl.polybazaar.category.Category;
-import ch.epfl.polybazaar.category.CategoryRepository;
-import ch.epfl.polybazaar.category.RootCategory;
-import ch.epfl.polybazaar.database.callback.LiteListingCallback;
 import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.litelisting.LiteListingDatabase;
+import ch.epfl.polybazaar.login.Account;
 
-
-import static ch.epfl.polybazaar.litelisting.LiteListingDatabase.fetchLiteListing;
+import static ch.epfl.polybazaar.Utilities.checkUserLoggedIn;
+import static ch.epfl.polybazaar.Utilities.getUser;
 
 public class SalesOverview extends AppCompatActivity {
 
-    // TODO: add tests for error cases (ex empty list on database)
-
+    private static final int EXTRALOAD = 20;
+    private static final int NUMBEROFCOLUMNS = 2;
+    private static final String bundleKey = "userSavedListings";
+    private Map<Timestamp, String> listingTimeMap;
+    public static final String LISTING_ID = "listingID";
     private List<String> IDList;
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
-    private static final int EXTRALOAD = 20;
     private int positionInIDList = 0;
-    private Spinner categorySelector;
-    private Category currentCategory = new RootCategory();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_overview2);
 
+        listingTimeMap = new TreeMap<>(Collections.reverseOrder());    // store LiteListing IDs in reverse order of creation (most recent first)
         IDList = new ArrayList<>();
         liteListingList = new ArrayList<>();
 
-        //setup the categories list
-        categorySelector = findViewById(R.id.categorySelector);
-        List<Category> categories = new ArrayList<>(CategoryRepository.getCategories());
-        categories.add(0,new RootCategory());
-        setupSpinner(categorySelector,categories);
-
         // Lookup the recyclerview in activity layout
         RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
-        
+
         // Create adapter passing in the sample LiteListing data
         adapter = new LiteListingAdapter(liteListingList);
 
@@ -62,21 +61,18 @@ public class SalesOverview extends AppCompatActivity {
             int viewID = view.getId();
             String listingID = adapter.getListingID(viewID);
             Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-            intent.putExtra("listingID", listingID);
+            intent.putExtra(LISTING_ID, listingID);
             startActivity(intent);
         });
 
         // Attach the adapter to the recyclerview to populate items
         rvLiteListings.setAdapter(adapter);
         // Set layout manager to position the items
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rvLiteListings.setLayoutManager(linearLayoutManager);
-
-        //no need load the lite listings now as the default item (RootCategory) in the category spinner
-        // is selected at the creation of the activity
+        LinearLayoutManager mGridLayoutManager = new GridLayoutManager(this, NUMBEROFCOLUMNS);
+        rvLiteListings.setLayoutManager(mGridLayoutManager);
 
         // Triggered only when new data needs to be appended to the list
-        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(mGridLayoutManager) {
             @Override
             public void onLoadMore() {
                 // Triggered only when new data needs to be appended to the list
@@ -85,6 +81,44 @@ public class SalesOverview extends AppCompatActivity {
         };
         // Adds the scroll listener to RecyclerView
         rvLiteListings.addOnScrollListener(scrollListener);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SalesOverview.this));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // prepare top menu
+        TextView favorites = findViewById(R.id.favoritesOverview);
+        favorites.setOnClickListener(v -> {
+            if (checkUserLoggedIn(this)) {
+                Account user = getUser();
+                user.getUserData().addOnSuccessListener(authUser -> {
+                    ArrayList<String> favoritesIds = authUser.getFavorites();
+                    // the list of favorites of the user is empty
+                    if (favoritesIds == null || favoritesIds.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), R.string.no_favorites, Toast.LENGTH_SHORT).show() ;
+                        // we relaunch the activity with the list of favorites in the bundle
+                    } else {
+                        displaySavedListings(this, favoritesIds);
+                    }
+                });
+            }
+        });
+
+        // activity is launched with a list of litelistings
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            if(bundle.getBoolean(bundleKey)) {
+                IDList = DataHolder.getInstance().getData();
+            }
+        }
+
+        // Initial load
+        loadLiteListingOverview();
     }
 
 
@@ -92,112 +126,59 @@ public class SalesOverview extends AppCompatActivity {
      * Create a graphical overview of LiteListings from database
      */
     public void loadLiteListingOverview() {
-
-        if(!currentCategory.equals(new RootCategory())){
-            loadLiteListingsFromCategory();
-        }else{
-            loadAllLiteListings();
-        }
-
+        LiteListing.fetchAll().addOnSuccessListener(result -> {
+            if(result == null) {
+                return;
+            }
+            if(IDList.isEmpty()) {
+                for (LiteListing l : result) {
+                    if (l != null) {
+                        if(l.getTimestamp() != null) { // TODO: delete before merge
+                            listingTimeMap.put(l.getTimestamp(), l.getId());
+                        }
+                    }
+                }
+                // retrieve values from Treemap: litelistings IDs in order: most recent first
+                IDList = new ArrayList<>(listingTimeMap.values());
+            }
+            int size = IDList.size();
+            List<Task<LiteListing>> taskList = new ArrayList<>();
+            // add fetch tasks in correct display order
+            for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
+                taskList.add(LiteListing.fetch(IDList.get(i)));
+                positionInIDList++;
+            }
+            Tasks.<LiteListing>whenAllSuccess(taskList).addOnSuccessListener(list -> {
+                int start = liteListingList.size();
+                liteListingList.addAll(list);
+                int itemCount = liteListingList.size() - start;
+                adapter.notifyItemRangeInserted(start, itemCount);
+            });
+        });
     }
 
     /**
      * Returns the list of lite listings shown currently
+     *
      * @return list of lite listings
      */
     public List<LiteListing> getLiteListingList() {
         return liteListingList;
     }
 
-    private void setupSpinner(Spinner spinner, List<Category> categories){
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories);
-        spinner.setAdapter(arrayAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                //refresh currentCategory and re-init layout
-                currentCategory = (Category)parent.getItemAtPosition(position);
-                liteListingList = new ArrayList<>();
-                IDList = new ArrayList<>();
-                positionInIDList = 0;
-                RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
-                adapter = new LiteListingAdapter(liteListingList);
-
-                adapter.setOnItemClickListener(view1 -> {
-                    int viewID = view1.getId();
-                    String listingID = adapter.getListingID(viewID);
-                    Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-                    intent.putExtra("listingID", listingID);
-                    startActivity(intent);
-                });
-
-
-                rvLiteListings.setAdapter(adapter);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-                rvLiteListings.setLayoutManager(linearLayoutManager);
-                loadLiteListingOverview();
-
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //Do nothing
-            }
-        });
-    }
-
-    /***
-     * load lite listing using currentCategory to get all items from the selected category and subcategories
+    /**
+     * Display saved listings of the user (if any), they can be favorites or user created own listings
+     *
+     * @param savedListings the list of saved listings that has to be displayed in Sales Overview
      */
-    private void loadLiteListingsFromCategory(){
-        List<Category> allCategories =  CategoryRepository.getAllSubCategories(currentCategory);
-        allCategories.add(currentCategory);
-
-        for(Category category : allCategories) {
-            LiteListingDatabase.queryLiteListingStringEquality("category", category.toString(), result -> {
-
-                IDList.addAll(result);
-
-                LiteListingCallback callbackLiteListing = result1 -> {
-                    liteListingList.add(result1);
-                    adapter.notifyItemInserted(liteListingList.size() - 1);
-                };
-
-                int size = IDList.size();
-                for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-                    fetchLiteListing(IDList.get(i), callbackLiteListing);
-                    positionInIDList++;
-                }
-            });
-        }
+    public static void displaySavedListings(Context context, ArrayList<String> savedListings) {
+        DataHolder.getInstance().setData(savedListings);
+        Intent intent = new Intent(context, SalesOverview.class);
+        Bundle extras = new Bundle();
+        extras.putBoolean(bundleKey, true);
+        intent.putExtras(extras);
+        context.startActivity(intent);
     }
-
-    /***
-     * load all lite listings in the database
-     */
-    private void loadAllLiteListings(){
-        LiteListing.retrieveAll().addOnSuccessListener(result -> {
-            if(IDList.isEmpty()) {
-                for (LiteListing l : result) {
-                    IDList.add(l.getId());      // create deep copy of ID list if list is empty
-                }
-            }
-            LiteListingCallback callbackLiteListing = result1 -> {
-                liteListingList.add(result1);
-                adapter.notifyItemInserted(liteListingList.size()-1);
-            };
-            int size = IDList.size();
-            for(int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-                fetchLiteListing(IDList.get(i), callbackLiteListing);
-                positionInIDList++;
-            }
-        });
-
-    }
-
-
 
 }
-
-

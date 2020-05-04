@@ -17,9 +17,9 @@ public class MockAuthenticator implements Authenticator {
     public final static String TEST_USER_NICKNAME = "testuser";
     public final static String TEST_USER_PASSWORD = "abcdef";
 
-    private AppUser currentUser;
+    private Account currentUser;
 
-    private HashMap<String, MockAppUser> registeredUsers;
+    private HashMap<String, MockAccount> registeredUsers;
 
     private MockAuthenticator() {
         reset();
@@ -30,7 +30,7 @@ public class MockAuthenticator implements Authenticator {
      */
     public void reset() {
         registeredUsers = new HashMap<>();
-        MockAppUser testUser = new MockAppUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        MockAccount testUser = new MockAccount(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         testUser.sendEmailVerification();
         testUser.reload();
         registeredUsers.put(TEST_USER_EMAIL, testUser);
@@ -48,13 +48,13 @@ public class MockAuthenticator implements Authenticator {
     }
 
     @Override
-    public AppUser getCurrentUser() {
+    public Account getCurrentUser() {
         return currentUser;
     }
 
     @Override
     public Task<AuthenticatorResult> signIn(String email, String password) {
-        MockAppUser record = registeredUsers.get(email);
+        MockAccount record = registeredUsers.get(email);
         if (MockPhoneSettings.getInstance().isAirPlaneModeEnabled()) {
             return Tasks.forException(new NetworkErrorException());
         } else if (record != null && record.checkPassword(password)) {
@@ -71,7 +71,7 @@ public class MockAuthenticator implements Authenticator {
             return Tasks.forException(new NetworkErrorException());
         }
         if (registeredUsers.get(email) == null) {
-            MockAppUser newUser = new MockAppUser(email, nickname, password);
+            MockAccount newUser = new MockAccount(email, nickname, password);
             registeredUsers.put(email, newUser);
             currentUser = newUser;
             return Tasks.call(MockAuthenticatorResult::new);

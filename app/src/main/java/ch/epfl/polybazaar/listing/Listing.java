@@ -1,13 +1,16 @@
 package ch.epfl.polybazaar.listing;
-import java.io.Serializable;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.DocumentId;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
-import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.Utilities.emailIsValid;
@@ -21,21 +24,24 @@ import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
  *
  */
 public class Listing extends Model implements Serializable {
-    @DocumentId
-    private String id;
-    private String title;
-    private String description;
-    private String price;
-    private String userEmail;
-    private String stringImage;
-    private String category;
-    private double latitude = NOLAT;
-    private double longitude = NOLNG;
-
+    private final SimpleField<String> id = new SimpleField<>("id");
+    private final SimpleField<String> title = new SimpleField<>("title");
+    private final SimpleField<String> description = new SimpleField<>("description");
+    private final SimpleField<String> price = new SimpleField<>("price");
+    private final SimpleField<String> userEmail = new SimpleField<>("userEmail");
+    private final SimpleField<String> stringImage = new SimpleField<>("stringImage");
+    private final SimpleField<String> category = new SimpleField<>("category");
+    private final SimpleField<Double> latitude = new SimpleField<>("latitude", NOLAT);
+    private final SimpleField<Double> longitude = new SimpleField<>("longitude", NOLNG);
+    private final SimpleField<Long> views = new SimpleField<>("views");
+    private final SimpleField<String> haveSeenUsers = new SimpleField<>("haveSeenUsers");
 
     public static final String COLLECTION = "listings";
 
-    public Listing() {}
+    // no-argument constructor so that instances can be created by ModelTransaction
+    public Listing() {
+        registerFields(id, title, description, price, userEmail, stringImage, category, latitude, longitude, views, haveSeenUsers);
+    }
 
     /**
      *
@@ -47,18 +53,21 @@ public class Listing extends Model implements Serializable {
      */
     public Listing(String title, String description, String price, String userEmail,
                    String stringImage, String category, double latitude, double longitude) throws  IllegalArgumentException {
-        this.title = title;
-        this.description = description;
-        this.price = price;
+        this();
+        this.title.set(title);
+        this.description.set(description);
+        this.price.set(price);
         if (emailIsValid(userEmail)) {
-            this.userEmail = userEmail;
+            this.userEmail.set(userEmail);
         } else {
             throw new IllegalArgumentException("userEmail has invalid format");
         }
-        this.stringImage = stringImage;
-        this.category = category;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.stringImage.set(stringImage);
+        this.category.set(category);
+        this.latitude.set(latitude);
+        this.longitude.set(longitude);
+        this.views.set(0L);
+        this.haveSeenUsers.set("");
     }
 
     public Listing(String title, String description, String price, String userEmail, String stringImage, String category) {
@@ -70,35 +79,43 @@ public class Listing extends Model implements Serializable {
     }
 
     public String getTitle() {
-        return title;
+        return title.get();
     }
 
     public String getDescription() {
-        return description;
+        return description.get();
     }
 
     public String getPrice() {
-        return price;
+        return price.get();
     }
 
     public String getUserEmail() {
-        return userEmail;
+        return userEmail.get();
     }
 
     public String getStringImage() {
-        return stringImage;
+        return stringImage.get();
     }
 
     public String getCategory(){
-        return category;
+        return category.get();
     }
 
     public double getLatitude() {
-        return latitude;
+        return latitude.get();
     }
 
     public double getLongitude() {
-        return longitude;
+        return longitude.get();
+    }
+
+    public String getHaveSeenUsers(){
+        return haveSeenUsers.get();
+    }
+
+    public long getViews(){
+        return views.get();
     }
 
     @Override
@@ -108,12 +125,30 @@ public class Listing extends Model implements Serializable {
 
     @Override
     public String getId() {
-        return id;
+        return id.get();
     }
 
     @Override
     public void setId(String id) {
-        this.id = id;
+        this.id.set(id);
+    }
+
+    /**
+     * Saves the listing with its lite version in a safe way
+     * @return successful task containing the model instance if it exists, null otherwise. The task
+     * fails if the database is unreachable
+     */
+    public Task<Void> saveWithLiteVersion() {
+        return this.save().onSuccessTask(v -> {
+            // TODO make thumbnail
+           LiteListing liteVersion = new LiteListing(id.get(), title.get(), price.get(), category.get(), "");
+           return liteVersion.save();
+        });
+    }
+
+    public static <T> Task<Void> updateField(String field, String id, T updatedValue) {
+
+        return ModelTransaction.updateField(COLLECTION, id, field, updatedValue);
     }
 
     /**
@@ -137,5 +172,9 @@ public class Listing extends Model implements Serializable {
         Task<Void> deleteLiteListing = ModelTransaction.delete(LiteListing.COLLECTION, id);
 
         return Tasks.whenAll(deleteListing, deleteLiteListing);
+    }
+
+    public static Task<Void> updateMultipleFields(String id, Map<String, Object> updated){
+       return ModelTransaction.updateMultipleFields(Listing.COLLECTION, id, updated);
     }
 }

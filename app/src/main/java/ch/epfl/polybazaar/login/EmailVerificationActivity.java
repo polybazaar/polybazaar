@@ -1,7 +1,6 @@
 package ch.epfl.polybazaar.login;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -31,7 +30,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
      * @param view view that triggers the action
      */
     public void verify(View view) {
-        AppUser user = authenticator.getCurrentUser();
+        Account user = authenticator.getCurrentUser();
 
 
         user.sendEmailVerification()
@@ -58,7 +57,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
      * @param view view that triggers the action
      */
     public void reload(View view) {
-        AppUser user = authenticator.getCurrentUser();
+        Account user = authenticator.getCurrentUser();
 
         user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -82,7 +81,6 @@ public class EmailVerificationActivity extends AppCompatActivity {
      */
     public void signOut(View view) {
         authenticator.signOut();
-
         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(intent);
     }

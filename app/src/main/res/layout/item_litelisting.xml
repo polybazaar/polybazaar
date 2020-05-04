@@ -9,11 +9,11 @@
     
     <ImageView
         android:id="@+id/liteListingThumbnail"
-        android:layout_width="@dimen/thumbnail_size"
-        android:layout_height="@dimen/thumbnail_size"
+        android:layout_width="@dimen/grid_thumbnail_width"
+        android:layout_height="@dimen/grid_thumbnail_height"
         android:clickable="true"
-        android:scaleType="fitStart"
-        />
+        android:scaleType="fitXY"
+        android:focusable="true" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -29,7 +29,8 @@
             android:clickable="true"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="@dimen/overview_text_size" />
+            android:textSize="@dimen/overview_text_size"
+            android:focusable="true" />
 
         <TextView
             android:id="@+id/liteListingPrice"

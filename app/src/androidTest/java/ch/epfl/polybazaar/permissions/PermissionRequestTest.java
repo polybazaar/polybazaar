@@ -1,18 +1,16 @@
 package ch.epfl.polybazaar.permissions;
 
 import android.Manifest;
-import android.view.View;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
-import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.polybazaar.FillListingActivity;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -27,8 +25,10 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class PermissionRequestTest {
 
+    private final int SLEEP_TIME = 2000;
+
     @Rule
-    public final ActivityTestRule<FillListingActivity> permissionActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
+    public final ActivityTestRule<FillListing> permissionActivityTestRule = new ActivityTestRule<>(FillListing.class);
 
     @Rule
     public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
@@ -41,7 +41,7 @@ public class PermissionRequestTest {
             });
             permissionRequest.assertPermission();
         });
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class PermissionRequestTest {
             });
             permissionRequest.assertPermission();
         });
-        Thread.sleep(1000);
+        Thread.sleep(SLEEP_TIME);
         onView(withText("hello")).check(matches(isDisplayed()));
     }
 
