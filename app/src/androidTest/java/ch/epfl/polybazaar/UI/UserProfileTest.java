@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar.UI;
 
 import android.content.Intent;
+import android.view.KeyEvent;
 import android.widget.Button;
 
 import androidx.test.espresso.Espresso;
@@ -37,6 +38,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.supportsInputMethods;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
@@ -85,20 +87,20 @@ public class UserProfileTest {
         onView(withId(R.id.nicknameSelector)).perform(scrollTo(), typeText(""), closeSoftKeyboard());
         onView(withId(R.id.saveProfileButton)).perform(scrollTo(), click());
         onView(withText(R.string.signup_nickname_invalid)).check(matches(isDisplayed()));
-        onView(withText("Back")).perform(scrollTo(), click());
+        onView(withText("Back")).perform(click());
 
         onView(withId(R.id.nicknameSelector)).perform(scrollTo(), typeText("UserNickname"), closeSoftKeyboard());
         onView(withId(R.id.firstNameSelector)).perform(scrollTo(), typeText(""), closeSoftKeyboard());
         onView(withId(R.id.saveProfileButton)).perform(scrollTo(), click());
         onView(withText(R.string.invalid_first_name)).check(matches(isDisplayed()));
-        onView(withText("Back")).perform(scrollTo(), click());
+        onView(withText("Back")).perform(click());
 
         onView(withId(R.id.nicknameSelector)).perform(scrollTo(), typeText("UserNickname"), closeSoftKeyboard());
         onView(withId(R.id.firstNameSelector)).perform(scrollTo(), typeText("Name"), closeSoftKeyboard());
         onView(withId(R.id.lastNameSelector)).perform(scrollTo(), typeText(""), closeSoftKeyboard());
         onView(withId(R.id.saveProfileButton)).perform(scrollTo(), click());
         onView(withText(R.string.invalid_last_name)).check(matches(isDisplayed()));
-        onView(withText("Back")).perform(scrollTo(), click());
+        onView(withText("Back")).perform(click());
     }
 
     @Test
@@ -159,13 +161,24 @@ public class UserProfileTest {
         Intents.release();
     }
 
-    /*@Test
-    public void testChangeImage() throws ExecutionException, InterruptedException {
+    @Test
+    public void testChangeImageViaCamera() throws Throwable {
         Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
+        onView(withId(R.id.profilePicture)).perform(scrollTo(), click());
+        onView(withText(R.string.camera)).perform(click());
+    }
 
-    }*/
+    @Test
+    public void testChangeImageViaLibrary() throws Throwable {
+        Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+        Intent intent = new Intent();
+        activityRule.launchActivity(intent);
+
+        onView(withId(R.id.profilePicture)).perform(scrollTo(), click());
+        onView(withText(R.string.library)).perform(click());
+    }
 
 }
