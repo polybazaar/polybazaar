@@ -61,6 +61,13 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
+
+    //Notifications
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.google.firebase:firebase-messaging:20.1.6'
+
+
     /*Copyright 2015-2020 Shimizu Yasuhiro (yshrsmz)
 
     Licensed under the Apache License, Version 2.0 (the "License");

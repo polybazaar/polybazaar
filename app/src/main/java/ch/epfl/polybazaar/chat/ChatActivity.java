@@ -14,6 +14,8 @@ import com.google.android.gms.tasks.Tasks;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
@@ -112,5 +114,8 @@ public class ChatActivity extends AppCompatActivity {
            messageRecycler.setAdapter(chatMessageRecyclerAdapter);
            messageRecycler.scrollToPosition(conversation.size() - 1);
         });
+
+        RemoteMessage.Notification notification = new RemoteMessage.Notification()
+
     }
 }

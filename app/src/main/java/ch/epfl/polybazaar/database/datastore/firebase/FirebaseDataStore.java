@@ -92,7 +92,6 @@ public class FirebaseDataStore implements DataStore {
     @Override
     public Task<Void> updateMultipleFields(String collectionPath, String id, Map<String, Object> updated) {
         return database.collection(collectionPath).document(id).update(updated);
-        //database.collection(collectionPath).document(id).u
     }
 }
 
