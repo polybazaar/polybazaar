@@ -37,6 +37,6 @@ public abstract class SignInUtilities {
         onView(withId(R.id.nicknameInput)).perform(typeText(nickname));
         onView(withId(R.id.passwordInput)).perform(typeText(password));
         onView(withId(R.id.confirmPasswordInput)).perform(typeText(confirm));
-        onView(withId(R.id.submitButton)).perform(click());
+        onView(withId(R.id.submitSignUpButton)).perform(click());
     }
 }
