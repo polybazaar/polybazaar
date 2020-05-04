@@ -28,7 +28,6 @@ public class NotificationService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         String sented = remoteMessage.getData().get("sented");
-
         Account account = AuthenticatorFactory.getDependency().getCurrentUser();
         account.getUserData().addOnSuccessListener(user -> {
             if(user != null && sented.equals(user.getId())){
@@ -67,6 +66,9 @@ public class NotificationService extends FirebaseMessagingService {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channel_id, "chat", NotificationManager.IMPORTANCE_HIGH);
             manager.createNotificationChannel(channel);
+        }
+        else{
+            System.out.println("Yooooooo");
         }
         manager.notify(0, builder.build());
     }

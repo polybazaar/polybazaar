@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Tasks;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
@@ -94,7 +95,7 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
         loadConversation();
-
+        User.updateField("token", senderEmail, FirebaseInstanceId.getInstance().getToken());
         apiService = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
     }
 

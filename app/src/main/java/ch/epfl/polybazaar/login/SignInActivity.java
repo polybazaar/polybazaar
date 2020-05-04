@@ -81,7 +81,7 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthenticatorResult> task) {
                         if (task.isSuccessful()) {
-                            updateToken(FirebaseInstanceId.getInstance().getToken(), email);
+                            User.updateField("token", email, FirebaseInstanceId.getInstance().getToken());
                             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
                             startActivity(intent);
                         } else {
@@ -92,7 +92,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void updateToken(String token, String email){
-        User.updateField("token", email, token);
+
     }
 }
 
