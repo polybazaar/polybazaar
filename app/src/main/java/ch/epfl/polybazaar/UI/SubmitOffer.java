@@ -42,7 +42,6 @@ public class SubmitOffer extends AppCompatActivity {
     public void submitOffer(View view) {
         if (!String.valueOf(inputOffer.getText()).isEmpty()) {
             double offer = Double.parseDouble(inputOffer.getText().toString());
-            // TODO : Send offer
             sendOffer(offer, listing, SubmitOffer.this);
             finish();
         } else {
