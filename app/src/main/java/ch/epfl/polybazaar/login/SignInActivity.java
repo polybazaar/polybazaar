@@ -9,12 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.bottomBar;
+import ch.epfl.polybazaar.user.User;
 
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
@@ -41,8 +44,15 @@ public class SignInActivity extends AppCompatActivity {
         Account currentUser = authenticator.getCurrentUser();
 
         if (currentUser != null) {
-            Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
-            startActivity(intent);
+            currentUser.getUserData().addOnSuccessListener(new OnSuccessListener<User>() {
+                @Override
+                public void onSuccess(User user) {
+                    updateToken(FirebaseInstanceId.getInstance().getToken(), user.getEmail());
+                    Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
+                    startActivity(intent);
+                }
+            });
+
         }
     }
 
@@ -71,6 +81,7 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthenticatorResult> task) {
                         if (task.isSuccessful()) {
+                            updateToken(FirebaseInstanceId.getInstance().getToken(), email);
                             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
                             startActivity(intent);
                         } else {
@@ -79,4 +90,9 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void updateToken(String token, String email){
+        User.updateField("token", email, token);
+    }
 }
+

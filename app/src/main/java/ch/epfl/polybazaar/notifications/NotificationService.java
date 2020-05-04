@@ -1,22 +1,22 @@
 package ch.epfl.polybazaar.notifications;
 
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverview;
-
-import static com.makeramen.roundedimageview.RoundedDrawable.TAG;
+import ch.epfl.polybazaar.login.Account;
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.user.User;
 
 public class NotificationService extends FirebaseMessagingService {
     public NotificationService() {
@@ -24,28 +24,38 @@ public class NotificationService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        if (remoteMessage.getNotification() != null) {
-            sendInAppNotification(remoteMessage);
-        }
-    }
 
+        String sented = remoteMessage.getData().get("sented");
+
+        Account account = AuthenticatorFactory.getDependency().getCurrentUser();
+        account.getUserData().addOnSuccessListener(user -> {
+            if(user != null && sented.equals(user.getId())){
+                sendNotification(remoteMessage);
+            }
+        });
+    }
 
     @Override
     public void onNewToken(String token) {
-
-        //sendRegistrationToServer(token);
+        Account user = AuthenticatorFactory.getDependency().getCurrentUser();
+        if(user != null){
+            Tasks.whenAll(user.getUserData().addOnSuccessListener(user1 -> {
+                Tasks.whenAll(User.updateField("token", user1.getId(), token));
+            }));
+        }
     }
 
-    private void sendInAppNotification(RemoteMessage remoteMessage) {
+    private void sendNotification(RemoteMessage remoteMessage) {
         String channel_id = "notification_channel_id";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channel_id)
-                .setContentTitle(remoteMessage.getNotification().getTitle())
-                .setContentText(remoteMessage.getNotification().getBody())
+                .setContentTitle(remoteMessage.getData().get("title"))
+                .setContentText(remoteMessage.getData().get("body"))
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         Intent notificationIntent = new Intent(this, ConversationOverview.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
         builder.setContentIntent(contentIntent);
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

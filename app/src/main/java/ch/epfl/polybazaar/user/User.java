@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar.user;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,7 @@ public final class User extends Model {
     private final SimpleField<String> profilePicture = new SimpleField<>("profilePicture");
     private final SimpleField<ArrayList<String>> ownListings = new SimpleField<>("ownListings", new ArrayList<>());
     private final SimpleField<ArrayList<String>> favorites = new SimpleField<>("favorites", new ArrayList<>());
+    private final SimpleField<String> token = new SimpleField<>("token");
 
     private final static String COLLECTION = "users";
     public final static String NO_PROFILE_PICTURE = "no_picture";
@@ -49,6 +51,10 @@ public final class User extends Model {
         return phoneNumber.get();
     }
 
+    public String getToken() {
+        return token.get();
+    }
+
     public String getProfilePicture(){
         if (profilePicture.get() != null) {
             return profilePicture.get();
@@ -59,7 +65,7 @@ public final class User extends Model {
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public User() {
-        registerFields(nickName, email, firstName, lastName, phoneNumber, profilePicture, ownListings, favorites);
+        registerFields(nickName, email, firstName, lastName, phoneNumber, profilePicture, ownListings, favorites, token);
     }
 
     /**
@@ -84,6 +90,7 @@ public final class User extends Model {
         lastName.set(capitalize(email.substring(email.indexOf(".")+1, email.indexOf("@"))));
         phoneNumber.set("");
         profilePicture.set(NO_PROFILE_PICTURE);
+        this.token.set(FirebaseInstanceId.getInstance().getToken());
     }
 
     /**
@@ -104,6 +111,7 @@ public final class User extends Model {
         this.profilePicture.set(profilePicture);
         this.ownListings.set(ownListings);
         this.favorites.set(favorites);
+        this.token.set(FirebaseInstanceId.getInstance().getToken());
     }
 
     @Override
@@ -152,6 +160,12 @@ public final class User extends Model {
     public void removeFavorite(Listing listing) {
         favorites.get().remove(listing.getId());
     }
+
+    public static <T> Task<Void> updateField(String field, String id, T updatedValue) {
+
+        return ModelTransaction.updateField(COLLECTION, id, field, updatedValue);
+    }
+
 
     public static Task<User> fetch(String email) {
         return ModelTransaction.fetch(COLLECTION, email, User.class);

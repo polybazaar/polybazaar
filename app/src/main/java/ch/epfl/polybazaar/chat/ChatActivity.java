@@ -4,21 +4,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +27,15 @@ import java.util.List;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.notifications.FCMServiceAPI;
+import ch.epfl.polybazaar.notifications.Client;
+import ch.epfl.polybazaar.notifications.Data;
+import ch.epfl.polybazaar.notifications.NotificationResponse;
+import ch.epfl.polybazaar.notifications.Sender;
+import ch.epfl.polybazaar.user.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static java.util.UUID.randomUUID;
 
@@ -41,9 +49,13 @@ public class ChatActivity extends AppCompatActivity {
 
     private String senderEmail;
     private String receiverEmail;
+    private String receiverToken;
     private String listingID;
 
     private List<ChatMessage> conversation = new ArrayList<>();
+
+    private FCMServiceAPI apiService;
+    boolean notify = false;
 
     public static final String bundleListingId = "listingID";
     public static final String bundleReceiverEmail = "receiverEmail";
@@ -71,9 +83,9 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageButton.setOnClickListener(v -> sendMessage());
 
         KeyboardVisibilityEvent.setEventListener(
-               this,
+                this,
                 isOpen -> {
-                    if(isOpen) {
+                    if (isOpen) {
                         messageRecycler.scrollToPosition(conversation.size() - 1);
                         bottomNavigationView.setVisibility(View.GONE);
                     } else {
@@ -82,6 +94,8 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
         loadConversation();
+
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
     }
 
     private void loadConversation() {
@@ -91,7 +105,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Tasks.whenAll(fetchReceiverMessages, fetchSenderMessages).addOnSuccessListener(aVoid -> {
             //Sort the conversation by the time the messages were sent
-            if(conversation != null){
+            if (conversation != null) {
                 Collections.sort(conversation, (o1, o2) -> o1.getTime().compareTo(o2.getTime()));
             }
             chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
@@ -108,14 +122,42 @@ public class ChatActivity extends AppCompatActivity {
         message.setId(newMessageID);
 
         message.save().addOnSuccessListener(aVoid -> {
-           conversation.add(message);
-           messageEditor.setText("");
-           chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
-           messageRecycler.setAdapter(chatMessageRecyclerAdapter);
-           messageRecycler.scrollToPosition(conversation.size() - 1);
+            conversation.add(message);
+            messageEditor.setText("");
+            chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
+            messageRecycler.setAdapter(chatMessageRecyclerAdapter);
+            messageRecycler.scrollToPosition(conversation.size() - 1);
         });
 
-        RemoteMessage.Notification notification = new RemoteMessage.Notification()
+        final String msg = messageText;
+        User.fetch(senderEmail).addOnSuccessListener(user -> sendNotification(receiverEmail, user.getNickName(), msg));
+    }
 
+    private void sendNotification(String receiverEmail, String nickname, String message) {
+        User.fetch(receiverEmail).addOnSuccessListener(new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                receiverToken = user.getToken();
+                Data data = new Data(senderEmail, R.mipmap.ic_launcher_round, nickname + ": " + message, "New Message", receiverEmail);
+                Sender sender = new Sender(data, receiverToken);
+                apiService.sendNotification(sender).enqueue(new Callback<NotificationResponse>() {
+                    @Override
+                    public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
+                        if (response.code() == 200) {
+                            if (response.body().success != 1) {
+                                Toast.makeText(ChatActivity.this, "FAIL", Toast.LENGTH_SHORT);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<NotificationResponse> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
     }
 }
+
+
