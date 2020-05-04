@@ -20,12 +20,14 @@ import org.junit.Test;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UtilitiesTest;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.LoginTest;
 import ch.epfl.polybazaar.login.MockAuthenticator;
+import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
 import ch.epfl.polybazaar.user.User;
 
@@ -316,6 +318,25 @@ public class SaleDetailsTest {
         auth.getCurrentUser().getUserData().addOnSuccessListener(user -> {
             assertFalse(user.getFavorites().contains(listing.getId()));
         });
+    }
+
+    @Test
+    public void testSetupViewMP() throws ExecutionException, InterruptedException {
+        MockAuthenticator auth = MockAuthenticator.getInstance();
+        String id = "listingID";
+        final Listing listing = new Listing("Title", "Description", "0", "otherUser@epfl.ch",
+                "", "", 1.0, 1.0);
+        listing.setId(id);
+        Tasks.await(listing.save());
+
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+        activityRule.launchActivity(intent);
+
+        Intents.init();
+        onView(withId(R.id.viewMP)).perform(scrollTo(), click());
+        intended(hasComponent(MapsActivity.class.getName()));
+        Intents.release();
     }
 }
 
