@@ -138,7 +138,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onSuccess(User user) {
                 receiverToken = user.getToken();
-                Data data = new Data(senderEmail, R.mipmap.ic_launcher_round, nickname + ": " + message, "New Message", receiverEmail);
+                Data data = new Data(senderEmail, R.mipmap.ic_launcher_round, nickname + ": " + message, "New Message", receiverEmail, listingID);
                 Sender sender = new Sender(data, receiverToken);
                 apiService.sendNotification(sender).enqueue(new Callback<NotificationResponse>() {
                     @Override

@@ -13,6 +13,8 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.UserProfile;
+import ch.epfl.polybazaar.chat.ChatActivity;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverview;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -53,7 +55,10 @@ public class NotificationService extends FirebaseMessagingService {
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        Intent notificationIntent = new Intent(this, ConversationOverview.class);
+        Intent notificationIntent = new Intent(this, ChatActivity.class);
+        System.out.println(remoteMessage.getData());
+        notificationIntent.putExtra(ChatActivity.bundleReceiverEmail, remoteMessage.getData().get("user"));
+        notificationIntent.putExtra(ChatActivity.bundleListingId, remoteMessage.getData().get("listingID"));
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
         builder.setContentIntent(contentIntent);

@@ -6,13 +6,15 @@ public class Data {
     private String body;
     private String title;
     private String sented;
+    private String listingID;
 
-    public Data(String user, int icon, String body, String title, String sented) {
+    public Data(String user, int icon, String body, String title, String sented, String listingID) {
         this.user = user;
         this.icon = icon;
         this.body = body;
         this.title = title;
         this.sented = sented;
+        this.listingID = listingID;
     }
 
     public Data() {
@@ -20,6 +22,14 @@ public class Data {
 
     public String getUser() {
         return user;
+    }
+
+    public String getListingID() {
+        return listingID;
+    }
+
+    public void setListingID(String listingID) {
+        this.listingID = listingID;
     }
 
     public void setUser(String user) {
