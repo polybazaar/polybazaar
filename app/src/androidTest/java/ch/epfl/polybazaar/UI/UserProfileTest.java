@@ -158,6 +158,14 @@ public class UserProfileTest {
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
     }
-    
+
+    /*@Test
+    public void testChangeImage() throws ExecutionException, InterruptedException {
+        Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+        Intent intent = new Intent();
+        activityRule.launchActivity(intent);
+
+
+    }*/
 
 }

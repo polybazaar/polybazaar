@@ -13,8 +13,7 @@ public abstract class Utilities {
 
     // TODO: can be adjusted
     public static boolean nameIsValid(String name) {
-        return true;
-        //return (name.matches("[a-zA-Z]+"));
+        return (name.matches("[a-zA-Z]+"));
     }
 
     public static boolean emailIsValid(String email) {
