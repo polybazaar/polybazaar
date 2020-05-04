@@ -1,7 +1,10 @@
 package ch.epfl.polybazaar.UI;
 
 import android.content.Intent;
+import android.widget.Button;
 
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
@@ -25,6 +28,7 @@ import ch.epfl.polybazaar.testingUtilities.SignInUtilities;
 import ch.epfl.polybazaar.user.User;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -35,8 +39,12 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.getDependency;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 
 public class UserProfileTest {
 
@@ -149,7 +157,7 @@ public class UserProfileTest {
         onView(withId(R.id.viewFavoritesButton)).perform(scrollTo(), click());
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
-
     }
+    
 
 }

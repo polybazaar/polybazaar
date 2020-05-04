@@ -134,29 +134,6 @@ public class UserProfileTest {
     }
 
     @Test
-    public void testNameChangesWorks() throws InterruptedException {
-        String newNickname = "new Nickname";
-        String newFirstName = "Aurelien";
-        String newLastName = "Queloz";
-        signInWithFromMainActivity();
-        onView(withId(R.id.action_profile)).perform(click());
-        onView(withId(R.id.nicknameSelector)).perform(scrollTo(), clearText(), typeText(newNickname));
-        closeSoftKeyboard();
-        onView(withId(R.id.firstNameSelector)).perform(scrollTo(), clearText(), typeText(newFirstName));
-        closeSoftKeyboard();
-        onView(withId(R.id.lastNameSelector)).perform(scrollTo(), clearText(), typeText(newLastName));
-        onView(withId(R.id.lastNameSelector)).perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.saveProfileButton)).perform(scrollTo(), click());
-
-        assertThat(authenticator.getCurrentUser().getNickname(), is(newNickname));
-        User.fetch(MockAuthenticator.TEST_USER_EMAIL).addOnSuccessListener(user -> {
-            assertThat(user.getNickName(), is(newNickname));
-            assertThat(user.getFirstName(), is(newFirstName));
-            assertThat(user.getLastName(), is(newLastName));
-        });
-    }
-
-    @Test
     public void testPasswordChangeWorks() throws InterruptedException {
         String newPassword = "mynewpassword";
         signInWithFromMainActivity();
