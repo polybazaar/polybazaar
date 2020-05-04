@@ -118,4 +118,5 @@
     <string name="send_when_connected">Send as soon as connection is available</string>
     <string name="information">Information</string>sign_in_to_contact
     <string name="sign_in_to_contact">Sign In To Contact Seller</string>
+    <string name="back">Back</string>
 </resources>

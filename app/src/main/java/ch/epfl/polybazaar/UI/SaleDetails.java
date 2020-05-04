@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar.UI;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -40,6 +41,8 @@ import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
+
 import android.provider.Settings.Secure;
 public class SaleDetails extends AppCompatActivity {
     private Button editButton;
@@ -215,11 +218,16 @@ public class SaleDetails extends AppCompatActivity {
      */
         public void fillWithListing(final Listing listing) {
         if(listing == null) {
-            Toast toast = Toast.makeText(getApplicationContext(),R.string.object_not_found,Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.show();
-            Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
-            startActivity(intent);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.object_not_found)
+                    .setNeutralButton(R.string.back, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(SaleDetails.this, SalesOverview.class);
+                                    startActivity(intent);
+                                }
+                            });
+            builder.create().show();
         } else {
 
             //Updates the number of listing's views once per phone
