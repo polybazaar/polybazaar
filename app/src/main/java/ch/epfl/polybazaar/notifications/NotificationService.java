@@ -27,6 +27,7 @@ public class NotificationService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
+        System.out.println(remoteMessage.getData());
         String sented = remoteMessage.getData().get("sented");
         Account account = AuthenticatorFactory.getDependency().getCurrentUser();
         account.getUserData().addOnSuccessListener(user -> {
@@ -52,13 +53,14 @@ public class NotificationService extends FirebaseMessagingService {
                 .setContentTitle(remoteMessage.getData().get("title"))
                 .setContentText(remoteMessage.getData().get("body"))
                 .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
 
         Intent notificationIntent = new Intent(this, ChatActivity.class);
         System.out.println(remoteMessage.getData());
         notificationIntent.putExtra(ChatActivity.bundleReceiverEmail, remoteMessage.getData().get("user"));
         notificationIntent.putExtra(ChatActivity.bundleListingId, remoteMessage.getData().get("listingID"));
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
         builder.setContentIntent(contentIntent);
 
@@ -66,9 +68,6 @@ public class NotificationService extends FirebaseMessagingService {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channel_id, "chat", NotificationManager.IMPORTANCE_HIGH);
             manager.createNotificationChannel(channel);
-        }
-        else{
-            System.out.println("Yooooooo");
         }
         manager.notify(0, builder.build());
     }

@@ -151,6 +151,7 @@ public class LoginTest {
     private void fillAndSubmitSignIn(String email, String password) {
         typeInput(withId(R.id.emailInput), email);
         typeInput(withId(R.id.passwordInput), password);
+        closeSoftKeyboard();
         clickButton(withId(R.id.loginButton));
     }
 
@@ -159,6 +160,7 @@ public class LoginTest {
         typeInput(withId(R.id.nicknameInput), nickname);
         typeInput(withId(R.id.passwordInput), password);
         typeInput(withId(R.id.confirmPasswordInput), confirm);
+        closeSoftKeyboard();
         clickButton(withId(R.id.submitButton));
     }
 

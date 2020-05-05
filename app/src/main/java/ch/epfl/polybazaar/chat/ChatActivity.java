@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
@@ -95,8 +96,14 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
         loadConversation();
-        User.updateField("token", senderEmail, FirebaseInstanceId.getInstance().getToken());
-        apiService = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                    @Override
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        User.updateField("token", senderEmail, instanceIdResult.getToken());
+                        apiService = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
+                    }
+        });
+
     }
 
     private void loadConversation() {
