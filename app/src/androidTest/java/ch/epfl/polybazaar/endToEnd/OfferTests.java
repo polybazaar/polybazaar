@@ -31,6 +31,11 @@ public class OfferTests {
 
     public static final int SLEEP_TIME = 2000;
 
+    private final String Listing1Name = "LOL";
+    private final String Listing1Price = "123";
+    private final String Listing2Name = "FUN";
+    private final String Listing2Price = "321";
+
     @Rule
     public final ActivityTestRule<MainActivity> activityRule =
             new ActivityTestRule<MainActivity>(MainActivity.class){
@@ -48,23 +53,28 @@ public class OfferTests {
             };
 
     @Test
-    public void buyNowTest() {
-        signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
-        onView(withId(R.id.action_add_item)).perform(click());
-        closeSoftKeyboard();
-        addItemFromFillListing();
-        signOutFromMainActivity();
-        onView(withId(R.id.action_add_item)).perform(click());
-        onView(withId(R.id.signInButton)).perform(click());
+    public void refuseThenAcceptOfferTest() {
+        // setup
+        onView(withId(R.id.action_profile)).perform(click());
         createAccountAndBackToLoginFromLoginActivity("test.magicuser@epfl.ch", "lolMan", "password123");
-        signInWithFromMainActivity("test.magicuser@epfl.ch", "password123");
-        onView(withText("LOL")).perform(click());
-        onView(withId(R.id.buyNow)).perform(click());
-    }
-
-    @Test
-    public void acceptOfferTest() {
-        setupListingAndConversation();
+        setupListingAndConversation(Listing1Name, Listing1Price);
+        // refuse offer
+        doAllOfferOptions();
+        gotToConversation(Listing1Name);
+        onView(withId(R.id.refuse_offer_button)).perform(click());
+        pressBack();
+        onView(withId(R.id.action_home)).perform(click());
+        onView(withText("CHF " + Listing1Price)).perform(click());
+        onView(withId(R.id.price)).check(matches(withText("CHF " + Listing1Price)));
+        pressBack();
+        // accept offer
+        signOutFromMainActivity();
+        setupListingAndConversation(Listing2Name, Listing2Price);
+        onView(withId(R.id.makeOffer)).perform(click());
+        onView(withId(R.id.offer)).perform(typeText("15"));
+        onView(withId(R.id.makeOfferNow)).perform(click());
+        pressBack();
+        gotToConversation(Listing2Name);
         onView(withId(R.id.accept_offer_button)).perform(click());
         pressBack();
         onView(withId(R.id.action_home)).perform(click());
@@ -74,20 +84,10 @@ public class OfferTests {
         onView(withId(R.id.buyNow)).check(matches(not(isDisplayed())));
     }
 
-    @Test
-    public void refuseOfferTest() {
-        setupListingAndConversation();
-        onView(withId(R.id.refuse_offer_button)).perform(click());
-        pressBack();
-        onView(withId(R.id.action_home)).perform(click());
-        onView(withText("CHF 123")).perform(click());
-        onView(withId(R.id.price)).check(matches(withText("CHF 123")));
-    }
-
-    private void addItemFromFillListing() {
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("LOL"));
+    private void addItemFromFillListing(String name, String price) {
+        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText(name));
         closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText("123"));
+        onView(withId(R.id.priceSelector)).perform(scrollTo(), typeText(price));
         closeSoftKeyboard();
         onView(withId(R.id.submitListing)).perform(scrollTo(), click());
     }
@@ -97,17 +97,27 @@ public class OfferTests {
         onView(withId(R.id.signOutButton)).perform(scrollTo(), click());
     }
 
-    private void setupListingAndConversation(){
+
+    private void setupListingAndConversation(String name, String price){
         signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         onView(withId(R.id.action_add_item)).perform(click());
         closeSoftKeyboard();
-        addItemFromFillListing();
+        addItemFromFillListing(name, price);
         signOutFromMainActivity();
-        onView(withId(R.id.action_add_item)).perform(click());
-        onView(withId(R.id.signInButton)).perform(click());
-        createAccountAndBackToLoginFromLoginActivity("test.magicuser@epfl.ch", "lolMan", "password123");
         signInWithFromMainActivity("test.magicuser@epfl.ch", "password123");
-        onView(withText("LOL")).perform(click());
+        onView(withText(name)).perform(click());
+    }
+
+    private void gotToConversation(String name) {
+        signOutFromMainActivity();
+        signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
+        onView(withId(R.id.action_messages)).perform(click());
+        onView(withText(name)).perform(click());
+    }
+
+    private void doAllOfferOptions() {
+        onView(withId(R.id.buyNow)).perform(click());
+        pressBack();
         onView(withId(R.id.makeOffer)).perform(click());
         onView(withId(R.id.offer)).perform(typeText("12"));
         onView(withId(R.id.cancelOfferMaking)).perform(click());
@@ -115,9 +125,5 @@ public class OfferTests {
         onView(withId(R.id.offer)).perform(typeText("15"));
         onView(withId(R.id.makeOfferNow)).perform(click());
         pressBack();
-        signOutFromMainActivity();
-        signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
-        onView(withId(R.id.action_messages)).perform(click());
-        onView(withText("LOL")).perform(click());
     }
 }
