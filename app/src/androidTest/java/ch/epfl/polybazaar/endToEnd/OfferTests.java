@@ -113,9 +113,11 @@ public class OfferTests {
         pressBack();
         onView(withId(R.id.makeOffer)).perform(scrollTo(), click());
         onView(withId(R.id.offer)).perform(typeText("12"));
+        closeSoftKeyboard();
         onView(withId(R.id.cancelOfferMaking)).perform(click());
         onView(withId(R.id.makeOffer)).perform(scrollTo(), click());
         onView(withId(R.id.offer)).perform(typeText("15"));
+        closeSoftKeyboard();
         onView(withId(R.id.makeOfferNow)).perform(click());
         pressBack();
     }
