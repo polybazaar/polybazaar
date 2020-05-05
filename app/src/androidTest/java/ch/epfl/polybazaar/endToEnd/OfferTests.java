@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
@@ -53,7 +54,7 @@ public class OfferTests {
             };
 
     @Test
-    public void refuseThenAcceptOfferTest() {
+    public void refuseThenAcceptOfferTest() throws InterruptedException {
         // setup
         onView(withId(R.id.action_profile)).perform(click());
         createAccountAndBackToLoginFromLoginActivity("test.magicuser@epfl.ch", "lolMan", "password123");
@@ -108,14 +109,16 @@ public class OfferTests {
         onView(withText(name)).perform(click());
     }
 
-    private void gotToConversation(String name) {
+    private void gotToConversation(String name) throws InterruptedException {
         signOutFromMainActivity();
         signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         onView(withId(R.id.action_messages)).perform(click());
         onView(withText(name)).perform(click());
+        Thread.sleep(SLEEP_TIME);
     }
 
     private void doAllOfferOptions() {
+        closeSoftKeyboard();
         onView(withId(R.id.buyNow)).perform(click());
         pressBack();
         onView(withId(R.id.makeOffer)).perform(click());
