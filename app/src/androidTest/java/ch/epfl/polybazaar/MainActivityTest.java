@@ -36,6 +36,7 @@ public class MainActivityTest{
             new ActivityTestRule<MainActivity>(MainActivity.class){
                 @Override
                 protected void beforeActivityLaunched() {
+                    MockAuthenticator.getInstance().reset();
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                 }
                 @Override
@@ -43,13 +44,13 @@ public class MainActivityTest{
                     MockAuthenticator.getInstance().reset();
                 }
             };
-
+/*
     @Test
     public void authenticatedUsersCanEnterFillListing() {
         signInAndBack();
         onView(withId(R.id.action_add_item)).perform(click());
         hasComponent(FillListing.class.getName());
-    }
+    }*/
 
     @Test
     public void accessesForNonAuthenticatedUserAreCorrect() {

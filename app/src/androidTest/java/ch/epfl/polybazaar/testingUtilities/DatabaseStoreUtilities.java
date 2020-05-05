@@ -8,6 +8,7 @@ import java.util.Date;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.chat.ChatMessage;
+import ch.epfl.polybazaar.user.User;
 
 import static java.util.UUID.randomUUID;
 
@@ -33,6 +34,13 @@ public abstract  class DatabaseStoreUtilities {
     public static void storeNewMessage(String sender, String receiver, String listingID, String message){
         ChatMessage chatMessage = new ChatMessage(sender, receiver, listingID, message, new Timestamp(new Date(System.currentTimeMillis())));
         Tasks.whenAll(chatMessage.save()).addOnFailureListener(e -> {
+            throw new AssertionError();
+        });
+    }
+
+    public static void storeNewUser(String nickname, String email){
+        User user = new User(nickname, email);
+        Tasks.whenAll(user.save()).addOnFailureListener(e -> {
             throw new AssertionError();
         });
     }
