@@ -2,7 +2,9 @@ package ch.epfl.polybazaar;
 import android.content.Context;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -18,13 +20,13 @@ public class UtilitiesTest {
     MockAuthenticator auth;
     Context context;
 
-    @Before
+    @BeforeClass
     public void init() {
         auth = MockAuthenticator.getInstance();
         AuthenticatorFactory.setDependency(auth);
     }
 
-    @After
+    @AfterClass
     public void reset(){
         MockAuthenticator.getInstance().reset();
     }

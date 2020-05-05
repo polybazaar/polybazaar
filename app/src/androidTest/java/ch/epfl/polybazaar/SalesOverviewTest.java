@@ -7,6 +7,7 @@ import androidx.test.rule.ActivityTestRule;
 import com.google.android.gms.tasks.Tasks;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class SalesOverviewTest {
                     true,
                     false);
 
-    @Before
+    @BeforeClass
     public void init() {
         useMockDataStore();
 
