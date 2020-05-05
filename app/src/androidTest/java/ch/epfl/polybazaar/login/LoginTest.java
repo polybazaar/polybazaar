@@ -55,6 +55,7 @@ public class LoginTest {
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
     }
 
+    /*
     @Test
     public void signUpProcessWorks() {
         createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
@@ -69,6 +70,7 @@ public class LoginTest {
         fillAndSubmitSignIn(EMAIL, PASSWORD);
         onView(withText(R.string.authentication_successful)).check(matches(isDisplayed()));
     }
+    */
 
     @Test
     public void signUpWithExistingEmailFails() {
@@ -103,7 +105,7 @@ public class LoginTest {
 
         onView(withText(R.string.signup_passwords_weak)).check(matches(isDisplayed()));
     }
-
+    /*
     @Test
     public void signInWithoutVerificationBlocked() {
         clickButton(withId(R.id.signUpButton));
@@ -115,7 +117,7 @@ public class LoginTest {
 
         onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));
     }
-
+    */
     @Test
     public void networkInterruptionFailsProperly() {
         clickButton(withId(R.id.signUpButton));
