@@ -132,10 +132,9 @@ public class ChatActivity extends AppCompatActivity {
             chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
             messageRecycler.setAdapter(chatMessageRecyclerAdapter);
             messageRecycler.scrollToPosition(conversation.size() - 1);
-        });
 
-        final String msg = messageText;
-        //User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), msg);});
+            User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), messageText);});
+        });
     }
 
     private void sendNotification(String receiverEmail, String nickname, String message) {
