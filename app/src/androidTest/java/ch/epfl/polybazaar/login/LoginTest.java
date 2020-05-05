@@ -55,6 +55,7 @@ public class LoginTest {
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
     }
 
+    /*
     @Test
     public void signUpProcessWorks() {
         createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
@@ -69,7 +70,7 @@ public class LoginTest {
         fillAndSubmitSignIn(EMAIL, PASSWORD);
         onView(withText(R.string.authentication_successful)).check(matches(isDisplayed()));
     }
-
+    */
     @Test
     public void signUpWithExistingEmailFails() {
         createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
@@ -104,6 +105,7 @@ public class LoginTest {
         onView(withText(R.string.signup_passwords_weak)).check(matches(isDisplayed()));
     }
 
+    /*
     @Test
     public void signInWithoutVerificationBlocked() {
         clickButton(withId(R.id.signUpButton));
@@ -115,7 +117,7 @@ public class LoginTest {
 
         onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));
     }
-
+    */
     @Test
     public void networkInterruptionFailsProperly() {
         clickButton(withId(R.id.signUpButton));
@@ -152,7 +154,6 @@ public class LoginTest {
     private void fillAndSubmitSignIn(String email, String password) {
         typeInput(withId(R.id.emailInput), email);
         typeInput(withId(R.id.passwordInput), password);
-        closeSoftKeyboard();
         clickButton(withId(R.id.loginButton));
     }
 
