@@ -129,6 +129,7 @@ public class FillListingTest {
     @After
     public void unSigned() {
         AuthenticatorFactory.getDependency().signOut();
+        MockAuthenticator.getInstance().reset();
     }
 
 

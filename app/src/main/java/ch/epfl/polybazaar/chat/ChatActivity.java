@@ -96,12 +96,9 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
         loadConversation();
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-                    @Override
-                    public void onSuccess(InstanceIdResult instanceIdResult) {
-                        User.updateField("token", senderEmail, instanceIdResult.getToken());
-                        apiService = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
-                    }
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
+            User.updateField("token", senderEmail, instanceIdResult.getToken());
+            apiService = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
         });
 
     }
@@ -138,7 +135,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         final String msg = messageText;
-        User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), msg);});
+        //User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), msg);});
     }
 
     private void sendNotification(String receiverEmail, String nickname, String message) {

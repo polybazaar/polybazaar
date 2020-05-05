@@ -32,7 +32,7 @@ public class NotificationService extends FirebaseMessagingService {
         Account account = AuthenticatorFactory.getDependency().getCurrentUser();
         account.getUserData().addOnSuccessListener(user -> {
             if(user != null && sented.equals(user.getId())){
-                sendNotification(remoteMessage);
+                showNotification(remoteMessage);
             }
         });
     }
@@ -47,7 +47,7 @@ public class NotificationService extends FirebaseMessagingService {
         }
     }
 
-    private void sendNotification(RemoteMessage remoteMessage) {
+    private void showNotification(RemoteMessage remoteMessage) {
         String channel_id = "notification_channel_id";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channel_id)
                 .setContentTitle(remoteMessage.getData().get("title"))

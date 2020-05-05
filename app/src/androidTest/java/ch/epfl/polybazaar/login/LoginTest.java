@@ -38,6 +38,7 @@ public class LoginTest {
             new ActivityTestRule<SignInActivity>(SignInActivity.class){
                 @Override
                 protected void beforeActivityLaunched() {
+                    MockAuthenticator.getInstance().reset();
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                 }
 

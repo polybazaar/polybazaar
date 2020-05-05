@@ -33,6 +33,11 @@ public class bottomBarTest {
             AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
             AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL,MockAuthenticator.TEST_USER_PASSWORD);
         }
+
+        @Override
+        protected void afterActivityFinished() {
+            MockAuthenticator.getInstance().reset();
+        }
     };
 
 
