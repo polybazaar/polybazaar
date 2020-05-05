@@ -119,8 +119,8 @@ public class OfferTests {
 
     private void doAllOfferOptions() {
         closeSoftKeyboard();
-        onView(withId(R.id.buyNow)).perform(click());
-        pressBack();
+        //onView(withId(R.id.buyNow)).perform(click());
+        //pressBack();
         onView(withId(R.id.makeOffer)).perform(click());
         onView(withId(R.id.offer)).perform(typeText("12"));
         onView(withId(R.id.cancelOfferMaking)).perform(click());
