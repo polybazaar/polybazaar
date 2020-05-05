@@ -5,9 +5,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,14 +38,14 @@ public class FavoritesTest {
             };
 
 
-    @BeforeClass
+    @Before
     public void init() {
         useMockDataStore();
         auth = MockAuthenticator.getInstance();
         AuthenticatorFactory.setDependency(auth);
     }
 
-    @AfterClass
+    @After
     public void reset(){
         MockAuthenticator.getInstance().reset();
     }

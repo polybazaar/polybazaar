@@ -12,9 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -49,13 +47,13 @@ public class SaleDetailsTest {
                     true,
                     false);
 
-    @BeforeClass
+    @Before
     public void init() {
         useMockDataStore();
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
     }
 
-    @AfterClass
+    @After
     public void cleanup() {
         MockAuthenticator.getInstance().reset();
     }

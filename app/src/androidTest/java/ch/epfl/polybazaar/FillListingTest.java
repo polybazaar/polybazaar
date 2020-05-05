@@ -25,7 +25,6 @@ import androidx.test.rule.GrantPermissionRule;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -114,7 +113,7 @@ public class FillListingTest {
 
     @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
-    @BeforeClass
+    @Before
     public void init() {
 
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
@@ -127,7 +126,7 @@ public class FillListingTest {
 
     }
 
-    @AfterClass
+    @After
     public void unSigned() {
         AuthenticatorFactory.getDependency().signOut();
         MockAuthenticator.getInstance().reset();

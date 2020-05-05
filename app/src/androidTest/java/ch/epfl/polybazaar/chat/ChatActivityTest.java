@@ -7,9 +7,7 @@ import androidx.test.rule.ActivityTestRule;
 import com.google.android.gms.tasks.Tasks;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -42,7 +40,7 @@ public class ChatActivityTest {
                     true,
                     false);
 
-    @BeforeClass
+    @Before
     public void init() throws ExecutionException, InterruptedException {
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
         useMockDataStore();
@@ -58,7 +56,7 @@ public class ChatActivityTest {
         DatabaseStoreUtilities.storeNewUser("nickname", MockAuthenticator.TEST_USER_EMAIL);
     }
 
-    @AfterClass
+    @After
     public void cleanup() {
         MockAuthenticator.getInstance().reset();
     }
