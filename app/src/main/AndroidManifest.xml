@@ -87,7 +87,7 @@
             android:noHistory="false" />
         <activity
             android:name=".UI.SalesOverview"
-            android:label="Browse Listings"
+            android:label="PolyBazaar"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
