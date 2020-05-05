@@ -135,7 +135,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         final String msg = messageText;
-        User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), msg);});
+        //User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), msg);});
     }
 
     private void sendNotification(String receiverEmail, String nickname, String message) {
