@@ -117,27 +117,41 @@
                 android:background="@drawable/rounded_corner_button_colored"
                 android:textColor="@color/white"/>
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/saleDetails_inter_space_small">
+
             <Button
                 android:id="@+id/makeOffer"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_small"
+                android:layout_marginBottom="@dimen/button_shadow_margin"
+                android:layout_weight="1"
                 android:text="@string/make_an_offer"
                 android:visibility="invisible"
                 android:onClick="makeOffer"
                 android:background="@drawable/rounded_corner_button_colored"
                 android:textColor="@color/white"/>
 
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"/>
+
             <Button
                 android:id="@+id/buyNow"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_small"
+                android:layout_marginBottom="@dimen/button_shadow_margin"
+                android:layout_weight="1"
                 android:text="@string/buy_now"
                 android:visibility="invisible"
                 android:background="@drawable/rounded_corner_button_colored"
                 android:textColor="@color/white"
                 android:onClick="buyNow"/>
+
+        </TableRow>
 
             <LinearLayout
                 android:id="@+id/descriptionLayout"

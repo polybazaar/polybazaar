@@ -71,7 +71,7 @@ public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<Co
                 User.fetch(result.getUserEmail()).addOnSuccessListener(user -> {
                     if(user != null) {
                         if (AuthenticatorFactory.getDependency().getCurrentUser().getEmail().equals(user.getEmail())) {
-                            User.fetch(conversationOverviews.get(0).getOtherUser()).addOnSuccessListener(user2 -> {
+                            User.fetch(conversationOverview.getOtherUser()).addOnSuccessListener(user2 -> {
                                 holder.otherUser.setText(user2.getNickName());
                             });
                         } else {
