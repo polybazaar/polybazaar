@@ -1,6 +1,5 @@
 package ch.epfl.polybazaar.filllisting;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.view.View;
@@ -15,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
 import ch.epfl.polybazaar.listingImage.ListingImage;
@@ -26,10 +26,10 @@ public class ImageManager extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private TableRow editButtons;
-    private Activity activity;
+    private FillListing activity;
     private boolean edited = false;
 
-    public ImageManager(Activity activity) {
+    public ImageManager(FillListing activity) {
         this.activity = activity;
         imageManagerFindViews();
     }

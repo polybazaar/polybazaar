@@ -66,6 +66,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
                     android:orientation="vertical">
 
                     <TextView
@@ -112,8 +113,45 @@
                 android:layout_marginTop="@dimen/saleDetails_inter_space_large"
                 android:text="@string/contact_the_seller"
                 android:visibility="invisible"
+                android:onClick="contactSeller"
                 android:background="@drawable/rounded_corner_button_colored"
                 android:textColor="@color/white"/>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/saleDetails_inter_space_small">
+
+            <Button
+                android:id="@+id/makeOffer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/button_shadow_margin"
+                android:layout_weight="1"
+                android:text="@string/make_an_offer"
+                android:visibility="invisible"
+                android:onClick="makeOffer"
+                android:background="@drawable/rounded_corner_button_colored"
+                android:textColor="@color/white"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"/>
+
+            <Button
+                android:id="@+id/buyNow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/button_shadow_margin"
+                android:layout_weight="1"
+                android:text="@string/buy_now"
+                android:visibility="invisible"
+                android:background="@drawable/rounded_corner_button_colored"
+                android:textColor="@color/white"
+                android:onClick="buyNow"/>
+
+        </TableRow>
 
             <LinearLayout
                 android:id="@+id/descriptionLayout"
@@ -158,6 +196,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/saleDetails_inter_space_large"
                 android:text="@string/see_MP"
+                android:onClick="viewMP"
                 android:background="@drawable/rounded_corner_button_grey"
                 android:visibility="gone"/>
 
@@ -229,6 +268,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/button_shadow_margin"
                         android:layout_marginBottom="@dimen/button_shadow_margin"
+                        android:onClick="editListing"
                         android:background="@drawable/rounded_corner_button_grey"
                         android:text="@string/edit" />
 
@@ -243,6 +283,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/button_shadow_margin"
                         android:layout_marginBottom="@dimen/button_shadow_margin"
+                        android:onClick="deleteListing"
                         android:background="@drawable/rounded_corner_button_grey"
                         android:text="@string/delete"/>
 
@@ -255,22 +296,23 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/saleDetails_inter_space_extra_large" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:layout_marginBottom="@dimen/saleDetails_inter_space_extra_large"
                 android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5" />
 
                 <TextView
                     android:id="@+id/viewsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/saleDetails_inter_space_large"
-                    android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
                     android:text="@string/views"
                     android:textColor="@android:color/secondary_text_light"
                     android:textSize="@dimen/large_textView_text_size"
@@ -281,12 +323,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/saleDetails_inter_space_large"
-                    android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
-                    android:layout_weight="1"
+                    android:layout_marginStart="3dp"
                     android:textColor="@android:color/secondary_text_light"
+                    android:text="@string/zero"
                     android:textSize="@dimen/large_textView_text_size"
                     android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5" />
+
             </LinearLayout>
 
         </LinearLayout>
