@@ -1,9 +1,7 @@
 package ch.epfl.polybazaar.filllisting;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -12,15 +10,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
@@ -30,12 +25,10 @@ import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
 import static ch.epfl.polybazaar.Utilities.getUser;
+import static ch.epfl.polybazaar.listing.Listing.*;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.scaleBitmap;
 import static java.util.UUID.randomUUID;
 
 public class ListingManager {
@@ -45,9 +38,9 @@ public class ListingManager {
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
-    private Activity activity;
+    private FillListing activity;
 
-    public ListingManager(Activity activity) {
+    public ListingManager(FillListing activity) {
         this.activity = activity;
         if (activity != null) {
             titleSelector = activity.findViewById(R.id.titleSelector);
@@ -193,37 +186,44 @@ public class ListingManager {
             Map<String, Object> listingUpdated = new HashMap<>();
             Map<String, Object> liteListingUpdated = new HashMap<>();
             Listing.fetch(listingID).addOnSuccessListener(listing -> {
-                if(!listing.getTitle().equals(titleSelector.getText())){
-                    listingUpdated.put("title", titleSelector.getText().toString());
-                    liteListingUpdated.put("title", titleSelector.getText().toString());
+                if(!listing.getTitle().contentEquals(titleSelector.getText())){
+                    listingUpdated.put(TITLE, titleSelector.getText().toString());
+                    liteListingUpdated.put(TITLE, titleSelector.getText().toString());
                 }
 
-                if(!listing.getPrice().equals(priceSelector.getText())){
-                    listingUpdated.put("price", priceSelector.getText().toString());
-                    listingUpdated.put("price", priceSelector.getText().toString());
+                if(!listing.getPrice().contentEquals(priceSelector.getText())){
+                    listingUpdated.put(PRICE, priceSelector.getText().toString());
+                    if (!listing.getListingActive()) {
+                        liteListingUpdated.put(PRICE, LiteListing.SOLD);
+                    } else {
+                        liteListingUpdated.put(PRICE, priceSelector.getText().toString());
+                    }
                 }
 
-                if(!listing.getDescription().equals(descriptionSelector.getText())){
-                    listingUpdated.put("description", descriptionSelector.getText().toString());
+                if(!listing.getDescription().contentEquals(descriptionSelector.getText())){
+                    listingUpdated.put(DESCRIPTION, descriptionSelector.getText().toString());
                 }
 
                 if(listing.getLatitude() != lat){
-                    listingUpdated.put("latitude", lat);
+                    listingUpdated.put(LATITUDE, lat);
                 }
 
                 if(listing.getLongitude() != lng){
-                    listingUpdated.put("longitude", lng);
+                    listingUpdated.put(LONGITUDE, lng);
                 }
+
+                listingUpdated.put(LISTING_ACTIVE, listing.getListingActive());
+
                 //TODO: Also edit the category. But this feature should wait to have the new category selector
 
                 Listing.updateMultipleFields(listingID, listingUpdated).addOnSuccessListener(aVoid -> LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
-                    String thumbnail = "NoThumbnail";
+                    String thumbnail = LiteListing.NO_THUMBNAIL;
 
                     if(!listStringImage.isEmpty()) {
                         thumbnail = resizeStringImageThumbnail(listStringImage.get(0));
                     }
-                    if(!liteListing.getStringThumbnail().equals(thumbnail) && !thumbnail.equals("NoThumbnail")){
-                        liteListingUpdated.put("stringThumbnail", thumbnail);
+                    if(!liteListing.getStringThumbnail().equals(thumbnail) && !thumbnail.equals(LiteListing.NO_THUMBNAIL)){
+                        liteListingUpdated.put(LiteListing.STRING_THUMBNAIL, thumbnail);
                     }
                     LiteListing.updateMultipleFields(listingID, liteListingUpdated);
                 }));

@@ -20,20 +20,31 @@ import static ch.epfl.polybazaar.Utilities.nameIsValid;
  * If you change attributes of this class, also change its CallbackAdapter and Utilities
  */
 public final class User extends Model {
-    private final SimpleField<String> nickName = new SimpleField<>("nickName");
-    private final SimpleField<String> email = new SimpleField<>("email");
-    private final SimpleField<String> firstName = new SimpleField<>("firstName");
-    private final SimpleField<String> lastName = new SimpleField<>("lastName");
-    private final SimpleField<String> phoneNumber = new SimpleField<>("phoneNumber");
-    private final SimpleField<String> profilePicture = new SimpleField<>("profilePicture");
-    private final SimpleField<ArrayList<String>> ownListings = new SimpleField<>("ownListings", new ArrayList<>());
-    private final SimpleField<ArrayList<String>> favorites = new SimpleField<>("favorites", new ArrayList<>());
-    private final SimpleField<String> token = new SimpleField<>("token");
+
+    public static final String NICK_NAME = "nickName";
+    public static final String EMAIL = "email";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
+    public static final String PHONE_NUMBER = "phoneNumber";
+    public static final String PROFILE_PICTURE = "profilePicture";
+    public static final String OWN_LISTINGS = "ownListings";
+    public static final String FAVORITES = "favorites";
+    public final static String TOKEN ="token";
+
+    private final SimpleField<String> nickName = new SimpleField<>(NICK_NAME);
+    private final SimpleField<String> email = new SimpleField<>(EMAIL);
+    private final SimpleField<String> firstName = new SimpleField<>(FIRST_NAME);
+    private final SimpleField<String> lastName = new SimpleField<>(LAST_NAME);
+    private final SimpleField<String> phoneNumber = new SimpleField<>(PHONE_NUMBER);
+    private final SimpleField<String> profilePicture = new SimpleField<>(PROFILE_PICTURE);
+    private final SimpleField<ArrayList<String>> ownListings = new SimpleField<>(OWN_LISTINGS, new ArrayList<>());
+    private final SimpleField<ArrayList<String>> favorites = new SimpleField<>(FAVORITES, new ArrayList<>());
+    private final SimpleField<String> token = new SimpleField<>(TOKEN);
 
     private final static String COLLECTION = "users";
     public final static String NO_PROFILE_PICTURE = "no_picture";
 
-    public final static String TOKEN ="token";
+
 
     public String getNickName() {
         return nickName.get();

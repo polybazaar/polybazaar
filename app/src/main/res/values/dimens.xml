@@ -54,4 +54,8 @@
     <dimen name="extra_large_textView_text_size">25sp</dimen>
     <dimen name="seller_image_size">120dp</dimen>
     <dimen name="bottom_bar_height">16dp</dimen>
+    <dimen name="message_text_size">12sp</dimen>
+    <dimen name="message_time_text_size">10sp</dimen>
+    <dimen name="message_date_text_size">13sp</dimen>
+    <dimen name="offer_buttons_margin">5dp</dimen>
 </resources>

@@ -55,6 +55,13 @@
         <activity
             android:name=".utilities.ImageTaker"
             android:noHistory="false" />
+
+        <activity
+            android:name=".UI.SubmitOffer"
+            android:noHistory="false"
+            android:label="@string/submit_offer"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".UI.SalesOverview"/>
         <activity
             android:name=".UI.NotSignedIn"
             android:label="Not Signed In"
@@ -95,7 +102,7 @@
             android:noHistory="false" />
         <activity
             android:name=".UI.SalesOverview"
-            android:label="Browse Listings"
+            android:label="PolyBazaar"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

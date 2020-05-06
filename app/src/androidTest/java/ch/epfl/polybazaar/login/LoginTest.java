@@ -6,11 +6,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.R;
 
@@ -25,6 +23,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.createAccountAndBackToLoginFromLoginActivity;
+import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.fillAndSubmitSignUp;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
@@ -60,7 +60,7 @@ public class LoginTest {
 
     @Test
     public void signUpProcessWorks() {
-        createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
+        createAccountAndBackToLoginFromLoginActivity(EMAIL, NICKNAME, PASSWORD);
         fillAndSubmitSignIn(EMAIL, "aaaaaaaa");
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
 
@@ -76,7 +76,7 @@ public class LoginTest {
 
     @Test
     public void signUpWithExistingEmailFails() {
-        createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
+        createAccountAndBackToLoginFromLoginActivity(EMAIL, NICKNAME, PASSWORD);
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
 
@@ -143,15 +143,7 @@ public class LoginTest {
         clickButton(withText(R.string.alert_close));
     }
 
-    public void createAccountAndBackToLogin(String email, String nickname, String password) {
-        clickButton(withId(R.id.signUpButton));
 
-        fillAndSubmitSignUp(email, nickname, password, password);
-
-        clickButton(withId(R.id.sendLinkButton));
-        clickButton(withId(R.id.reloadButton));
-        clickButton(withId(R.id.signOutButton));
-    }
 
     private void fillAndSubmitSignIn(String email, String password) {
         typeInput(withId(R.id.emailInput), email);
