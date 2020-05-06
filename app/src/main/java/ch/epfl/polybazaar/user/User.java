@@ -33,6 +33,8 @@ public final class User extends Model {
     private final static String COLLECTION = "users";
     public final static String NO_PROFILE_PICTURE = "no_picture";
 
+    public final static String TOKEN ="token";
+
     public String getNickName() {
         return nickName.get();
     }

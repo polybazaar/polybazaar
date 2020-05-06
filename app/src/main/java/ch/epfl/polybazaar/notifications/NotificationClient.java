@@ -3,7 +3,7 @@ package ch.epfl.polybazaar.notifications;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Client {
+public class NotificationClient {
 
     private static Retrofit retrofit;
 

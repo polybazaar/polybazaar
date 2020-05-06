@@ -13,6 +13,7 @@ import ch.epfl.polybazaar.UI.UserProfile;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
+import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
 
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -32,6 +33,7 @@ public class bottomBarTest {
             useMockDataStore();
             AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
             AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL,MockAuthenticator.TEST_USER_PASSWORD);
+            DatabaseStoreUtilities.storeNewUser(MockAuthenticator.TEST_USER_NICKNAME, MockAuthenticator.TEST_USER_EMAIL);
         }
 
         @Override

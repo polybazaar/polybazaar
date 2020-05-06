@@ -14,5 +14,5 @@ public interface FCMServiceAPI {
     )
 
     @POST("fcm/send")
-    Call<NotificationResponse> sendNotification(@Body Sender body);
+    Call<Void> sendNotification(@Body NotificationSender body);
 }

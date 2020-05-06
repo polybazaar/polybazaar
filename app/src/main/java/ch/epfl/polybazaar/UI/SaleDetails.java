@@ -92,6 +92,7 @@ public class SaleDetails extends AppCompatActivity {
             return true;
         });
 
+
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
 

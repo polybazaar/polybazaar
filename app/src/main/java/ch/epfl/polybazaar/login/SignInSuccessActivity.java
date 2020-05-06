@@ -7,11 +7,13 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.bottomBar;
+import ch.epfl.polybazaar.user.User;
 
 public class SignInSuccessActivity extends AppCompatActivity {
     private Authenticator authenticator;
@@ -26,7 +28,6 @@ public class SignInSuccessActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(),SignInSuccessActivity.this));
-
     }
 
     @Override
@@ -39,6 +40,7 @@ public class SignInSuccessActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), EmailVerificationActivity.class);
             startActivity(intent);
         }
+
     }
 
     /**

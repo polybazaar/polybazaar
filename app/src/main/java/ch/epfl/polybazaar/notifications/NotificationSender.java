@@ -1,10 +1,10 @@
 package ch.epfl.polybazaar.notifications;
 
-public class Sender {
+public class NotificationSender {
     public Data data;
     public String to;
 
-    public Sender(Data data, String to) {
+    public NotificationSender(Data data, String to) {
         this.data = data;
         this.to = to;
     }
