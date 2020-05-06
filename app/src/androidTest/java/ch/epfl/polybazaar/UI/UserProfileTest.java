@@ -149,25 +149,4 @@ public class UserProfileTest {
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
     }
-
-    /*@Test
-    public void testChangeImageViaCamera() throws Throwable {
-        Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
-        Intent intent = new Intent();
-        activityRule.launchActivity(intent);
-
-        onView(withId(R.id.profilePicture)).perform(scrollTo(), click());
-        onView(withText(R.string.camera)).perform(click());
-    }*/
-
-    /*@Test
-    public void testChangeImageViaLibrary() throws Throwable {
-        Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
-        Intent intent = new Intent();
-        activityRule.launchActivity(intent);
-
-        onView(withId(R.id.profilePicture)).perform(scrollTo(), click());
-        onView(withText(R.string.library)).perform(click());
-    }*/
-
 }
