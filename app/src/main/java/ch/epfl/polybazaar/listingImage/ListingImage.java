@@ -8,9 +8,13 @@ import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
 public class ListingImage extends Model {
-    private final SimpleField<String> id = new SimpleField<>("id");
-    private final SimpleField<String> image = new SimpleField<>("image");
-    private final SimpleField<String> refNextImg = new SimpleField<>("refNextImg");
+    public static final String ID = "id";
+    public static final String IMAGE = "image";
+    public static final String REF_NEXT_IMG = "refNextImg";
+
+    private final SimpleField<String> id = new SimpleField<>(ID);
+    private final SimpleField<String> image = new SimpleField<>(IMAGE);
+    private final SimpleField<String> refNextImg = new SimpleField<>(REF_NEXT_IMG);
 
     public static final String COLLECTION = "listingsImage";
 

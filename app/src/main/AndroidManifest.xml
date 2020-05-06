@@ -40,8 +40,13 @@
 
         <activity
             android:name=".utilities.ImageTaker"
-            android:noHistory="false"/>
-
+            android:noHistory="false" />
+        <activity
+            android:name=".UI.SubmitOffer"
+            android:noHistory="false"
+            android:label="@string/submit_offer"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".UI.SalesOverview"/>
         <activity
             android:name=".UI.NotSignedIn"
             android:label="Not Signed In"
@@ -58,9 +63,8 @@
         <activity
             android:name=".UI.UserProfile"
             android:label="@string/title_activity_user_profile"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="false"/>
-
+            android:noHistory="false"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".login.EmailVerificationActivity"
             android:label="Verify E-mail" />
@@ -89,12 +93,11 @@
         <activity
             android:name=".UI.FillListing"
             android:label="Listing Editor"
-            android:noHistory="false"/>
-
+            android:noHistory="false" />
         <activity
             android:name=".UI.SalesOverview"
-            android:label="Polybazaar"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="PolyBazaar"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -111,11 +114,7 @@
             android:name=".UI.SaleDetails"
             android:label="Details"
             android:parentActivityName=".UI.SalesOverview" />
-
-        <activity android:name=".MainActivity">
-
-        </activity>
-
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

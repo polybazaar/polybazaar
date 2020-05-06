@@ -275,10 +275,12 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         /**
          * FOR TESTING PURPOSES ONLY:
          */
+        /*
         Category editedCategory = new NodeCategory(listing.getCategory());
         Category root = RootCategoryFactory.getDependency();
         traversingCategory = root.getSubCategoryContaining(editedCategory);
         categorySelector.setSelection(root.indexOf(traversingCategory)+1);
+         */
         /**
          * ==========================
          */
