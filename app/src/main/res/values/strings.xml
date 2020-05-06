@@ -61,6 +61,8 @@
     <string name="incorrect_fields">One or more fields are missing</string>
     <string name="default_spinner_text">Select category…</string>
     <string name="object_not_found">Object not found</string>
+    <string name="search_title">Search listings</string>
+    <string name="search_hint">Search listings</string>
 
     //bottom navigation bar
     <string name="bottom_navigation_home">Home</string>

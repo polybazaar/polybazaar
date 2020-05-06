@@ -8,12 +8,23 @@
     android:background="@android:color/white"
     tools:context=".UI.SalesOverview">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/searchbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
     <LinearLayout
         android:id="@+id/salesOverviewTopMenu"
         android:layout_width="match_parent"
         android:layout_height="@dimen/sales_overview_top_menu_height"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/searchbar">
 
         <TextView
             android:id="@+id/searchOverview"
