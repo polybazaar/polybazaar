@@ -20,7 +20,6 @@ import org.junit.Test;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.UtilitiesTest;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Authenticator;
