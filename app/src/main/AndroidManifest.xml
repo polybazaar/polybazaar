@@ -35,6 +35,11 @@
                 android:resource="@xml/searchable" />
         </activity>
 
+        <activity
+            android:name=".search.NoSearchResults"
+            android:label="No Search Results"
+            android:parentActivityName=".UI.SalesOverview" />
+
         <activity android:name=".conversationOverview.ConversationOverviewActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -95,9 +100,9 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".chat.ChatActivity"
@@ -107,9 +112,7 @@
             android:name=".UI.SaleDetails"
             android:label="Details"
             android:parentActivityName=".UI.SalesOverview" />
-
-        <activity android:name=".MainActivity"></activity>
-
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

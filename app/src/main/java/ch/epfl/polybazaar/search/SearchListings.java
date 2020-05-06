@@ -3,7 +3,6 @@ package ch.epfl.polybazaar.search;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import ch.epfl.polybazaar.DataHolder;
-import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
 
 import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
@@ -46,10 +44,11 @@ public class SearchListings extends AppCompatActivity {
         }
 
         if(sortedIDs.isEmpty()) {
-            Toast toast = Toast.makeText(SearchListings.this, R.string.no_results, Toast.LENGTH_LONG);
-            toast.show();
+            startActivity(new Intent(SearchListings.this, NoSearchResults.class));
         }
-        displaySavedListings(this, sortedIDs);
+        else {
+            displaySavedListings(this, sortedIDs);
+        }
     }
 
 }
