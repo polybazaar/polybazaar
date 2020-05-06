@@ -32,7 +32,7 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.search.SearchListings;
 
-public class SalesOverview extends AppCompatActivity {
+public class SalesOverview extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
@@ -111,6 +111,9 @@ public class SalesOverview extends AppCompatActivity {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(new
                         ComponentName(this, SearchListings.class)));
+
+        searchView.setOnQueryTextListener(this);
+
         return true;
     }
 
@@ -131,6 +134,23 @@ public class SalesOverview extends AppCompatActivity {
 
         // Initial load
         loadLiteListingOverview();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Intent searchIntent = new Intent(this, SearchListings.class);
+        searchIntent.putExtra(SearchManager.QUERY, query);
+
+        // transmit listing information to SearchListings class via DataHolder singleton class
+        DataHolder.getInstance().setDataMap(searchListingTitleMap);
+
+        startActivity(searchIntent);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
 
