@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.View;
 
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
@@ -94,29 +95,6 @@ public class UserProfileTest {
         onView(withId(R.id.signOutButton)).perform(scrollTo(), click());
         onView(withId(R.id.action_profile)).perform(click());
         onView(withId(R.id.signUpButton)).perform(click());
-    }
-
-    @Test
-    public void testNameChangesWorks() throws InterruptedException {
-        String newNickname = "new Nickname";
-        String newFirstName = "Aurelien";
-        String newLastName = "Queloz";
-        signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
-        onView(withId(R.id.action_profile)).perform(click());
-        onView(withId(R.id.nicknameSelector)).perform(scrollTo(), clearText(), typeText(newNickname));
-        closeSoftKeyboard();
-        onView(withId(R.id.firstNameSelector)).perform(scrollTo(), clearText(), typeText(newFirstName));
-        closeSoftKeyboard();
-        onView(withId(R.id.lastNameSelector)).perform(scrollTo(), clearText(), typeText(newLastName));
-        closeSoftKeyboard();
-        onView(withId(R.id.saveProfileButton)).perform(scrollTo(), click());
-
-        assertThat(authenticator.getCurrentUser().getNickname(), is(newNickname));
-        User.fetch(MockAuthenticator.TEST_USER_EMAIL).addOnSuccessListener(user -> {
-            assertThat(user.getNickName(), is(newNickname));
-            assertThat(user.getFirstName(), is(newFirstName));
-            assertThat(user.getLastName(), is(newLastName));
-        });
     }
 
     @Test
