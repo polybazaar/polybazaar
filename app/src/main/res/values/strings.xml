@@ -117,6 +117,23 @@
     <string name="no_connection">No Internet connection</string>send_when_connected
     <string name="send_when_connected">Send as soon as connection is available</string>
     <string name="information">Information</string>sign_in_to_contact
-    <string name="sign_in_to_contact">Sign In To Contact Seller</string>
     <string name="back">Back</string>
+    <string name="sign_in_to_contact">Sign In To Contact Seller / Make An Offer</string>
+    <string name="make_an_offer">Make an offer</string>
+    <string name="sign_in_to_make_offer">Sign in to make an offer</string>
+    <string name="buy_now">Buy now</string>
+    <string name="accept_offer">Accept Offer</string>
+    <string name="submit_offer">Submit Offer</string>
+    <string name="offer_invalid">Offer Invalid</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="offer_sent">Offer Sent</string>
+    <string name="purchase_offer">"Purchase offer for "</string>
+    <string name="you_made_an_offer">"You made an offer at "</string>
+    <string name="refuse_offer">Refuse Offer</string>
+    <string name="offer_accepted">This offer was accepted</string>
+    <string name="offer_for">"Offer for CHF "</string>
+    <string name="sold">SOLD</string>
+    <string name="zero">0</string>
+>>>>>>> 7ed2568873ec92081af2cdcc48a1ae366bf3ebd7
 </resources>

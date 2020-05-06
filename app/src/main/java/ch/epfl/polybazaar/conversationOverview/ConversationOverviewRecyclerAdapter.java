@@ -16,9 +16,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.user.User;
 
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.cropToSquare;
 
 public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<ConversationOverviewRecyclerAdapter.ViewHolder> {
 
@@ -58,11 +62,25 @@ public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<Co
         LiteListing.fetch(conversationOverview.getListingID()).addOnSuccessListener(result -> {
             if(result != null) {
                 holder.title.setText(result.getTitle());
-                holder.thumbnail.setImageBitmap(convertStringToBitmap(result.getStringThumbnail()));
+                holder.thumbnail.setImageBitmap(cropToSquare(convertStringToBitmap(result.getStringThumbnail())));
             }
         });
 
-        holder.otherUser.setText(String.format("Seller : %s", conversationOverview.getOtherUser()));
+        Listing.fetch(conversationOverview.getListingID()).addOnSuccessListener(result -> {
+            if(result != null) {
+                User.fetch(result.getUserEmail()).addOnSuccessListener(user -> {
+                    if(user != null) {
+                        if (AuthenticatorFactory.getDependency().getCurrentUser().getEmail().equals(user.getEmail())) {
+                            User.fetch(conversationOverview.getOtherUser()).addOnSuccessListener(user2 -> {
+                                holder.otherUser.setText(user2.getNickName());
+                            });
+                        } else {
+                            holder.otherUser.setText(user.getNickName());
+                        }
+                    }
+                });
+            }
+        });
         holder.item.setTag(position);
     }
 
@@ -80,7 +98,7 @@ public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<Co
             super(itemView);
             thumbnail = itemView.findViewById(R.id.liteListingThumbnail);
             title = itemView.findViewById(R.id.title_conversation);
-            otherUser = itemView.findViewById(R.id.seller_email);
+            otherUser = itemView.findViewById(R.id.interlocutor);
             item = itemView.findViewById(R.id.conversationItem);
 
             item.setOnClickListener(v -> {

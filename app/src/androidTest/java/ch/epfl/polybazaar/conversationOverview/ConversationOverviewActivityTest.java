@@ -59,8 +59,6 @@ public class ConversationOverviewActivityTest {
     public void testConversationIsVisible() {
         onView(withId(R.id.title_conversation))
                 .check(matches(withText("Title")));
-        onView(withId(R.id.seller_email))
-                .check(matches(withText("Seller : user_email@epfl.ch")));
     }
 
 }

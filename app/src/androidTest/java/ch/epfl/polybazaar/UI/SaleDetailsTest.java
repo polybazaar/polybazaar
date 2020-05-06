@@ -78,8 +78,7 @@ public class SaleDetailsTest {
         intent.putExtra("listingID", listing.getId());
         activityRule.launchActivity(intent);
 
-
-        runOnUiThread(() -> activityRule.getActivity().fillWithListing(listing));
+        runOnUiThread(() -> activityRule.getActivity().applyFillWithListing(listing));
 
         TextView textTitle = activityRule.getActivity().findViewById(R.id.title);
         assertEquals("Algebre linéaire by David C. Lay", textTitle.getText().toString());
@@ -183,7 +182,7 @@ public class SaleDetailsTest {
         activityRule.launchActivity(intent);
 
         runOnUiThread(() -> {
-            activityRule.getActivity().favorite();
+            activityRule.getActivity().applyFavorite(listing);
             assertNotEquals(0f, (((RatingBar)activityRule.getActivity().findViewById(R.id.ratingBar)).getRating()));
         });
     }
@@ -252,7 +251,7 @@ public class SaleDetailsTest {
     }
 
     @Test
-    public void testFillWithListingNull() throws InterruptedException {
+    public void testFillWithListingNull() {
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
