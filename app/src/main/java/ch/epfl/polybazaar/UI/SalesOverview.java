@@ -22,6 +22,7 @@ import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -37,6 +38,8 @@ public class SalesOverview extends AppCompatActivity {
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
     private Map<Timestamp, String> listingTimeMap;
+    private Map<String, String> listingTitleMap;
+    private Map<String, String> searchListingTitleMap;
     public static final String LISTING_ID = "listingID";
     private List<String> IDList;
     private List<LiteListing> liteListingList;
@@ -49,6 +52,8 @@ public class SalesOverview extends AppCompatActivity {
         setContentView(R.layout.activity_sales_overview2);
 
         listingTimeMap = new TreeMap<>(Collections.reverseOrder());    // store LiteListing IDs in reverse order of creation (most recent first)
+        listingTitleMap = new TreeMap<>();
+        searchListingTitleMap = new LinkedHashMap<>();
         IDList = new ArrayList<>();
         liteListingList = new ArrayList<>();
 
@@ -106,7 +111,6 @@ public class SalesOverview extends AppCompatActivity {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(new
                         ComponentName(this, SearchListings.class)));
-
         return true;
     }
 
@@ -120,7 +124,7 @@ public class SalesOverview extends AppCompatActivity {
         // activity is launched with a list of litelistings
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
-            if(bundle.getBoolean(bundleKey)) {
+            if (bundle.getBoolean(bundleKey)) {
                 IDList = DataHolder.getInstance().getData();
             }
         }
@@ -135,19 +139,30 @@ public class SalesOverview extends AppCompatActivity {
      */
     public void loadLiteListingOverview() {
         LiteListing.fetchAll().addOnSuccessListener(result -> {
-            if(result == null) {
+            if (result == null) {
                 return;
             }
-            if(IDList.isEmpty()) {
-                for (LiteListing l : result) {
-                    if (l != null) {
-                        listingTimeMap.put(l.getTimestamp(), l.getId());
-                    }
+
+            // fill maps <Timestamp, listingID> and <listingID, title>
+            for (LiteListing l : result) {
+                if (l != null) {
+                    listingTimeMap.put(l.getTimestamp(), l.getId());
+                    listingTitleMap.put(l.getId(), l.getTitle());
                 }
+            }
+            if (IDList.isEmpty()) {
                 // retrieve values from Treemap: litelistings IDs in order: most recent first
                 IDList = new ArrayList<>(listingTimeMap.values());
             }
+
             int size = IDList.size();
+
+            // Prepare a  map <listingID, title> sorted by most recent first, for search purposes
+            for (int i = 0; i < size; i++) {
+                String key = IDList.get(i);
+                searchListingTitleMap.put(key, listingTitleMap.get(key));
+            }
+
             List<Task<LiteListing>> taskList = new ArrayList<>();
             // add fetch tasks in correct display order
             for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
