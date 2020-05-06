@@ -4,6 +4,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
 
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
@@ -38,10 +39,12 @@ public abstract  class DatabaseStoreUtilities {
         });
     }
 
-    public static void storeNewUser(String nickname, String email){
+    public static void storeNewUser(String nickname, String email) {
         User user = new User(nickname, email);
-        Tasks.whenAll(user.save()).addOnFailureListener(e -> {
-            throw new AssertionError();
-        });
+        try {
+            Tasks.await(user.save());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
