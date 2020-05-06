@@ -1,31 +1,28 @@
 package ch.epfl.polybazaar.category;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.login.SignInActivity;
-import ch.epfl.polybazaar.login.SignUpActivity;
+
 
 public class CategorySelectionActivity extends AppCompatActivity {
+
+    private CategoryRecyclerAdapter categoryRecyclerAdapter;
+    private RecyclerView categoryRecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_not_signed_in);
-        findViewById(R.id.signInButton).setOnClickListener(v -> {
-            // TODO: launch the correct activity
-            Intent target = new Intent(this, SignInActivity.class);
-            startActivity(target);
-            finish();
-        });
-        findViewById(R.id.signUpButton).setOnClickListener(v -> {
-            // TODO: launch the correct activity
-            Intent target = new Intent(this, SignUpActivity.class);
-            startActivity(target);
-            finish();
-        });
+        setContentView(R.layout.activity_category_selector);
+        categoryRecyclerAdapter = new CategoryRecyclerAdapter(getApplicationContext());
+        categoryRecycler = findViewById(R.id.categoriesRecycler);
+        categoryRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        categoryRecycler.setAdapter(categoryRecyclerAdapter);
+
     }
 }

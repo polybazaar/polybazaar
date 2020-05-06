@@ -46,6 +46,10 @@
             android:name=".UI.NotSignedIn"
             android:label="Not Signed In"
             android:parentActivityName=".UI.SalesOverview"/>
+        <activity
+            android:name=".category.CategorySelectionActivity"
+            android:label="filter by category"
+            android:parentActivityName=".UI.SalesOverview"/>
 
         <activity
             android:name=".map.MapsActivity"
@@ -89,7 +93,7 @@
 
         <activity
             android:name=".UI.SalesOverview"
-            android:label="Browse Listings"
+            android:label="Polybazaar"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

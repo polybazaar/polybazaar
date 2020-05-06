@@ -3,6 +3,7 @@ package ch.epfl.polybazaar.UI;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.category.CategorySelectionActivity;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 
@@ -51,6 +53,12 @@ public class SalesOverview extends AppCompatActivity {
         IDList = new ArrayList<>();
         liteListingList = new ArrayList<>();
 
+
+        TextView catButton = findViewById(R.id.searchOverview);
+        catButton.setOnClickListener(view->{
+            Intent catIntent = new Intent(SalesOverview.this, CategorySelectionActivity.class);
+            startActivity(catIntent);
+        });
         // Lookup the recyclerview in activity layout
         RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
 
