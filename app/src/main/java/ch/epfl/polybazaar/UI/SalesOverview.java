@@ -1,12 +1,13 @@
 package ch.epfl.polybazaar.UI;
 
 import android.app.SearchManager;
-import android.widget.SearchView;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -28,6 +29,7 @@ import java.util.TreeMap;
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.search.SearchListings;
 
 public class SalesOverview extends AppCompatActivity {
 
@@ -102,7 +104,8 @@ public class SalesOverview extends AppCompatActivity {
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+                searchManager.getSearchableInfo(new
+                        ComponentName(this, SearchListings.class)));
 
         return true;
     }
@@ -112,8 +115,10 @@ public class SalesOverview extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
+        Intent intent = getIntent();
+
         // activity is launched with a list of litelistings
-        Bundle bundle = getIntent().getExtras();
+        Bundle bundle = intent.getExtras();
         if (bundle != null) {
             if(bundle.getBoolean(bundleKey)) {
                 IDList = DataHolder.getInstance().getData();
