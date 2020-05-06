@@ -3,8 +3,6 @@ package ch.epfl.polybazaar.UI;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -25,10 +23,6 @@ import java.util.TreeMap;
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.litelisting.LiteListing;
-import ch.epfl.polybazaar.login.Account;
-
-import static ch.epfl.polybazaar.Utilities.checkUserLoggedIn;
-import static ch.epfl.polybazaar.Utilities.getUser;
 
 public class SalesOverview extends AppCompatActivity {
 
@@ -91,24 +85,6 @@ public class SalesOverview extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-        // prepare top menu
-        TextView favorites = findViewById(R.id.favoritesOverview);
-        favorites.setOnClickListener(v -> {
-            if (checkUserLoggedIn(this)) {
-                Account user = getUser();
-                user.getUserData().addOnSuccessListener(authUser -> {
-                    ArrayList<String> favoritesIds = authUser.getFavorites();
-                    // the list of favorites of the user is empty
-                    if (favoritesIds == null || favoritesIds.isEmpty()) {
-                        Toast.makeText(getApplicationContext(), R.string.no_favorites, Toast.LENGTH_SHORT).show() ;
-                        // we relaunch the activity with the list of favorites in the bundle
-                    } else {
-                        displaySavedListings(this, favoritesIds);
-                    }
-                });
-            }
-        });
-
         // activity is launched with a list of litelistings
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -133,9 +109,7 @@ public class SalesOverview extends AppCompatActivity {
             if(IDList.isEmpty()) {
                 for (LiteListing l : result) {
                     if (l != null) {
-                        if(l.getTimestamp() != null) { // TODO: delete before merge
-                            listingTimeMap.put(l.getTimestamp(), l.getId());
-                        }
+                        listingTimeMap.put(l.getTimestamp(), l.getId());
                     }
                 }
                 // retrieve values from Treemap: litelistings IDs in order: most recent first
