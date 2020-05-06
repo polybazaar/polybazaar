@@ -65,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_messages);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), ChatActivity.this));
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> User.updateField("token", senderEmail, instanceIdResult.getToken()));
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> User.updateField(User.TOKEN, senderEmail, instanceIdResult.getToken()));
         //TODO: What if the bundle is null ?
         Bundle bundle = getIntent().getExtras();
         this.listingID = bundle.getString(bundleListingId);

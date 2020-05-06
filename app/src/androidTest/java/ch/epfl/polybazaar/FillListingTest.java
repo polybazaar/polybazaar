@@ -37,6 +37,7 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
+import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -118,6 +119,7 @@ public class FillListingTest {
 
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
         AuthenticatorFactory.getDependency().signIn(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        DatabaseStoreUtilities.storeNewUser(MockAuthenticator.TEST_USER_NICKNAME, TEST_USER_EMAIL);
 
         Activity activityUnderTest = fillSaleActivityTestRule.getActivity();
         activityUnderTest.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));

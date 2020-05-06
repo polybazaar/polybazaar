@@ -45,7 +45,6 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
         ChatMessage message = messages.get(position);
         Account user = AuthenticatorFactory.getDependency().getCurrentUser();
-        assert(user != null);
 
         if (user == null || message.getSender().equals(user.getEmail())) {
             // If the current user is the sender of the message

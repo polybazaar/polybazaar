@@ -49,11 +49,11 @@ public class ChatActivityTest {
         Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
 
         listingID = randomUUID().toString();
-        DatabaseStoreUtilities.storeNewListing("Tityyyle", MockAuthenticator.TEST_USER_EMAIL, listingID);
+        DatabaseStoreUtilities.storeNewListing("Title", MockAuthenticator.TEST_USER_EMAIL, listingID);
         DatabaseStoreUtilities.storeNewMessage(otherUserEmail, MockAuthenticator.TEST_USER_EMAIL, listingID, "Hello!");
         DatabaseStoreUtilities.storeNewMessage( MockAuthenticator.TEST_USER_EMAIL, otherUserEmail, listingID, "Hi!");
-        DatabaseStoreUtilities.storeNewUser("nickname", otherUserEmail);
-        DatabaseStoreUtilities.storeNewUser("nickname", MockAuthenticator.TEST_USER_EMAIL);
+        DatabaseStoreUtilities.storeNewUser("otherNickname", otherUserEmail);
+        DatabaseStoreUtilities.storeNewUser(MockAuthenticator.TEST_USER_NICKNAME, MockAuthenticator.TEST_USER_EMAIL);
     }
 
     @After

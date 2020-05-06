@@ -42,20 +42,19 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     private void showNotification(RemoteMessage remoteMessage) {
-        String channel_id = "notification_channel_id";
+        Intent notificationIntent = new Intent(this, ChatActivity.class)
+                .putExtra(ChatActivity.bundleReceiverEmail, remoteMessage.getData().get(Data.SENDER))
+                .putExtra(ChatActivity.bundleListingId, remoteMessage.getData().get(Data.LISTINGID))
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
                 .setContentTitle(remoteMessage.getData().get(Data.TITLE))
                 .setContentText(remoteMessage.getData().get(Data.BODY))
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
-
-        Intent notificationIntent = new Intent(this, ChatActivity.class);
-        notificationIntent.putExtra(ChatActivity.bundleReceiverEmail, remoteMessage.getData().get(Data.SENDER));
-        notificationIntent.putExtra(ChatActivity.bundleListingId, remoteMessage.getData().get(Data.LISTINGID));
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
-        builder.setContentIntent(contentIntent);
+                .setAutoCancel(true)
+                .setContentIntent(contentIntent);
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

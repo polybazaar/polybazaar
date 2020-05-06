@@ -40,7 +40,6 @@ public class LoginTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     useMockDataStore();
-                    MockAuthenticator.getInstance().reset();
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                 }
 
@@ -56,7 +55,6 @@ public class LoginTest {
         fillAndSubmitSignIn(EMAIL, PASSWORD);
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
     }
-
 
     @Test
     public void signUpProcessWorks() {
@@ -107,7 +105,7 @@ public class LoginTest {
 
         onView(withText(R.string.signup_passwords_weak)).check(matches(isDisplayed()));
     }
-    /*
+
     @Test
     public void signInWithoutVerificationBlocked() {
         clickButton(withId(R.id.signUpButton));
@@ -119,7 +117,7 @@ public class LoginTest {
 
         onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));
     }
-    */
+
     @Test
     public void networkInterruptionFailsProperly() {
         clickButton(withId(R.id.signUpButton));
@@ -143,22 +141,11 @@ public class LoginTest {
         clickButton(withText(R.string.alert_close));
     }
 
-
-
     private void fillAndSubmitSignIn(String email, String password) {
         typeInput(withId(R.id.emailInput), email);
         typeInput(withId(R.id.passwordInput), password);
         closeSoftKeyboard();
         clickButton(withId(R.id.loginButton));
-    }
-
-    private void fillAndSubmitSignUp(String email, String nickname, String password, String confirm) {
-        typeInput(withId(R.id.emailInput), email);
-        typeInput(withId(R.id.nicknameInput), nickname);
-        typeInput(withId(R.id.passwordInput), password);
-        typeInput(withId(R.id.confirmPasswordInput), confirm);
-        closeSoftKeyboard();
-        clickButton(withId(R.id.submitButton));
     }
 
     private void typeInput(Matcher<View> object, String text) {
