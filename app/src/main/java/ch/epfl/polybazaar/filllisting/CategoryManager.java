@@ -1,6 +1,5 @@
 package ch.epfl.polybazaar.filllisting;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.listing.Listing;
@@ -19,13 +19,13 @@ import ch.epfl.polybazaar.listing.Listing;
 
 public class CategoryManager {
 
-    private Activity activity;
+    private FillListing activity;
     private Spinner categorySelector;
     private LinearLayout linearLayout;
     private Category traversingCategory;
     private List<Spinner> spinnerList;
 
-    public CategoryManager(Activity activity) {
+    public CategoryManager(FillListing activity) {
         this.activity = activity;
         if (activity != null) {
             categorySelector = activity.findViewById(R.id.categorySelector);

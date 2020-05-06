@@ -56,6 +56,14 @@
         <activity
             android:name=".utilities.ImageTaker"
             android:noHistory="false" />
+
+        <activity
+            android:name=".UI.SubmitOffer"
+            android:noHistory="false"
+            android:label="@string/submit_offer"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".UI.SalesOverview"/>
+
         <activity
             android:name=".UI.NotSignedIn"
             android:label="Not Signed In"
@@ -112,7 +120,9 @@
             android:name=".UI.SaleDetails"
             android:label="Details"
             android:parentActivityName=".UI.SalesOverview" />
+
         <activity android:name=".MainActivity" />
+
     </application>
 
 </manifest>

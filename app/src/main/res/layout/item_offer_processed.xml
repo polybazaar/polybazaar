@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/general_margin"
+    android:paddingTop="@dimen/general_margin">
+
+    <TextView
+        android:id="@+id/date_received"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/general_margin"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="@dimen/message_date_text_size" />
+
+    <TextView
+        android:id="@+id/text_message_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/message_text_size"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="@dimen/general_margin"
+        app:layout_constraintTop_toBottomOf="@id/date_received"
+        android:layout_marginTop="@dimen/message_small_margin" />
+
+    <LinearLayout
+        android:id="@+id/message_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/text_message_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="@dimen/message_small_margin">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.13" />
+
+        <TextView
+            android:id="@+id/text_message_body"
+            android:background="@drawable/rounded_rectangle_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/message_max_width"
+            android:padding="@dimen/general_margin"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/text_message_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/message_time_text_size"
+            app:layout_constraintLeft_toRightOf="@+id/text_message_body"
+            android:layout_marginStart="@dimen/message_small_margin"
+            app:layout_constraintBottom_toBottomOf="@+id/text_message_body" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1" />
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

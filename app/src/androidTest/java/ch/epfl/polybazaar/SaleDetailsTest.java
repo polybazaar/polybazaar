@@ -23,6 +23,7 @@ import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.LoginTest;
 import ch.epfl.polybazaar.login.MockAuthenticator;
+import ch.epfl.polybazaar.saledetails.ListingManager;
 import ch.epfl.polybazaar.testingUtilities.DatabaseChecksUtilities;
 import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
 import ch.epfl.polybazaar.user.User;
@@ -66,8 +67,7 @@ public class SaleDetailsTest {
         intent.putExtra("listingID", listing.getId());
         activityRule.launchActivity(intent);
 
-
-        runOnUiThread(() -> activityRule.getActivity().fillWithListing(listing));
+        runOnUiThread(() -> activityRule.getActivity().applyFillWithListing(listing));
 
         TextView textTitle = activityRule.getActivity().findViewById(R.id.title);
         assertEquals("Algebre linéaire by David C. Lay", textTitle.getText().toString());
@@ -171,7 +171,7 @@ public class SaleDetailsTest {
         activityRule.launchActivity(intent);
 
         runOnUiThread(() -> {
-            activityRule.getActivity().favorite();
+            activityRule.getActivity().applyFavorite(listing);
             assertNotEquals(0f, (((RatingBar)activityRule.getActivity().findViewById(R.id.ratingBar)).getRating()));
         });
     }

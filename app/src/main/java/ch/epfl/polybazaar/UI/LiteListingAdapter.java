@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar.UI;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -97,6 +98,7 @@ public class LiteListingAdapter extends
 
 
     // Populating data into the item through holder
+    @SuppressLint("SetTextI18n")
     public void onBindViewHolder(LiteListingAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
         LiteListing liteListing = liteListingList.get(position);
@@ -108,9 +110,12 @@ public class LiteListingAdapter extends
         viewIDtoListingIDMap.put(textView.getId(), liteListing.getListingID()); // update map <view ID, listing ID>
 
         TextView priceView = viewHolder.priceView;
-        priceView.setText("CHF " + liteListing.getPrice());
+        if ((liteListing.getPrice()).equals(LiteListing.SOLD)) {
+            priceView.setText(R.string.sold);
+        } else {
+            priceView.setText("CHF " + liteListing.getPrice());
+        }
         priceView.setId(View.generateViewId());
-
         ImageView thumbnail = viewHolder.thumbnail;
         thumbnail.setScaleType(ImageView.ScaleType.FIT_XY);
         String stringThumbnail = liteListing.getStringThumbnail();
