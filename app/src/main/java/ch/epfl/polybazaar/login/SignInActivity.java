@@ -47,7 +47,6 @@ public class SignInActivity extends AppCompatActivity {
             currentUser.getUserData().addOnSuccessListener(new OnSuccessListener<User>() {
                 @Override
                 public void onSuccess(User user) {
-                    updateToken(FirebaseInstanceId.getInstance().getToken(), user.getEmail());
                     Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
                     startActivity(intent);
                 }
@@ -81,7 +80,6 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthenticatorResult> task) {
                         if (task.isSuccessful()) {
-                            User.updateField("token", email, FirebaseInstanceId.getInstance().getToken());
                             Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
                             startActivity(intent);
                         } else {
@@ -89,10 +87,6 @@ public class SignInActivity extends AppCompatActivity {
                         }
                     }
                 });
-    }
-
-    private void updateToken(String token, String email){
-
     }
 }
 

@@ -13,11 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
@@ -29,9 +26,9 @@ import java.util.List;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.notifications.FCMServiceAPI;
 import ch.epfl.polybazaar.notifications.Client;
 import ch.epfl.polybazaar.notifications.Data;
+import ch.epfl.polybazaar.notifications.FCMServiceAPI;
 import ch.epfl.polybazaar.notifications.NotificationResponse;
 import ch.epfl.polybazaar.notifications.Sender;
 import ch.epfl.polybazaar.user.User;
@@ -81,6 +78,7 @@ public class ChatActivity extends AppCompatActivity {
         messageEditor = findViewById(R.id.messageEditor);
         messageRecycler = findViewById(R.id.messageDisplay);
         messageRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
 
         sendMessageButton.setOnClickListener(v -> sendMessage());
 
@@ -96,11 +94,6 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
         loadConversation();
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
-            User.updateField("token", senderEmail, instanceIdResult.getToken());
-            apiService = Client.getClient("https://fcm.googleapis.com/").create(FCMServiceAPI.class);
-        });
-
     }
 
     private void loadConversation() {
@@ -136,30 +129,25 @@ public class ChatActivity extends AppCompatActivity {
             User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), messageText);});
         });
     }
-
+git a
     private void sendNotification(String receiverEmail, String nickname, String message) {
-        User.fetch(receiverEmail).addOnSuccessListener(new OnSuccessListener<User>() {
-            @Override
-            public void onSuccess(User user) {
-                receiverToken = user.getToken();
-                Data data = new Data(senderEmail, R.mipmap.ic_launcher_round, nickname + ": " + message, "New Message", receiverEmail, listingID);
-                Sender sender = new Sender(data, receiverToken);
-                apiService.sendNotification(sender).enqueue(new Callback<NotificationResponse>() {
-                    @Override
-                    public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
-                        if (response.code() == 200) {
-                            if (response.body().success != 1) {
-                                Toast.makeText(ChatActivity.this, "FAIL", Toast.LENGTH_SHORT);
-                            }
+        User.fetch(receiverEmail).addOnSuccessListener(user -> {
+            receiverToken = user.getToken();
+            Data data = new Data(senderEmail, R.mipmap.ic_launcher_round, nickname + ": " + message, "New Message", receiverEmail, listingID);
+            Sender sender = new Sender(data, receiverToken);
+            apiService.sendNotification(sender).enqueue(new Callback<NotificationResponse>() {
+                @Override
+                public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
+                    if (response.code() == 200 && response.body().success != 1) {
+                            Toast.makeText(ChatActivity.this, "FAIL", Toast.LENGTH_SHORT);
                         }
-                    }
+                }
 
-                    @Override
-                    public void onFailure(Call<NotificationResponse> call, Throwable t) {
+                @Override
+                public void onFailure(Call<NotificationResponse> call, Throwable t) {
 
-                    }
-                });
-            }
+                }
+            });
         });
     }
 }

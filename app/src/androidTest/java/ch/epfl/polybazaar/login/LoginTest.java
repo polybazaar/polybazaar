@@ -24,6 +24,7 @@ import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
@@ -38,6 +39,7 @@ public class LoginTest {
             new ActivityTestRule<SignInActivity>(SignInActivity.class){
                 @Override
                 protected void beforeActivityLaunched() {
+                    useMockDataStore();
                     MockAuthenticator.getInstance().reset();
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                 }
@@ -55,7 +57,7 @@ public class LoginTest {
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
     }
 
-    /*
+
     @Test
     public void signUpProcessWorks() {
         createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
@@ -70,7 +72,7 @@ public class LoginTest {
         fillAndSubmitSignIn(EMAIL, PASSWORD);
         onView(withText(R.string.authentication_successful)).check(matches(isDisplayed()));
     }
-    */
+
 
     @Test
     public void signUpWithExistingEmailFails() {

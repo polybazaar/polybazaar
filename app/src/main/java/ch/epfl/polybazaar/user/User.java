@@ -1,7 +1,9 @@
 package ch.epfl.polybazaar.user;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
 
@@ -90,7 +92,7 @@ public final class User extends Model {
         lastName.set(capitalize(email.substring(email.indexOf(".")+1, email.indexOf("@"))));
         phoneNumber.set("");
         profilePicture.set(NO_PROFILE_PICTURE);
-        this.token.set(FirebaseInstanceId.getInstance().getToken());
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> token.set(instanceIdResult.getToken()));
     }
 
     /**
@@ -111,7 +113,7 @@ public final class User extends Model {
         this.profilePicture.set(profilePicture);
         this.ownListings.set(ownListings);
         this.favorites.set(favorites);
-        this.token.set(FirebaseInstanceId.getInstance().getToken());
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> token.set(instanceIdResult.getToken()));
     }
 
     @Override
