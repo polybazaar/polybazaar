@@ -91,9 +91,7 @@ public class SubmitOffer extends AppCompatActivity {
         if (offerStatus.equals(OFFER_ACCEPTED)) {
             Listing.updateField(Listing.LISTING_ACTIVE, message.getListingID(), false);
             Listing.updateField(Listing.PRICE, message.getListingID(), Listing.SOLD);
-            Map<String, Object> map =new HashMap<>();
-            map.put(LiteListing.PRICE, LiteListing.SOLD);
-            LiteListing.updateMultipleFields(message.getListingID(), map);
+            LiteListing.updateField(LiteListing.PRICE, message.getListingID(), LiteListing.SOLD);
         }
     }
 }

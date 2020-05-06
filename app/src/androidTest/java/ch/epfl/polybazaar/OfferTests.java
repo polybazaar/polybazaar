@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.endToEnd;
+package ch.epfl.polybazaar;
 
 import android.view.View;
 

@@ -109,6 +109,9 @@ public class LiteListing extends Model {
         return ModelTransaction.fetchAll(COLLECTION, LiteListing.class);
     }
 
+    public static <T> Task<Void> updateField(String field, String id, T updatedValue) {
+        return ModelTransaction.updateField(COLLECTION, id, field, updatedValue);
+    }
 
     /**
      * Updates multiple fields of a lite listing
