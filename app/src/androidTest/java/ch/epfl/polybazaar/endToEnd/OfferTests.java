@@ -117,6 +117,18 @@ public class OfferTests {
 
     @Test
     public void refuseOfferTest() {
+        ChatMessage message = new ChatMessage(TestUser2Email, MockAuthenticator.TEST_USER_EMAIL,
+                testListing1ID, ChatMessage.OFFER_PROCESSED + ChatMessage.OFFER_ACCEPTED + "15.0", new Timestamp(12, 13));
+        message.save();
+        ChatMessage message1 = new ChatMessage(TestUser2Email, MockAuthenticator.TEST_USER_EMAIL,
+                testListing1ID, ChatMessage.OFFER_PROCESSED + ChatMessage.OFFER_REFUSED + "15.0", new Timestamp(12, 13));
+        message1.save();
+        onView(withId(R.id.action_messages)).perform(click());
+        onView(withText(Listing1Name)).perform(click());
+    }
+
+    @Test
+    public void makeOfferTest() {
         onView(withId(R.id.action_messages)).perform(click());
         onView(withText(Listing1Name)).perform(click());
         onView(withId(R.id.refuse_offer_button)).perform(click());
@@ -127,15 +139,18 @@ public class OfferTests {
 
     private void doAllOfferOptions() {
         closeSoftKeyboard();
-        /*
-        onView(withId(R.id.buyNow)).perform(scrollTo(), click());
+        onView(withId(R.id.contactSel)).perform(scrollTo(), click());
         pressBack();
+        //onView(withId(R.id.buyNow)).perform(scrollTo(), click());
+        //pressBack();
         onView(withId(R.id.makeOffer)).perform(scrollTo(), click());
         onView(withId(R.id.offer)).perform(typeText("12"));
         closeSoftKeyboard();
         onView(withId(R.id.cancelOfferMaking)).perform(click());
-         */
         onView(withId(R.id.makeOffer)).perform(scrollTo(), click());
+        onView(withId(R.id.offer)).perform(typeText(""));
+        closeSoftKeyboard();
+        onView(withId(R.id.makeOfferNow)).perform(click());
         onView(withId(R.id.offer)).perform(typeText("15"));
         closeSoftKeyboard();
         onView(withId(R.id.makeOfferNow)).perform(click());
