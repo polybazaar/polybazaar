@@ -36,9 +36,10 @@ public class SearchListings extends AppCompatActivity {
     public void performSearch(String query) {
         searchListingTitleMap = DataHolder.getInstance().getDataMap();
         sortedIDs = new ArrayList<>();
+        String mQuery = query.toLowerCase();
 
         for (Map.Entry<String, String> entry: searchListingTitleMap.entrySet()) {
-            if(entry.getValue().contains(query)) {
+            if(entry.getValue().contains(mQuery)) {
                 sortedIDs.add(entry.getKey());
             }
         }

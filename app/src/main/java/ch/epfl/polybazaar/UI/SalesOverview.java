@@ -180,7 +180,7 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
             // Prepare a  map <listingID, title> sorted by most recent first, for search purposes
             for (int i = 0; i < size; i++) {
                 String key = IDList.get(i);
-                searchListingTitleMap.put(key, listingTitleMap.get(key));
+                searchListingTitleMap.put(key, listingTitleMap.get(key).toLowerCase());
             }
 
             List<Task<LiteListing>> taskList = new ArrayList<>();
