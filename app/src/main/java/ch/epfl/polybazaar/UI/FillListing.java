@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,6 +28,7 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.category.Category;
+import ch.epfl.polybazaar.category.CategoryFragment;
 import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.filllisting.CategoryManager;
@@ -50,7 +53,7 @@ import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 
-public class FillListing extends AppCompatActivity implements NoticeDialogListener {
+public class FillListing extends AppCompatActivity implements NoticeDialogListener, CategoryFragment.CategoryFragmentListener {
 
 
     public static final int ADD_MP = 3;
@@ -178,7 +181,13 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         });
         selectCategory.setOnClickListener(v -> {
             // TODO : open category selection activity
-            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
+            RootCategoryFactory.useJSONCategory(getApplicationContext());
+            CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency());
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.addToBackStack(null)
+                    .add(R.id.fillListing_fragment_container,categoryFragment).commit();
+
         });
         addMP.setOnClickListener(v -> {
             Intent defineMP = new Intent(this, MapsActivity.class);
@@ -249,6 +258,14 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         }
     }
 
+    @Override
+    public void onCategoryFragmentInteraction(Category category) {
+
+        traversingCategory = category;
+        selectCategory.setText(category.toString());
+
+    }
+
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
         if(bundle == null){
@@ -271,6 +288,8 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         if (lat != NOLAT && lng != NOLNG) {
             addMP.setText(R.string.change_MP);
         }
+
+
 
         /**
          * FOR TESTING PURPOSES ONLY:
@@ -301,6 +320,8 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
             return null;
         }
     }
+
+
     /**
      * ==========================
      */
