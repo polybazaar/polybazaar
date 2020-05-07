@@ -1,7 +1,6 @@
 package ch.epfl.polybazaar.category;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,10 +18,10 @@ public class CategorySelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_selector);
-        categoryRecyclerAdapter = new CategoryRecyclerAdapter(getApplicationContext());
-        categoryRecycler = findViewById(R.id.categoriesRecycler);
-        categoryRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        categoryRecycler.setAdapter(categoryRecyclerAdapter);
+        //categoryRecyclerAdapter = new CategoryRecyclerAdapter(getApplicationContext(), cat);
+        //categoryRecycler = findViewById(R.id.categoriesRecycler);
+        //categoryRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        //categoryRecycler.setAdapter(categoryRecyclerAdapter);
 
     }
 }

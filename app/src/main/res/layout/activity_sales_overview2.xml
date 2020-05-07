@@ -66,5 +66,9 @@
         app:itemTextColor="@color/bottomBarContent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@layout/bottom_bar" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/salesOverview_fragment_container"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +27,9 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.category.CategoryFragment;
 import ch.epfl.polybazaar.category.CategorySelectionActivity;
+import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 
@@ -56,8 +60,15 @@ public class SalesOverview extends AppCompatActivity {
 
         TextView catButton = findViewById(R.id.searchOverview);
         catButton.setOnClickListener(view->{
-            Intent catIntent = new Intent(SalesOverview.this, CategorySelectionActivity.class);
-            startActivity(catIntent);
+            //Intent catIntent = new Intent(SalesOverview.this, CategorySelectionActivity.class);
+            //startActivity(catIntent);
+            RootCategoryFactory.useJSONCategory(getApplicationContext());
+
+            CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency());
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.salesOverview_fragment_container,categoryFragment).commit();
+
         });
         // Lookup the recyclerview in activity layout
         RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);

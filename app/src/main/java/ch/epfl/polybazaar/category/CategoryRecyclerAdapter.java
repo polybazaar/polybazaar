@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,19 +18,22 @@ import ch.epfl.polybazaar.conversationOverview.ConversationOverviewRecyclerAdapt
 public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecyclerAdapter.ViewHolder> {
 
 
-    private ConversationOverviewRecyclerAdapter.OnItemClickListener listener;
     private Context context;
-    private Category rootCategory;
+    private Category category;
     private List<Category> categories;
+    private ConversationOverviewRecyclerAdapter.OnItemClickListener listener;
 
-    public CategoryRecyclerAdapter(Context context) {
+    public CategoryRecyclerAdapter(Context context,Category category) {
         this.context = context;
-        RootCategoryFactory.useJSONCategory(context);
-        rootCategory = RootCategoryFactory.getDependency();
-        categories = rootCategory.subCategories();
+        this.category = category;
+        //RootCategoryFactory.useJSONCategory(context);
+        //rootCategory = RootCategoryFactory.getDependency();
+        categories = category.subCategories();
 
     }
-
+    public void setOnItemClickListener(ConversationOverviewRecyclerAdapter.OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
 
 
@@ -47,9 +49,9 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         Category category = categories.get(position);
         holder.categoryName.setText(category.toString());
-        holder.categoryName.setTag(position);
+        holder.item.setTag(position);
         //Toast.makeText(context, category.toString(), Toast.LENGTH_SHORT).show() ;
-
+        holder.categoryName.setTag(position);
     }
 
     @Override
@@ -61,10 +63,17 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView categoryName;
+        public LinearLayout item;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             categoryName = itemView.findViewById(R.id.categoryName);
+            item = itemView.findViewById(R.id.categoryItem);
+            item.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(item);
+                }
+            });
 
         }
     }

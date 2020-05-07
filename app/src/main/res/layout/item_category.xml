@@ -11,7 +11,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/CategoryItem"
+        android:id="@+id/categoryItem"
         android:layout_width="match_parent"
         android:layout_height="@dimen/thumbnail_size"
         android:orientation="horizontal"
