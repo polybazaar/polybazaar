@@ -1,5 +1,7 @@
 package ch.epfl.polybazaar.saledetails;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
@@ -38,11 +40,13 @@ public class ListingManager {
      */
     public void fillWithListing(final Listing listing) {
         if(listing == null) {
-            Toast toast = Toast.makeText(activity.getApplicationContext(), R.string.object_not_found, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.show();
-            Intent intent = new Intent(activity.getApplicationContext(), SalesOverview.class);
-            activity.startActivity(intent);
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle(R.string.object_not_found)
+                    .setNeutralButton(R.string.back, (dialog, which) -> {
+                        Intent intent = new Intent(activity.getApplicationContext(), SalesOverview.class);
+                        activity.startActivity(intent);
+                    });
+            builder.create().show();
         } else {
             activity.updateViews();
             activity.setMP();

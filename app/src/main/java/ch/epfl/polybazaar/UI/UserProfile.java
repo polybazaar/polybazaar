@@ -256,7 +256,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
                     ArrayList<String> favoritesIds = authUser.getFavorites();
             // the list of user-created listings is empty
             if (favoritesIds == null || favoritesIds.isEmpty()) {
-                displayToast(this, R.string.no_favorites, Gravity.CENTER);
+                makeDialog(this, R.string.no_favorites);
                 // we relaunch the SalesOverview activity with the list of favorites in the bundle
             } else {
                 displaySavedListings(this, favoritesIds);
