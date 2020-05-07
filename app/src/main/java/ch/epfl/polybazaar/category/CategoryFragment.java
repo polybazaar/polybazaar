@@ -3,15 +3,18 @@ package ch.epfl.polybazaar.category;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.Utilities;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,9 +27,12 @@ public class CategoryFragment extends Fragment {
     private CategoryRecyclerAdapter categoryRecyclerAdapter;
     private RecyclerView categoryRecycler;
     private View fragmentView;
+    private CategoryFragmentListener listener;
 
 
     private static Category category;
+    private static Category selectedCategory;
+
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -42,6 +48,7 @@ public class CategoryFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static CategoryFragment newInstance(Category cat) {
         category = cat;
+
         CategoryFragment fragment = new CategoryFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -52,21 +59,47 @@ public class CategoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(getActivity() instanceof CategoryFragmentListener){
+            listener = (CategoryFragmentListener)getActivity();
+        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        //selectedCategory is here to avoid access to static var category which causes bugs
+        // when switching between fragments
+        final Category currentCategory = category;
         fragmentView = inflater.inflate(R.layout.fragment_category, container, false);
-        categoryRecyclerAdapter = new CategoryRecyclerAdapter(fragmentView.getContext(),category);
+        Button categoryButton  = fragmentView.findViewById(R.id.categoryButton);
+        categoryButton.setText(currentCategory.toString());
+
+        categoryRecyclerAdapter = new CategoryRecyclerAdapter(fragmentView.getContext(),currentCategory);
         categoryRecyclerAdapter.setOnItemClickListener(view->{
             int viewPosition = (int)view.getTag();
-            Category nextCategory = category.subCategories().get(viewPosition);
-            CategoryFragment nextFrag=  CategoryFragment.newInstance(nextCategory);
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.salesOverview_fragment_container, nextFrag)
-                  .commit();
+            Category nextCategory = currentCategory.subCategories().get(viewPosition);
+            //select category if leaf, show subcategories otherwise
+            if(nextCategory.hasSubCategories()){
+
+                CategoryFragment nextFrag=  CategoryFragment.newInstance(nextCategory);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .add(R.id.salesOverview_fragment_container, nextFrag)
+                        .commit();
+            }else{
+                categoryButton.setText(nextCategory.toString());
+
+            }
+            selectedCategory = nextCategory;
+
+        });
+
+        categoryButton.setOnClickListener(view->{
+            listener.onCategoryFragmentInteraction(selectedCategory);
+           //getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            popBackStackTillEntry(0);
+
         });
 
         categoryRecycler = fragmentView.findViewById(R.id.categoriesRecycler);
@@ -75,5 +108,29 @@ public class CategoryFragment extends Fragment {
 
 
         return fragmentView;
+    }
+
+    //method taken from https://stackoverflow.com/questions/41549112/android-close-all-fragments-onbackpressed
+    //to remove all fragments in backstack
+    public void popBackStackTillEntry(int entryIndex) {
+
+        if (getActivity().getSupportFragmentManager() == null) {
+            return;
+        }
+        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= entryIndex) {
+            return;
+        }
+        FragmentManager.BackStackEntry entry = getActivity().getSupportFragmentManager().getBackStackEntryAt(
+                entryIndex);
+        if (entry != null) {
+            getActivity().getSupportFragmentManager().popBackStackImmediate(entry.getId(),
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+
+
+    }
+
+    public interface CategoryFragmentListener{
+        void onCategoryFragmentInteraction(Category category);
     }
 }

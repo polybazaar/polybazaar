@@ -2,6 +2,7 @@ package ch.epfl.polybazaar.litelisting;
 
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
 
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.Map;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.database.SimpleField;
+import ch.epfl.polybazaar.database.datastore.DataStore;
+import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.listing.Listing;
 
 /**
@@ -121,5 +124,9 @@ public class LiteListing extends Model {
      */
     public static Task<Void> updateMultipleFields(String id, Map<String, Object> updated){
         return ModelTransaction.updateMultipleFields(LiteListing.COLLECTION, id, updated);
+    }
+
+    public static  Task<List<LiteListing>> fetchFieldEquality(String field, String compareValue) {
+       return  ModelTransaction.fetchFieldEquality(COLLECTION, field, compareValue, LiteListing.class);
     }
 }

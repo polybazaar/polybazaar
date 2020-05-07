@@ -27,6 +27,7 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryFragment;
 import ch.epfl.polybazaar.category.CategorySelectionActivity;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
@@ -36,7 +37,7 @@ import ch.epfl.polybazaar.login.Account;
 import static ch.epfl.polybazaar.Utilities.checkUserLoggedIn;
 import static ch.epfl.polybazaar.Utilities.getUser;
 
-public class SalesOverview extends AppCompatActivity {
+public class SalesOverview extends AppCompatActivity implements CategoryFragment.CategoryFragmentListener {
 
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
@@ -47,6 +48,7 @@ public class SalesOverview extends AppCompatActivity {
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
     private int positionInIDList = 0;
+    private Category currentCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +59,17 @@ public class SalesOverview extends AppCompatActivity {
         IDList = new ArrayList<>();
         liteListingList = new ArrayList<>();
 
+        RootCategoryFactory.useJSONCategory(getApplicationContext());
+        currentCategory = RootCategoryFactory.getDependency();
+
 
         TextView catButton = findViewById(R.id.searchOverview);
         catButton.setOnClickListener(view->{
-            //Intent catIntent = new Intent(SalesOverview.this, CategorySelectionActivity.class);
-            //startActivity(catIntent);
-            RootCategoryFactory.useJSONCategory(getApplicationContext());
-
             CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency());
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.salesOverview_fragment_container,categoryFragment).commit();
+            fragmentTransaction.addToBackStack(null)
+                    .add(R.id.salesOverview_fragment_container,categoryFragment).commit();
 
         });
         // Lookup the recyclerview in activity layout
@@ -145,35 +147,19 @@ public class SalesOverview extends AppCompatActivity {
      * Create a graphical overview of LiteListings from database
      */
     public void loadLiteListingOverview() {
-        LiteListing.fetchAll().addOnSuccessListener(result -> {
-            if(result == null) {
-                return;
-            }
-            if(IDList.isEmpty()) {
-                for (LiteListing l : result) {
-                    if (l != null) {
-                        if(l.getTimestamp() != null) { // TODO: delete before merge
-                            listingTimeMap.put(l.getTimestamp(), l.getId());
-                        }
-                    }
-                }
-                // retrieve values from Treemap: litelistings IDs in order: most recent first
-                IDList = new ArrayList<>(listingTimeMap.values());
-            }
-            int size = IDList.size();
-            List<Task<LiteListing>> taskList = new ArrayList<>();
-            // add fetch tasks in correct display order
-            for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-                taskList.add(LiteListing.fetch(IDList.get(i)));
-                positionInIDList++;
-            }
-            Tasks.<LiteListing>whenAllSuccess(taskList).addOnSuccessListener(list -> {
-                int start = liteListingList.size();
-                liteListingList.addAll(list);
-                int itemCount = liteListingList.size() - start;
-                adapter.notifyItemRangeInserted(start, itemCount);
-            });
-        });
+        if(currentCategory.toString().equals(RootCategoryFactory.getDependency().toString())){
+            //Toast.makeText(getApplicationContext(), "oiuasdf", Toast.LENGTH_SHORT).show();
+            LiteListing.fetchAll().addOnSuccessListener(this::onFetchSuccess);
+          }else{
+            List<Category> allCategories = currentCategory.subCategories();
+            allCategories.add(currentCategory);
+            for(Category category : allCategories)
+                LiteListing.fetchFieldEquality("category",category.toString())
+                    .addOnSuccessListener(this::onFetchSuccess);
+        }
+
+
+
     }
 
     /**
@@ -198,6 +184,77 @@ public class SalesOverview extends AppCompatActivity {
         extras.putBoolean(bundleKey, true);
         intent.putExtras(extras);
         context.startActivity(intent);
+    }
+
+
+    private void onFetchSuccess(List<LiteListing> result){
+        Toast.makeText(getApplicationContext(), Integer.toString(result.size()), Toast.LENGTH_SHORT).show();
+        if(result == null) {
+            return;
+        }
+        if(IDList.isEmpty()) {
+            for (LiteListing l : result) {
+                if (l != null) {
+                    if(l.getTimestamp() != null) { // TODO: delete before merge
+                        listingTimeMap.put(l.getTimestamp(), l.getId());
+                    }
+                }
+            }
+            // retrieve values from Treemap: litelistings IDs in order: most recent first
+            IDList = new ArrayList<>(listingTimeMap.values());
+        }
+        int size = IDList.size();
+        List<Task<LiteListing>> taskList = new ArrayList<>();
+        // add fetch tasks in correct display order
+        for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
+            taskList.add(LiteListing.fetch(IDList.get(i)));
+            positionInIDList++;
+        }
+        Tasks.<LiteListing>whenAllSuccess(taskList).addOnSuccessListener(list -> {
+            int start = liteListingList.size();
+            liteListingList.addAll(list);
+            int itemCount = liteListingList.size() - start;
+            adapter.notifyItemRangeInserted(start, itemCount);
+        });
+    }
+
+    @Override
+    public void onCategoryFragmentInteraction(Category category) {
+
+        currentCategory = category;
+        listingTimeMap = new TreeMap<>(Collections.reverseOrder());    // store LiteListing IDs in reverse order of creation (most recent first)
+        IDList = new ArrayList<>();
+        liteListingList = new ArrayList<>();
+        RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
+
+        // Create adapter passing in the sample LiteListing data
+        adapter = new LiteListingAdapter(liteListingList);
+
+        adapter.setOnItemClickListener(view -> {
+            int viewID = view.getId();
+            String listingID = adapter.getListingID(viewID);
+            Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
+            intent.putExtra(LISTING_ID, listingID);
+            startActivity(intent);
+        });
+
+        // Attach the adapter to the recyclerview to populate items
+        rvLiteListings.setAdapter(adapter);
+        // Set layout manager to position the items
+        LinearLayoutManager mGridLayoutManager = new GridLayoutManager(this, NUMBEROFCOLUMNS);
+        rvLiteListings.setLayoutManager(mGridLayoutManager);
+
+        // Triggered only when new data needs to be appended to the list
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(mGridLayoutManager) {
+            @Override
+            public void onLoadMore() {
+                // Triggered only when new data needs to be appended to the list
+                loadLiteListingOverview();
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvLiteListings.addOnScrollListener(scrollListener);
+        loadLiteListingOverview();
     }
 
 }
