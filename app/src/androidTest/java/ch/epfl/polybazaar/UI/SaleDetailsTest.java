@@ -296,7 +296,7 @@ public class SaleDetailsTest {
         Intents.release();
     }
 
-    @Test
+    /*@Test
     public void testRemoveFromFavorite() throws Throwable {
         MockAuthenticator auth = MockAuthenticator.getInstance();
         Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
@@ -316,7 +316,7 @@ public class SaleDetailsTest {
         auth.getCurrentUser().getUserData().addOnSuccessListener(user -> {
             assertFalse(user.getFavorites().contains(listing.getId()));
         });
-    }
+    }*/
 
     @Test
     public void testSetupViewMP() throws ExecutionException, InterruptedException {
