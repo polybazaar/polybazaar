@@ -22,6 +22,7 @@ import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.createAccountAndBackToLoginFromLoginActivity;
 import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.fillAndSubmitSignUp;
 import static org.hamcrest.Matchers.is;
@@ -38,6 +39,7 @@ public class LoginTest {
             new ActivityTestRule<SignInActivity>(SignInActivity.class){
                 @Override
                 protected void beforeActivityLaunched() {
+                    useMockDataStore();
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                 }
 
@@ -68,6 +70,7 @@ public class LoginTest {
         fillAndSubmitSignIn(EMAIL, PASSWORD);
         onView(withText(R.string.authentication_successful)).check(matches(isDisplayed()));
     }
+
 
     @Test
     public void signUpWithExistingEmailFails() {
@@ -138,15 +141,12 @@ public class LoginTest {
         clickButton(withText(R.string.alert_close));
     }
 
-
-
     private void fillAndSubmitSignIn(String email, String password) {
         typeInput(withId(R.id.emailInput), email);
         typeInput(withId(R.id.passwordInput), password);
+        closeSoftKeyboard();
         clickButton(withId(R.id.loginButton));
     }
-
-
 
     private void typeInput(Matcher<View> object, String text) {
         onView(object).perform(typeText(text)).perform(closeSoftKeyboard());

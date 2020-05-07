@@ -117,6 +117,10 @@
     <string name="no_connection">No Internet connection</string>send_when_connected
     <string name="send_when_connected">Send as soon as connection is available</string>
     <string name="information">Information</string>sign_in_to_contact
+    <string name="notification_title">New Message</string>
+    <string name="fcm_url">https://fcm.googleapis.com/</string>
+    <string name="notification_channel_id">notification_channel_id</string>
+    <string name="notification_channel_name">notification_channel_name</string>
     <string name="back">Back</string>
     <string name="sign_in_to_contact">Sign In To Contact Seller / Make An Offer</string>
     <string name="make_an_offer">Make an offer</string>
