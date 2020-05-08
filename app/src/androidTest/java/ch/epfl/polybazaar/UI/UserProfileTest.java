@@ -137,7 +137,7 @@ public class UserProfileTest {
                 .getCurrentUser()
                 .getUserData()
                 .addOnSuccessListener(user -> {
-                    user.addFavorite(listing);
+                    user.addFavorite(listing.getId());
                 });
         whenAll(listingTask, userTask);
 

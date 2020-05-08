@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -24,8 +27,11 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.user.User;
 
 import static ch.epfl.polybazaar.Utilities.checkUserLoggedIn;
 import static ch.epfl.polybazaar.Utilities.getUser;
@@ -173,7 +179,18 @@ public class SalesOverview extends AppCompatActivity {
      * @param savedListings the list of saved listings that has to be displayed in Sales Overview
      */
     public static void displaySavedListings(Context context, ArrayList<String> savedListings) {
-        DataHolder.getInstance().setData(savedListings);
+        ArrayList<String> displayListings = new ArrayList<>();
+        for (String liteListingID : savedListings) {
+            LiteListing.fetch(liteListingID).addOnSuccessListener(liteListing -> {
+                displayListings.add(liteListingID);
+            }).addOnFailureListener(e -> {
+                Account account = AuthenticatorFactory.getDependency().getCurrentUser();
+                User.fetch(account.getEmail()).addOnSuccessListener(user -> {
+                    user.removeFavorite(liteListingID);
+                });
+            });
+        }
+        DataHolder.getInstance().setData(displayListings);
         Intent intent = new Intent(context, SalesOverview.class);
         Bundle extras = new Bundle();
         extras.putBoolean(bundleKey, true);

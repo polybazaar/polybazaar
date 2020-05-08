@@ -177,9 +177,9 @@ public class ListingManager {
         if (authUser != null) {
             authUser.getUserData().addOnSuccessListener(user -> {
                 if (ratingBar.getRating() == 1) {
-                    user.addFavorite(listing);
+                    user.addFavorite(listing.getId());
                 } else {
-                    user.removeFavorite(listing);
+                    user.removeFavorite(listing.getId());
                 }
                 user.save();
             });
