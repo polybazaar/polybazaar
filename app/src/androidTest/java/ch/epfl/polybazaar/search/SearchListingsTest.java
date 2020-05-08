@@ -6,6 +6,8 @@ import android.view.KeyEvent;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.tasks.Tasks;
+
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,6 +21,7 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressKey;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.intent.Intents.intended;
@@ -40,15 +43,16 @@ public class SearchListingsTest {
                     true);
 
     @BeforeClass
-    public static void init() {
+    public static void init() throws Throwable {
         useMockDataStore();
         LiteListing litelisting1 = new LiteListing("1", "listing1", "1", "Furniture");
-        litelisting1.save();
+        Tasks.await(litelisting1.save());
     }
 
     @Test
     public void searchTriggersDataHolderTransfer() {
         onView(withId(R.id.search)).perform(typeText("My title")).perform(pressKey(KeyEvent.KEYCODE_ENTER));
+        closeSoftKeyboard();
         Map<String, String> map = new LinkedHashMap<>();
         map.put("1", "listing1");
         assertEquals(map, DataHolder.getInstance().getDataMap());
@@ -58,6 +62,7 @@ public class SearchListingsTest {
     public void searchTriggersSearchActivity() {
         Intents.init();
         onView(withId(R.id.search)).perform(typeText("My title")).perform(pressKey(KeyEvent.KEYCODE_ENTER));
+        closeSoftKeyboard();
         intended(allOf(hasComponent(SearchListings.class.getName()), hasAction(Intent.ACTION_SEARCH)));
         Intents.release();
     }
