@@ -16,6 +16,7 @@ import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 
 public class SearchListings extends AppCompatActivity {
 
+    public final String SEARCH_QUERY = "searchQuery";
     Map<String, String> searchListingTitleMap;
     ArrayList<String> sortedIDs;
 
@@ -45,7 +46,9 @@ public class SearchListings extends AppCompatActivity {
         }
 
         if(sortedIDs.isEmpty()) {
-            startActivity(new Intent(SearchListings.this, NoSearchResults.class));
+            Intent intent = new Intent(SearchListings.this, NoSearchResults.class);
+            intent.putExtra(SEARCH_QUERY, query);
+            startActivity(intent);
         }
         else {
             displaySavedListings(this, sortedIDs);

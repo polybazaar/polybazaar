@@ -31,6 +31,21 @@
         <Space
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_weight="0.1" />
+
+        <TextView
+            android:id="@+id/searchQuery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text=""
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="@dimen/default_textView_text_size"
+            />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="0.3" />
 
         <Space
