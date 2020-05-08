@@ -4,17 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.Utilities;
 
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
@@ -28,10 +20,6 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         authenticator = AuthenticatorFactory.getDependency();
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SignUpActivity.this));
     }
 
     /**
@@ -64,17 +52,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void createUser(String email, String nickname, String password) {
         authenticator.createUser(email, nickname, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthenticatorResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthenticatorResult> task) {
-                        if (task.isSuccessful()) {
-                            Account user = authenticator.getCurrentUser();
-
-                            Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
-                            startActivity(intent);
-                        } else {
-                            makeDialog(SignUpActivity.this, R.string.signup_error);
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Intent intent = new Intent(getApplicationContext(), EmailVerificationActivity.class);
+                        startActivity(intent);
+                    } else {
+                        makeDialog(SignUpActivity.this, R.string.signup_error);
                     }
                 });
     }

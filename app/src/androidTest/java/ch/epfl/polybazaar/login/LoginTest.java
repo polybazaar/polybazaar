@@ -19,6 +19,7 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -28,7 +29,6 @@ import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.fillAndSubmitS
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
-@RunWith(AndroidJUnit4.class)
 public class LoginTest {
     public static final String EMAIL = "otheruser.test@epfl.ch";
     public static final String NICKNAME = "otheruser";
@@ -41,6 +41,7 @@ public class LoginTest {
                 protected void beforeActivityLaunched() {
                     useMockDataStore();
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
+                    MockAuthenticator.getInstance().reset();
                 }
 
                 @Override
@@ -59,6 +60,7 @@ public class LoginTest {
     @Test
     public void signUpProcessWorks() {
         createAccountAndBackToLoginFromLoginActivity(EMAIL, NICKNAME, PASSWORD);
+        onView(withId(R.id.signInButton)).perform(click());
         fillAndSubmitSignIn(EMAIL, "aaaaaaaa");
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
 
@@ -68,7 +70,8 @@ public class LoginTest {
         emptyInput(withId(R.id.passwordInput));
 
         fillAndSubmitSignIn(EMAIL, PASSWORD);
-        onView(withText(R.string.authentication_successful)).check(matches(isDisplayed()));
+        assertThat(MockAuthenticator.getInstance().getCurrentUser().getEmail(), is(EMAIL));
+
     }
 
 
@@ -112,7 +115,6 @@ public class LoginTest {
 
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
         clickButton(withId(R.id.signOutButton));
-
         fillAndSubmitSignIn(EMAIL, PASSWORD);
 
         onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));

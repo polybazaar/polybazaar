@@ -19,7 +19,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/passwordInput"
+                android:id="@+id/emailInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/inter_space_large"
@@ -28,12 +28,12 @@
                 android:background="@drawable/boxed"
                 android:maxLength="50"
                 android:maxLines="1"
-                android:hint="@string/password"
-                android:inputType="textPassword"
+                android:hint="@string/e_mail_address"
+                android:inputType="textEmailAddress"
                 android:importantForAutofill="no" />
 
             <EditText
-                android:id="@+id/emailInput"
+                android:id="@+id/passwordInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/inter_space_large"
@@ -42,8 +42,8 @@
                 android:background="@drawable/boxed"
                 android:maxLength="50"
                 android:maxLines="1"
-                android:hint="@string/e_mail_address"
-                android:inputType="textEmailAddress"
+                android:hint="@string/password"
+                android:inputType="textPassword"
                 android:importantForAutofill="no" />
 
             <Button
