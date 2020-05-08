@@ -44,17 +44,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:background="@drawable/rounded_corner_button_colored"
                 android:textColor="@color/white"
-                android:text="@string/add_image"
-                android:textSize="@dimen/default_button_text_size" />
+                android:textSize="@dimen/default_button_text_size"
+                android:text="@string/add_image" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/viewpager_height"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:clickable="true"
                 android:focusable="true"
                 android:visibility="gone" />
@@ -63,7 +63,7 @@
                 android:id="@+id/editButtons"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:visibility="gone">
 
                 <Space
@@ -125,7 +125,7 @@
                 android:id="@+id/titleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:text="@string/listing_title"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/default_textView_text_size"
@@ -135,7 +135,7 @@
                 android:id="@+id/titleSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_small"
+                android:layout_marginTop="@dimen/inter_space_small"
                 android:background="@drawable/boxed"
                 android:importantForAutofill="no"
                 android:inputType="textPersonName"
@@ -147,7 +147,7 @@
                 android:id="@+id/descriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:text="@string/description"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/default_textView_text_size"
@@ -157,7 +157,7 @@
                 android:id="@+id/descriptionSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_small"
+                android:layout_marginTop="@dimen/inter_space_small"
                 android:background="@drawable/boxed"
                 android:gravity="start|top"
                 android:importantForAutofill="no"
@@ -167,7 +167,7 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large">
+                android:layout_marginTop="@dimen/inter_space_large">
 
                 <TextView
                     android:id="@+id/priceTextView"
@@ -216,7 +216,7 @@
                 android:id="@+id/categoryTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_extra_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
                 android:text="@string/category"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/default_textView_text_size"
@@ -263,7 +263,7 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fillListing_inter_space_large">
+                android:layout_marginTop="@dimen/inter_space_large">
 
                 <TextView
                     android:id="@+id/setMeetingPointTextView"
@@ -299,8 +299,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/fillListing_inter_space_extra_large"
-                android:layout_marginBottom="@dimen/fillListing_inter_space_extra_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
+                android:layout_marginBottom="@dimen/inter_space_extra_large"
                 android:background="@drawable/rounded_corner_button_colored"
                 android:text="@string/submit_listing"
                 android:textColor="@color/white"

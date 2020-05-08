@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">PolyBazaar</string>
     <string name="email_not_verified">Your e-mail address has not been verified yet</string>
-    <string name="verify_email">Verify e-mail address now</string>
-    <string name="verification_not_working">Have you already verified your e-mail?</string>
+    <string name="verify_email">Send Verification E-mail</string>
+    <string name="verification_not_working">E-mail verified?</string>
     <string name="authentication_successful">Authentication was successful!</string>
     <string name="verify_credentials">Please verify your credentials!</string>
     <string name="alert_close">Back</string>
@@ -139,4 +139,5 @@
     <string name="offer_for">"Offer for CHF "</string>
     <string name="sold">SOLD</string>
     <string name="zero">0</string>
+    <string name="reload">Reload</string>
 </resources>

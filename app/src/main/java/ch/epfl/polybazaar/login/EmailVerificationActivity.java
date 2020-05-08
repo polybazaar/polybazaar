@@ -31,8 +31,6 @@ public class EmailVerificationActivity extends AppCompatActivity {
      */
     public void verify(View view) {
         Account user = authenticator.getCurrentUser();
-
-
         user.sendEmailVerification()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
@@ -58,19 +56,15 @@ public class EmailVerificationActivity extends AppCompatActivity {
      */
     public void reload(View view) {
         Account user = authenticator.getCurrentUser();
-
-        user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
-                    startActivity(intent);
-                } else {
-                    MinimalAlertDialog.makeDialog(
-                            EmailVerificationActivity.this,
-                            R.string.reload_fail
-                    );
-                }
+        user.reload().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
+                startActivity(intent);
+            } else {
+                MinimalAlertDialog.makeDialog(
+                        EmailVerificationActivity.this,
+                        R.string.reload_fail
+                );
             }
         });
     }
