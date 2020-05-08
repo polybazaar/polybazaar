@@ -72,6 +72,7 @@ public class SearchListingsTest {
         Intents.init();
         activityRule.launchActivity(new Intent());
         onView(withId(R.id.search)).perform(typeText("Dude")).perform(pressKey(KeyEvent.KEYCODE_ENTER));
+        closeSoftKeyboard();
         Thread.sleep(SLEEP_TIME);
         intended(hasComponent(NoSearchResults.class.getName()));
         Intents.release();
