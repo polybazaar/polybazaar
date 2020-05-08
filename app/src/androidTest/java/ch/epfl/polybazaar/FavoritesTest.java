@@ -22,14 +22,11 @@ import ch.epfl.polybazaar.login.MockAuthenticator;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static junit.framework.TestCase.assertEquals;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNot.not;
 
 
 public class FavoritesTest {
@@ -60,10 +57,8 @@ public class FavoritesTest {
 
         clickButton(withId(R.id.action_profile));
         clickButton(withId(R.id.viewFavoritesButton));
-
-       onView(withText(R.string.no_favorites))
-               .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
-               .check(matches(isDisplayed()));
+        
+        onView(withText(R.string.no_favorites)).check(matches(isDisplayed()));
     }
 
     @Test public void favoriteIsRecorded() throws Throwable {
