@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.chat.ChatActivity;
 import ch.epfl.polybazaar.chat.ChatMessage;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.user.User;
 
 public class ConversationOverviewActivity extends AppCompatActivity {
 
@@ -47,6 +49,7 @@ public class ConversationOverviewActivity extends AppCompatActivity {
 
     private void loadConversationOverview() {
         String userEmail = AuthenticatorFactory.getDependency().getCurrentUser().getEmail();
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> User.updateField(User.TOKEN, userEmail, instanceIdResult.getToken()));
         Task<List<ChatMessage>> messagesFromTask = ChatMessage.fetchMessagesFrom(userEmail).addOnSuccessListener(chatMessages -> messagesFrom.addAll(chatMessages));
         Task<List<ChatMessage>> messagesToTask = ChatMessage.fetchMessagesTo(userEmail).addOnSuccessListener(chatMessages -> messagesTo.addAll(chatMessages));
         Tasks.whenAll(messagesFromTask, messagesToTask).addOnSuccessListener(aVoid -> {

@@ -31,7 +31,7 @@ import static java.util.UUID.randomUUID;
 
 public class ChatActivityTest {
     String listingID;
-    String otherUserEmail = "another_user@epfl.ch";
+    String otherUserEmail = "another.user@epfl.ch";
 
     @Rule
     public final ActivityTestRule<ChatActivity> chatActivityRule =
@@ -52,6 +52,8 @@ public class ChatActivityTest {
         DatabaseStoreUtilities.storeNewListing("Title", MockAuthenticator.TEST_USER_EMAIL, listingID);
         DatabaseStoreUtilities.storeNewMessage(otherUserEmail, MockAuthenticator.TEST_USER_EMAIL, listingID, "Hello!");
         DatabaseStoreUtilities.storeNewMessage( MockAuthenticator.TEST_USER_EMAIL, otherUserEmail, listingID, "Hi!");
+        DatabaseStoreUtilities.storeNewUser("otherNickname", otherUserEmail);
+        DatabaseStoreUtilities.storeNewUser(MockAuthenticator.TEST_USER_NICKNAME, MockAuthenticator.TEST_USER_EMAIL);
     }
 
     @After

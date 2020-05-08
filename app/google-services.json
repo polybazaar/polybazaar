@@ -15,6 +15,46 @@
       },
       "oauth_client": [
         {
+          "client_id": "661988135004-ie1d0pl5dj7fbp33oc5r4ddfop1h64kp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.polybazaar",
+            "certificate_hash": "d87f9563d9bc5030ac818a3fff598cf1ba6d0186"
+          }
+        },
+        {
+          "client_id": "661988135004-uptn8nf2j3jah60g437mvjgpp9p3a3oa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.polybazaar",
+            "certificate_hash": "a66cfafb8adcb9f62f40dc15021eec9c0cc453c1"
+          }
+        },
+        {
+          "client_id": "661988135004-i260rr12obn82vrupjft6lqnjvlak0ll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.polybazaar",
+            "certificate_hash": "4c19f73a86e9ff9cb8b0e89d9657fb5fd42ef090"
+          }
+        },
+        {
+          "client_id": "661988135004-0vra9tdegesq7bd995706jm3kdo2lulm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.polybazaar",
+            "certificate_hash": "b348ec7ccc233bab87c33a2329b100d6492bdf7c"
+          }
+        },
+        {
+          "client_id": "661988135004-9plp2slfr0v52p6ujtbu07s2m89fritr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.polybazaar",
+            "certificate_hash": "32b7cb091ba5d065117192979b43caa744affa59"
+          }
+        },
+        {
           "client_id": "661988135004-70vcp4nm4drpdljhbk8hnd5q74ic6b50.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

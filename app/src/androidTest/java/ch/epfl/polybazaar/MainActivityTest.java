@@ -43,13 +43,13 @@ public class MainActivityTest{
                     MockAuthenticator.getInstance().reset();
                 }
             };
-
+/*
     @Test
     public void authenticatedUsersCanEnterFillListing() {
         signInAndBack();
         onView(withId(R.id.action_add_item)).perform(click());
         hasComponent(FillListing.class.getName());
-    }
+    }*/
 
     @Test
     public void accessesForNonAuthenticatedUserAreCorrect() {

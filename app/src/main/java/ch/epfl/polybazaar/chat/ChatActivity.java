@@ -11,12 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +25,14 @@ import java.util.List;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.notifications.NotificationClient;
+import ch.epfl.polybazaar.notifications.Data;
+import ch.epfl.polybazaar.notifications.FCMServiceAPI;
+import ch.epfl.polybazaar.notifications.NotificationSender;
+import ch.epfl.polybazaar.user.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static java.util.UUID.randomUUID;
 
@@ -39,9 +46,12 @@ public class ChatActivity extends AppCompatActivity {
 
     private String senderEmail;
     private String receiverEmail;
+    private String receiverToken;
     private String listingID;
 
     private List<ChatMessage> conversation = new ArrayList<>();
+
+    private FCMServiceAPI fcmServiceAPI;
 
     public static final String bundleListingId = "listingID";
     public static final String bundleReceiverEmail = "receiverEmail";
@@ -55,6 +65,7 @@ public class ChatActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_messages);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), ChatActivity.this));
 
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> User.updateField(User.TOKEN, senderEmail, instanceIdResult.getToken()));
         //TODO: What if the bundle is null ?
         Bundle bundle = getIntent().getExtras();
         this.listingID = bundle.getString(bundleListingId);
@@ -65,13 +76,14 @@ public class ChatActivity extends AppCompatActivity {
         messageEditor = findViewById(R.id.messageEditor);
         messageRecycler = findViewById(R.id.messageDisplay);
         messageRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        fcmServiceAPI = NotificationClient.getClient(getString(R.string.fcm_url)).create(FCMServiceAPI.class);
 
         sendMessageButton.setOnClickListener(v -> sendMessage());
 
         KeyboardVisibilityEvent.setEventListener(
-               this,
+                this,
                 isOpen -> {
-                    if(isOpen) {
+                    if (isOpen) {
                         messageRecycler.scrollToPosition(conversation.size() - 1);
                         bottomNavigationView.setVisibility(View.GONE);
                     } else {
@@ -88,7 +100,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Tasks.whenAll(fetchReceiverMessages, fetchSenderMessages).addOnSuccessListener(aVoid -> {
             //Sort the conversation by the time the messages were sent
-            if(conversation != null){
+            if (conversation != null) {
                 Collections.sort(conversation, (o1, o2) -> o1.getTime().compareTo(o2.getTime()));
             }
             chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
@@ -105,11 +117,29 @@ public class ChatActivity extends AppCompatActivity {
         message.setId(newMessageID);
 
         message.save().addOnSuccessListener(aVoid -> {
-           conversation.add(message);
-           messageEditor.setText("");
-           chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
-           messageRecycler.setAdapter(chatMessageRecyclerAdapter);
-           messageRecycler.scrollToPosition(conversation.size() - 1);
+            conversation.add(message);
+            messageEditor.setText("");
+            chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
+            messageRecycler.setAdapter(chatMessageRecyclerAdapter);
+            messageRecycler.scrollToPosition(conversation.size() - 1);
+
+            User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), messageText);});
+        });
+    }
+    private void sendNotification(String receiverEmail, String nickname, String message) {
+        User.fetch(receiverEmail).addOnSuccessListener(user -> {
+            receiverToken = user.getToken();
+            Data data = new Data(senderEmail, nickname + ": " + message, getString(R.string.notification_title), receiverEmail, listingID);
+            NotificationSender notificationSender = new NotificationSender(data, receiverToken);
+            fcmServiceAPI.sendNotification(notificationSender).enqueue(new Callback<Void>() {
+                //These functions have to be overridden but in our implementation we do not want anything to happen if we fail to send a notification
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {}
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {}
+            });
         });
     }
 }
+
+

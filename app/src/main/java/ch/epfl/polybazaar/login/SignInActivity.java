@@ -9,12 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.bottomBar;
+import ch.epfl.polybazaar.user.User;
 
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
@@ -41,8 +44,14 @@ public class SignInActivity extends AppCompatActivity {
         Account currentUser = authenticator.getCurrentUser();
 
         if (currentUser != null) {
-            Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
-            startActivity(intent);
+            currentUser.getUserData().addOnSuccessListener(new OnSuccessListener<User>() {
+                @Override
+                public void onSuccess(User user) {
+                    Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
+                    startActivity(intent);
+                }
+            });
+
         }
     }
 
@@ -80,3 +89,4 @@ public class SignInActivity extends AppCompatActivity {
                 });
     }
 }
+

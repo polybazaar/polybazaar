@@ -235,7 +235,7 @@ public class SaleDetailsTest {
     public void testSetupSellerContact() throws ExecutionException, InterruptedException {
         MockAuthenticator auth = MockAuthenticator.getInstance();
         Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
-
+        DatabaseStoreUtilities.storeNewUser(MockAuthenticator.TEST_USER_NICKNAME, MockAuthenticator.TEST_USER_EMAIL);
         String id = "listingID";
         String otherUser = "anotherepfl.user@epfl.ch";
         String message = "Hi!";
