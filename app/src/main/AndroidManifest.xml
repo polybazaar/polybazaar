@@ -29,10 +29,20 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".search.SearchListings">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
         <activity
-            android:name=".UI.SatCompass"
-            android:parentActivityName=".UI.SalesOverview"
-            android:label="PolyBeer"/>
+            android:name=".search.NoSearchResults"
+            android:label="Back to listings"
+            android:parentActivityName=".UI.SalesOverview" />
 
         <service
             android:name=".notifications.NotificationService"
@@ -45,7 +55,8 @@
 
         <activity
             android:name=".conversationOverview.ConversationOverviewActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -64,9 +75,10 @@
         <activity
             android:name=".UI.SubmitOffer"
             android:label="@string/submit_offer"
-            android:noHistory="false"
-            android:parentActivityName=".UI.SalesOverview"
-            android:theme="@style/AppTheme.NoActionBar" />
+
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".UI.SalesOverview"/>
+
         <activity
             android:name=".UI.NotSignedIn"
             android:label="Not Signed In"
@@ -91,6 +103,11 @@
         <activity
             android:name=".login.SignInActivity"
             android:label="Sign In" />
+
+        <activity
+            android:name=".UI.SatCompass"
+            android:parentActivityName=".UI.SalesOverview"
+            android:label="PolyBeer"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -123,7 +140,9 @@
             android:name=".UI.SaleDetails"
             android:label="Details"
             android:parentActivityName=".UI.SalesOverview" />
+
         <activity android:name=".MainActivity" />
+
     </application>
 
 </manifest>

@@ -1,4 +1,5 @@
 package ch.epfl.polybazaar;
+
 import android.view.View;
 
 import androidx.test.rule.ActivityTestRule;
@@ -6,37 +7,36 @@ import androidx.test.rule.ActivityTestRule;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
-import ch.epfl.polybazaar.UI.SalesOverview;
+import java.util.List;
+
+import ch.epfl.polybazaar.UI.NotSignedIn;
+import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.login.Account;
+import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNot.not;
+import static junit.framework.TestCase.assertEquals;
 
 
 public class FavoritesTest {
 
 
-    MockAuthenticator auth;
-
     @Rule
-    public final ActivityTestRule<SalesOverview> mActivityRule =
-            new ActivityTestRule<SalesOverview>(SalesOverview.class){
+    public final ActivityTestRule<NotSignedIn> mActivityRule =
+            new ActivityTestRule<NotSignedIn>(NotSignedIn.class){
             };
-
+    MockAuthenticator auth;
 
     @Before
     public void init() {
@@ -51,24 +51,30 @@ public class FavoritesTest {
     }
 
 
+   @Test public void favoritesListIsEmpty() {
+        auth.signIn("test.user@epfl.ch", "abcdef");
+        clickButton(withId(R.id.signInButton));
 
-    @Test
-    public void favoritesUserNotLoggedIn() {
-        clickButton(withId(R.id.favoritesOverview));
-
-        onView(withText(R.string.sign_in_required))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
-                .check(matches(isDisplayed()));
+        clickButton(withId(R.id.action_profile));
+        clickButton(withId(R.id.viewFavoritesButton));
+        
+        onView(withText(R.string.no_favorites)).check(matches(isDisplayed()));
     }
 
-   /* @Test public void favoritesListIsEmpty() {
+    @Test public void favoriteIsRecorded() throws Throwable {
+        Listing listing1 = new Listing();
         auth.signIn("test.user@epfl.ch", "abcdef");
-        clickButton(withId(R.id.favoritesOverview));
 
-        onView(withText(R.string.no_favorites))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
-                .check(matches(isDisplayed()));
-    }*/
+        Authenticator auth = AuthenticatorFactory.getDependency();
+        Account authAccount = auth.getCurrentUser();
+
+        authAccount.getUserData().addOnSuccessListener(user -> {
+            user.addFavorite(listing1);
+            List<String> favoritesIds = user.getFavorites();
+            assertEquals(listing1.getId(), favoritesIds.get(0));
+        });
+
+    }
     
     private void clickButton(Matcher<View> object) {
         onView(object).perform(click());
