@@ -44,9 +44,6 @@
     <dimen name="message_max_width">240dp</dimen>
     <dimen name="message_small_margin">4dp</dimen>
     <dimen name="line_thickness">2dp</dimen>
-    <dimen name="userProfile_inter_space_extra_large">50dp</dimen>
-    <dimen name="userProfile_inter_space_large">30dp</dimen>
-    <dimen name="userProfile_inter_space_small">7dp</dimen>
     <dimen name="profile_picture_size">200dp</dimen>
     <dimen name="large_textView_text_size">20sp</dimen>
     <dimen name="extra_large_textView_text_size">25sp</dimen>
