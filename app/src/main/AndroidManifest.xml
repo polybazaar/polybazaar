@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.epfl.polybazaar">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -11,6 +10,10 @@
 
     <uses-feature
         android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
         android:required="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,10 +29,14 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".UI.SatCompass"
+            android:parentActivityName=".UI.SalesOverview"
+            android:label="PolyBeer"/>
+
         <service
             android:name=".notifications.NotificationService"
             android:enabled="true"
-
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -38,8 +45,7 @@
 
         <activity
             android:name=".conversationOverview.ConversationOverviewActivity"
-            android:exported="true"
-            />
+            android:exported="true" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -55,13 +61,12 @@
         <activity
             android:name=".utilities.ImageTaker"
             android:noHistory="false" />
-
         <activity
             android:name=".UI.SubmitOffer"
-            android:noHistory="false"
             android:label="@string/submit_offer"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".UI.SalesOverview"/>
+            android:noHistory="false"
+            android:parentActivityName=".UI.SalesOverview"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UI.NotSignedIn"
             android:label="Not Signed In"
@@ -118,7 +123,7 @@
             android:name=".UI.SaleDetails"
             android:label="Details"
             android:parentActivityName=".UI.SalesOverview" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
