@@ -67,7 +67,8 @@ public class SignInActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         if (authenticator.getCurrentUser() != null) {
                             if (!authenticator.getCurrentUser().isEmailVerified()) {
-                                makeDialog(SignInActivity.this, R.string.email_not_verified);
+                                Intent intent = new Intent(getApplicationContext(), EmailVerificationActivity.class);
+                                startActivity(intent);
                             } else {
                                 backToMainWithSuccess(this);
                             }

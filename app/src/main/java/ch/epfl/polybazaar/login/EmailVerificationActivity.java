@@ -26,10 +26,10 @@ public class EmailVerificationActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        authenticator.signOut();
         Account user = authenticator.getCurrentUser();
         /*
         if (user != null && !user.isEmailVerified()) {
+            authenticator.signOut();
             // TODO delete the user
         }
          */
@@ -65,8 +65,10 @@ public class EmailVerificationActivity extends AppCompatActivity {
         Account user = authenticator.getCurrentUser();
         user.reload().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                if (authenticator.getCurrentUser().isEmailVerified()) {
-                    backToMainWithSuccess(this);
+                if (authenticator.getCurrentUser() != null) {
+                    if (authenticator.getCurrentUser().isEmailVerified()) {
+                        backToMainWithSuccess(this);
+                    }
                 }
             } else {
                 MinimalAlertDialog.makeDialog(
