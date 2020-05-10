@@ -12,11 +12,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SaleDetails;
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.chat.ChatMessage;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Account;
@@ -164,6 +167,12 @@ public class ListingManager {
         for(String id: listImageID) {
             ListingImage.delete(id);
         }
+        // delete all messages
+        ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
+            for (ChatMessage message : chatMessages) {
+                message.delete();
+            }
+        });
     }
 
     /**

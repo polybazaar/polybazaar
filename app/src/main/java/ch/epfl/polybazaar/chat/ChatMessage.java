@@ -103,6 +103,10 @@ public class ChatMessage extends Model {
         return ModelTransaction.fetchMultipleFieldsEquality(ChatMessage.COLLECTION, Arrays.asList("sender", "receiver", "listingID"), Arrays.asList(userEmail1, userEmail2, listingID), ChatMessage.class);
     }
 
+    public static Task<List<ChatMessage>> fetchConversation(String listingID) {
+        return ModelTransaction.fetchFieldEquality(ChatMessage.COLLECTION, "listingID", listingID, ChatMessage.class);
+    }
+
     public static Task<List<ChatMessage>> fetchMessagesFrom(String sender) {
         return ModelTransaction.fetchFieldEquality(ChatMessage.COLLECTION,"sender", sender, ChatMessage.class);
     }
