@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -44,6 +45,7 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
+    public static final float SENSIBILITY = 2.0f;
     private Map<Timestamp, String> listingTimeMap;
     private Map<String, String> listingTitleMap;
     private Map<String, String> searchListingTitleMap;
@@ -109,7 +111,7 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
                 .background(true)
                 .interval(1000)
                 .shakeCount(2)
-                .sensibility(2.0f);
+                .sensibility(SENSIBILITY);
         shakeDetector = new ShakeDetector(options).start(this, () -> {
             if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -121,7 +123,10 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            startActivity(new Intent(SalesOverview.this, SatCompass.class));
+            LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+            if (manager != null && manager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
+                startActivity(new Intent(SalesOverview.this, SatCompass.class));
+            }
         });
     }
 
