@@ -14,8 +14,9 @@ public class NoSearchResults extends AppCompatActivity {
 
         // get search query
         Bundle bundle = getIntent().getExtras();
-        String searchQuery = bundle.getString("searchQuery");
-
-        ((TextView)findViewById(R.id.searchQuery)).setText(searchQuery);
+        if (bundle != null) {
+            String searchQuery = bundle.getString("searchQuery");
+            ((TextView)findViewById(R.id.searchQuery)).setText(searchQuery);
+        }
     }
 }
