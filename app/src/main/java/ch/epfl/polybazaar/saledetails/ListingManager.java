@@ -54,6 +54,7 @@ public class ListingManager {
             //Set the title
             TextView title_txt = activity.findViewById(R.id.title);
             title_txt.setText(listing.getTitle());
+            title_txt.setVisibility(View.VISIBLE);
 
             //Set the description
             LinearLayout description = activity.findViewById(R.id.descriptionLayout);
@@ -72,6 +73,7 @@ public class ListingManager {
             } else {
                 price_txt.setText(String.format("CHF %s", listing.getPrice()));
             }
+            price_txt.setVisibility(View.VISIBLE);
 
             // Set seller information
             ImageView sellerPicture  = activity.findViewById(R.id.sellerProfilePicture);
