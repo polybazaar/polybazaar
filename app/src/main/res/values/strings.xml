@@ -146,4 +146,5 @@
     <string name="no_account">No account?</string>
     <string name="e_mail_address">E-mail address</string>
     <string name="sign_in_success">Successfully signed in</string>
+    <string name="no_match_found">No match found</string>
 </resources>

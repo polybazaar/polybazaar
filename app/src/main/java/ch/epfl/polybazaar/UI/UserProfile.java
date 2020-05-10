@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -244,7 +245,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
                 makeDialog(this, R.string.no_created_listings);
                 // we relaunch the SalesOverview activity with the list of favorites in the bundle
             } else {
-                displaySavedListings(this, ownListingsIds);
+                displaySavedListings(this, ownListingsIds, R.string.no_created_listings);
             }
         });
     }
@@ -253,13 +254,13 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         Account user = getUser();
         if(user == null) return;
         user.getUserData().addOnSuccessListener(authUser -> {
-                    ArrayList<String> favoritesIds = authUser.getFavorites();
+            ArrayList<String> favoritesIds = authUser.getFavorites();
             // the list of user-created listings is empty
             if (favoritesIds == null || favoritesIds.isEmpty()) {
                 makeDialog(this, R.string.no_favorites);
                 // we relaunch the SalesOverview activity with the list of favorites in the bundle
             } else {
-                displaySavedListings(this, favoritesIds);
+                displaySavedListings(this, favoritesIds, R.string.no_favorites);
             }
         });
     }
