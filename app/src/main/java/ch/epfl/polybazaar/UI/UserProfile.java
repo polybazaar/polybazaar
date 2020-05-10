@@ -34,6 +34,7 @@ import ch.epfl.polybazaar.widgets.PublishProfileDialog;
 import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 import static ch.epfl.polybazaar.Utilities.displayToast;
 import static ch.epfl.polybazaar.Utilities.getUser;
+import static ch.epfl.polybazaar.chat.ChatActivity.removeBottomBarWhenKeyboardUp;
 import static ch.epfl.polybazaar.user.User.NO_PROFILE_PICTURE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
@@ -66,9 +67,6 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         authenticator = AuthenticatorFactory.getDependency();
-        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_profile);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), UserProfile.this));
         if (authenticator.getCurrentUser() == null) {
             Intent notSignedIn = new Intent(this, NotSignedIn.class);
             startActivity(notSignedIn);
@@ -95,6 +93,10 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
                 }
             });
         }
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_profile);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), UserProfile.this));
+        removeBottomBarWhenKeyboardUp(this);
     }
 
     @Override

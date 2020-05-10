@@ -41,6 +41,7 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.user.User;
 import ch.epfl.polybazaar.search.SearchListings;
 
+import static ch.epfl.polybazaar.chat.ChatActivity.removeBottomBarWhenKeyboardUp;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class SalesOverview extends AppCompatActivity implements SearchView.OnQueryTextListener {
@@ -106,6 +107,7 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
         BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SalesOverview.this));
+        removeBottomBarWhenKeyboardUp(this);
     }
 
     @Override
