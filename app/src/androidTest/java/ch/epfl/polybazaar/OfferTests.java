@@ -72,7 +72,7 @@ public class OfferTests {
                 }
             };
 
-    @Test
+    /*@Test
     public void doOfferTest() throws InterruptedException {
         MockAuthenticator.getInstance().signOut();
         MockAuthenticator.getInstance().signIn(TestUser2Email, TestUser2Password);
@@ -84,7 +84,7 @@ public class OfferTests {
             assertThat(chatMessages.get(0).getMessage(), is(ChatMessage.OFFER_MADE+ "15.0"));
         });
         pressBack();
-    }
+    }*/
 
     @Test
     public void sendOfferTest() {
