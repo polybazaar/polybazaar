@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.Utilities;
 
@@ -29,10 +31,10 @@ public class CategoryFragment extends Fragment {
     private View fragmentView;
     private CategoryFragmentListener listener;
 
-
     private static Category category;
     private static Category selectedCategory;
-
+    private static int backstackIndex;
+    private static int containerId;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -46,8 +48,10 @@ public class CategoryFragment extends Fragment {
      * @return a list of the subcategories
      */
     // TODO: Rename and change types and number of parameters
-    public static CategoryFragment newInstance(Category cat) {
+    public static CategoryFragment newInstance(Category cat,int containerId,int backstackIndex) {
         category = cat;
+        CategoryFragment.backstackIndex = backstackIndex;
+        CategoryFragment.containerId = containerId;
 
         CategoryFragment fragment = new CategoryFragment();
         Bundle args = new Bundle();
@@ -68,9 +72,12 @@ public class CategoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //selectedCategory is here to avoid access to static var category which causes bugs
+        // avoid access to static variables  which causes bugs
         // when switching between fragments
         final Category currentCategory = category;
+        final int containerId = CategoryFragment.containerId;
+        final int backstackIndex = CategoryFragment.backstackIndex;
+
         fragmentView = inflater.inflate(R.layout.fragment_category, container, false);
         Button categoryButton  = fragmentView.findViewById(R.id.categoryButton);
         categoryButton.setText(currentCategory.toString());
@@ -82,10 +89,10 @@ public class CategoryFragment extends Fragment {
             //select category if leaf, show subcategories otherwise
             if(nextCategory.hasSubCategories()){
 
-                CategoryFragment nextFrag=  CategoryFragment.newInstance(nextCategory);
+                CategoryFragment nextFrag=  CategoryFragment.newInstance(nextCategory,containerId,backstackIndex);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .addToBackStack(null)
-                        .add(R.id.salesOverview_fragment_container, nextFrag)
+                        .add(containerId, nextFrag)
                         .commit();
             }else{
                 categoryButton.setText(nextCategory.toString());
@@ -98,7 +105,7 @@ public class CategoryFragment extends Fragment {
         categoryButton.setOnClickListener(view->{
             listener.onCategoryFragmentInteraction(selectedCategory);
            //getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-            popBackStackTillEntry(0);
+            popBackStackTillEntry(backstackIndex);
 
         });
 

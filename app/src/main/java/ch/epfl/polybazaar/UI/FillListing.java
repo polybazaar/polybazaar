@@ -182,8 +182,9 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         selectCategory.setOnClickListener(v -> {
             // TODO : open category selection activity
             RootCategoryFactory.useJSONCategory(getApplicationContext());
-            CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency());
             FragmentManager fragmentManager = getSupportFragmentManager();
+            CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency(),
+                   R.id.fillListing_fragment_container,fragmentManager.getBackStackEntryCount());
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.addToBackStack(null)
                     .add(R.id.fillListing_fragment_container,categoryFragment).commit();
