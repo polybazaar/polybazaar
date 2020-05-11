@@ -1,12 +1,19 @@
 package ch.epfl.polybazaar.notifications;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -19,14 +26,24 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.user.User;
 
 public class NotificationService extends FirebaseMessagingService {
+
+    LocalBroadcastManager broadcastManager;
     public NotificationService() {
     }
 
     @Override
+    public void onCreate(){
+        broadcastManager = LocalBroadcastManager.getInstance(this);
+    }
+
+    @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        broadcastManager.sendBroadcast(new Intent(ChatActivity.broadcastUpdateMessage));
+        SharedPreferences preferences = getSharedPreferences("PREFS", MODE_PRIVATE);
+        String currentChatID = preferences.getString(ChatActivity.currentChatID, ChatActivity.noCurrentID);
         AuthenticatorFactory.getDependency().getCurrentUser().getUserData().addOnSuccessListener(user -> {
-            if(user != null && remoteMessage.getData().get(Data.TO).equals(user.getId())){
-                showNotification(remoteMessage);
+            if(user != null && remoteMessage.getData().get(Data.TO).equals(user.getId()) && !currentChatID.equals(remoteMessage.getData().get(Data.SENDER) + remoteMessage.getData().get(Data.LISTINGID))){
+                    showNotification(remoteMessage);
             }
         });
     }
@@ -42,10 +59,7 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     private void showNotification(RemoteMessage remoteMessage) {
-        Intent notificationIntent = new Intent(this, ChatActivity.class)
-                .putExtra(ChatActivity.bundleReceiverEmail, remoteMessage.getData().get(Data.SENDER))
-                .putExtra(ChatActivity.bundleListingId, remoteMessage.getData().get(Data.LISTINGID))
-                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent notificationIntent = toChatActivityIntent(remoteMessage);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
@@ -63,4 +77,13 @@ public class NotificationService extends FirebaseMessagingService {
         }
         manager.notify(0, builder.build());
     }
+
+    private final Intent toChatActivityIntent(RemoteMessage remoteMessage){
+        return new Intent(this, ChatActivity.class)
+                .putExtra(ChatActivity.bundleReceiverEmail, remoteMessage.getData().get(Data.SENDER))
+                .putExtra(ChatActivity.bundleListingId, remoteMessage.getData().get(Data.LISTINGID))
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
 }
+
+

@@ -1,11 +1,17 @@
 package ch.epfl.polybazaar.chat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,14 +58,26 @@ public class ChatActivity extends AppCompatActivity {
     private List<ChatMessage> conversation = new ArrayList<>();
 
     private FCMServiceAPI fcmServiceAPI;
+    private BroadcastReceiver broadcastReceiver;
 
     public static final String bundleListingId = "listingID";
     public static final String bundleReceiverEmail = "receiverEmail";
+    public static final String broadcastUpdateMessage = "broadcastUpdateMessage";
+    public static final String currentChatID = "currentChatID";
+    public static final String noCurrentID = "noCurrentID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                loadConversation();
+            }
+        };
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_messages);
@@ -71,7 +89,7 @@ public class ChatActivity extends AppCompatActivity {
         this.listingID = bundle.getString(bundleListingId);
         this.receiverEmail = bundle.getString(bundleReceiverEmail);
         this.senderEmail = AuthenticatorFactory.getDependency().getCurrentUser().getEmail();
-
+        writeCurrentChatIDToPreferences(receiverEmail+listingID);
         sendMessageButton = findViewById(R.id.sendMessageButton);
         messageEditor = findViewById(R.id.messageEditor);
         messageRecycler = findViewById(R.id.messageDisplay);
@@ -95,6 +113,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadConversation() {
+        conversation.clear();
         Task<List<ChatMessage>> fetchSenderMessages = ChatMessage.fetchConversation(senderEmail, receiverEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
         Task<List<ChatMessage>> fetchReceiverMessages = ChatMessage.fetchConversation(receiverEmail, senderEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
 
@@ -139,6 +158,38 @@ public class ChatActivity extends AppCompatActivity {
                 public void onFailure(Call<Void> call, Throwable t) {}
             });
         });
+    }
+
+    private void writeCurrentChatIDToPreferences(String id){
+        SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+        editor.putString(currentChatID, id);
+        editor.apply();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
+                new IntentFilter(broadcastUpdateMessage)
+        );
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        writeCurrentChatIDToPreferences(receiverEmail + listingID);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        writeCurrentChatIDToPreferences(noCurrentID);
     }
 }
 
