@@ -58,7 +58,8 @@ public final class LocalCache {
     }
 
     /**
-     * Sets the folder on which the cache contents are stored
+     * Sets the folder on which the cache contents are stored. Can be used for testing purpose for
+     * isolating test cache in a different folder.
      * @param path relative path of the cache folder
      */
     public static void setRoot(String path) {
