@@ -93,18 +93,6 @@ public final class LocalCache {
      * @param context context
      */
     public static void cleanUp(Context context) {
-        File rootDir = new File(makeFullRootPath(context));
-
-        if (rootDir.exists()) {
-            String[] children = rootDir.list();
-            for(String child: children){
-                File currentFile = new File(rootDir.getPath(), child);
-                currentFile.delete();
-            }
-
-            if (!root.equals("")) {
-                rootDir.delete();
-            }
-        }
+        IoUtils.deleteDir(new File(makeFullRootPath(context)));
     }
 }

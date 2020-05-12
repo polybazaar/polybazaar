@@ -14,8 +14,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public final class ImageTransaction {
-    private static final int BUFFER_SIZE = 1024;
-
     // this class is non-instantiable
     private ImageTransaction(){}
 
@@ -44,7 +42,7 @@ public final class ImageTransaction {
 
                 // store result in cache
                 OutputStream outputStream = LocalCache.add(id, context);
-                copyStream(inputStream, outputStream);
+                IoUtils.copyStream(inputStream, outputStream);
 
                 // re-read from cache since an InputStream cannot be read twice
                 InputStream cacheInputStream = LocalCache.get(id, context);
@@ -79,18 +77,5 @@ public final class ImageTransaction {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         FileStore fileStore = FileStoreFactory.getDependency();
         return fileStore.store(id, byteArrayInputStream);
-    }
-
-    // read bytes from input stream and write them to output stream
-    private static void copyStream(InputStream input, OutputStream output) {
-        byte[] buffer = new byte[BUFFER_SIZE];
-        int len;
-        try {
-            while ((len = input.read(buffer)) > 0) {
-                output.write(buffer, 0, len);
-            }
-        } catch (IOException e) {
-            throw new Error("Unexpected IO error");
-        }
     }
 }

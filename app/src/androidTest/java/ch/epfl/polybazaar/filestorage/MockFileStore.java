@@ -8,10 +8,10 @@ import com.google.android.gms.tasks.Tasks;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.OutputStream;
 
 public final class MockFileStore implements FileStore {
     private final static String MOCK_DIR = "cloud-mock" + File.separator;
@@ -37,17 +37,7 @@ public final class MockFileStore implements FileStore {
      * Deletes the folder used for mocking remote storage
      */
     public void cleanUp() {
-        File rootDir = new File(path);
-
-        if (rootDir.exists()) {
-            String[] children = rootDir.list();
-            for(String child: children){
-                File currentFile = new File(rootDir.getPath(), child);
-                currentFile.delete();
-            }
-            rootDir.delete();
-        }
-
+        IoUtils.deleteDir(new File(path));
     }
 
     @Override
@@ -67,8 +57,8 @@ public final class MockFileStore implements FileStore {
 
     @Override
     public Task<Void> store(String id, InputStream data) {
-        try {
-            Files.copy(data, Paths.get(path + File.separator + id));
+        try (OutputStream out = new FileOutputStream(new File(path + File.separator + id))) {
+            IoUtils.copyStream(data, out);
             return Tasks.forResult(null);
         } catch (IOException e) {
             throw new Error("Unexpected IO error");
