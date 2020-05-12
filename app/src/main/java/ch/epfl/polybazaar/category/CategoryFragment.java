@@ -81,6 +81,7 @@ public class CategoryFragment extends Fragment {
         fragmentView = inflater.inflate(R.layout.fragment_category, container, false);
         Button categoryButton  = fragmentView.findViewById(R.id.categoryButton);
         categoryButton.setText(currentCategory.toString());
+        selectedCategory = currentCategory;
 
         categoryRecyclerAdapter = new CategoryRecyclerAdapter(fragmentView.getContext(),currentCategory);
         categoryRecyclerAdapter.setOnItemClickListener(view->{
@@ -95,16 +96,16 @@ public class CategoryFragment extends Fragment {
                         .add(containerId, nextFrag)
                         .commit();
             }else{
-                categoryButton.setText(nextCategory.toString());
+                //categoryButton.setText(nextCategory.toString());
 
             }
+            categoryButton.setText(nextCategory.toString());
             selectedCategory = nextCategory;
 
         });
 
         categoryButton.setOnClickListener(view->{
             listener.onCategoryFragmentInteraction(selectedCategory);
-           //getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             popBackStackTillEntry(backstackIndex);
 
         });

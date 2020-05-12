@@ -13,7 +13,7 @@
     <LinearLayout
         android:id="@+id/categoryItem"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/thumbnail_size"
+        android:layout_height="60sp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,7 +22,7 @@
             android:id="@+id/categoryName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="40sp"
+            android:textSize="30sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
