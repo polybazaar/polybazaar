@@ -10,7 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -28,7 +28,7 @@ public class PermissionRequestTest {
     private final int SLEEP_TIME = 2000;
 
     @Rule
-    public final ActivityTestRule<FillListingActivity> permissionActivityTestRule = new ActivityTestRule<>(FillListingActivity.class);
+    public final ActivityTestRule<FillListing> permissionActivityTestRule = new ActivityTestRule<>(FillListing.class);
 
     @Rule
     public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);

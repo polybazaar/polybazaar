@@ -4,10 +4,12 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
 
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.chat.ChatMessage;
+import ch.epfl.polybazaar.user.User;
 
 import static java.util.UUID.randomUUID;
 
@@ -35,5 +37,14 @@ public abstract  class DatabaseStoreUtilities {
         Tasks.whenAll(chatMessage.save()).addOnFailureListener(e -> {
             throw new AssertionError();
         });
+    }
+
+    public static void storeNewUser(String nickname, String email) {
+        User user = new User(nickname, email);
+        try {
+            Tasks.await(user.save());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

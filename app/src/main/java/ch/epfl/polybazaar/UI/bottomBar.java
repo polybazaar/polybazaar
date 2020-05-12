@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.UserProfileActivity;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
-import ch.epfl.polybazaar.widgets.NotSignedInActivity;
 
 public abstract class bottomBar {
 
@@ -20,7 +17,7 @@ public abstract class bottomBar {
      * @param activity activity where the bar is
      * @return
      */
-    public static boolean updateActivity(Integer i,Activity activity){
+    public static boolean updateActivity(Integer i, Activity activity){
 
         switch (i){
             case R.id.action_home:
@@ -31,14 +28,14 @@ public abstract class bottomBar {
                 break;
 
             case R.id.action_add_item:
-                    toActivity(activity,FillListingActivity.class);
+                    toActivity(activity,FillListing.class);
                 break;
 
             case R.id.action_messages:
                 toActivity(activity, ConversationOverviewActivity.class);
                 break;
             case R.id.action_profile:
-                toActivity(activity, UserProfileActivity.class);
+                toActivity(activity, UserProfile.class);
                 break;
         }
         return true;
@@ -49,18 +46,16 @@ public abstract class bottomBar {
      * @param currentActivity activity where the method is called
      * @param c the class to go to
      */
-    private static void toActivity(Activity currentActivity,Class c){
+    private static void toActivity(Activity currentActivity, Class c){
         Authenticator authenticator = AuthenticatorFactory.getDependency();
         Account user = authenticator.getCurrentUser();
         Intent intent;
-
         if(user == null){
-            intent = new Intent(currentActivity, NotSignedInActivity.class);
+            intent = new Intent(currentActivity, NotSignedIn.class);
         }else{
             intent = new Intent(currentActivity,c);
         }
         currentActivity.startActivity(intent);
         currentActivity.overridePendingTransition(0, 0);
-
     }
 }

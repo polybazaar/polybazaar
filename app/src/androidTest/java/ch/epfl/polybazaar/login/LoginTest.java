@@ -6,11 +6,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.R;
 
@@ -21,13 +19,16 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.createAccountAndBackToLoginFromLoginActivity;
+import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.fillAndSubmitSignUp;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
-@RunWith(AndroidJUnit4.class)
 public class LoginTest {
     public static final String EMAIL = "otheruser.test@epfl.ch";
     public static final String NICKNAME = "otheruser";
@@ -38,7 +39,9 @@ public class LoginTest {
             new ActivityTestRule<SignInActivity>(SignInActivity.class){
                 @Override
                 protected void beforeActivityLaunched() {
+                    useMockDataStore();
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
+                    MockAuthenticator.getInstance().reset();
                 }
 
                 @Override
@@ -56,7 +59,8 @@ public class LoginTest {
 
     @Test
     public void signUpProcessWorks() {
-        createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
+        createAccountAndBackToLoginFromLoginActivity(EMAIL, NICKNAME, PASSWORD);
+        onView(withId(R.id.signInButton)).perform(click());
         fillAndSubmitSignIn(EMAIL, "aaaaaaaa");
         onView(withText(R.string.verify_credentials)).check(matches(isDisplayed()));
 
@@ -66,12 +70,14 @@ public class LoginTest {
         emptyInput(withId(R.id.passwordInput));
 
         fillAndSubmitSignIn(EMAIL, PASSWORD);
-        onView(withText(R.string.authentication_successful)).check(matches(isDisplayed()));
+        assertThat(MockAuthenticator.getInstance().getCurrentUser().getEmail(), is(EMAIL));
+
     }
+
 
     @Test
     public void signUpWithExistingEmailFails() {
-        createAccountAndBackToLogin(EMAIL, NICKNAME, PASSWORD);
+        createAccountAndBackToLoginFromLoginActivity(EMAIL, NICKNAME, PASSWORD);
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
 
@@ -109,7 +115,6 @@ public class LoginTest {
 
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
         clickButton(withId(R.id.signOutButton));
-
         fillAndSubmitSignIn(EMAIL, PASSWORD);
 
         onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));
@@ -138,28 +143,11 @@ public class LoginTest {
         clickButton(withText(R.string.alert_close));
     }
 
-    public void createAccountAndBackToLogin(String email, String nickname, String password) {
-        clickButton(withId(R.id.signUpButton));
-
-        fillAndSubmitSignUp(email, nickname, password, password);
-
-        clickButton(withId(R.id.sendLinkButton));
-        clickButton(withId(R.id.reloadButton));
-        clickButton(withId(R.id.signOutButton));
-    }
-
     private void fillAndSubmitSignIn(String email, String password) {
         typeInput(withId(R.id.emailInput), email);
         typeInput(withId(R.id.passwordInput), password);
+        closeSoftKeyboard();
         clickButton(withId(R.id.loginButton));
-    }
-
-    private void fillAndSubmitSignUp(String email, String nickname, String password, String confirm) {
-        typeInput(withId(R.id.emailInput), email);
-        typeInput(withId(R.id.nicknameInput), nickname);
-        typeInput(withId(R.id.passwordInput), password);
-        typeInput(withId(R.id.confirmPasswordInput), confirm);
-        clickButton(withId(R.id.submitButton));
     }
 
     private void typeInput(Matcher<View> object, String text) {

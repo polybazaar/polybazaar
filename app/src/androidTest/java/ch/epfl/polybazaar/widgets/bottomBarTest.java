@@ -7,13 +7,13 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.UserProfileActivity;
-import ch.epfl.polybazaar.conversationOverview.ConversationOverview;
+import ch.epfl.polybazaar.UI.UserProfile;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
+import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
 
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -33,6 +33,12 @@ public class bottomBarTest {
             useMockDataStore();
             AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
             AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL,MockAuthenticator.TEST_USER_PASSWORD);
+            DatabaseStoreUtilities.storeNewUser(MockAuthenticator.TEST_USER_NICKNAME, MockAuthenticator.TEST_USER_EMAIL);
+        }
+
+        @Override
+        protected void afterActivityFinished() {
+            MockAuthenticator.getInstance().reset();
         }
     };
 
@@ -50,7 +56,7 @@ public class bottomBarTest {
         Intents.init();
         runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.action_add_item).performClick());
         Thread.sleep(SLEEP_TIME);
-        intended(hasComponent(FillListingActivity.class.getName()));
+        intended(hasComponent(FillListing.class.getName()));
         Intents.release();
     }
     @Test
@@ -66,7 +72,7 @@ public class bottomBarTest {
         Intents.init();
         runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.action_profile).performClick());
         Thread.sleep(SLEEP_TIME);
-        intended(hasComponent(UserProfileActivity.class.getName()));
+        intended(hasComponent(UserProfile.class.getName()));
         Intents.release();
     }
 }
