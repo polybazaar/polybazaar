@@ -3,13 +3,11 @@ package ch.epfl.polybazaar;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 
-import ch.epfl.polybazaar.filllisting.FillListingActivity;
+import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.login.SignInActivity;
@@ -45,23 +43,13 @@ public class MainActivityTest{
                     MockAuthenticator.getInstance().reset();
                 }
             };
-
+/*
     @Test
     public void authenticatedUsersCanEnterFillListing() {
         signInAndBack();
-        onView(withId(R.id.addListing)).perform(click());
-        hasComponent(FillListingActivity.class.getName());
-    }
-
-    @Test
-    public void authenticatedUsersCanSignOut() {
-        signInAndBack();
-        onView(withText(R.string.sign_out)).check(matches(isDisplayed()));
-
-        onView(withId(R.id.authenticationButton)).perform(click());
-
-        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
-    }
+        onView(withId(R.id.action_add_item)).perform(click());
+        hasComponent(FillListing.class.getName());
+    }*/
 
     @Test
     public void accessesForNonAuthenticatedUserAreCorrect() {
@@ -87,6 +75,5 @@ public class MainActivityTest{
         onView(withId(R.id.passwordInput)).perform(typeText(MockAuthenticator.TEST_USER_PASSWORD))
                 .perform(closeSoftKeyboard());
         onView(withId(R.id.loginButton)).perform(click());
-        onView(withId(R.id.toMainButton)).perform(click());
     }
 }

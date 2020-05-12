@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.epfl.polybazaar">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -25,7 +26,36 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".conversationOverview.ConversationOverviewActivity"></activity>
+
+        <activity android:name=".search.SearchListings">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
+        <activity
+            android:name=".search.NoSearchResults"
+            android:label="Back to listings"
+            android:parentActivityName=".UI.SalesOverview" />
+
+        <service
+            android:name=".notifications.NotificationService"
+            android:enabled="true"
+
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".conversationOverview.ConversationOverviewActivity"
+            android:exported="true"
+            />
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -39,15 +69,27 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".widgets.NotSignedInActivity"
-            android:label="Not Signed In" />
+            android:name=".utilities.ImageTaker"
+            android:noHistory="false" />
 
+        <activity
+            android:name=".UI.SubmitOffer"
+            android:noHistory="false"
+            android:label="@string/submit_offer"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".UI.SalesOverview"/>
+
+        <activity
+            android:name=".UI.NotSignedIn"
+            android:label="Not Signed In"
+            android:parentActivityName=".UI.SalesOverview" />
         <activity
             android:name=".map.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".UI.UserProfile"
             android:label="@string/title_activity_user_profile"
+            android:noHistory="false"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".login.EmailVerificationActivity"
@@ -56,17 +98,12 @@
             android:name=".login.SignUpActivity"
             android:label="Sign Up" />
         <activity
-            android:name=".login.SignInSuccessActivity"
-            android:label="Sign In" />
-        <activity
             android:name=".login.SignInActivity"
-            android:exported="true"
             android:label="Sign In" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="ch.epfl.polybazaar.fileprovider"
-            android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
@@ -74,14 +111,13 @@
         </provider>
 
         <activity
-            android:name=".filllisting.FillListingActivity"
-            android:exported="true"
+            android:name=".UI.FillListing"
             android:label="Listing Editor"
-            android:parentActivityName=".MainActivity" />
+            android:noHistory="false" />
         <activity
             android:name=".UI.SalesOverview"
-            android:label="Browse Listings"
-            android:parentActivityName=".MainActivity" >
+            android:label="PolyBazaar"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -91,15 +127,13 @@
         <activity
             android:name=".chat.ChatActivity"
             android:label="Chat"
-            android:parentActivityName=".UI.SaleDetails" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UI.SaleDetails"
-            android:exported="true"
             android:label="Details"
             android:parentActivityName=".UI.SalesOverview" />
-        <activity android:name=".MainActivity">
 
-        </activity>
+        <activity android:name=".MainActivity" />
 
     </application>
 

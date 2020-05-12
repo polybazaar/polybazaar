@@ -1,24 +1,20 @@
-package ch.epfl.polybazaar.widgets;
+package ch.epfl.polybazaar.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.login.SignInActivity;
 import ch.epfl.polybazaar.login.SignUpActivity;
 
-public class NotSignedInActivity extends AppCompatActivity {
+public class NotSignedIn extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_not_logged_in);
+        setContentView(R.layout.activity_not_signed_in);
         findViewById(R.id.signInButton).setOnClickListener(v -> {
             // TODO: launch the correct activity
             Intent target = new Intent(this, SignInActivity.class);
@@ -32,8 +28,5 @@ public class NotSignedInActivity extends AppCompatActivity {
             finish();
         });
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), NotSignedInActivity.this));
     }
 }

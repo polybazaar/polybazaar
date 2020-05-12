@@ -11,14 +11,25 @@ import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.database.SimpleField;
 
 public class ChatMessage extends Model {
-    private SimpleField<String> id = new SimpleField<>("id");
-    private SimpleField<String> sender = new SimpleField<>("sender");
-    private SimpleField<String> receiver = new SimpleField<>("receiver");
-    private SimpleField<String> listingID = new SimpleField<>("listingID");
-    private SimpleField<String> message = new SimpleField<>("message");
-    private SimpleField<Timestamp> time = new SimpleField<>("time");
+    public static final String ID = "id";
+    public static final String SENDER = "sender";
+    public static final String RECEIVER = "receiver";
+    public static final String LISTING_ID = "listingID";
+    public static final String MESSAGE = "message";
+    public static final String TIME = "time";
+
+    private SimpleField<String> id = new SimpleField<>(ID);
+    private SimpleField<String> sender = new SimpleField<>(SENDER);
+    private SimpleField<String> receiver = new SimpleField<>(RECEIVER);
+    private SimpleField<String> listingID = new SimpleField<>(LISTING_ID);
+    private SimpleField<String> message = new SimpleField<>(MESSAGE);
+    private SimpleField<Timestamp> time = new SimpleField<>(TIME);
 
     public static final String COLLECTION = "chatMessages";
+    public static final String OFFER_MADE = "make_offer_";
+    public static final String OFFER_PROCESSED = "process_offer_";
+    public static final String OFFER_ACCEPTED = "acc";
+    public static final String OFFER_REFUSED = "ref";
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public ChatMessage(){
@@ -90,6 +101,10 @@ public class ChatMessage extends Model {
 
     public static Task<List<ChatMessage>> fetchConversation(String userEmail1, String userEmail2, String listingID) {
         return ModelTransaction.fetchMultipleFieldsEquality(ChatMessage.COLLECTION, Arrays.asList("sender", "receiver", "listingID"), Arrays.asList(userEmail1, userEmail2, listingID), ChatMessage.class);
+    }
+
+    public static Task<List<ChatMessage>> fetchConversation(String listingID) {
+        return ModelTransaction.fetchFieldEquality(ChatMessage.COLLECTION, "listingID", listingID, ChatMessage.class);
     }
 
     public static Task<List<ChatMessage>> fetchMessagesFrom(String sender) {

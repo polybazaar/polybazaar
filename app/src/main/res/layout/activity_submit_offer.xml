@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="@dimen/general_margin"
+    android:layout_marginEnd="@dimen/general_margin"
+    tools:context=".UI.SubmitOffer">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"/>
+
+    <TextView
+        android:id="@+id/offerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/make_an_offer"
+        android:textColor="@android:color/secondary_text_light"
+        android:textSize="@dimen/large_textView_text_size"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/offer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/inter_space_large"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/boxed"
+        android:textAlignment="center"
+        android:ems="7"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        android:maxLength="7"
+        android:maxLines="1"
+        tools:ignore="LabelFor" />
+
+    <Button
+        android:id="@+id/makeOfferNow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/inter_space_large"
+        android:layout_marginBottom="@dimen/button_shadow_margin"
+        android:background="@drawable/rounded_corner_button_colored"
+        android:text="@string/submit_offer"
+        android:textColor="@color/white"
+        android:textSize="@dimen/default_button_text_size"
+        android:onClick="submitOffer"/>
+
+    <Button
+        android:id="@+id/cancelOfferMaking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/inter_space_large"
+        android:layout_marginBottom="@dimen/button_shadow_margin"
+        android:background="@drawable/rounded_corner_button_colored"
+        android:text="@android:string/cancel"
+        android:textColor="@color/white"
+        android:textSize="@dimen/default_button_text_size"
+        android:onClick="cancelOfferMaking"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
