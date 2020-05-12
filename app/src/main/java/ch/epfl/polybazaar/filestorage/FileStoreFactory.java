@@ -3,7 +3,7 @@ package ch.epfl.polybazaar.filestorage;
 /**
  * Factory class that enables cloud storage dependency injection
  */
-public class FileStoreFactory {
+public final class FileStoreFactory {
     private static FileStore dependency = FirebaseFileStore.getInstance();
 
     // this class is non-instantiable

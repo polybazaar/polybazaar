@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class MockFileStore implements FileStore {
+public final class MockFileStore implements FileStore {
     private final static String MOCK_DIR = "cloud-mock" + File.separator;
     private String path;
 
