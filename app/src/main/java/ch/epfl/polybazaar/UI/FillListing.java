@@ -63,7 +63,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     private Button deleteImage;
     private ImageManager imageManager;
     private ListingManager listingManager;
-    private CategoryManager categoryManager;
     private Button addImages;
     private Button selectCategory;
     private Button submitListing;
@@ -72,12 +71,10 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
-    private Spinner categorySelector;
-    private List<Spinner> spinnerList;
     private List<String> listStringImage;
     //only used for edit to delete all images
     private List<String> listImageID;
-    private Category traversingCategory;
+    private Category selectedCategory;
     private String stringThumbnail = "";
     private double lat = NOLAT;
     private double lng = NOLNG;
@@ -89,7 +86,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         setContentView(R.layout.activity_fill_listing);
         imageManager = new ImageManager(this);
         listingManager = new ListingManager(this);
-        categoryManager = new CategoryManager(this);
         setMainImage = findViewById(R.id.setMain);
         rotateImage = findViewById(R.id.rotate);
         deleteImage = findViewById(R.id.deleteImage);
@@ -102,19 +98,9 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         addMP = findViewById(R.id.addMP);
         pictureView = findViewById(R.id.picturePreview);
 
-        /**
-         * FOR TESTING PURPOSES ONLY:
-         */
-        categorySelector = findViewById(R.id.categorySelector);
-        spinnerList = new ArrayList<>();
-        spinnerList.add(categorySelector);
         RootCategoryFactory.useJSONCategory(this);
-        categoryManager.setupSpinner(categorySelector, RootCategoryFactory.getDependency().subCategories() , spinnerList, traversingCategory);
-        traversingCategory = categoryManager.getTraversingCategory();
-        spinnerList = categoryManager.getSpinnerList();
-        /**
-         * ==========================
-         */
+        selectedCategory = RootCategoryFactory.getDependency();
+
 
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
@@ -208,7 +194,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         deleteImage.setOnClickListener(v -> imageManager.deleteImage(listStringImage));
         if(!edit){
             submitListing.setOnClickListener(v -> {
-                if (!listingManager.submit(spinnerList, listStringImage, stringThumbnail, lat, lng)) {
+                if (!listingManager.submit(selectedCategory, listStringImage, stringThumbnail, lat, lng)) {
                     NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
                     dialog.show(getSupportFragmentManager(), "noConnectionDialog");
                 }
@@ -217,7 +203,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         else{
             submitListing.setText(R.string.edit);
             submitListing.setOnClickListener(v ->
-                    listingManager.deleteOldListingAndSubmitNewOne(spinnerList, listStringImage, lat, lng, listImageID, imageManager.isEdited()));
+                    listingManager.deleteOldListingAndSubmitNewOne(selectedCategory, listStringImage, lat, lng, listImageID, imageManager.isEdited()));
         }
 
         /**
@@ -237,7 +223,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         if(dialog instanceof NoConnectionForListingDialog){
-            Listing newListing = listingManager.makeListing(lat, lng, spinnerList);
+            Listing newListing = listingManager.makeListing(lat, lng, selectedCategory);
             if (newListing != null) {
                 listingManager.createAndSendListing(newListing, listStringImage, stringThumbnail);
                 Intent SalesOverviewIntent = new Intent(FillListing.this, SalesOverview.class);
@@ -262,7 +248,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     @Override
     public void onCategoryFragmentInteraction(Category category) {
 
-        traversingCategory = category;
+        selectedCategory = category;
         selectCategory.setText(category.toString());
 
     }

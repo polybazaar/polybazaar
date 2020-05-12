@@ -148,7 +148,8 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
      * Create a graphical overview of LiteListings from database
      */
     public void loadLiteListingOverview() {
-        if(currentCategory.toString().equals(RootCategoryFactory.getDependency().toString())){
+
+        if(currentCategory.equals(RootCategoryFactory.getDependency())){
             //Toast.makeText(getApplicationContext(), "oiuasdf", Toast.LENGTH_SHORT).show();
             LiteListing.fetchAll().addOnSuccessListener(this::onFetchSuccess);
           }else{
@@ -193,7 +194,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         if(result == null) {
             return;
         }
-        if(IDList.isEmpty()) {
             for (LiteListing l : result) {
                 if (l != null) {
                     if(l.getTimestamp() != null) { // TODO: delete before merge
@@ -203,7 +203,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             }
             // retrieve values from Treemap: litelistings IDs in order: most recent first
             IDList = new ArrayList<>(listingTimeMap.values());
-        }
+
         int size = IDList.size();
         List<Task<LiteListing>> taskList = new ArrayList<>();
         // add fetch tasks in correct display order
@@ -217,11 +217,12 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             int itemCount = liteListingList.size() - start;
             adapter.notifyItemRangeInserted(start, itemCount);
         });
+
     }
 
     @Override
     public void onCategoryFragmentInteraction(Category category) {
-
+        positionInIDList = 0;
         currentCategory = category;
         listingTimeMap = new TreeMap<>(Collections.reverseOrder());    // store LiteListing IDs in reverse order of creation (most recent first)
         IDList = new ArrayList<>();
