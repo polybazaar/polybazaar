@@ -69,7 +69,7 @@ public class FavoritesTest {
         Account authAccount = auth.getCurrentUser();
 
         authAccount.getUserData().addOnSuccessListener(user -> {
-            user.addFavorite(listing1);
+            user.addFavorite(listing1.getId());
             List<String> favoritesIds = user.getFavorites();
             assertEquals(listing1.getId(), favoritesIds.get(0));
         });

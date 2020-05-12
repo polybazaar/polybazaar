@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/fillListing_inter_space_large"
+            android:layout_marginTop="@dimen/inter_space_large"
             android:background="@drawable/rounded_corner_button_colored"
             android:text="@string/sign_up"
             android:textColor="@color/white"
