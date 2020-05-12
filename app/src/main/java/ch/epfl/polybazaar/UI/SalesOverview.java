@@ -160,13 +160,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             //Toast.makeText(getApplicationContext(), "oiuasdf", Toast.LENGTH_SHORT).show();
             LiteListing.fetchAll().addOnSuccessListener(this::onFetchSuccess);
           }else{
-            /*
-            List<Category> allCategories = getContainedCategories(currentCategory);
-            for(Category category : allCategories)
-                LiteListing.fetchFieldEquality("category",category.toString())
-                    .addOnSuccessListener(this::onFetchSuccess);
-
-             */
             queryCategories(currentCategory);
         }
 

@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,19 +17,13 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryFragment;
-import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
-import ch.epfl.polybazaar.filllisting.CategoryManager;
 import ch.epfl.polybazaar.filllisting.ImageManager;
 import ch.epfl.polybazaar.filllisting.ListingManager;
 import ch.epfl.polybazaar.listing.Listing;
@@ -40,17 +32,18 @@ import ch.epfl.polybazaar.utilities.ImageTaker;
 import ch.epfl.polybazaar.widgets.AddImageDialog;
 import ch.epfl.polybazaar.widgets.NoConnectionForListingDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
+
 import static ch.epfl.polybazaar.map.MapsActivity.GIVE_LAT_LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.map.MapsActivity.VALID;
-import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
-import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
-import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
 import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
+import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 
 public class FillListing extends AppCompatActivity implements NoticeDialogListener, CategoryFragment.CategoryFragmentListener {
@@ -278,18 +271,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
 
 
 
-        /**
-         * FOR TESTING PURPOSES ONLY:
-         */
-        /*
-        Category editedCategory = new NodeCategory(listing.getCategory());
-        Category root = RootCategoryFactory.getDependency();
-        traversingCategory = root.getSubCategoryContaining(editedCategory);
-        categorySelector.setSelection(root.indexOf(traversingCategory)+1);
-         */
-        /**
-         * ==========================
-         */
 
         return true;
     }
@@ -309,8 +290,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     }
 
 
-    /**
-     * ==========================
-     */
+
 
 }
