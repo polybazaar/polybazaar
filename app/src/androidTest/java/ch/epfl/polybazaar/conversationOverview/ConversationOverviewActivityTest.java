@@ -16,6 +16,7 @@ import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.AuthenticatorResult;
 import ch.epfl.polybazaar.login.MockAuthenticator;
+import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -38,7 +39,7 @@ public class ConversationOverviewActivityTest {
 
                     Task<AuthenticatorResult> loginTask = AuthenticatorFactory.getDependency()
                             .signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
-
+                    DatabaseStoreUtilities.storeNewUser(MockAuthenticator.TEST_USER_NICKNAME, MockAuthenticator.TEST_USER_EMAIL);
                     String newListingID = randomUUID().toString();
                     LiteListing liteListing = new LiteListing(newListingID, "Title", "0", "");
                     Task<Void> liteListingTask = liteListing.save();

@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar;
 import android.content.Context;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -21,6 +22,11 @@ public class UtilitiesTest {
     public void init() {
         auth = MockAuthenticator.getInstance();
         AuthenticatorFactory.setDependency(auth);
+    }
+
+    @After
+    public void reset(){
+        MockAuthenticator.getInstance().reset();
     }
 
     @Test

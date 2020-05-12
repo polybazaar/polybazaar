@@ -1,6 +1,5 @@
 package ch.epfl.polybazaar.login;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,11 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.widgets.MinimalAlertDialog;
+
+import static ch.epfl.polybazaar.login.SignInActivity.backToMainWithSuccess;
 
 public class EmailVerificationActivity extends AppCompatActivity {
     private Authenticator authenticator;
@@ -25,29 +23,36 @@ public class EmailVerificationActivity extends AppCompatActivity {
         authenticator = AuthenticatorFactory.getDependency();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Account user = authenticator.getCurrentUser();
+        /*
+        if (user != null && !user.isEmailVerified()) {
+            authenticator.signOut();
+            // TODO delete the user
+        }
+         */
+    }
+
     /**
      * Attempts to send a verification email to the user
      * @param view view that triggers the action
      */
     public void verify(View view) {
         Account user = authenticator.getCurrentUser();
-
-
         user.sendEmailVerification()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(
-                                    EmailVerificationActivity.this,
-                                    R.string.verification_email_sent, Toast.LENGTH_LONG
-                            ).show();
-                        } else {
-                            MinimalAlertDialog.makeDialog(
-                                    EmailVerificationActivity.this,
-                                    R.string.verification_email_fail
-                            );
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(
+                                EmailVerificationActivity.this,
+                                R.string.verification_email_sent, Toast.LENGTH_LONG
+                        ).show();
+                    } else {
+                        MinimalAlertDialog.makeDialog(
+                                EmailVerificationActivity.this,
+                                R.string.verification_email_fail
+                        );
                     }
                 });
     }
@@ -58,19 +63,18 @@ public class EmailVerificationActivity extends AppCompatActivity {
      */
     public void reload(View view) {
         Account user = authenticator.getCurrentUser();
-
-        user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
-                    startActivity(intent);
-                } else {
-                    MinimalAlertDialog.makeDialog(
-                            EmailVerificationActivity.this,
-                            R.string.reload_fail
-                    );
+        user.reload().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (authenticator.getCurrentUser() != null) {
+                    if (authenticator.getCurrentUser().isEmailVerified()) {
+                        backToMainWithSuccess(this);
+                    }
                 }
+            } else {
+                MinimalAlertDialog.makeDialog(
+                        EmailVerificationActivity.this,
+                        R.string.reload_fail
+                );
             }
         });
     }

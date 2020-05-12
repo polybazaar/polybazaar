@@ -1,6 +1,9 @@
 package ch.epfl.polybazaar.user;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
 
@@ -17,6 +20,7 @@ import static ch.epfl.polybazaar.Utilities.nameIsValid;
  * If you change attributes of this class, also change its CallbackAdapter and Utilities
  */
 public final class User extends Model {
+
     public static final String NICK_NAME = "nickName";
     public static final String EMAIL = "email";
     public static final String FIRST_NAME = "firstName";
@@ -25,6 +29,7 @@ public final class User extends Model {
     public static final String PROFILE_PICTURE = "profilePicture";
     public static final String OWN_LISTINGS = "ownListings";
     public static final String FAVORITES = "favorites";
+    public final static String TOKEN ="token";
 
     private final SimpleField<String> nickName = new SimpleField<>(NICK_NAME);
     private final SimpleField<String> email = new SimpleField<>(EMAIL);
@@ -34,9 +39,12 @@ public final class User extends Model {
     private final SimpleField<String> profilePicture = new SimpleField<>(PROFILE_PICTURE);
     private final SimpleField<ArrayList<String>> ownListings = new SimpleField<>(OWN_LISTINGS, new ArrayList<>());
     private final SimpleField<ArrayList<String>> favorites = new SimpleField<>(FAVORITES, new ArrayList<>());
+    private final SimpleField<String> token = new SimpleField<>(TOKEN);
 
     private final static String COLLECTION = "users";
     public final static String NO_PROFILE_PICTURE = "no_picture";
+
+
 
     public String getNickName() {
         return nickName.get();
@@ -58,6 +66,10 @@ public final class User extends Model {
         return phoneNumber.get();
     }
 
+    public String getToken() {
+        return token.get();
+    }
+
     public String getProfilePicture(){
         if (profilePicture.get() != null) {
             return profilePicture.get();
@@ -68,7 +80,7 @@ public final class User extends Model {
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public User() {
-        registerFields(nickName, email, firstName, lastName, phoneNumber, profilePicture, ownListings, favorites);
+        registerFields(nickName, email, firstName, lastName, phoneNumber, profilePicture, ownListings, favorites, token);
     }
 
     /**
@@ -93,6 +105,7 @@ public final class User extends Model {
         lastName.set(capitalize(email.substring(email.indexOf(".")+1, email.indexOf("@"))));
         phoneNumber.set("");
         profilePicture.set(NO_PROFILE_PICTURE);
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> token.set(instanceIdResult.getToken()));
     }
 
     /**
@@ -113,6 +126,7 @@ public final class User extends Model {
         this.profilePicture.set(profilePicture);
         this.ownListings.set(ownListings);
         this.favorites.set(favorites);
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> token.set(instanceIdResult.getToken()));
     }
 
     @Override
@@ -148,19 +162,25 @@ public final class User extends Model {
 
     /**
      * Adds a listing to the user's favorites
-     * @param listing listing to add
+     * @param listingID listing to add
      */
-    public void addFavorite(Listing listing) {
-        favorites.get().add(listing.getId());
+    public void addFavorite(String listingID) {
+        favorites.get().add(listingID);
     }
 
     /**
      * Removes a listing from the user's favorites
-     * @param listing listing to remove
+     * @param listingID listing to remove
      */
-    public void removeFavorite(Listing listing) {
-        favorites.get().remove(listing.getId());
+    public void removeFavorite(String listingID) {
+        favorites.get().remove(listingID);
     }
+
+    public static <T> Task<Void> updateField(String field, String id, T updatedValue) {
+
+        return ModelTransaction.updateField(COLLECTION, id, field, updatedValue);
+    }
+
 
     public static Task<User> fetch(String email) {
         return ModelTransaction.fetch(COLLECTION, email, User.class);

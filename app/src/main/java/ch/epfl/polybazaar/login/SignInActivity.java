@@ -4,17 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.UI.bottomBar;
+import ch.epfl.polybazaar.UI.SalesOverview;
 
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
@@ -27,23 +22,24 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
         authenticator = AuthenticatorFactory.getDependency();
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SignInActivity.this));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Account currentUser = authenticator.getCurrentUser();
-
         if (currentUser != null) {
-            Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
-            startActivity(intent);
+            currentUser.getUserData().addOnSuccessListener(user -> {
+                backToMainWithSuccess(this);
+            });
         }
+    }
+
+    public static void backToMainWithSuccess(AppCompatActivity activity) {
+        Intent intent = new Intent(activity.getApplicationContext(), SalesOverview.class);
+        activity.startActivity(intent);
+        Toast.makeText(activity, R.string.sign_in_success, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -67,16 +63,20 @@ public class SignInActivity extends AppCompatActivity {
         String password = passwordView.getText().toString();
 
         authenticator.signIn(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthenticatorResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthenticatorResult> task) {
-                        if (task.isSuccessful()) {
-                            Intent intent = new Intent(getApplicationContext(), SignInSuccessActivity.class);
-                            startActivity(intent);
-                        } else {
-                            makeDialog(SignInActivity.this, R.string.verify_credentials);
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        if (authenticator.getCurrentUser() != null) {
+                            if (!authenticator.getCurrentUser().isEmailVerified()) {
+                                Intent intent = new Intent(getApplicationContext(), EmailVerificationActivity.class);
+                                startActivity(intent);
+                            } else {
+                                backToMainWithSuccess(this);
+                            }
                         }
+                    } else {
+                        makeDialog(SignInActivity.this, R.string.verify_credentials);
                     }
                 });
     }
 }
+

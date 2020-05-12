@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:orientation="vertical">
 
                 <androidx.viewpager2.widget.ViewPager2
@@ -60,7 +60,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -73,9 +73,10 @@
                         android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
+                        android:layout_marginBottom="@dimen/inter_space_small"
                         android:text="@string/title"
                         android:textSize="@dimen/extra_large_textView_text_size"
+                        android:visibility="invisible"
                         android:textStyle="bold"
                         android:textColor="@android:color/secondary_text_light"/>
 
@@ -85,8 +86,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/price"
                         android:textSize="@dimen/default_textView_text_size"
+                        android:visibility="invisible"
                         android:textColor="@android:color/secondary_text_light"
-                        android:layout_marginTop="@dimen/saleDetails_inter_space_small"/>
+                        android:layout_marginTop="@dimen/inter_space_small"/>
                 </LinearLayout>
 
                 <androidx.legacy.widget.Space
@@ -110,7 +112,7 @@
                 android:id="@+id/contactSel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:text="@string/contact_the_seller"
                 android:visibility="invisible"
                 android:onClick="contactSeller"
@@ -120,7 +122,7 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/saleDetails_inter_space_small">
+            android:layout_marginTop="@dimen/inter_space_small">
 
             <Button
                 android:id="@+id/makeOffer"
@@ -157,7 +159,7 @@
                 android:id="@+id/descriptionLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:visibility="gone"
                 android:orientation="vertical">
 
@@ -170,7 +172,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                    android:layout_marginTop="@dimen/inter_space_large"
                     android:layout_gravity="center_horizontal"
                     android:textSize="@dimen/large_textView_text_size"
                     android:textStyle="bold"
@@ -182,7 +184,7 @@
                     android:id="@+id/description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/saleDetails_inter_space_small"
+                    android:layout_marginTop="@dimen/inter_space_small"
                     android:textSize="@dimen/small_textView_text_size"
                     android:textColor="@android:color/secondary_text_light"
                     android:text="@string/description"/>
@@ -194,7 +196,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:text="@string/see_MP"
                 android:onClick="viewMP"
                 android:background="@drawable/rounded_corner_button_grey"
@@ -203,15 +205,15 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:alpha="0.7"
                 android:background="@android:color/darker_gray"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
-                android:layout_marginBottom="@dimen/saleDetails_inter_space_small"
+                android:layout_marginTop="@dimen/inter_space_large"
+                android:layout_marginBottom="@dimen/inter_space_small"
                 android:layout_gravity="center_horizontal"
                 android:textSize="@dimen/large_textView_text_size"
                 android:textStyle="bold"
@@ -223,7 +225,7 @@
                 android:layout_width="@dimen/seller_image_size"
                 android:layout_height="@dimen/seller_image_size"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_small"
+                android:layout_marginTop="@dimen/inter_space_small"
                 android:src="@drawable/no_user"
                 android:contentDescription="@string/profile_picture" />
 
@@ -231,7 +233,7 @@
                 android:id="@+id/sellerNickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_small"
+                android:layout_marginTop="@dimen/inter_space_small"
                 android:layout_gravity="center_horizontal"
                 android:textSize="@dimen/small_textView_text_size"
                 android:textColor="@android:color/secondary_text_light"
@@ -241,7 +243,7 @@
                 android:id="@+id/editButtonsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_large"
                 android:visibility="gone"
                 android:orientation="vertical">
 
@@ -255,7 +257,7 @@
                     android:id="@+id/editButtons"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/saleDetails_inter_space_large">
+                    android:layout_marginTop="@dimen/inter_space_large">
 
                     <Space
                         android:layout_width="wrap_content"
@@ -299,8 +301,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/saleDetails_inter_space_large"
-                android:layout_marginBottom="@dimen/saleDetails_inter_space_extra_large"
+                android:layout_marginTop="@dimen/inter_space_large"
+                android:layout_marginBottom="@dimen/inter_space_extra_large"
                 android:orientation="horizontal">
 
                 <Space
