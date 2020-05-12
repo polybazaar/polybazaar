@@ -2,11 +2,13 @@ package ch.epfl.polybazaar.UI;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,11 +21,13 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 
+import java.lang.annotation.AnnotationTypeMismatchException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
@@ -95,6 +99,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
 
         // Triggered only when new data needs to be appended to the list
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(mGridLayoutManager) {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onLoadMore() {
                 // Triggered only when new data needs to be appended to the list
@@ -109,6 +114,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SalesOverview.this));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
         super.onStart();
@@ -147,17 +153,21 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     /**
      * Create a graphical overview of LiteListings from database
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void loadLiteListingOverview() {
 
         if(currentCategory.equals(RootCategoryFactory.getDependency())){
             //Toast.makeText(getApplicationContext(), "oiuasdf", Toast.LENGTH_SHORT).show();
             LiteListing.fetchAll().addOnSuccessListener(this::onFetchSuccess);
           }else{
-            List<Category> allCategories = currentCategory.subCategories();
-            allCategories.add(currentCategory);
+            /*
+            List<Category> allCategories = getContainedCategories(currentCategory);
             for(Category category : allCategories)
                 LiteListing.fetchFieldEquality("category",category.toString())
                     .addOnSuccessListener(this::onFetchSuccess);
+
+             */
+            queryCategories(currentCategory);
         }
 
 
@@ -188,7 +198,21 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         context.startActivity(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void queryCategories(Category category){
+        List<Category> allCategories = getContainedCategories(currentCategory);
+        List<Task<List<LiteListing>>> queryList = new ArrayList<>();;
+        for(Category cat: allCategories){
+            queryList.add(LiteListing.fetchFieldEquality("category",cat.toString()));
+        }
+        Tasks.<List<LiteListing>>whenAllSuccess(queryList).addOnSuccessListener(result->{
+            List<LiteListing> flatList =result.stream()
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList());
+            onFetchSuccess(flatList);
+        });
 
+    }
     private void onFetchSuccess(List<LiteListing> result){
         Toast.makeText(getApplicationContext(), Integer.toString(result.size()), Toast.LENGTH_SHORT).show();
         if(result == null) {
@@ -220,6 +244,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCategoryFragmentInteraction(Category category) {
         positionInIDList = 0;
@@ -248,6 +273,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
 
         // Triggered only when new data needs to be appended to the list
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(mGridLayoutManager) {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onLoadMore() {
                 // Triggered only when new data needs to be appended to the list
@@ -257,6 +283,18 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         // Adds the scroll listener to RecyclerView
         rvLiteListings.addOnScrollListener(scrollListener);
         loadLiteListingOverview();
+    }
+
+    // get all categories contained in the category (the category is also contained in itself)
+    private List<Category> getContainedCategories(Category category){
+        List<Category> subcategories = new ArrayList<>();
+        subcategories.add(category);
+        if (category.hasSubCategories()){
+            for(Category cat : category.subCategories()){
+                subcategories.addAll(getContainedCategories(cat));
+            }
+        }
+        return subcategories;
     }
 
 }
