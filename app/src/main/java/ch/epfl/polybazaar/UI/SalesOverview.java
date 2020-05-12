@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -20,6 +22,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,11 +38,18 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
+import ch.epfl.polybazaar.login.Account;
+import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.user.User;
 import ch.epfl.polybazaar.search.SearchListings;
 import safety.com.br.android_shake_detector.core.ShakeCallback;
 import safety.com.br.android_shake_detector.core.ShakeDetector;
 import safety.com.br.android_shake_detector.core.ShakeOptions;
+
+import static ch.epfl.polybazaar.chat.ChatActivity.removeBottomBarWhenKeyboardUp;
+import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class SalesOverview extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -128,6 +139,7 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
                 startActivity(new Intent(SalesOverview.this, SatCompass.class));
             }
         });
+        removeBottomBarWhenKeyboardUp(this);
     }
 
     @Override
@@ -245,14 +257,37 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
      * Display saved listings of the user (if any), they can be favorites or user created own listings
      *
      * @param savedListings the list of saved listings that has to be displayed in Sales Overview
+     * @param text the text in dialog to be shown if there are no matching listings
      */
-    public static void displaySavedListings(Context context, ArrayList<String> savedListings) {
-        DataHolder.getInstance().setData(savedListings);
-        Intent intent = new Intent(context, SalesOverview.class);
-        Bundle extras = new Bundle();
-        extras.putBoolean(bundleKey, true);
-        intent.putExtras(extras);
-        context.startActivity(intent);
+    public static void displaySavedListings(Context context, ArrayList<String> savedListings, int text) {
+        ArrayList<String> displayListings = new ArrayList<>();
+        List<Task<LiteListing>> taskList = new ArrayList<>();
+        for (String liteListingID : savedListings) {
+            taskList.add(LiteListing.fetch(liteListingID));
+            LiteListing.fetch(liteListingID).addOnSuccessListener(liteListing -> {
+                if (liteListing == null) {
+                    Account account = AuthenticatorFactory.getDependency().getCurrentUser();
+                    User.fetch(account.getEmail()).addOnSuccessListener(user -> {
+                        user.removeFavorite(liteListingID);
+                        user.save();
+                    });
+                } else {
+                    displayListings.add(liteListingID);
+                }
+            });
+        }
+        Tasks.whenAllComplete(taskList).addOnCompleteListener(aVoid -> {
+            if (!displayListings.isEmpty()) {
+                DataHolder.getInstance().setData(displayListings);
+                Intent intent = new Intent(context, SalesOverview.class);
+                Bundle extras = new Bundle();
+                extras.putBoolean(bundleKey, true);
+                intent.putExtras(extras);
+                context.startActivity(intent);
+            } else {
+                makeDialog(context, text);
+            }
+        });
     }
 
 }

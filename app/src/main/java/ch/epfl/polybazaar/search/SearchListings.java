@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import ch.epfl.polybazaar.DataHolder;
+import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
 
 import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
@@ -51,7 +52,7 @@ public class SearchListings extends AppCompatActivity {
             startActivity(intent);
         }
         else {
-            displaySavedListings(this, sortedIDs);
+            displaySavedListings(this, sortedIDs, R.string.no_match_found);
         }
     }
 

@@ -12,11 +12,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SaleDetails;
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.chat.ChatMessage;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Account;
@@ -54,6 +57,7 @@ public class ListingManager {
             //Set the title
             TextView title_txt = activity.findViewById(R.id.title);
             title_txt.setText(listing.getTitle());
+            title_txt.setVisibility(View.VISIBLE);
 
             //Set the description
             LinearLayout description = activity.findViewById(R.id.descriptionLayout);
@@ -72,6 +76,7 @@ public class ListingManager {
             } else {
                 price_txt.setText(String.format("CHF %s", listing.getPrice()));
             }
+            price_txt.setVisibility(View.VISIBLE);
 
             // Set seller information
             ImageView sellerPicture  = activity.findViewById(R.id.sellerProfilePicture);
@@ -162,6 +167,12 @@ public class ListingManager {
         for(String id: listImageID) {
             ListingImage.delete(id);
         }
+        // delete all messages
+        ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
+            for (ChatMessage message : chatMessages) {
+                message.delete();
+            }
+        });
     }
 
     /**
@@ -177,9 +188,9 @@ public class ListingManager {
         if (authUser != null) {
             authUser.getUserData().addOnSuccessListener(user -> {
                 if (ratingBar.getRating() == 1) {
-                    user.addFavorite(listing);
+                    user.addFavorite(listing.getId());
                 } else {
-                    user.removeFavorite(listing);
+                    user.removeFavorite(listing.getId());
                 }
                 user.save();
             });

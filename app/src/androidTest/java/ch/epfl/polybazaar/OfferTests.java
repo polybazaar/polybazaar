@@ -1,7 +1,5 @@
 package ch.epfl.polybazaar;
 
-import android.view.View;
-
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.Timestamp;
@@ -9,9 +7,6 @@ import com.google.firebase.Timestamp;
 import org.junit.Rule;
 import org.junit.Test;
 
-
-import ch.epfl.polybazaar.MainActivity;
-import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SubmitOffer;
 import ch.epfl.polybazaar.chat.ChatMessage;
 import ch.epfl.polybazaar.listing.Listing;

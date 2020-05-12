@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/general_margin"
-    android:paddingTop="@dimen/general_margin">
+    android:paddingBottom="@dimen/general_margin">
 
     <TextView
         android:id="@+id/date_received"

@@ -24,10 +24,13 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressKey;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.OfferTests.SLEEP_TIME;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static junit.framework.TestCase.assertEquals;
@@ -68,14 +71,10 @@ public class SearchListingsTest {
     }
 
     @Test
-    public void searchTriggersNoSearchResults() throws InterruptedException {
-        Intents.init();
-        activityRule.launchActivity(new Intent());
+    public void searchTriggersNoSearchResults() {
         onView(withId(R.id.search)).perform(typeText("Dude")).perform(pressKey(KeyEvent.KEYCODE_ENTER));
         closeSoftKeyboard();
-        Thread.sleep(SLEEP_TIME);
-        intended(hasComponent(NoSearchResults.class.getName()));
-        Intents.release();
+        onView(withText(R.string.no_search_results)).check(matches(isDisplayed()));
     }
 
 }

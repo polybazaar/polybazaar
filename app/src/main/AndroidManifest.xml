@@ -98,9 +98,6 @@
             android:name=".login.SignUpActivity"
             android:label="Sign Up" />
         <activity
-            android:name=".login.SignInSuccessActivity"
-            android:label="Sign In" />
-        <activity
             android:name=".login.SignInActivity"
             android:label="Sign In" />
 
