@@ -1,16 +1,21 @@
 package ch.epfl.polybazaar.UI;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +39,9 @@ import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.search.SearchListings;
 import ch.epfl.polybazaar.user.User;
+import safety.com.br.android_shake_detector.core.ShakeCallback;
+import safety.com.br.android_shake_detector.core.ShakeDetector;
+import safety.com.br.android_shake_detector.core.ShakeOptions;
 
 import static ch.epfl.polybazaar.chat.ChatActivity.removeBottomBarWhenKeyboardUp;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
@@ -43,6 +51,7 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
+    public static final float SENSIBILITY = 2.0f;
     private Map<Timestamp, String> listingTimeMap;
     private Map<String, String> listingTitleMap;
     private Map<String, String> searchListingTitleMap;
@@ -51,6 +60,7 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
     private int positionInIDList = 0;
+    private ShakeDetector shakeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +111,32 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
         BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SalesOverview.this));
+
+        //Detects shake
+        ShakeOptions options = new ShakeOptions()
+                .background(true)
+                .interval(1000)
+                .shakeCount(2)
+                .sensibility(SENSIBILITY);
+        shakeDetector = new ShakeDetector(options).start(this, () -> {
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                Toast.makeText(this, R.string.location_not_granted, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+            if (manager != null && manager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
+                startActivity(new Intent(SalesOverview.this, SatCompass.class));
+            } else {
+                Toast.makeText(this, R.string.location_not_enabled, Toast.LENGTH_SHORT).show();
+            }
+        });
         removeBottomBarWhenKeyboardUp(this);
     }
 

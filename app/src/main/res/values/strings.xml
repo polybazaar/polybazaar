@@ -147,4 +147,6 @@
     <string name="e_mail_address">E-mail address</string>
     <string name="sign_in_success">Successfully signed in</string>
     <string name="no_match_found">No match found</string>
+    <string name="location_not_enabled">Location is not enabled!</string>
+    <string name="location_not_granted">Location permission not granted!</string>
 </resources>
