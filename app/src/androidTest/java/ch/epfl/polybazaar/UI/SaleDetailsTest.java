@@ -306,7 +306,7 @@ public class SaleDetailsTest {
         listing.setId(id);
         Tasks.await(listing.save());
 
-        Tasks.await(auth.getCurrentUser().getUserData().addOnSuccessListener(user -> user.addFavorite(listing)));
+        Tasks.await(auth.getCurrentUser().getUserData().addOnSuccessListener(user -> user.addFavorite(listing.getId())));
         Intent intent = new Intent();
         intent.putExtra("listingID", id);
         activityRule.launchActivity(intent);

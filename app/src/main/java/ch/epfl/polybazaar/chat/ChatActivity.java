@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -98,18 +99,34 @@ public class ChatActivity extends AppCompatActivity {
 
         sendMessageButton.setOnClickListener(v -> sendMessage());
 
+        removeBottomBarWhenKeyboardUp(this);
         KeyboardVisibilityEvent.setEventListener(
                 this,
                 isOpen -> {
                     if (isOpen) {
                         messageRecycler.scrollToPosition(conversation.size() - 1);
+                    } else {
+                    }
+                });
+
+        loadConversation();
+    }
+
+    /**
+     * Self Explanatory, fixes bug0
+     * @param activity the calling activity
+     */
+    public static void removeBottomBarWhenKeyboardUp(Activity activity) {
+        BottomNavigationView bottomNavigationView = activity.findViewById(R.id.activity_main_bottom_navigation);
+        KeyboardVisibilityEvent.setEventListener(
+                activity,
+                isOpen -> {
+                    if (isOpen) {
                         bottomNavigationView.setVisibility(View.GONE);
                     } else {
                         bottomNavigationView.setVisibility(View.VISIBLE);
                     }
                 });
-
-        loadConversation();
     }
 
     private void loadConversation() {
@@ -129,7 +146,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
-
         String messageText = messageEditor.getText().toString();
         ChatMessage message = new ChatMessage(senderEmail, receiverEmail, listingID, messageText, new Timestamp(new Date(System.currentTimeMillis())));
         final String newMessageID = randomUUID().toString();
@@ -145,6 +161,7 @@ public class ChatActivity extends AppCompatActivity {
             User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), messageText);});
         });
     }
+
     private void sendNotification(String receiverEmail, String nickname, String message) {
         User.fetch(receiverEmail).addOnSuccessListener(user -> {
             receiverToken = user.getToken();

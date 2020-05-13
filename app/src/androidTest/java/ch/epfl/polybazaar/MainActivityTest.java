@@ -75,6 +75,5 @@ public class MainActivityTest{
         onView(withId(R.id.passwordInput)).perform(typeText(MockAuthenticator.TEST_USER_PASSWORD))
                 .perform(closeSoftKeyboard());
         onView(withId(R.id.loginButton)).perform(click());
-        onView(withId(R.id.toMainButton)).perform(click());
     }
 }

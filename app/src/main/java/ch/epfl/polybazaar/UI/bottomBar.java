@@ -17,7 +17,7 @@ public abstract class bottomBar {
      * @param activity activity where the bar is
      * @return
      */
-    public static boolean updateActivity(Integer i,Activity activity){
+    public static boolean updateActivity(Integer i, Activity activity){
 
         switch (i){
             case R.id.action_home:
@@ -46,11 +46,10 @@ public abstract class bottomBar {
      * @param currentActivity activity where the method is called
      * @param c the class to go to
      */
-    private static void toActivity(Activity currentActivity,Class c){
+    private static void toActivity(Activity currentActivity, Class c){
         Authenticator authenticator = AuthenticatorFactory.getDependency();
         Account user = authenticator.getCurrentUser();
         Intent intent;
-
         if(user == null){
             intent = new Intent(currentActivity, NotSignedIn.class);
         }else{
@@ -58,6 +57,5 @@ public abstract class bottomBar {
         }
         currentActivity.startActivity(intent);
         currentActivity.overridePendingTransition(0, 0);
-
     }
 }

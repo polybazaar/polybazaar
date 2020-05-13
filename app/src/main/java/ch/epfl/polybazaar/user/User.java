@@ -162,18 +162,18 @@ public final class User extends Model {
 
     /**
      * Adds a listing to the user's favorites
-     * @param listing listing to add
+     * @param listingID listing to add
      */
-    public void addFavorite(Listing listing) {
-        favorites.get().add(listing.getId());
+    public void addFavorite(String listingID) {
+        favorites.get().add(listingID);
     }
 
     /**
      * Removes a listing from the user's favorites
-     * @param listing listing to remove
+     * @param listingID listing to remove
      */
-    public void removeFavorite(Listing listing) {
-        favorites.get().remove(listing.getId());
+    public void removeFavorite(String listingID) {
+        favorites.get().remove(listingID);
     }
 
     public static <T> Task<Void> updateField(String field, String id, T updatedValue) {

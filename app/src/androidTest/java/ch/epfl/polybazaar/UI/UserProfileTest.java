@@ -30,14 +30,19 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static com.google.android.gms.tasks.Tasks.whenAll;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 public class UserProfileTest {
 
+    public static final int SLEEP_TIME = 2000;
     @Rule
     public final ActivityTestRule<UserProfile> activityRule =
             new ActivityTestRule<>(
@@ -131,13 +136,13 @@ public class UserProfileTest {
     public void testViewFavorites() throws ExecutionException, InterruptedException {
         Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
         Listing listing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "");
-        Task<Void> listingTask = listing.save();
+        Task<Void> listingTask = listing.saveWithLiteVersion();
         Task<User> userTask = AuthenticatorFactory
                 .getDependency()
                 .getCurrentUser()
                 .getUserData()
                 .addOnSuccessListener(user -> {
-                    user.addFavorite(listing);
+                    user.addFavorite(listing.getId());
                 });
         whenAll(listingTask, userTask);
 
@@ -148,5 +153,22 @@ public class UserProfileTest {
         onView(withId(R.id.viewFavoritesButton)).perform(scrollTo(), click());
         intended(hasComponent(SalesOverview.class.getName()));
         Intents.release();
+    }
+
+    @Test
+    public void deletedFavoritesAreCleaned() throws ExecutionException, InterruptedException {
+        Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+        Listing listing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "");
+        Task<User> userTask = AuthenticatorFactory
+                .getDependency()
+                .getCurrentUser()
+                .getUserData()
+                .addOnSuccessListener(user -> {
+                    user.addFavorite(listing.getId());
+                });
+        whenAll(userTask);
+        activityRule.launchActivity(new Intent());
+        onView(withId(R.id.viewFavoritesButton)).perform(scrollTo(), click());
+        onView(withText(R.string.no_favorites)).check(matches(isDisplayed()));
     }
 }

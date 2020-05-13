@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import ch.epfl.polybazaar.widgets.PublishProfileDialog;
 import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 import static ch.epfl.polybazaar.Utilities.displayToast;
 import static ch.epfl.polybazaar.Utilities.getUser;
+import static ch.epfl.polybazaar.chat.ChatActivity.removeBottomBarWhenKeyboardUp;
 import static ch.epfl.polybazaar.user.User.NO_PROFILE_PICTURE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
@@ -65,9 +67,6 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         authenticator = AuthenticatorFactory.getDependency();
-        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_profile);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), UserProfile.this));
         if (authenticator.getCurrentUser() == null) {
             Intent notSignedIn = new Intent(this, NotSignedIn.class);
             startActivity(notSignedIn);
@@ -94,6 +93,10 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
                 }
             });
         }
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_profile);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), UserProfile.this));
+        removeBottomBarWhenKeyboardUp(this);
     }
 
     @Override
@@ -241,10 +244,10 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
 
             // the list of user-created listings is empty
             if (ownListingsIds == null || ownListingsIds.isEmpty()) {
-                displayToast(this, R.string.no_created_listings, Gravity.CENTER);
+                makeDialog(this, R.string.no_created_listings);
                 // we relaunch the SalesOverview activity with the list of favorites in the bundle
             } else {
-                displaySavedListings(this, ownListingsIds);
+                displaySavedListings(this, ownListingsIds, R.string.no_created_listings);
             }
         });
     }
@@ -253,13 +256,13 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         Account user = getUser();
         if(user == null) return;
         user.getUserData().addOnSuccessListener(authUser -> {
-                    ArrayList<String> favoritesIds = authUser.getFavorites();
+            ArrayList<String> favoritesIds = authUser.getFavorites();
             // the list of user-created listings is empty
             if (favoritesIds == null || favoritesIds.isEmpty()) {
                 makeDialog(this, R.string.no_favorites);
                 // we relaunch the SalesOverview activity with the list of favorites in the bundle
             } else {
-                displaySavedListings(this, favoritesIds);
+                displaySavedListings(this, favoritesIds, R.string.no_favorites);
             }
         });
     }
