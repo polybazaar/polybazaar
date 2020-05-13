@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -132,11 +133,14 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
+                Toast.makeText(this, R.string.location_not_granted, Toast.LENGTH_SHORT).show();
                 return;
             }
             LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
             if (manager != null && manager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
                 startActivity(new Intent(SalesOverview.this, SatCompass.class));
+            } else {
+                Toast.makeText(this, R.string.location_not_enabled, Toast.LENGTH_SHORT).show();
             }
         });
         removeBottomBarWhenKeyboardUp(this);
