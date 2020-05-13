@@ -177,7 +177,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
 
         // transmit listing information to SearchListings class via DataHolder singleton class
         DataHolder.getInstance().setDataMap(searchListingTitleMap);
-
+        searchIntent.setAction(Intent.ACTION_SEARCH);
         startActivity(searchIntent);
         return true;
     }
@@ -296,34 +296,27 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     }
     private void onFetchSuccess(List<LiteListing> result){
         Toast.makeText(getApplicationContext(), Integer.toString(result.size()), Toast.LENGTH_SHORT).show();
-        // fill maps <Timestamp, listingID> and <listingID, title>
+        if(result == null) {
+            return;
+        }
         for (LiteListing l : result) {
             if (l != null) {
-                listingTimeMap.put(l.getTimestamp(), l.getId());
-                listingTitleMap.put(l.getId(), l.getTitle());
+                if(l.getTimestamp() != null) { // TODO: delete before merge
+                    listingTimeMap.put(l.getTimestamp(), l.getId());
+                }
             }
         }
-        if (IDList.isEmpty()) {
-            // retrieve values from Treemap: litelistings IDs in order: most recent first
-            IDList = new ArrayList<>(listingTimeMap.values());
-        }
-
+        // retrieve values from Treemap: litelistings IDs in order: most recent first
+        IDList = new ArrayList<>(listingTimeMap.values());
         int size = IDList.size();
-
-        // Prepare a  map <listingID, title> sorted by most recent first, for search purposes
-        for (int i = 0; i < size; i++) {
-            String key = IDList.get(i);
-            searchListingTitleMap.put(key, listingTitleMap.get(key).toLowerCase());
-        }
-
         List<Task<LiteListing>> taskList = new ArrayList<>();
         // add fetch tasks in correct display order
-
+        for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
+            taskList.add(LiteListing.fetch(IDList.get(i)));
+            positionInIDList++;
+        }
         Tasks.<LiteListing>whenAllSuccess(taskList).addOnSuccessListener(list -> {
-            int start = liteListingList.size();   for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-                taskList.add(LiteListing.fetch(IDList.get(i)));
-                positionInIDList++;
-            }
+            int start = liteListingList.size();
             liteListingList.addAll(list);
             int itemCount = liteListingList.size() - start;
             adapter.notifyItemRangeInserted(start, itemCount);

@@ -26,6 +26,7 @@ import static androidx.test.espresso.action.ViewActions.pressKey;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.Intents.times;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -62,11 +63,12 @@ public class SearchListingsTest {
     }
 
     @Test
-    public void searchTriggersSearchActivity() {
+    public void searchTriggersSearchActivity() throws InterruptedException {
         Intents.init();
         onView(withId(R.id.search)).perform(typeText("My title")).perform(pressKey(KeyEvent.KEYCODE_ENTER));
         closeSoftKeyboard();
-        intended(allOf(hasComponent(SearchListings.class.getName()), hasAction(Intent.ACTION_SEARCH)));
+        Thread.sleep(2000);
+        intended(allOf(hasComponent(SearchListings.class.getName()), hasAction(Intent.ACTION_SEARCH)),times(2));
         Intents.release();
     }
 
