@@ -191,17 +191,45 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     /**
      * Create a graphical overview of LiteListings from database
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void loadLiteListingOverview() {
+        LiteListing.fetchAll().addOnSuccessListener(result -> {
+            if (result == null) {
+                return;
+            }
 
-        if(currentCategory.equals(RootCategoryFactory.getDependency())){
-            //Toast.makeText(getApplicationContext(), "oiuasdf", Toast.LENGTH_SHORT).show();
-            LiteListing.fetchAll().addOnSuccessListener(this::onFetchSuccess);
-          }else{
-            queryCategories(currentCategory);
-        }
+            // fill maps <Timestamp, listingID> and <listingID, title>
+            for (LiteListing l : result) {
+                if (l != null) {
+                    listingTimeMap.put(l.getTimestamp(), l.getId());
+                    listingTitleMap.put(l.getId(), l.getTitle());
+                }
+            }
+            if (IDList.isEmpty()) {
+                // retrieve values from Treemap: litelistings IDs in order: most recent first
+                IDList = new ArrayList<>(listingTimeMap.values());
+            }
 
+            int size = IDList.size();
 
+            // Prepare a  map <listingID, title> sorted by most recent first, for search purposes
+            for (int i = 0; i < size; i++) {
+                String key = IDList.get(i);
+                searchListingTitleMap.put(key, listingTitleMap.get(key).toLowerCase());
+            }
+
+            List<Task<LiteListing>> taskList = new ArrayList<>();
+            // add fetch tasks in correct display order
+            for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
+                taskList.add(LiteListing.fetch(IDList.get(i)));
+                positionInIDList++;
+            }
+            Tasks.<LiteListing>whenAllSuccess(taskList).addOnSuccessListener(list -> {
+                int start = liteListingList.size();
+                liteListingList.addAll(list);
+                int itemCount = liteListingList.size() - start;
+                adapter.notifyItemRangeInserted(start, itemCount);
+            });
+        });
 
     }
 
@@ -252,7 +280,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void queryCategories(Category category){
+    private void queryCategories(){
         List<Category> allCategories = getContainedCategories(currentCategory);
         List<Task<List<LiteListing>>> queryList = new ArrayList<>();;
         for(Category cat: allCategories){
@@ -290,17 +318,16 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
 
         List<Task<LiteListing>> taskList = new ArrayList<>();
         // add fetch tasks in correct display order
-        for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-            taskList.add(LiteListing.fetch(IDList.get(i)));
-            positionInIDList++;
-        }
+
         Tasks.<LiteListing>whenAllSuccess(taskList).addOnSuccessListener(list -> {
-            int start = liteListingList.size();
+            int start = liteListingList.size();   for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
+                taskList.add(LiteListing.fetch(IDList.get(i)));
+                positionInIDList++;
+            }
             liteListingList.addAll(list);
             int itemCount = liteListingList.size() - start;
             adapter.notifyItemRangeInserted(start, itemCount);
         });
-    });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -341,7 +368,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         };
         // Adds the scroll listener to RecyclerView
         rvLiteListings.addOnScrollListener(scrollListener);
-        loadLiteListingOverview();
+        loadLiteListingsByCategory();
     }
 
     // get all categories contained in the category (the category is also contained in itself)
@@ -354,6 +381,17 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             }
         }
         return subcategories;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void loadLiteListingsByCategory(){
+        if(currentCategory.equals(RootCategoryFactory.getDependency())){
+
+            //LiteListing.fetchAll().addOnSuccessListener(this::onFetchSuccess);
+            loadLiteListingOverview();
+        }else{
+            queryCategories();
+        }
     }
 
 }
