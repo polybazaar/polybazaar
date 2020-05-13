@@ -150,7 +150,7 @@ public class SalesOverview extends AppCompatActivity implements SearchView.OnQue
 
         // transmit listing information to SearchListings class via DataHolder singleton class
         DataHolder.getInstance().setDataMap(searchListingTitleMap);
-        searchIntent.setAction(Intent.ACTION_SEARCH);
+        // searchIntent.setAction(Intent.ACTION_SEARCH);
 
         startActivity(searchIntent);
         return true;
