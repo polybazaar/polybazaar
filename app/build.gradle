@@ -47,6 +47,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.3'  // Analytics
     implementation 'com.google.firebase:firebase-auth:19.3.0'       // Authentification
     implementation 'com.google.firebase:firebase-firestore:21.4.1'  // Cloud Firestore
+    implementation 'com.google.firebase:firebase-storage:19.1.1'    // Cloud Storage
 
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
