@@ -22,12 +22,12 @@ public class MockCategoryTest {
 
     @Test
     public void testContainsIsCorrect(){
-        assertThat(mockRoot.contains(new NodeCategory("Others")), is(true));
+        assertThat(mockRoot.contains(new NodeCategory("Multimedia")), is(true));
     }
 
     @Test
     public void maxDepthIsCorrect(){
-        assertThat(mockRoot.maxDepth(), is(1));
+        assertThat(mockRoot.maxDepth(), is(2));
     }
 
 }
