@@ -34,7 +34,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
@@ -45,7 +44,6 @@ import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.search.SearchListings;
-import ch.epfl.polybazaar.user.User;
 import ch.epfl.polybazaar.user.User;
 import safety.com.br.android_shake_detector.core.ShakeDetector;
 import safety.com.br.android_shake_detector.core.ShakeOptions;

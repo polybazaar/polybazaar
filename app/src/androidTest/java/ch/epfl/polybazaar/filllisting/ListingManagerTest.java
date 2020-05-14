@@ -62,9 +62,9 @@ public class ListingManagerTest {
         String newTitle = "new title";
         onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText(), typeText(newTitle));
         closeSoftKeyboard();
-        String newDescription= "new Description";
-        onView(withId(R.id.descriptionSelector)).perform(scrollTo(), clearText(), typeText(newDescription));
-        closeSoftKeyboard();
+        //String newDescription= "new Description";
+        //onView(withId(R.id.descriptionSelector)).perform(scrollTo(), clearText(), typeText(newDescription));
+        //closeSoftKeyboard();
         runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.selectCategory).performClick());
         Thread.sleep(500);
         onView(withId(R.id.categoriesRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
