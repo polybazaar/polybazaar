@@ -24,24 +24,28 @@ public class MockRootCategory implements Category {
     }
 
     private MockRootCategory(){
-        onlyCategory = new NodeCategory("Others");
+        //onlyCategory = new NodeCategory("All");
+        NodeCategory subcat = new NodeCategory("Multimedia");
+        subcat.addSubCategory(new NodeCategory("Video games"));
+        //onlyCategory.addSubCategory(subcat);
+        onlyCategory= subcat;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @NonNull
     @Override
     public String treeRepresentation(int depth) {
-        return onlyCategory.toString();
+        return onlyCategory.treeRepresentation(depth);
     }
 
     @Override
     public void addSubCategory(Category subCategory) {
-        throw new IllegalStateException("Cannot add a category to the mock");
+        //throw new IllegalStateException("Cannot add a category to the mock");
     }
 
     @Override
     public void removeSubCategory(Category subCategory) {
-        throw new IllegalStateException("Cannot remove a category to the mock");
+        //throw new IllegalStateException("Cannot remove a category to the mock");
     }
 
     @Override
@@ -56,22 +60,22 @@ public class MockRootCategory implements Category {
 
     @Override
     public boolean equals(Category other) {
-        return false;
+        return onlyCategory.equals(other);
     }
 
     @Override
     public int size() {
-        return 1;
+        return 2;
     }
 
     @Override
     public int maxDepth() {
-        return 1;
+        return 2;
     }
 
     @Override
     public boolean contains(Category contained) {
-        return contained.equals(onlyCategory);
+        return onlyCategory.contains(contained);
     }
 
     @Override
@@ -90,7 +94,7 @@ public class MockRootCategory implements Category {
             return onlyCategory;
         }
         else{
-            return null;
+            return onlyCategory.getSubCategoryContaining(contained);
         }
     }
 }

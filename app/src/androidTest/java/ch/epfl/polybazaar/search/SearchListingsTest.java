@@ -67,7 +67,7 @@ public class SearchListingsTest {
         Intents.init();
         onView(withId(R.id.search)).perform(typeText("My title")).perform(pressKey(KeyEvent.KEYCODE_ENTER));
         closeSoftKeyboard();
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_TIME);
         intended(allOf(hasComponent(SearchListings.class.getName()), hasAction(Intent.ACTION_SEARCH)),times(2));
         Intents.release();
     }

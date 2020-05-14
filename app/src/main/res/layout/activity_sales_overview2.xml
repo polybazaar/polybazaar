@@ -27,7 +27,7 @@
         app:layout_constraintTop_toBottomOf="@id/searchbar">
 
         <TextView
-            android:id="@+id/searchOverview"
+            android:id="@+id/categoryOverview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -54,8 +54,14 @@
         android:layout_marginEnd="@dimen/general_margin"
         app:layout_constraintBottom_toTopOf="@+id/activity_main_bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/salesOverviewTopMenu" />
+        app:layout_constraintTop_toBottomOf="@+id/salesOverviewTopMenu"
+        app:layout_constraintVertical_bias="0.0" >
+
+
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/activity_main_bottom_navigation"
@@ -69,8 +75,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@layout/bottom_bar" />
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/salesOverview_fragment_container"/>
+        android:id="@+id/salesOverview_fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/activity_main_bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/salesOverviewTopMenu"
+        app:layout_constraintVertical_bias="0.0" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

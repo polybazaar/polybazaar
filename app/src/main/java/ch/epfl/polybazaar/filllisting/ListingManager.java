@@ -216,11 +216,11 @@ public class ListingManager {
 
                 listingUpdated.put(LISTING_ACTIVE, listing.getListingActive());
 
-                //TODO: Also edit the category. But this feature should wait to have the new category selector
+                listingUpdated.put(CATEGORY,category.toString());
 
                 Listing.updateMultipleFields(listingID, listingUpdated).addOnSuccessListener(aVoid -> LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
                     String thumbnail = LiteListing.NO_THUMBNAIL;
-
+                    liteListingUpdated.put(CATEGORY,category.toString());
                     if(!listStringImage.isEmpty()) {
                         thumbnail = resizeStringImageThumbnail(listStringImage.get(0));
                     }

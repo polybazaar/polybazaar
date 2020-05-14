@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import java.util.List;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryFragment;
+import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.filllisting.ImageManager;
 import ch.epfl.polybazaar.filllisting.ListingManager;
@@ -265,6 +267,15 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
         priceSelector.setText(listing.getPrice());
+        selectCategory.setText(listing.getCategory());
+        Category cat = new NodeCategory(listing.getCategory());
+        RootCategoryFactory.useJSONCategory(getApplicationContext());
+        Category parentCategory = RootCategoryFactory.getDependency().getSubCategoryContaining(cat);
+        for(Category c :parentCategory.subCategories()){
+            if (c.equals(cat)){
+                selectedCategory = c;
+            }
+        }
         lat = listing.getLatitude();
         lng = listing.getLongitude();
         if (lat != NOLAT && lng != NOLNG) {

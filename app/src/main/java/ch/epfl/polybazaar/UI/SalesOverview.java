@@ -78,7 +78,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         currentCategory = RootCategoryFactory.getDependency();
 
 
-        TextView catButton = findViewById(R.id.searchOverview);
+        TextView catButton = findViewById(R.id.categoryOverview);
         catButton.setOnClickListener(view->{
             FragmentManager fragmentManager = getSupportFragmentManager();
             CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency(),

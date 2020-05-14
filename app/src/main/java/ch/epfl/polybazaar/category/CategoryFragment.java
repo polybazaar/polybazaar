@@ -49,6 +49,7 @@ public class CategoryFragment extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static CategoryFragment newInstance(Category cat,int containerId,int backstackIndex) {
+
         category = cat;
         CategoryFragment.backstackIndex = backstackIndex;
         CategoryFragment.containerId = containerId;
@@ -96,12 +97,10 @@ public class CategoryFragment extends Fragment {
                         .add(containerId, nextFrag)
                         .commit();
             }else{
-                //categoryButton.setText(nextCategory.toString());
 
             }
             categoryButton.setText(nextCategory.toString());
             selectedCategory = nextCategory;
-
         });
 
         categoryButton.setOnClickListener(view->{

@@ -26,8 +26,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     public CategoryRecyclerAdapter(Context context,Category category) {
         this.context = context;
         this.category = category;
-        //RootCategoryFactory.useJSONCategory(context);
-        //rootCategory = RootCategoryFactory.getDependency();
+        RootCategoryFactory.useJSONCategory(context);
         categories = category.subCategories();
 
     }
@@ -50,7 +49,6 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         Category category = categories.get(position);
         holder.categoryName.setText(category.toString());
         holder.item.setTag(position);
-        //Toast.makeText(context, category.toString(), Toast.LENGTH_SHORT).show() ;
         holder.categoryName.setTag(position);
     }
 
