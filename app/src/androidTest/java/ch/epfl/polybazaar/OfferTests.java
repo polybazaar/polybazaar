@@ -90,7 +90,7 @@ public class OfferTests {
     public void sendOfferTest() {
         MockAuthenticator.getInstance().signOut();
         MockAuthenticator.getInstance().signIn(TestUser2Email, TestUser2Password);
-        SubmitOffer.sendOffer(15.0, listing1, activityRule.getActivity());
+        SubmitOffer.sendOffer(15.0, listing1, activityRule.getActivity(), activityRule.getActivity().getApplicationContext());
         ChatMessage.fetchMessagesFrom(TestUser2Email).addOnSuccessListener(chatMessages -> {
             assertThat(chatMessages.get(0).getMessage(), is(ChatMessage.OFFER_MADE+ "15.0"));
         });

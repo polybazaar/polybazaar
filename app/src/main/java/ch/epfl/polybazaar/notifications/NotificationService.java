@@ -35,11 +35,6 @@ public class NotificationService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        showNotificationOrRefreshChat(remoteMessage);
-    }
-
-    public void showNotificationOrRefreshChat(RemoteMessage remoteMessage){
-        System.out.println(remoteMessage.getData());
         broadcastManager.sendBroadcast(new Intent(ChatActivity.BROADCAST_UPDATE_MESSAGE));
         SharedPreferences preferences = getSharedPreferences("PREFS", MODE_PRIVATE);
         String currentChatID = preferences.getString(ChatActivity.CURRENT_CHAT_ID, ChatActivity.NO_CURRENT_ID);
