@@ -32,7 +32,6 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.polybazaar.OfferTests.SLEEP_TIME;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.core.AllOf.allOf;
@@ -63,12 +62,11 @@ public class SearchListingsTest {
     }
 
     @Test
-    public void searchTriggersSearchActivity() throws InterruptedException {
+    public void searchTriggersSearchActivity() {
         Intents.init();
         onView(withId(R.id.search)).perform(typeText("My title")).perform(pressKey(KeyEvent.KEYCODE_ENTER));
         closeSoftKeyboard();
-        Thread.sleep(SLEEP_TIME);
-        intended(allOf(hasComponent(SearchListings.class.getName()), hasAction(Intent.ACTION_SEARCH)),times(2));
+        intended(allOf(hasComponent(SearchListings.class.getName()), hasAction(Intent.ACTION_SEARCH)), times(2));
         Intents.release();
     }
 

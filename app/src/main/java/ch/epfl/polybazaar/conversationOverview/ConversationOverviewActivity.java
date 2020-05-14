@@ -66,8 +66,8 @@ public class ConversationOverviewActivity extends AppCompatActivity {
             conversationOverviewRecyclerAdapter.setOnItemClickListener(view -> {
                 int viewPosition = (int)view.getTag();
                 Intent intent = new Intent(ConversationOverviewActivity.this, ChatActivity.class);
-                intent.putExtra(ChatActivity.bundleListingId, conversationOverviewsList.get(viewPosition).getListingID());
-                intent.putExtra(ChatActivity.bundleReceiverEmail, conversationOverviewsList.get(viewPosition).getOtherUser());
+                intent.putExtra(ChatActivity.BUNDLE_LISTING_ID, conversationOverviewsList.get(viewPosition).getListingID());
+                intent.putExtra(ChatActivity.BUNDLE_RECEIVER_EMAIL, conversationOverviewsList.get(viewPosition).getOtherUser());
                 startActivity(intent);
             });
 
