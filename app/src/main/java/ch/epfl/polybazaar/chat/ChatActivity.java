@@ -36,6 +36,7 @@ import ch.epfl.polybazaar.notifications.NotificationClient;
 import ch.epfl.polybazaar.notifications.Data;
 import ch.epfl.polybazaar.notifications.FCMServiceAPI;
 import ch.epfl.polybazaar.notifications.NotificationSender;
+import ch.epfl.polybazaar.notifications.NotificationUtilities;
 import ch.epfl.polybazaar.user.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,11 +62,11 @@ public class ChatActivity extends AppCompatActivity {
     private FCMServiceAPI fcmServiceAPI;
     private BroadcastReceiver broadcastReceiver;
 
-    public static final String bundleListingId = "listingID";
-    public static final String bundleReceiverEmail = "receiverEmail";
-    public static final String broadcastUpdateMessage = "broadcastUpdateMessage";
-    public static final String currentChatID = "currentChatID";
-    public static final String noCurrentID = "noCurrentID";
+    public static final String BUNDLE_LISTING_ID = "listingID";
+    public static final String BUNDLE_RECEIVER_EMAIL = "receiverEmail";
+    public static final String BROADCAST_UPDATE_MESSAGE = "broadcastUpdateMessage";
+    public static final String CURRENT_CHAT_ID = "currentChatID";
+    public static final String NO_CURRENT_ID = "noCurrentID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +88,8 @@ public class ChatActivity extends AppCompatActivity {
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> User.updateField(User.TOKEN, senderEmail, instanceIdResult.getToken()));
         //TODO: What if the bundle is null ?
         Bundle bundle = getIntent().getExtras();
-        this.listingID = bundle.getString(bundleListingId);
-        this.receiverEmail = bundle.getString(bundleReceiverEmail);
+        this.listingID = bundle.getString(BUNDLE_LISTING_ID);
+        this.receiverEmail = bundle.getString(BUNDLE_RECEIVER_EMAIL);
         this.senderEmail = AuthenticatorFactory.getDependency().getCurrentUser().getEmail();
         writeCurrentChatIDToPreferences(receiverEmail+listingID);
         sendMessageButton = findViewById(R.id.sendMessageButton);
@@ -158,28 +159,18 @@ public class ChatActivity extends AppCompatActivity {
             messageRecycler.setAdapter(chatMessageRecyclerAdapter);
             messageRecycler.scrollToPosition(conversation.size() - 1);
 
-            User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), messageText);});
+            User.fetch(receiverEmail).addOnSuccessListener(user -> {if(user != null) {
+                receiverToken = user.getToken();
+                NotificationUtilities.sendNewChatNotification(getApplicationContext(), fcmServiceAPI, senderEmail, receiverEmail, listingID, AuthenticatorFactory.getDependency().getCurrentUser().getNickname(), message, receiverToken);
+            }});
         });
     }
 
-    private void sendNotification(String receiverEmail, String nickname, String message) {
-        User.fetch(receiverEmail).addOnSuccessListener(user -> {
-            receiverToken = user.getToken();
-            Data data = new Data(senderEmail, nickname + ": " + message, getString(R.string.notification_title), receiverEmail, listingID);
-            NotificationSender notificationSender = new NotificationSender(data, receiverToken);
-            fcmServiceAPI.sendNotification(notificationSender).enqueue(new Callback<Void>() {
-                //These functions have to be overridden but in our implementation we do not want anything to happen if we fail to send a notification
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {}
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {}
-            });
-        });
-    }
+
 
     private void writeCurrentChatIDToPreferences(String id){
         SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
-        editor.putString(currentChatID, id);
+        editor.putString(CURRENT_CHAT_ID, id);
         editor.apply();
     }
 
@@ -187,7 +178,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
-                new IntentFilter(broadcastUpdateMessage)
+                new IntentFilter(BROADCAST_UPDATE_MESSAGE)
         );
     }
 
@@ -206,7 +197,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        writeCurrentChatIDToPreferences(noCurrentID);
+        writeCurrentChatIDToPreferences(NO_CURRENT_ID);
     }
 }
 
