@@ -17,8 +17,8 @@ public abstract  class DatabaseStoreUtilities {
 
     public static void storeNewListing(String title, String userEmail, String id){
 
-        Listing testListing = new Listing(title,"testDescription","22",userEmail, "Others");
-        LiteListing testLiteListing = new LiteListing(id, title, "22", "Others");
+        Listing testListing = new Listing(title,"testDescription","22",userEmail, "Multimedia");
+        LiteListing testLiteListing = new LiteListing(id, title, "22", "Multimedia");
         testListing.setId(id);
         testLiteListing.setId(id);
 

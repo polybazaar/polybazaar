@@ -17,6 +17,7 @@ import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -41,6 +42,7 @@ import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -479,8 +481,8 @@ public class FillListingTest {
     private void checkNoImageUploaded(){
         onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
     }
-
-    private void selectCategory(String cat){
+    //always select the first category
+    private void selectCategory(String cat) throws Throwable {
         /**
          * TODO : complete with new category selection activity
          */
@@ -488,6 +490,12 @@ public class FillListingTest {
         onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
         onData(hasToString(cat)).perform(click());
          */
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.selectCategory).performClick());
+        Thread.sleep(500);
+        onView(withId(R.id.categoriesRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
+        pressBack();
+        Thread.sleep(500);
+        runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.categoryButton).performClick());
     }
 
     private void fillListing() throws Throwable {

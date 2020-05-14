@@ -51,7 +51,7 @@ public class OfferTests {
                     MockAuthenticator.getInstance().createUser(TestUser2Email, TestUser2NickName, TestUser2Password);
                     User testUser2 = new User(TestUser2NickName, TestUser2Email);
                     testUser2.save();
-                    Listing testListing1 = new Listing(Listing1Name, "", Listing1Price, MockAuthenticator.TEST_USER_EMAIL, "none");
+                    Listing testListing1 = new Listing(Listing1Name, "", Listing1Price, MockAuthenticator.TEST_USER_EMAIL, "Multimedia");
                     testListing1.saveWithLiteVersion();
                     try {
                         Thread.sleep(SLEEP_TIME);

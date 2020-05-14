@@ -17,6 +17,8 @@ import java.util.Map;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.category.Category;
+import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
@@ -105,15 +107,14 @@ public class ListingManager {
         }
     }
 
-    private boolean checkFields(List<Spinner> spinnerList){
-        checkTitle();
-        checkPrice();
-        checkCategory(spinnerList);
-        return checkTitle() && checkPrice() && checkCategory(spinnerList);
+    private boolean checkFields(Category category){
+
+        return checkTitle() && checkPrice() && checkCategory(category);
     }
 
-    private boolean checkCategory(List<Spinner> spinnerList) {
-        return !spinnerList.get(spinnerList.size()-1).getSelectedItem().toString().equals(R.string.default_spinner_text);
+    private boolean checkCategory(Category category) {
+        RootCategoryFactory.useJSONCategory(activity);
+        return !category.equals(RootCategoryFactory.getDependency());
     }
 
     private boolean checkPrice() {
@@ -136,8 +137,9 @@ public class ListingManager {
         return ok;
     }
 
-    public Listing makeListing(Double lat, Double lng, List<Spinner> spinnerList) {
-        String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
+    public Listing makeListing(Double lat, Double lng, Category cat) {
+       // String category = spinnerList.get(spinnerList.size()-1).getSelectedItem().toString();
+        String category = cat.toString();
         Authenticator fbAuth = AuthenticatorFactory.getDependency();
         if (fbAuth.getCurrentUser() != null) {
             String userEmail = fbAuth.getCurrentUser().getEmail();
@@ -148,17 +150,17 @@ public class ListingManager {
     }
 
     //returns false if the listing can't be submitted
-    public boolean submit(List<Spinner> spinnerList, List<String> listStringImage, String stringThumbnail, Double lat, Double lng) {
+    public boolean submit(Category category, List<String> listStringImage, String stringThumbnail, Double lat, Double lng) {
         if(!listStringImage.isEmpty()) {
             stringThumbnail = resizeStringImageThumbnail(listStringImage.get(0));
         }
         Context context = activity.getApplicationContext();
-        if (!checkFields(spinnerList)) {
+        if (!checkFields(category)) {
             Toast.makeText(context, R.string.incorrect_fields, Toast.LENGTH_SHORT).show();
         }
         else {
             if(isInternetAvailable(context)){
-                Listing newListing = makeListing(lat, lng, spinnerList);
+                Listing newListing = makeListing(lat, lng, category);
                 if (newListing != null) {
                     createAndSendListing(newListing, listStringImage, stringThumbnail);
                     Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
@@ -173,8 +175,8 @@ public class ListingManager {
         return true;
     }
 
-    public void deleteOldListingAndSubmitNewOne(List<Spinner> spinnerList, List<String> listStringImage, Double lat, Double lng, List<String> listImageID, boolean imagesEdited) {
-        if (!checkFields(spinnerList)) {
+    public void deleteOldListingAndSubmitNewOne(Category category, List<String> listStringImage, Double lat, Double lng, List<String> listImageID, boolean imagesEdited) {
+        if (!checkFields(category)) {
             Toast.makeText(activity.getApplicationContext(), R.string.incorrect_fields, Toast.LENGTH_SHORT).show();
         }
         else{
@@ -214,11 +216,11 @@ public class ListingManager {
 
                 listingUpdated.put(LISTING_ACTIVE, listing.getListingActive());
 
-                //TODO: Also edit the category. But this feature should wait to have the new category selector
+                listingUpdated.put(CATEGORY,category.toString());
 
                 Listing.updateMultipleFields(listingID, listingUpdated).addOnSuccessListener(aVoid -> LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
                     String thumbnail = LiteListing.NO_THUMBNAIL;
-
+                    liteListingUpdated.put(CATEGORY,category.toString());
                     if(!listStringImage.isEmpty()) {
                         thumbnail = resizeStringImageThumbnail(listStringImage.get(0));
                     }

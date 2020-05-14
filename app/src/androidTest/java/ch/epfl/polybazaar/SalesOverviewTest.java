@@ -2,9 +2,13 @@ package ch.epfl.polybazaar;
 
 import android.content.Intent;
 
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Tasks;
+
+import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -18,6 +22,12 @@ import java.util.concurrent.ExecutionException;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static org.junit.Assert.assertEquals;
 
@@ -35,7 +45,7 @@ public class SalesOverviewTest {
     public void init() {
         useMockDataStore();
 
-        LiteListing litelisting1 = new LiteListing("1", "listing1", "CHF 1", "Furniture");
+        LiteListing litelisting1 = new LiteListing("1", "listing1", "CHF 1", "Video games");
 
         litelisting1.save();
     }
@@ -43,6 +53,7 @@ public class SalesOverviewTest {
 
     @Test
     public void testLiteListingList() {
+        Intents.init();
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
@@ -50,6 +61,26 @@ public class SalesOverviewTest {
         assertEquals(liteListingList.get(0).getListingID(), "1");
         assertEquals(liteListingList.get(0).getTitle(), "listing1");
         assertEquals(liteListingList.get(0).getPrice(), "CHF 1");
+        Intents.release();
+    }
+
+    @Test
+    public void selectCategoryFromSalesOverview() throws InterruptedException {
+        Intents.init();
+        Intent intent = new Intent();
+        activityRule.launchActivity(intent);
+        onView(withId(R.id.categoryOverview)).perform(click());
+        Thread.sleep(500);
+        //onView(withId(R.id.categoriesRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
+        onView(withText("Multimedia")).perform(click());
+
+        pressBack();
+        Thread.sleep(500);
+        onView(withId(R.id.categoryButton)).perform(click());
+        LiteListing searchedListing = activityRule.getActivity().getLiteListingList().get(0);
+        assertEquals("listing1",searchedListing.getTitle());
+        assertEquals(1,activityRule.getActivity().getLiteListingList().size());
+        Intents.release();
     }
 
 }
