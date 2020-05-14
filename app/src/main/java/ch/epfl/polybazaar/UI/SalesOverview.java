@@ -279,7 +279,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void queryCategories(){
         List<Category> allCategories = getContainedCategories(currentCategory);
         List<Task<List<LiteListing>>> queryList = new ArrayList<>();;
@@ -287,15 +286,15 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             queryList.add(LiteListing.fetchFieldEquality("category",cat.toString()));
         }
         Tasks.<List<LiteListing>>whenAllSuccess(queryList).addOnSuccessListener(result->{
-            List<LiteListing> flatList =result.stream()
-                    .flatMap(List::stream)
-                    .collect(Collectors.toList());
+            List<LiteListing> flatList = new ArrayList<>();
+            for(List<LiteListing> l : result){
+                flatList.addAll(l);
+            }
             onFetchSuccess(flatList);
         });
 
     }
     private void onFetchSuccess(List<LiteListing> result){
-        Toast.makeText(getApplicationContext(), Integer.toString(result.size()), Toast.LENGTH_SHORT).show();
         if(result == null) {
             return;
         }
@@ -306,11 +305,9 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                 }
             }
         }
-        // retrieve values from Treemap: litelistings IDs in order: most recent first
         IDList = new ArrayList<>(listingTimeMap.values());
         int size = IDList.size();
         List<Task<LiteListing>> taskList = new ArrayList<>();
-        // add fetch tasks in correct display order
         for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
             taskList.add(LiteListing.fetch(IDList.get(i)));
             positionInIDList++;
@@ -323,7 +320,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCategoryFragmentInteraction(Category category) {
         positionInIDList = 0;
@@ -344,13 +340,9 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             startActivity(intent);
         });
 
-        // Attach the adapter to the recyclerview to populate items
         rvLiteListings.setAdapter(adapter);
-        // Set layout manager to position the items
         LinearLayoutManager mGridLayoutManager = new GridLayoutManager(this, NUMBEROFCOLUMNS);
         rvLiteListings.setLayoutManager(mGridLayoutManager);
-
-        // Triggered only when new data needs to be appended to the list
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(mGridLayoutManager) {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -376,11 +368,8 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         return subcategories;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void loadLiteListingsByCategory(){
         if(currentCategory.equals(RootCategoryFactory.getDependency())){
-
-            //LiteListing.fetchAll().addOnSuccessListener(this::onFetchSuccess);
             loadLiteListingOverview();
         }else{
             queryCategories();
