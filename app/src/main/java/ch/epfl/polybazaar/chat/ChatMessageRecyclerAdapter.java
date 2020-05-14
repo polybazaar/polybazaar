@@ -2,6 +2,7 @@ package ch.epfl.polybazaar.chat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +27,10 @@ import static ch.epfl.polybazaar.chat.ChatMessage.OFFER_REFUSED;
 import static ch.epfl.polybazaar.user.User.fetch;
 
 public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
-    private static final int VIEW_TYPE_MESSAGE_SENT = 1;
-    private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
-    private static final int VIEW_TYPE_OFFER_PROCESSED = 3;
-    private static final int VIEW_TYPE_OFFER_RECEIVED = 4;
+    public static final int VIEW_TYPE_MESSAGE_SENT = 1;
+    public static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
+    public static final int VIEW_TYPE_OFFER_PROCESSED = 3;
+    public static final int VIEW_TYPE_OFFER_RECEIVED = 4;
     private static final String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     public static final int START_YEAR = 1900;
 
@@ -46,6 +47,16 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
         ChatMessage message = messages.get(position);
         Account user = AuthenticatorFactory.getDependency().getCurrentUser();
 
+        return getMessageType(user, message);
+    }
+
+    /**
+     * Get the type of message this is. i.e. is it a message sent by you, a message received, an offer message, etc...
+     * @param user: the current user of the app
+     * @param message: the message to get the type of
+     * @return the message's type
+     */
+    public static int getMessageType(Account user, ChatMessage message){
         if (user == null || message.getSender().equals(user.getEmail())) {
             // If the current user is the sender of the message
             if (message.getMessage().startsWith(OFFER_PROCESSED)) {
@@ -192,13 +203,13 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter {
             });
             acceptOffer.setOnClickListener(v -> {
                 double offer = Double.parseDouble(message.getMessage().replace(OFFER_MADE, ""));
-                processOffer(offer, message, OFFER_ACCEPTED);
+                processOffer(offer, message, OFFER_ACCEPTED, context);
                 acceptOffer.setVisibility(View.GONE);
                 refuseOffer.setVisibility(View.GONE);
             });
             refuseOffer.setOnClickListener(v -> {
                 double offer = Double.parseDouble(message.getMessage().replace(OFFER_MADE, ""));
-                processOffer(offer, message, OFFER_REFUSED);
+                processOffer(offer, message, OFFER_REFUSED, context);
                 acceptOffer.setVisibility(View.GONE);
                 refuseOffer.setVisibility(View.GONE);
             });

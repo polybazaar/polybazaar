@@ -1,14 +1,11 @@
 package ch.epfl.polybazaar.UI;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -136,8 +133,8 @@ public class SaleDetails extends AppCompatActivity {
             startActivity(notSignedIn);
         } else {
             Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
-            intent.putExtra(ChatActivity.bundleListingId, listingID);
-            intent.putExtra(ChatActivity.bundleReceiverEmail, listing.getUserEmail());
+            intent.putExtra(ChatActivity.BUNDLE_LISTING_ID, listingID);
+            intent.putExtra(ChatActivity.BUNDLE_RECEIVER_EMAIL, listing.getUserEmail());
             startActivity(intent);
         }
     }
@@ -154,7 +151,7 @@ public class SaleDetails extends AppCompatActivity {
                 .setMessage("Do you want to submit an offer at " + listing.getPrice() + " " +
                         getResources().getString(R.string.currency) + "?")
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    sendOffer(Double.parseDouble(listing.getPrice()), listing, SaleDetails.this);
+                    sendOffer(Double.parseDouble(listing.getPrice()), listing, SaleDetails.this, getApplicationContext());
                     dialog.dismiss();
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());

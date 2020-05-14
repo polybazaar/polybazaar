@@ -1,5 +1,10 @@
 package ch.epfl.polybazaar.chat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +36,7 @@ import ch.epfl.polybazaar.notifications.NotificationClient;
 import ch.epfl.polybazaar.notifications.Data;
 import ch.epfl.polybazaar.notifications.FCMServiceAPI;
 import ch.epfl.polybazaar.notifications.NotificationSender;
+import ch.epfl.polybazaar.notifications.NotificationUtilities;
 import ch.epfl.polybazaar.user.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,14 +60,26 @@ public class ChatActivity extends AppCompatActivity {
     private List<ChatMessage> conversation = new ArrayList<>();
 
     private FCMServiceAPI fcmServiceAPI;
+    private BroadcastReceiver broadcastReceiver;
 
-    public static final String bundleListingId = "listingID";
-    public static final String bundleReceiverEmail = "receiverEmail";
+    public static final String BUNDLE_LISTING_ID = "listingID";
+    public static final String BUNDLE_RECEIVER_EMAIL = "receiverEmail";
+    public static final String BROADCAST_UPDATE_MESSAGE = "broadcastUpdateMessage";
+    public static final String CURRENT_CHAT_ID = "currentChatID";
+    public static final String NO_CURRENT_ID = "noCurrentID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                loadConversation();
+            }
+        };
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_messages);
@@ -69,10 +88,10 @@ public class ChatActivity extends AppCompatActivity {
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> User.updateField(User.TOKEN, senderEmail, instanceIdResult.getToken()));
         //TODO: What if the bundle is null ?
         Bundle bundle = getIntent().getExtras();
-        this.listingID = bundle.getString(bundleListingId);
-        this.receiverEmail = bundle.getString(bundleReceiverEmail);
+        this.listingID = bundle.getString(BUNDLE_LISTING_ID);
+        this.receiverEmail = bundle.getString(BUNDLE_RECEIVER_EMAIL);
         this.senderEmail = AuthenticatorFactory.getDependency().getCurrentUser().getEmail();
-
+        writeCurrentChatIDToPreferences(receiverEmail+listingID);
         sendMessageButton = findViewById(R.id.sendMessageButton);
         messageEditor = findViewById(R.id.messageEditor);
         messageRecycler = findViewById(R.id.messageDisplay);
@@ -112,6 +131,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadConversation() {
+        conversation.clear();
         Task<List<ChatMessage>> fetchSenderMessages = ChatMessage.fetchConversation(senderEmail, receiverEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
         Task<List<ChatMessage>> fetchReceiverMessages = ChatMessage.fetchConversation(receiverEmail, senderEmail, listingID).addOnSuccessListener(chatMessages -> conversation.addAll(chatMessages));
 
@@ -139,23 +159,45 @@ public class ChatActivity extends AppCompatActivity {
             messageRecycler.setAdapter(chatMessageRecyclerAdapter);
             messageRecycler.scrollToPosition(conversation.size() - 1);
 
-            User.fetch(senderEmail).addOnSuccessListener(user -> {if(user != null) sendNotification(receiverEmail, user.getNickName(), messageText);});
+            User.fetch(receiverEmail).addOnSuccessListener(user -> {if(user != null) {
+                receiverToken = user.getToken();
+                NotificationUtilities.sendNewChatNotification(getApplicationContext(), fcmServiceAPI, senderEmail, receiverEmail, listingID, AuthenticatorFactory.getDependency().getCurrentUser().getNickname(), message, receiverToken);
+            }});
         });
     }
 
-    private void sendNotification(String receiverEmail, String nickname, String message) {
-        User.fetch(receiverEmail).addOnSuccessListener(user -> {
-            receiverToken = user.getToken();
-            Data data = new Data(senderEmail, nickname + ": " + message, getString(R.string.notification_title), receiverEmail, listingID);
-            NotificationSender notificationSender = new NotificationSender(data, receiverToken);
-            fcmServiceAPI.sendNotification(notificationSender).enqueue(new Callback<Void>() {
-                //These functions have to be overridden but in our implementation we do not want anything to happen if we fail to send a notification
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {}
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {}
-            });
-        });
+
+
+    private void writeCurrentChatIDToPreferences(String id){
+        SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+        editor.putString(CURRENT_CHAT_ID, id);
+        editor.apply();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
+                new IntentFilter(BROADCAST_UPDATE_MESSAGE)
+        );
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        writeCurrentChatIDToPreferences(receiverEmail + listingID);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        writeCurrentChatIDToPreferences(NO_CURRENT_ID);
     }
 }
 
