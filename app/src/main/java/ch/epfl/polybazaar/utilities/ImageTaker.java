@@ -42,6 +42,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringW
 public class ImageTaker extends AppCompatActivity {
 
     public static final int QUALITY = 25;
+    public static final int BEST_QUALITY = 100;
     public static final String STRING_IMAGE = "bitmap_image";
     public static final String PICTURE_PREFS = "bitmap_prefs";
     public static final String CODE = "request_code";
@@ -50,7 +51,6 @@ public class ImageTaker extends AppCompatActivity {
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final int RESULT_TAKE_PICTURE = 2;
     public static final String IMAGE_AVAILABLE = "image_present";
-    public static final int BEST_QUALITY = 100;
     private File photoFile;
     private Bitmap image;
     private PermissionRequest cameraPermissionRequest;

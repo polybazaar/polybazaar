@@ -34,6 +34,7 @@ import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.chat.ChatActivity.removeBottomBarWhenKeyboardUp;
 import static ch.epfl.polybazaar.user.User.NO_PROFILE_PICTURE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.QUALITY;
 import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
@@ -186,7 +187,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
                 }
                 Bitmap bitmap = convertStringToBitmap(this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).
                         getString(STRING_IMAGE, null));
-                ImageTransaction.store(profilePicRef, bitmap, 100, this.getApplicationContext());
+                ImageTransaction.storePNG(profilePicRef, bitmap, QUALITY, this.getApplicationContext());
         } else {
             profilePicRef = NO_PROFILE_PICTURE;
         }

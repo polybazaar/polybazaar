@@ -35,6 +35,7 @@ import static ch.epfl.polybazaar.listing.Listing.*;
 import static ch.epfl.polybazaar.litelisting.LiteListing.NO_THUMBNAIL;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 
+import static ch.epfl.polybazaar.utilities.ImageTaker.QUALITY;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeImageThumbnail;
 import static java.util.UUID.randomUUID;
 
@@ -99,7 +100,7 @@ public class ListingManager {
             for(int i = 0; i <= (listImage.size() - 1); i++) {
                 nextId = randomUUID().toString();
                 idList.add(nextId);
-                ImageTransaction.store(nextId, listImage.get(i), 100, activity.getApplicationContext())
+                ImageTransaction.store(nextId, listImage.get(i), QUALITY, activity.getApplicationContext())
                         .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored image"))
                         .addOnFailureListener(e -> Toast.makeText(activity.getApplicationContext(), "Failed to send image", Toast.LENGTH_LONG).show());
             }
@@ -148,7 +149,7 @@ public class ListingManager {
         if(!listImage.isEmpty()) {
             thumbnail = resizeImageThumbnail(listImage.get(0));
             thumbnailRef = randomUUID().toString();
-            ImageTransaction.store(thumbnailRef, thumbnail, 100, activity.getApplicationContext());
+            ImageTransaction.store(thumbnailRef, thumbnail, QUALITY, activity.getApplicationContext());
         }
         Context context = activity.getApplicationContext();
         if (!checkFields()) {
@@ -210,7 +211,7 @@ public class ListingManager {
                         if (!listImage.isEmpty()) {
                             thumbnailRef = randomUUID().toString();
                             Bitmap thumbnail = resizeImageThumbnail(listImage.get(0));
-                            ImageTransaction.store(thumbnailRef, thumbnail, 100, activity.getApplicationContext());
+                            ImageTransaction.store(thumbnailRef, thumbnail, QUALITY, activity.getApplicationContext());
                         }
                         if (!liteListing.getThumbnailRef().equals(thumbnailRef) && !thumbnailRef.equals(NO_THUMBNAIL)) {
                             liteListingUpdated.put(LiteListing.THUMBNAIL_REF, thumbnailRef);
@@ -225,7 +226,7 @@ public class ListingManager {
                 List<String> listRefs = new ArrayList<>();
                 for (String ref : listing.getImagesRefs()) {
                     if (i < listImage.size()) {
-                        ImageTransaction.store(ref, listImage.get(i), 100, activity.getApplicationContext());
+                        ImageTransaction.store(ref, listImage.get(i), QUALITY, activity.getApplicationContext());
                         listRefs.add(ref);
                     }
                     ++i;
@@ -233,7 +234,7 @@ public class ListingManager {
                 if (listing.getImagesRefs().size() < listImage.size()) {
                     while (i < listImage.size()) {
                         String ref  = randomUUID().toString();
-                        ImageTransaction.store(ref, listImage.get(i), 100, activity.getApplicationContext());
+                        ImageTransaction.store(ref, listImage.get(i), QUALITY, activity.getApplicationContext());
                         listRefs.add(ref);
                     }
                 }
