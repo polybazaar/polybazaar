@@ -23,6 +23,7 @@ import ch.epfl.polybazaar.chat.ChatMessage;
 import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -150,13 +151,16 @@ public class ListingManager {
      * @param listingID the listings Id
      */
     public void deleteCurrentListing(String listingID) {
-        // Delete images:
         Listing.fetch(listingID).addOnSuccessListener(listing -> {
+            // Delete images:
             if (listing != null && listing.getImagesRefs() != null) {
                 for (String ref : listing.getImagesRefs()) {
                     // todo: delete image at ref
                 }
             }
+            LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
+                // TODO: delete img at liteListing.getThumbnailRef()
+            });
             // delete all messages
             ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
                 for (ChatMessage message : chatMessages) {
