@@ -107,6 +107,8 @@ public class SaleDetails extends AppCompatActivity {
             listing.fetchImages(SaleDetails.this).addOnSuccessListener(bitmaps -> {
                 imageManager.drawImages(bitmaps);
             });
+        } else {
+            imageManager.drawImages(new ArrayList<>());
         }
     }
 
@@ -161,7 +163,7 @@ public class SaleDetails extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetails.this);
         builder.setTitle("Delete this listing")
                 .setMessage("You are about to delete this listing. Are you sure you want to continue?")
-                .setPositiveButton(R.string.yes, (dialog, id) -> listingManager.deleteCurrentListing(listingID, listImageID))
+                .setPositiveButton(R.string.yes, (dialog, id) -> listingManager.deleteCurrentListing(listingID))
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
         builder.create().show();
     }

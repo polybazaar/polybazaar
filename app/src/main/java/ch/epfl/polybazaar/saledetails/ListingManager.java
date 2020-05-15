@@ -84,9 +84,7 @@ public class ListingManager {
             TextView sellerNickname  = activity.findViewById(R.id.sellerNickname);
             User.fetch(listing.getUserEmail()).addOnSuccessListener(result -> {
                 if (!result.getProfilePictureRef().equals(User.NO_PROFILE_PICTURE)) {
-                    ImageTransaction.fetch(result.getProfilePictureRef(), activity.getApplicationContext()).addOnSuccessListener(bitmap -> {
-                        sellerPicture.setImageBitmap(bitmap);
-                    });
+                    ImageTransaction.fetch(result.getProfilePictureRef(), activity.getApplicationContext()).addOnSuccessListener(sellerPicture::setImageBitmap);
                 }
                 if (result.getNickName() != null) {
                     sellerNickname.setText(result.getNickName());
@@ -150,31 +148,39 @@ public class ListingManager {
     /**
      * Deletes the listing specified
      * @param listingID the listings Id
-     * @param listImageID the list of images used iin the listing
      */
-    public void deleteCurrentListing(String listingID, List<String> listImageID) {
-        Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-            Toast toast = Toast.makeText(activity.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.show();
-            Authenticator fbAuth = AuthenticatorFactory.getDependency();
-            Account authAccount = fbAuth.getCurrentUser();
-            authAccount.getUserData().addOnSuccessListener(user -> {
-                user.deleteOwnListing(listingID);
-                user.save();
+    public void deleteCurrentListing(String listingID) {
+        // Delete images:
+        Listing.fetch(listingID).addOnSuccessListener(listing -> {
+            if (listing != null && listing.getImagesRefs() != null) {
+                for (String ref : listing.getImagesRefs()) {
+                    // todo: delete image at ref
+                }
+            }
+            Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
+                Toast toast = Toast.makeText(activity.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.show();
+                Authenticator fbAuth = AuthenticatorFactory.getDependency();
+                Account authAccount = fbAuth.getCurrentUser();
+                authAccount.getUserData().addOnSuccessListener(user -> {
+                    user.deleteOwnListing(listingID);
+                    user.save();
+                });
+                Intent SalesOverviewIntent = new Intent(activity.getApplicationContext(), SalesOverview.class);
+                activity.startActivity(SalesOverviewIntent);
             });
-            Intent SalesOverviewIntent = new Intent(activity.getApplicationContext(), SalesOverview.class);
-            activity.startActivity(SalesOverviewIntent);
         });
-        //delete all images
-        for(String id: listImageID) {
-            ListingImage.delete(id);
-        }
         // delete all messages
         ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
             for (ChatMessage message : chatMessages) {
                 message.delete();
             }
+        });
+        AuthenticatorFactory.getDependency().getCurrentUser().getUserData().addOnSuccessListener(user -> {
+            List<String> own = user.getOwnListings();
+            own.remove(listingID);
+            User.updateField(User.OWN_LISTINGS, user.getEmail(), own);
         });
     }
 
