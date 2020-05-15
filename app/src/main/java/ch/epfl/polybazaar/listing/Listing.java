@@ -1,5 +1,8 @@
 package ch.epfl.polybazaar.listing;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
@@ -11,6 +14,7 @@ import java.util.Map;
 import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
+import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.Utilities.emailIsValid;
@@ -37,6 +41,7 @@ public class Listing extends Model implements Serializable {
     public static final String VIEWS = "views";
     public static final String HAVE_SEEN_USERS = "haveSeenUsers";
     public static final String LISTING_ACTIVE = "listingActive";
+    public static final String IMAGE_REFS = "imageRefs";
 
     private final SimpleField<String> id = new SimpleField<>(ID);
     private final SimpleField<String> title = new SimpleField<>(TITLE);
@@ -50,13 +55,14 @@ public class Listing extends Model implements Serializable {
     private final SimpleField<Long> views = new SimpleField<>(VIEWS);
     private final SimpleField<String> haveSeenUsers = new SimpleField<>(HAVE_SEEN_USERS);
     private final SimpleField<Boolean> listingActive = new SimpleField<>(LISTING_ACTIVE);
+    private final SimpleField<List<String>> imagesRefs = new SimpleField<>(IMAGE_REFS, new ArrayList<>());
 
     public static final String SOLD = "SOLD";
     public static final String COLLECTION = "listings";
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public Listing() {
-        registerFields(id, title, description, price, userEmail, stringImage, category, latitude, longitude, views, haveSeenUsers, listingActive);
+        registerFields(id, title, description, price, userEmail, stringImage, category, latitude, longitude, views, haveSeenUsers, listingActive, imagesRefs);
     }
 
     /**
@@ -140,6 +146,19 @@ public class Listing extends Model implements Serializable {
             return true;
         }
         return listingActive.get();
+    }
+
+    public List<String> getImagesRefs() {
+        return imagesRefs.get();
+    }
+
+    public Task<List<Bitmap>> fetchImages(Context ctx) {
+        List<Task<Bitmap>> tasks = new ArrayList<>();
+        for (String ref: imagesRefs.get()) {
+            tasks.add(ImageTransaction.fetch(ref, ctx));
+        }
+
+        return Tasks.whenAllSuccess(tasks);
     }
 
     @Override
