@@ -177,6 +177,7 @@ public class ListingManager {
                 message.delete();
             }
         });
+        // delete ownListing
         AuthenticatorFactory.getDependency().getCurrentUser().getUserData().addOnSuccessListener(user -> {
             List<String> own = user.getOwnListings();
             own.remove(listingID);
