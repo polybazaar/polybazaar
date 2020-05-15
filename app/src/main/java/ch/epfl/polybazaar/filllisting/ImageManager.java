@@ -31,7 +31,6 @@ public class ImageManager extends AppCompatActivity {
     private ViewPager2 viewPager;
     private TableRow editButtons;
     private FillListing activity;
-    private boolean edited = false;
 
     public ImageManager(FillListing activity) {
         this.activity = activity;
@@ -49,19 +48,19 @@ public class ImageManager extends AppCompatActivity {
         listImage.add(image);
         drawImages(listImage);
         viewPager.setCurrentItem(listImage.size() - 1, false);
-        edited = true;
     }
 
     /**
      * recursive function to retrieve all images
      * @param listingID ID of the image
      */
-    public void retrieveAllImages(String listingID) {
+    public void retrieveAllImages(String listingID, List<Bitmap> listImage) {
         Listing.fetch(listingID).addOnSuccessListener(listing -> {
             listing.fetchImages(activity.getApplicationContext()).addOnSuccessListener(bitmaps -> {
                 if (bitmaps != null && !bitmaps.isEmpty()) {
                     drawImages(bitmaps);
                     updateViewPagerVisibility(bitmaps);
+                    listImage.addAll(bitmaps);
                 }
             });
         });
@@ -109,7 +108,6 @@ public class ImageManager extends AppCompatActivity {
         }
         Collections.swap(listImage, 0, index);
         drawImages(listImage);
-        edited = true;
     }
 
     public void rotateLeft(List<Bitmap> listImage) {
@@ -123,7 +121,6 @@ public class ImageManager extends AppCompatActivity {
         listImage.set(index, Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true));
         drawImages(listImage);
         viewPager.setCurrentItem(index);
-        edited = true;
     }
 
     public void deleteImage(List<Bitmap> listImage) {
@@ -131,11 +128,6 @@ public class ImageManager extends AppCompatActivity {
             listImage.remove(viewPager.getCurrentItem());
         drawImages(listImage);
         updateViewPagerVisibility(listImage);
-        edited = true;
-    }
-
-    public boolean isEdited() {
-        return edited;
     }
 
 }

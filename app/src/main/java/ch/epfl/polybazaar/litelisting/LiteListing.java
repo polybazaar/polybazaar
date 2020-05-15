@@ -87,20 +87,14 @@ public class LiteListing extends Model {
     }
 
     public Task<Bitmap> fetchThumbnail(Context ctx) {
-
         String filename = getThumbnailRef();
-        return ImageTransaction.fetch(filename, ctx).onSuccessTask(bitmap -> {
-            thumbnail = bitmap;
-            return Tasks.forResult(bitmap);
-        });
-    }
-
-    public Bitmap getThumbnail() {
-        // TODO temporary solution to guarantee retro-compatibility
-        if (thumbnailRef.get() != null) {
-            return thumbnail;
+        if (filename.equals(NO_THUMBNAIL)) {
+            return Tasks.forResult(null);
         } else {
-            return ImageUtilities.convertStringToBitmap(stringThumbnail.get());
+            return ImageTransaction.fetch(filename, ctx).onSuccessTask(bitmap -> {
+                thumbnail = bitmap;
+                return Tasks.forResult(bitmap);
+            });
         }
     }
 

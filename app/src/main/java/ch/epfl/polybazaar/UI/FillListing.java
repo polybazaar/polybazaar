@@ -54,6 +54,8 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
 
 
     public static final int ADD_MP = 3;
+    public static final String LISTING_ID = "listingID";
+    public static final String LISTING = "listing";
 
     private Button setMainImage;
     private Button rotateImage;
@@ -189,18 +191,16 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         setMainImage.setOnClickListener(v -> imageManager.setFirst(listImage));
         rotateImage.setOnClickListener(v -> imageManager.rotateLeft(listImage));
         deleteImage.setOnClickListener(v -> imageManager.deleteImage(listImage));
-        if(!edit){
-            submitListing.setOnClickListener(v -> {
-                if (!listingManager.submit(selectedCategory, listImage, thumbnail, lat, lng)) {
-                    NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
-                    dialog.show(getSupportFragmentManager(), "noConnectionDialog");
-                }
-            });
-        }
-        else{
-            submitListing.setText(R.string.edit);
+        submitListing.setOnClickListener(v -> {
+            if (!listingManager.submit(selectedCategory, listImage, lat, lng)) {
+                NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
+                dialog.show(getSupportFragmentManager(), "noConnectionDialog");
+            }
+        });
+        if(edit) {
+            submitListing.setText(R.string.save);
             submitListing.setOnClickListener(v ->
-                    listingManager.deleteOldListingAndSubmitNewOne(selectedCategory, listImage, lat, lng, imageManager.isEdited()));
+                    listingManager.deleteOldListingAndSubmitNewOne(selectedCategory, listImage, lat, lng));
         }
 
         /**
@@ -220,7 +220,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         if(dialog instanceof NoConnectionForListingDialog){
-            listingManager.submit(selectedCategory, listImage, thumbnail, lat, lng);
+            listingManager.submit(selectedCategory, listImage, lat, lng);
             Intent SalesOverviewIntent = new Intent(FillListing.this, SalesOverview.class);
             startActivity(SalesOverviewIntent);
         }
@@ -252,15 +252,15 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         if(bundle == null){
             return false;
         }
-        String listingID = bundle.getString("listingID", "-1");
+        String listingID = bundle.getString(LISTING_ID, "-1");
         if (listingID.equals("-1")){
             return false;
         }
-        Listing listing = (Listing)bundle.get("listing");
+        Listing listing = (Listing)bundle.get(LISTING);
         if(listing == null) {
             return false;
         }
-        imageManager.retrieveAllImages(listingID);
+        imageManager.retrieveAllImages(listingID, listImage);
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
         priceSelector.setText(listing.getPrice());

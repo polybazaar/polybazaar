@@ -10,8 +10,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +19,8 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.category.Category;
-import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
@@ -32,6 +28,7 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.listing.Listing.*;
+import static ch.epfl.polybazaar.litelisting.LiteListing.LISTING_ID;
 import static ch.epfl.polybazaar.litelisting.LiteListing.NO_THUMBNAIL;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 
@@ -75,7 +72,7 @@ public class ListingManager {
             toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
             toast.show();
         });
-        //store images (current has a ref to the next)
+        //store images
         storeImages(listImage, newListingID);
         newLiteListing.save()
                 .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
@@ -144,10 +141,10 @@ public class ListingManager {
     }
 
     //returns false if the listing can't be submitted
-    public boolean submit(Category category, List<Bitmap> listImage, Bitmap thumbnail, Double lat, Double lng) {
+    public boolean submit(Category category, List<Bitmap> listImage, Double lat, Double lng) {
         String thumbnailRef = NO_THUMBNAIL;
         if(!listImage.isEmpty()) {
-            thumbnail = resizeImageThumbnail(listImage.get(0));
+            Bitmap thumbnail = resizeImageThumbnail(listImage.get(0));
             thumbnailRef = randomUUID().toString();
             ImageTransaction.store(thumbnailRef, thumbnail, QUALITY, activity.getApplicationContext());
         }
@@ -172,76 +169,15 @@ public class ListingManager {
         return true;
     }
 
-    public void deleteOldListingAndSubmitNewOne(Category category, List<Bitmap> listImage, Double lat, Double lng, boolean imagesEdited) {
+    public void deleteOldListingAndSubmitNewOne(Category category, List<Bitmap> listImage, Double lat, Double lng) {
         Bundle bundle = activity.getIntent().getExtras();
         if(bundle == null) {
             return;
         }
-        String listingID = bundle.getString("listingID");
-        Map<String, Object> listingUpdated = new HashMap<>();
-        Map<String, Object> liteListingUpdated = new HashMap<>();
-        Listing.fetch(listingID).addOnSuccessListener(listing -> {
-            if (!listing.getTitle().contentEquals(titleSelector.getText())) {
-                listingUpdated.put(TITLE, titleSelector.getText().toString());
-                liteListingUpdated.put(TITLE, titleSelector.getText().toString());
-            }
-            if (!listing.getPrice().contentEquals(priceSelector.getText())) {
-                listingUpdated.put(PRICE, priceSelector.getText().toString());
-                if (!listing.getListingActive()) {
-                    liteListingUpdated.put(PRICE, LiteListing.SOLD);
-                } else {
-                    liteListingUpdated.put(PRICE, priceSelector.getText().toString());
-                }
-            }
-            if (!listing.getDescription().contentEquals(descriptionSelector.getText())) {
-                listingUpdated.put(DESCRIPTION, descriptionSelector.getText().toString());
-            }
-            if (listing.getLatitude() != lat) {
-                listingUpdated.put(LATITUDE, lat);
-            }
-            if (listing.getLongitude() != lng) {
-                listingUpdated.put(LONGITUDE, lng);
-            }
-            listingUpdated.put(LISTING_ACTIVE, listing.getListingActive());
-            listingUpdated.put(CATEGORY, category.toString());
-            Listing.updateMultipleFields(listingID, listingUpdated).addOnSuccessListener(
-                    aVoid -> LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
-                        String thumbnailRef = NO_THUMBNAIL;
-                        liteListingUpdated.put(CATEGORY, category.toString());
-                        if (!listImage.isEmpty()) {
-                            thumbnailRef = randomUUID().toString();
-                            Bitmap thumbnail = resizeImageThumbnail(listImage.get(0));
-                            ImageTransaction.store(thumbnailRef, thumbnail, QUALITY, activity.getApplicationContext());
-                        }
-                        if (!liteListing.getThumbnailRef().equals(thumbnailRef) && !thumbnailRef.equals(NO_THUMBNAIL)) {
-                            liteListingUpdated.put(LiteListing.THUMBNAIL_REF, thumbnailRef);
-                        }
-                        LiteListing.updateMultipleFields(listingID, liteListingUpdated);
-                    }));
-
-            //TODO: This could be more optimized. All images shouldn't be reuploaded when only 1 is modified.
-            //TODO: Such an optimization however would require another PR
-            if (imagesEdited) {
-                int i = 0;
-                List<String> listRefs = new ArrayList<>();
-                for (String ref : listing.getImagesRefs()) {
-                    if (i < listImage.size()) {
-                        ImageTransaction.store(ref, listImage.get(i), QUALITY, activity.getApplicationContext());
-                        listRefs.add(ref);
-                    }
-                    ++i;
-                }
-                if (listing.getImagesRefs().size() < listImage.size()) {
-                    while (i < listImage.size()) {
-                        String ref  = randomUUID().toString();
-                        ImageTransaction.store(ref, listImage.get(i), QUALITY, activity.getApplicationContext());
-                        listRefs.add(ref);
-                    }
-                }
-                listingUpdated.put(IMAGES_REFS, listRefs);
-            }
-            Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
-            activity.startActivity(SalesOverviewIntent);
-        });
+        String listingID = bundle.getString(FillListing.LISTING_ID);
+        Listing.deleteWithLiteVersion(listingID);
+        submit(category, listImage, lat, lng);
+        Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
+        activity.startActivity(SalesOverviewIntent);
     }
 }
