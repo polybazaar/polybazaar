@@ -1,7 +1,6 @@
 package ch.epfl.polybazaar.saledetails;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
@@ -11,8 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
 
@@ -82,8 +79,8 @@ public class ListingManager {
             ImageView sellerPicture  = activity.findViewById(R.id.sellerProfilePicture);
             TextView sellerNickname  = activity.findViewById(R.id.sellerNickname);
             User.fetch(listing.getUserEmail()).addOnSuccessListener(result -> {
-                if (!result.getProfilePicture().equals(User.NO_PROFILE_PICTURE)) {
-                    sellerPicture.setImageBitmap(convertStringToBitmap(result.getProfilePicture()));
+                if (!result.getProfilePictureRef().equals(User.NO_PROFILE_PICTURE)) {
+                    sellerPicture.setImageBitmap(convertStringToBitmap(result.getProfilePictureRef()));
                 }
                 if (result.getNickName() != null) {
                     sellerNickname.setText(result.getNickName());

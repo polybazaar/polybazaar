@@ -164,7 +164,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
             dialog.show(getSupportFragmentManager(), "select image import");
         });
         selectCategory.setOnClickListener(v -> {
-            // TODO : open category selection activity
             RootCategoryFactory.useJSONCategory(getApplicationContext());
             FragmentManager fragmentManager = getSupportFragmentManager();
             CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency(),

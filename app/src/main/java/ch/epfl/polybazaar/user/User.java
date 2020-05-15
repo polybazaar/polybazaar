@@ -1,16 +1,13 @@
 package ch.epfl.polybazaar.user;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
 
 import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
-import ch.epfl.polybazaar.listing.Listing;
 
 import static ch.epfl.polybazaar.Utilities.emailIsValid;
 import static ch.epfl.polybazaar.Utilities.nameIsValid;
@@ -26,7 +23,7 @@ public final class User extends Model {
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
     public static final String PHONE_NUMBER = "phoneNumber";
-    public static final String PROFILE_PICTURE = "profilePicture";
+    public static final String PROFILE_PICTURE_REF = "profilePictureRef";
     public static final String OWN_LISTINGS = "ownListings";
     public static final String FAVORITES = "favorites";
     public final static String TOKEN ="token";
@@ -36,7 +33,7 @@ public final class User extends Model {
     private final SimpleField<String> firstName = new SimpleField<>(FIRST_NAME);
     private final SimpleField<String> lastName = new SimpleField<>(LAST_NAME);
     private final SimpleField<String> phoneNumber = new SimpleField<>(PHONE_NUMBER);
-    private final SimpleField<String> profilePicture = new SimpleField<>(PROFILE_PICTURE);
+    private final SimpleField<String> profilePictureRef = new SimpleField<>(PROFILE_PICTURE_REF);
     private final SimpleField<ArrayList<String>> ownListings = new SimpleField<>(OWN_LISTINGS, new ArrayList<>());
     private final SimpleField<ArrayList<String>> favorites = new SimpleField<>(FAVORITES, new ArrayList<>());
     private final SimpleField<String> token = new SimpleField<>(TOKEN);
@@ -70,9 +67,9 @@ public final class User extends Model {
         return token.get();
     }
 
-    public String getProfilePicture(){
-        if (profilePicture.get() != null) {
-            return profilePicture.get();
+    public String getProfilePictureRef(){
+        if (profilePictureRef.get() != null) {
+            return profilePictureRef.get();
         } else {
             return NO_PROFILE_PICTURE;
         }
@@ -80,7 +77,7 @@ public final class User extends Model {
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public User() {
-        registerFields(nickName, email, firstName, lastName, phoneNumber, profilePicture, ownListings, favorites, token);
+        registerFields(nickName, email, firstName, lastName, phoneNumber, profilePictureRef, ownListings, favorites, token);
     }
 
     /**
@@ -104,7 +101,7 @@ public final class User extends Model {
         firstName.set(capitalize(email.substring(0, email.indexOf("."))));
         lastName.set(capitalize(email.substring(email.indexOf(".")+1, email.indexOf("@"))));
         phoneNumber.set("");
-        profilePicture.set(NO_PROFILE_PICTURE);
+        profilePictureRef.set(NO_PROFILE_PICTURE);
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> token.set(instanceIdResult.getToken()));
     }
 
@@ -115,15 +112,15 @@ public final class User extends Model {
      * @param firstName User's first name
      * @param lastName User's last name
      * @param phoneNumber User's phone number
-     * @param profilePicture StringImage that is the user's profile Picture
+     * @param profilePictureRef StringImage that is the user's profile Picture
      */
     public User(String nickName, String email, String firstName, String lastName, String phoneNumber,
-                String profilePicture, ArrayList<String> ownListings, ArrayList<String> favorites){
+                String profilePictureRef, ArrayList<String> ownListings, ArrayList<String> favorites){
         this(nickName, email);
         this.firstName.set(firstName);
         this.lastName.set(lastName);
         this.phoneNumber.set(phoneNumber);
-        this.profilePicture.set(profilePicture);
+        this.profilePictureRef.set(profilePictureRef);
         this.ownListings.set(ownListings);
         this.favorites.set(favorites);
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> token.set(instanceIdResult.getToken()));

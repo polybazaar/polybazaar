@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,12 +14,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.Utilities;
+import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -32,7 +32,6 @@ import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 import ch.epfl.polybazaar.widgets.PublishProfileDialog;
 
 import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
-import static ch.epfl.polybazaar.Utilities.displayToast;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.chat.ChatActivity.removeBottomBarWhenKeyboardUp;
 import static ch.epfl.polybazaar.user.User.NO_PROFILE_PICTURE;
@@ -46,6 +45,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringP
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.getRoundedCroppedBitmap;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
+import static java.util.UUID.randomUUID;
 
 public class UserProfile extends AppCompatActivity implements NoticeDialogListener {
 
@@ -85,11 +85,13 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
                 firstNameSelector.setText(user.getFirstName());
                 lastNameSelector.setText(user.getLastName());
                 phoneNumberSelector.setText(user.getPhoneNumber());
-                if (!user.getProfilePicture().equals(NO_PROFILE_PICTURE)) {
-                    profilePicView.setImageBitmap(convertStringToBitmap(user.getProfilePicture()));
-                    SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
-                    myPrefs.edit().putString(STRING_IMAGE, user.getProfilePicture()).apply();
-                    profilePicChanged = true;
+                if (!user.getProfilePictureRef().equals(NO_PROFILE_PICTURE)) {
+                    ImageTransaction.fetch(user.getProfilePictureRef(), this.getApplicationContext()).addOnSuccessListener(bitmap -> {
+                        profilePicView.setImageBitmap(bitmap);
+                        SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
+                        myPrefs.edit().putString(STRING_IMAGE, convertBitmapToStringPNG(bitmap)).apply();
+                        profilePicChanged = true;
+                    });
                 }
             });
         }
@@ -176,13 +178,22 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         String newLastName = lastNameSelector.getText().toString();
         String newPhoneNumber = phoneNumberSelector.getText().toString();
         User editedUser;
-        String profilePic;
+        final String[] profilePicRef = new String[1];
         if (profilePicChanged) {
-            profilePic = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
+            User.fetch(user.getEmail()).addOnSuccessListener(user -> {
+                if (!user.getProfilePictureRef().equals(NO_PROFILE_PICTURE)) {
+                    profilePicRef[0] = user.getProfilePictureRef();
+                } else {
+                    profilePicRef[0] = randomUUID().toString();
+                }
+                Bitmap bitmap = convertStringToBitmap(this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).
+                        getString(STRING_IMAGE, null));
+                ImageTransaction.store(profilePicRef[0], bitmap, 100, this.getApplicationContext());
+            });
         } else {
-            profilePic = NO_PROFILE_PICTURE;
+            profilePicRef[0] = NO_PROFILE_PICTURE;
         }
-        editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber, profilePic, user.getOwnListings(), user.getFavorites());
+        editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber, profilePicRef[0], user.getOwnListings(), user.getFavorites());
         editedUser.save().addOnSuccessListener(aVoid -> {
             Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
         }).addOnSuccessListener(aVoid -> account.updateNickname(newNickname));
