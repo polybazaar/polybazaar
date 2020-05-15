@@ -41,13 +41,16 @@ public final class ImageTransaction {
                 }
 
                 // store result in cache
-                OutputStream outputStream = LocalCache.add(id, context);
-                IoUtils.copyStream(inputStream, outputStream);
-
+                try (OutputStream outputStream = LocalCache.add(id, context)) {
+                    IoUtils.copyStream(inputStream, outputStream);
+                }
                 // re-read from cache since an InputStream cannot be read twice
                 InputStream cacheInputStream = LocalCache.get(id, context);
 
                 return Tasks.forResult(BitmapFactory.decodeStream(cacheInputStream));
+
+
+
             });
         }
     }
