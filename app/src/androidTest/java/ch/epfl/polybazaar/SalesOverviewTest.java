@@ -64,7 +64,6 @@ public class SalesOverviewTest {
         activityRule.launchActivity(intent);
         onView(withId(R.id.categoryOverview)).perform(click());
         Thread.sleep(500);
-        //onView(withId(R.id.categoriesRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
         onView(withText("Multimedia")).perform(click());
 
         pressBack();
