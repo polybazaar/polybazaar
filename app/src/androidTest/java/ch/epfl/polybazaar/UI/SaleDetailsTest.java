@@ -72,7 +72,7 @@ public class SaleDetailsTest {
 
     @Test
     public void testFillWithListingAndGetSellerInfo() throws Throwable {
-        final Listing listing = new Listing("Algebre linéaire by David C. Lay", "Very good book.", "23", "gu.vrut@epfl.ch", "Furniture");
+        final Listing listing = new Listing("Algebre linéaire by David C. Lay", "Very good book.", "23", "gu.vrut@epfl.ch", "Multimedia");
         Tasks.await(listing.save());
         Intent intent = new Intent();
         intent.putExtra("listingID", listing.getId());
@@ -125,7 +125,7 @@ public class SaleDetailsTest {
     @Test
     public void favoriteButtonIsDisabledForUnauthenticatedUsers() throws Throwable {
 
-        Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
+        Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "Multimedia");
 
         Tasks.await(listing.save());
         String id = listing.getId();
@@ -143,7 +143,7 @@ public class SaleDetailsTest {
 
         Tasks.await(auth.createUser("user.test@epfl.ch", "usert", "abcdef"));
 
-        Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
+        Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "Multimedia");
 
         Tasks.await(listing.save());
         String id = listing.getId();
@@ -172,7 +172,7 @@ public class SaleDetailsTest {
 
         Tasks.await(auth.createUser("user.test@epfl.ch", "usert", "abcdef"));
 
-        Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "");
+        Listing listing = new Listing("random", "blablabla", "20.00", LoginTest.EMAIL, "Multimedia");
 
         Tasks.await(listing.save());
         String id = listing.getId();
@@ -302,7 +302,7 @@ public class SaleDetailsTest {
         Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
 
         String id = "listingID";
-        Listing listing = new Listing("Title", "Description", "0", MockAuthenticator.TEST_USER_EMAIL, "");
+        Listing listing = new Listing("Title", "Description", "0", MockAuthenticator.TEST_USER_EMAIL, "Multimedia");
         listing.setId(id);
         Tasks.await(listing.save());
 
@@ -323,7 +323,7 @@ public class SaleDetailsTest {
         MockAuthenticator auth = MockAuthenticator.getInstance();
         String id = "listingID";
         final Listing listing = new Listing("Title", "Description", "0", "otherUser@epfl.ch",
-                "", "", 1.0, 1.0);
+                "", "Multimedia", 1.0, 1.0);
         listing.setId(id);
         Tasks.await(listing.save());
 

@@ -1,4 +1,4 @@
-package ch.epfl.polybazaar.litelisting;
+    package ch.epfl.polybazaar.litelisting;
 
 
 import android.content.Context;
@@ -15,6 +15,8 @@ import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.filestorage.ImageTransaction;
+import ch.epfl.polybazaar.database.datastore.DataStore;
+import ch.epfl.polybazaar.database.datastore.DataStoreFactory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.utilities.ImageUtilities;
 
@@ -150,5 +152,9 @@ public class LiteListing extends Model {
      */
     public static Task<Void> updateMultipleFields(String id, Map<String, Object> updated){
         return ModelTransaction.updateMultipleFields(LiteListing.COLLECTION, id, updated);
+    }
+
+    public static  Task<List<LiteListing>> fetchFieldEquality(String field, String compareValue) {
+       return  ModelTransaction.fetchFieldEquality(COLLECTION, field, compareValue, LiteListing.class);
     }
 }

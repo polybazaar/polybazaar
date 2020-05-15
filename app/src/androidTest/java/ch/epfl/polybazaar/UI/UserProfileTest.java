@@ -135,7 +135,7 @@ public class UserProfileTest {
     @Test
     public void testViewFavorites() throws ExecutionException, InterruptedException {
         Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
-        Listing listing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "");
+        Listing listing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "Multimedia");
         Task<Void> listingTask = listing.saveWithLiteVersion();
         Task<User> userTask = AuthenticatorFactory
                 .getDependency()
@@ -158,7 +158,7 @@ public class UserProfileTest {
     @Test
     public void deletedFavoritesAreCleaned() throws ExecutionException, InterruptedException {
         Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
-        Listing listing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "");
+        Listing listing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "Multimedia");
         Task<User> userTask = AuthenticatorFactory
                 .getDependency()
                 .getCurrentUser()

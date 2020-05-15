@@ -103,9 +103,10 @@ public class JSONRootCategory implements Category {
         return !nodes.isEmpty();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean equals(Category other) {
-        return false;
+        return root.toString().equals(other.toString());
     }
 
     @Override
@@ -161,6 +162,6 @@ public class JSONRootCategory implements Category {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public String toString(){
-        return "Root category";
+        return "All";
     }
 }

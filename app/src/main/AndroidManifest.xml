@@ -78,7 +78,6 @@
 
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".UI.SalesOverview"/>
-
         <activity
             android:name=".UI.NotSignedIn"
             android:label="Not Signed In"

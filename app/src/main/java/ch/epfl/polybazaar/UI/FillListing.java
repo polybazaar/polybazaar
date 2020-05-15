@@ -3,35 +3,29 @@ package ch.epfl.polybazaar.UI;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.UI.SalesOverview;
-import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.category.Category;
+import ch.epfl.polybazaar.category.CategoryFragment;
 import ch.epfl.polybazaar.category.NodeCategory;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
-import ch.epfl.polybazaar.filllisting.CategoryManager;
 import ch.epfl.polybazaar.filllisting.ImageManager;
 import ch.epfl.polybazaar.filllisting.ListingManager;
 import ch.epfl.polybazaar.listing.Listing;
@@ -48,14 +42,14 @@ import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
 import static ch.epfl.polybazaar.map.MapsActivity.VALID;
-import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
-import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
-import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
 import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
+import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 
-public class FillListing extends AppCompatActivity implements NoticeDialogListener {
+public class FillListing extends AppCompatActivity implements NoticeDialogListener, CategoryFragment.CategoryFragmentListener {
 
 
     public static final int ADD_MP = 3;
@@ -65,7 +59,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     private Button deleteImage;
     private ImageManager imageManager;
     private ListingManager listingManager;
-    private CategoryManager categoryManager;
     private Button addImages;
     private Button selectCategory;
     private Button submitListing;
@@ -74,12 +67,10 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
-    private Spinner categorySelector;
-    private List<Spinner> spinnerList;
     private List<String> listStringImage;
     //only used for edit to delete all images
     private List<String> listImageID;
-    private Category traversingCategory;
+    private Category selectedCategory;
     private String stringThumbnail = "";
     private double lat = NOLAT;
     private double lng = NOLNG;
@@ -91,7 +82,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         setContentView(R.layout.activity_fill_listing);
         imageManager = new ImageManager(this);
         listingManager = new ListingManager(this);
-        categoryManager = new CategoryManager(this);
         setMainImage = findViewById(R.id.setMain);
         rotateImage = findViewById(R.id.rotate);
         deleteImage = findViewById(R.id.deleteImage);
@@ -104,19 +94,9 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         addMP = findViewById(R.id.addMP);
         pictureView = findViewById(R.id.picturePreview);
 
-        /**
-         * FOR TESTING PURPOSES ONLY:
-         */
-        categorySelector = findViewById(R.id.categorySelector);
-        spinnerList = new ArrayList<>();
-        spinnerList.add(categorySelector);
         RootCategoryFactory.useJSONCategory(this);
-        categoryManager.setupSpinner(categorySelector, RootCategoryFactory.getDependency().subCategories() , spinnerList, traversingCategory);
-        traversingCategory = categoryManager.getTraversingCategory();
-        spinnerList = categoryManager.getSpinnerList();
-        /**
-         * ==========================
-         */
+        selectedCategory = RootCategoryFactory.getDependency();
+
 
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
@@ -184,7 +164,14 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         });
         selectCategory.setOnClickListener(v -> {
             // TODO : open category selection activity
-            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
+            RootCategoryFactory.useJSONCategory(getApplicationContext());
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency(),
+                   R.id.fillListing_fragment_container,fragmentManager.getBackStackEntryCount());
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.addToBackStack(null)
+                    .add(R.id.fillListing_fragment_container,categoryFragment).commit();
+
         });
         addMP.setOnClickListener(v -> {
             Intent defineMP = new Intent(this, MapsActivity.class);
@@ -204,7 +191,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         deleteImage.setOnClickListener(v -> imageManager.deleteImage(listStringImage));
         if(!edit){
             submitListing.setOnClickListener(v -> {
-                if (!listingManager.submit(spinnerList, listStringImage, stringThumbnail, lat, lng)) {
+                if (!listingManager.submit(selectedCategory, listStringImage, stringThumbnail, lat, lng)) {
                     NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
                     dialog.show(getSupportFragmentManager(), "noConnectionDialog");
                 }
@@ -213,7 +200,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         else{
             submitListing.setText(R.string.edit);
             submitListing.setOnClickListener(v ->
-                    listingManager.deleteOldListingAndSubmitNewOne(spinnerList, listStringImage, lat, lng, listImageID, imageManager.isEdited()));
+                    listingManager.deleteOldListingAndSubmitNewOne(selectedCategory, listStringImage, lat, lng, listImageID, imageManager.isEdited()));
         }
 
         /**
@@ -233,7 +220,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         if(dialog instanceof NoConnectionForListingDialog){
-            Listing newListing = listingManager.makeListing(lat, lng, spinnerList);
+            Listing newListing = listingManager.makeListing(lat, lng, selectedCategory);
             if (newListing != null) {
                 listingManager.createAndSendListing(newListing, listStringImage, stringThumbnail);
                 Intent SalesOverviewIntent = new Intent(FillListing.this, SalesOverview.class);
@@ -255,6 +242,14 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         }
     }
 
+    @Override
+    public void onCategoryFragmentInteraction(Category category) {
+
+        selectedCategory = category;
+        selectCategory.setText(category.toString());
+
+    }
+
     private boolean fillFieldsIfEdit() {
         Bundle bundle = getIntent().getExtras();
         if(bundle == null){
@@ -272,24 +267,23 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
         priceSelector.setText(listing.getPrice());
+        selectCategory.setText(listing.getCategory());
+        Category cat = new NodeCategory(listing.getCategory());
+        RootCategoryFactory.useJSONCategory(getApplicationContext());
+        Category parentCategory = RootCategoryFactory.getDependency().getSubCategoryContaining(cat);
+        for(Category c :parentCategory.subCategories()){
+            if (c.equals(cat)){
+                selectedCategory = c;
+            }
+        }
         lat = listing.getLatitude();
         lng = listing.getLongitude();
         if (lat != NOLAT && lng != NOLNG) {
             addMP.setText(R.string.change_MP);
         }
 
-        /**
-         * FOR TESTING PURPOSES ONLY:
-         */
-        /*
-        Category editedCategory = new NodeCategory(listing.getCategory());
-        Category root = RootCategoryFactory.getDependency();
-        traversingCategory = root.getSubCategoryContaining(editedCategory);
-        categorySelector.setSelection(root.indexOf(traversingCategory)+1);
-         */
-        /**
-         * ==========================
-         */
+
+
 
         return true;
     }
@@ -307,8 +301,8 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
             return null;
         }
     }
-    /**
-     * ==========================
-     */
+
+
+
 
 }
