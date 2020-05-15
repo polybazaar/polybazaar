@@ -41,7 +41,7 @@ public class Listing extends Model implements Serializable {
     public static final String VIEWS = "views";
     public static final String HAVE_SEEN_USERS = "haveSeenUsers";
     public static final String LISTING_ACTIVE = "listingActive";
-    public static final String IMAGE_REFS = "imageRefs";
+    public static final String IMAGES_REFS = "imagesRefs";
 
     private final SimpleField<String> id = new SimpleField<>(ID);
     private final SimpleField<String> title = new SimpleField<>(TITLE);
@@ -55,7 +55,7 @@ public class Listing extends Model implements Serializable {
     private final SimpleField<Long> views = new SimpleField<>(VIEWS);
     private final SimpleField<String> haveSeenUsers = new SimpleField<>(HAVE_SEEN_USERS);
     private final SimpleField<Boolean> listingActive = new SimpleField<>(LISTING_ACTIVE);
-    private final SimpleField<List<String>> imagesRefs = new SimpleField<>(IMAGE_REFS, new ArrayList<>());
+    private final SimpleField<List<String>> imagesRefs = new SimpleField<>(IMAGES_REFS, new ArrayList<>());
 
     public static final String SOLD = "SOLD";
     public static final String COLLECTION = "listings";
