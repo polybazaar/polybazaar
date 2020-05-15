@@ -20,7 +20,6 @@ import ch.epfl.polybazaar.litelisting.LiteListing;
 import static ch.epfl.polybazaar.Utilities.emailIsValid;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
-import static java.util.UUID.randomUUID;
 
 /**
  * A listing represents an object that is listed for sale on the app
@@ -184,11 +183,7 @@ public class Listing extends Model implements Serializable {
      */
     public Task<Void> saveWithLiteVersion() {
         return this.save().onSuccessTask(v -> {
-            String thumbnail = LiteListing.NO_THUMBNAIL;
-            if (getImagesRefs().get(0) != null) {
-                thumbnail = getImagesRefs().get(0);
-            }
-            LiteListing liteVersion = new LiteListing(id.get(), title.get(), price.get(), category.get(), LiteListing.NO_THUMBNAIL, thumbnail);
+            LiteListing liteVersion = new LiteListing(id.get(), title.get(), price.get(), category.get(), "");
             return liteVersion.save();
         });
     }
