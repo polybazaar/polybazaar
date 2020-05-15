@@ -1,7 +1,11 @@
 package ch.epfl.polybazaar.litelisting;
 
 
+import android.content.Context;
+import android.graphics.Bitmap;
+
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
 
 import java.util.List;
@@ -10,7 +14,9 @@ import java.util.Map;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.database.SimpleField;
+import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.utilities.ImageUtilities;
 
 /**
  * If you attributes of this class, also change its CallbackAdapter and Utilities
@@ -30,13 +36,16 @@ public class LiteListing extends Model {
     private final SimpleField<String> category = new SimpleField<>(CATEGORY);
     private final SimpleField<String> stringThumbnail = new SimpleField<>(STRING_THUMBNAIL);
     private final SimpleField<Timestamp> timestamp = new SimpleField<>(TIMESTAMP);
+    private final SimpleField<String> thumbnailRef = new SimpleField<>("thumbnailFilename");
+
+    private Bitmap thumbnail;
 
     public static final String SOLD = "SOLD";
     public static final String COLLECTION = "liteListings";
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public LiteListing() {
-        registerFields(listingID, title, price, category, stringThumbnail, timestamp);
+        registerFields(listingID, title, price, category, stringThumbnail, timestamp, thumbnailRef);
     }
 
     public LiteListing(String listingID, String title, String price, String category, String stringThumbnail) {
@@ -71,6 +80,26 @@ public class LiteListing extends Model {
 
     public String getStringThumbnail() {
         return stringThumbnail.get();
+    }
+
+    public Task<Bitmap> fetchThumbnail(Context ctx) {
+
+        String filename = listingID.get()+"-" + "thumbnail.jpg";
+        return ImageTransaction.fetch(filename, ctx).onSuccessTask(bitmap -> {
+
+            thumbnail = bitmap;
+            return Tasks.forResult(bitmap);
+        });
+    }
+
+    public Bitmap getThumbnail() {
+        // TODO temporary solution to guarantee retro-compatibility
+        if (thumbnailRef.get() != null) {
+            return thumbnail;
+        } else {
+            Bitmap bm = ImageUtilities.convertStringToBitmap(stringThumbnail.get());
+            return bm;
+        }
     }
 
     public Timestamp getTimestamp() { return timestamp.get(); }

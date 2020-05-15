@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar.saledetails;
 
+import android.graphics.Bitmap;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -30,7 +31,7 @@ public class ImageManager {
      * Displays the images on the ViewPager
      * @param listStringImage list of StringImages to Display
      */
-    public void drawImages(List<String> listStringImage) {
+    public void drawImages(List<Bitmap> listStringImage) {
         ViewPager2 viewPager = activity.findViewById(R.id.viewPagerImageSlider);
         activity.runOnUiThread (()-> {
             List<SliderItem> sliderItems = new ArrayList<>();
@@ -38,8 +39,8 @@ public class ImageManager {
                 viewPager.setVisibility(View.VISIBLE);
                 activity.findViewById(R.id.loadingImage).setVisibility(View.GONE);
                 activity.findViewById(R.id.pageNumber).setVisibility(View.VISIBLE);
-                for (String strImg : listStringImage) {
-                    sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
+                for (Bitmap bm : listStringImage) {
+                    sliderItems.add(new SliderItem(bm));
                 }
 
                 viewPager.setAdapter(new SliderAdapter(sliderItems, viewPager));

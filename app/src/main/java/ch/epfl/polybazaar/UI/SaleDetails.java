@@ -1,14 +1,12 @@
 package ch.epfl.polybazaar.UI;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,12 +20,14 @@ import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.chat.ChatActivity;
+import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.saledetails.ImageManager;
 import ch.epfl.polybazaar.saledetails.ListingManager;
+import ch.epfl.polybazaar.utilities.ImageUtilities;
 
 import static ch.epfl.polybazaar.UI.SubmitOffer.LISTING;
 import static ch.epfl.polybazaar.UI.SubmitOffer.sendOffer;
@@ -44,7 +44,7 @@ public class SaleDetails extends AppCompatActivity {
 
     private Listing listing;
     private String listingID;
-    private List<String> listStringImage;
+    //private List<Bitmap> listStringImage;
     private List<String> listImageID;
 
     private double mpLat = NOLAT;
@@ -60,7 +60,7 @@ public class SaleDetails extends AppCompatActivity {
 
         imageManager = new ImageManager(this);
         listingManager = new ListingManager(this);
-        listStringImage = new ArrayList<>();
+        //listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
 
         findViewById(R.id.ratingBar).setOnTouchListener((v, event) -> {
@@ -70,7 +70,7 @@ public class SaleDetails extends AppCompatActivity {
             return true;
         });
 
-        listStringImage = new ArrayList<>();
+        //listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
 
         Glide.with(this).load(R.drawable.loading).into((ImageView)findViewById(R.id.loadingImage));
@@ -101,27 +101,17 @@ public class SaleDetails extends AppCompatActivity {
         Listing.fetch(listingID).addOnSuccessListener(result -> {
             listing = result;
             this.listingID = listingID;
-            retrieveImages(listingID);
+            retrieveImages();
             listingManager.fillWithListing(listing);
         });
     }
 
-    private void retrieveImages(String listingID) {
-        listImageID.add(listingID);
-        ListingImage.fetch(listingID).addOnSuccessListener(result -> {
-            if(result == null) {
-                imageManager.drawImages(listStringImage);
-                return;
-            }
-            listStringImage.add(result.getImage());
-            if(result.getRefNextImg().equals("")) {
-                //last image, we can draw
-                imageManager.drawImages(listStringImage);
-            } else {
-                //we continue to retrieve
-                retrieveImages(result.getRefNextImg());
-            }
-        });
+    private void retrieveImages() {
+        if (listing.getImagesRefs() != null && listing.getImagesRefs().size() > 0) {
+            listing.fetchImages(SaleDetails.this).addOnSuccessListener(bitmaps -> {
+                imageManager.drawImages(bitmaps);
+            });
+        }
     }
 
     /**
