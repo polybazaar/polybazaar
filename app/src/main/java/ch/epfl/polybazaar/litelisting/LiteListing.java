@@ -66,6 +66,11 @@ public class LiteListing extends Model {
         this(listingID, title, price, category, NO_THUMBNAIL);
     }
 
+    public LiteListing(String listingID, String title, String price, String category, String stringThumbnail , String thumbnailRef) {
+        this(listingID, title, price, category, NO_THUMBNAIL);
+        this.thumbnailRef.set(thumbnailRef);
+    }
+
     public String getTitle() {
         return title.get();
     }

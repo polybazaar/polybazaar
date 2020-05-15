@@ -48,10 +48,10 @@ public class CategoryFragment extends Fragment {
      * @return a list of the subcategories
      */
     // TODO: Rename and change types and number of parameters
-    public static CategoryFragment newInstance(Category cat,int containerId,int backstackIndex) {
+    public static CategoryFragment newInstance(Category cat,int containerId,int backStackIndex) {
 
         category = cat;
-        CategoryFragment.backstackIndex = backstackIndex;
+        CategoryFragment.backstackIndex = backStackIndex;
         CategoryFragment.containerId = containerId;
 
         CategoryFragment fragment = new CategoryFragment();

@@ -30,7 +30,6 @@ public class FirebaseDataStore implements DataStore {
     public Task<DataSnapshot> fetch(String collectionPath, String documentPath) {
         return database.collection(collectionPath).document(documentPath)
                 .get().onSuccessTask((documentSnapshot ->
-                        // TODO fromDocumentSnapshot is probably not necessary
                         Tasks.forResult(new FirebaseDataSnapshot(documentSnapshot))
                 ));
     }
