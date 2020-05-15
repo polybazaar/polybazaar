@@ -157,32 +157,27 @@ public class ListingManager {
                     // todo: delete image at ref
                 }
             }
+            // delete all messages
+            ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
+                for (ChatMessage message : chatMessages) {
+                    message.delete();
+                }
+            });
+            // delete ownListing
+            AuthenticatorFactory.getDependency().getCurrentUser().getUserData().addOnSuccessListener(user -> {
+                List<String> own = user.getOwnListings();
+                own.remove(listingID);
+                User.updateField(User.OWN_LISTINGS, user.getEmail(), own);
+            });
             Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
                 Toast toast = Toast.makeText(activity.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
-                Authenticator fbAuth = AuthenticatorFactory.getDependency();
-                Account authAccount = fbAuth.getCurrentUser();
-                authAccount.getUserData().addOnSuccessListener(user -> {
-                    user.deleteOwnListing(listingID);
-                    user.save();
-                });
                 Intent SalesOverviewIntent = new Intent(activity.getApplicationContext(), SalesOverview.class);
                 activity.startActivity(SalesOverviewIntent);
             });
         });
-        // delete all messages
-        ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
-            for (ChatMessage message : chatMessages) {
-                message.delete();
-            }
-        });
-        // delete ownListing
-        AuthenticatorFactory.getDependency().getCurrentUser().getUserData().addOnSuccessListener(user -> {
-            List<String> own = user.getOwnListings();
-            own.remove(listingID);
-            User.updateField(User.OWN_LISTINGS, user.getEmail(), own);
-        });
+
     }
 
     /**
