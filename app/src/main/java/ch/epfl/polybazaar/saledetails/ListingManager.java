@@ -2,6 +2,7 @@ package ch.epfl.polybazaar.saledetails;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -11,12 +12,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SaleDetails;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.chat.ChatMessage;
+import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Account;
@@ -80,7 +84,9 @@ public class ListingManager {
             TextView sellerNickname  = activity.findViewById(R.id.sellerNickname);
             User.fetch(listing.getUserEmail()).addOnSuccessListener(result -> {
                 if (!result.getProfilePictureRef().equals(User.NO_PROFILE_PICTURE)) {
-                    sellerPicture.setImageBitmap(convertStringToBitmap(result.getProfilePictureRef()));
+                    ImageTransaction.fetch(result.getProfilePictureRef(), activity.getApplicationContext()).addOnSuccessListener(bitmap -> {
+                        sellerPicture.setImageBitmap(bitmap);
+                    });
                 }
                 if (result.getNickName() != null) {
                     sellerNickname.setText(result.getNickName());

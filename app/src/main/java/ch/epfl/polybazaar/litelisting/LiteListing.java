@@ -31,7 +31,7 @@ public class LiteListing extends Model {
     public static final String STRING_THUMBNAIL = "stringThumbnail";
     public static final String TIMESTAMP = "timestamp";
     public static final String NO_THUMBNAIL = "NoThumbnail";
-    public static final String THUMBNAIL_REF = "thumbnailFilename";
+    public static final String THUMBNAIL_REF = "thumbnailRef";
 
     private final SimpleField<String> listingID = new SimpleField<>(LISTING_ID);
     private final SimpleField<String> title = new SimpleField<>(TITLE);
@@ -59,6 +59,7 @@ public class LiteListing extends Model {
         this.category.set(category);
         this.stringThumbnail.set(stringThumbnail);
         this.timestamp.set(Timestamp.now());
+        this.thumbnailRef.set(NO_THUMBNAIL);
     }
 
     public LiteListing(String listingID, String title, String price, String category) {
@@ -87,9 +88,8 @@ public class LiteListing extends Model {
 
     public Task<Bitmap> fetchThumbnail(Context ctx) {
 
-        String filename = listingID.get()+"-" + "thumbnail.jpg";
+        String filename = getThumbnailRef();
         return ImageTransaction.fetch(filename, ctx).onSuccessTask(bitmap -> {
-
             thumbnail = bitmap;
             return Tasks.forResult(bitmap);
         });

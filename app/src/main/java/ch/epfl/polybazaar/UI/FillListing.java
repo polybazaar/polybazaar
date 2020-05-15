@@ -268,9 +268,11 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         Category cat = new NodeCategory(listing.getCategory());
         RootCategoryFactory.useJSONCategory(getApplicationContext());
         Category parentCategory = RootCategoryFactory.getDependency().getSubCategoryContaining(cat);
-        for(Category c :parentCategory.subCategories()){
-            if (c.equals(cat)){
-                selectedCategory = c;
+        if (parentCategory != null) {
+            for (Category c : parentCategory.subCategories()) {
+                if (c.equals(cat)) {
+                    selectedCategory = c;
+                }
             }
         }
         lat = listing.getLatitude();
@@ -278,10 +280,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         if (lat != NOLAT && lng != NOLNG) {
             addMP.setText(R.string.change_MP);
         }
-
-
-
-
         return true;
     }
 

@@ -107,14 +107,8 @@ public class ListingManager {
         }
     }
 
-    private boolean checkFields(Category category){
-
-        return checkTitle() && checkPrice() && checkCategory(category);
-    }
-
-    private boolean checkCategory(Category category) {
-        RootCategoryFactory.useJSONCategory(activity);
-        return !category.equals(RootCategoryFactory.getDependency());
+    private boolean checkFields(){
+        return checkTitle() && checkPrice();
     }
 
     private boolean checkPrice() {
@@ -157,7 +151,7 @@ public class ListingManager {
             ImageTransaction.store(thumbnailRef, thumbnail, 100, activity.getApplicationContext());
         }
         Context context = activity.getApplicationContext();
-        if (!checkFields(category)) {
+        if (!checkFields()) {
             Toast.makeText(context, R.string.incorrect_fields, Toast.LENGTH_SHORT).show();
         }
         else {

@@ -66,7 +66,7 @@ public final class ImageTransaction {
      */
     public static Task<Void> store(String id, Bitmap bitmap, int quality, Context context) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality, byteArrayOutputStream);
 
         // write image to local cache
         try (OutputStream outputStream = LocalCache.add(id, context)) {

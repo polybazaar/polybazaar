@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -178,22 +177,20 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         String newLastName = lastNameSelector.getText().toString();
         String newPhoneNumber = phoneNumberSelector.getText().toString();
         User editedUser;
-        final String[] profilePicRef = new String[1];
+        String profilePicRef;
         if (profilePicChanged) {
-            User.fetch(user.getEmail()).addOnSuccessListener(user -> {
                 if (!user.getProfilePictureRef().equals(NO_PROFILE_PICTURE)) {
-                    profilePicRef[0] = user.getProfilePictureRef();
+                    profilePicRef = user.getProfilePictureRef();
                 } else {
-                    profilePicRef[0] = randomUUID().toString();
+                    profilePicRef = randomUUID().toString();
                 }
                 Bitmap bitmap = convertStringToBitmap(this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).
                         getString(STRING_IMAGE, null));
-                ImageTransaction.store(profilePicRef[0], bitmap, 100, this.getApplicationContext());
-            });
+                ImageTransaction.store(profilePicRef, bitmap, 100, this.getApplicationContext());
         } else {
-            profilePicRef[0] = NO_PROFILE_PICTURE;
+            profilePicRef = NO_PROFILE_PICTURE;
         }
-        editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber, profilePicRef[0], user.getOwnListings(), user.getFavorites());
+        editedUser = new User(newNickname, user.getEmail(), newFirstName, newLastName, newPhoneNumber, profilePicRef, user.getOwnListings(), user.getFavorites());
         editedUser.save().addOnSuccessListener(aVoid -> {
             Toast.makeText(getApplicationContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show();
         }).addOnSuccessListener(aVoid -> account.updateNickname(newNickname));

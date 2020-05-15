@@ -278,13 +278,13 @@ public class FillListingTest {
     @Test
     public void testRemoveImage() throws Throwable {
         uploadMultipleImages();
-        String firstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
+        Bitmap firstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
+        Bitmap newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         //check that it delete last image
         assertNotEquals(newFirstImage, firstImage);
     }
@@ -292,13 +292,13 @@ public class FillListingTest {
     @Test
     public void testRotateImage() throws Throwable {
         uploadMultipleImages();
-        String beforeRotationImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
+        Bitmap beforeRotationImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.rotate).performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        String afterRotationImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
+        Bitmap afterRotationImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         assertNotEquals(afterRotationImage, beforeRotationImage);
     }
 
@@ -313,13 +313,13 @@ public class FillListingTest {
         });
         Thread.sleep(SLEEP_TIME);
         uploadMultipleImages();
-        String firstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
+        Bitmap firstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.setMain).performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
+        Bitmap newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         //check that it's equal because viewPager show the first image
         assertEquals(newFirstImage, firstImage);
         fillListing();
@@ -482,13 +482,6 @@ public class FillListingTest {
     }
     //always select the first category
     private void selectCategory(String cat) throws Throwable {
-        /**
-         * TODO : complete with new category selection activity
-         */
-        /*
-        onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
-        onData(hasToString(cat)).perform(click());
-         */
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.selectCategory).performClick());
         Thread.sleep(500);
         onView(withId(R.id.categoriesRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));

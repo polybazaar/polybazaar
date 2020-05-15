@@ -2,7 +2,6 @@ package ch.epfl.polybazaar.UI;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.MotionEvent;
@@ -20,14 +19,11 @@ import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.chat.ChatActivity;
-import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.saledetails.ImageManager;
 import ch.epfl.polybazaar.saledetails.ListingManager;
-import ch.epfl.polybazaar.utilities.ImageUtilities;
 
 import static ch.epfl.polybazaar.UI.SubmitOffer.LISTING;
 import static ch.epfl.polybazaar.UI.SubmitOffer.sendOffer;
