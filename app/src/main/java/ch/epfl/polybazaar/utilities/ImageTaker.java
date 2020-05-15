@@ -50,6 +50,7 @@ public class ImageTaker extends AppCompatActivity {
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final int RESULT_TAKE_PICTURE = 2;
     public static final String IMAGE_AVAILABLE = "image_present";
+    public static final int BEST_QUALITY = 100;
     private File photoFile;
     private Bitmap image;
     private PermissionRequest cameraPermissionRequest;
@@ -94,7 +95,7 @@ public class ImageTaker extends AppCompatActivity {
     private void success() {
         Intent returnIntent = new Intent();
         SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
-        myPrefs.edit().putString(STRING_IMAGE, convertBitmapToStringWithQuality(image, QUALITY)).apply();
+        myPrefs.edit().putString(STRING_IMAGE, convertBitmapToStringWithQuality(image, BEST_QUALITY)).apply();
         returnIntent.putExtra(IMAGE_AVAILABLE, true);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();

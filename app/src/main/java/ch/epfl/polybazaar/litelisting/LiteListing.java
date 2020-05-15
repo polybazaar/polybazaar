@@ -31,6 +31,7 @@ public class LiteListing extends Model {
     public static final String STRING_THUMBNAIL = "stringThumbnail";
     public static final String TIMESTAMP = "timestamp";
     public static final String NO_THUMBNAIL = "NoThumbnail";
+    public static final String THUMBNAIL_REF = "thumbnailFilename";
 
     private final SimpleField<String> listingID = new SimpleField<>(LISTING_ID);
     private final SimpleField<String> title = new SimpleField<>(TITLE);
@@ -38,7 +39,7 @@ public class LiteListing extends Model {
     private final SimpleField<String> category = new SimpleField<>(CATEGORY);
     private final SimpleField<String> stringThumbnail = new SimpleField<>(STRING_THUMBNAIL);
     private final SimpleField<Timestamp> timestamp = new SimpleField<>(TIMESTAMP);
-    private final SimpleField<String> thumbnailRef = new SimpleField<>("thumbnailFilename");
+    private final SimpleField<String> thumbnailRef = new SimpleField<>(THUMBNAIL_REF);
 
     private Bitmap thumbnail;
 
@@ -99,12 +100,13 @@ public class LiteListing extends Model {
         if (thumbnailRef.get() != null) {
             return thumbnail;
         } else {
-            Bitmap bm = ImageUtilities.convertStringToBitmap(stringThumbnail.get());
-            return bm;
+            return ImageUtilities.convertStringToBitmap(stringThumbnail.get());
         }
     }
 
     public Timestamp getTimestamp() { return timestamp.get(); }
+
+    public String getThumbnailRef() { return thumbnailRef.get(); }
 
     @Override
     public String collectionName() {

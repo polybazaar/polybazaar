@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
@@ -72,7 +71,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertDrawableToBitma
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertFileToString;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeBitmap;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeImageThumbnail;
 import static com.google.android.gms.tasks.Tasks.whenAll;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
@@ -273,19 +272,19 @@ public class FillListingTest {
 
     @Test
     public void testUtilitiesResizeStringImageThumbnailNull() {
-        assertNull(resizeStringImageThumbnail(null));
+        assertNull(resizeImageThumbnail(null));
     }
 
     @Test
     public void testRemoveImage() throws Throwable {
         uploadMultipleImages();
-        String firstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        String firstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         //check that it delete last image
         assertNotEquals(newFirstImage, firstImage);
     }
@@ -293,13 +292,13 @@ public class FillListingTest {
     @Test
     public void testRotateImage() throws Throwable {
         uploadMultipleImages();
-        String beforeRotationImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        String beforeRotationImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.rotate).performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        String afterRotationImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        String afterRotationImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         assertNotEquals(afterRotationImage, beforeRotationImage);
     }
 
@@ -314,13 +313,13 @@ public class FillListingTest {
         });
         Thread.sleep(SLEEP_TIME);
         uploadMultipleImages();
-        String firstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        String firstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.setMain).performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         //check that it's equal because viewPager show the first image
         assertEquals(newFirstImage, firstImage);
         fillListing();

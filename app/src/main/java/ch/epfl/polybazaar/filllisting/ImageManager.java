@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +19,8 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
+import ch.epfl.polybazaar.filestorage.ImageTransaction;
+import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
 
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
@@ -41,10 +45,10 @@ public class ImageManager extends AppCompatActivity {
         }
     }
 
-    public void addImage(List<String> listStringImage, String stringImage) {
-        listStringImage.add(stringImage);
-        drawImages(listStringImage);
-        viewPager.setCurrentItem(listStringImage.size() - 1, false);
+    public void addImage(List<Bitmap> listImage, Bitmap image) {
+        listImage.add(image);
+        drawImages(listImage);
+        viewPager.setCurrentItem(listImage.size() - 1, false);
         edited = true;
     }
 
@@ -52,29 +56,21 @@ public class ImageManager extends AppCompatActivity {
      * recursive function to retrieve all images
      * @param listingID ID of the image
      */
-    public void retrieveAllImages(List<String> listStringImage, List<String> listImageID, String listingID) {
-        listImageID.add(listingID);
-        ListingImage.fetch(listingID).addOnSuccessListener(result -> {
-            //check if Listing contains image
-            if(result == null) {
-                drawImages(listStringImage);
-                updateViewPagerVisibility(listStringImage);
-                return;
-            }
-            listStringImage.add(result.getImage());
-            if(!result.getRefNextImg().equals("")) {
-                retrieveAllImages(listStringImage, listImageID, result.getRefNextImg());
-            } else {
-                drawImages(listStringImage);
-                updateViewPagerVisibility(listStringImage);
-            }
+    public void retrieveAllImages(String listingID) {
+        Listing.fetch(listingID).addOnSuccessListener(listing -> {
+            listing.fetchImages(activity.getApplicationContext()).addOnSuccessListener(bitmaps -> {
+                if (bitmaps != null && !bitmaps.isEmpty()) {
+                    drawImages(bitmaps);
+                    updateViewPagerVisibility(bitmaps);
+                }
+            });
         });
     }
 
-    public void drawImages(List<String> listStringImage) {
+    public void drawImages(List<Bitmap> listImage) {
         List<SliderItem> sliderItems = new ArrayList<>();
-        for(String strImg: listStringImage) {
-            sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
+        for(Bitmap img: listImage) {
+            sliderItems.add(new SliderItem(img));
         }
         viewPager.setAdapter(new SliderAdapter(sliderItems, viewPager));
         viewPager.setClipToPadding(false);
@@ -96,8 +92,8 @@ public class ImageManager extends AppCompatActivity {
         });
     }
 
-    public void updateViewPagerVisibility(List<String> listStringImage) {
-        if (listStringImage == null || listStringImage.isEmpty()) {
+    public void updateViewPagerVisibility(List<Bitmap> listImage) {
+        if (listImage == null || listImage.isEmpty()) {
             viewPager.setVisibility(View.GONE);
             editButtons.setVisibility(View.GONE);
         } else {
@@ -106,35 +102,35 @@ public class ImageManager extends AppCompatActivity {
         }
     }
 
-    public void setFirst(List<String> listStringImage) {
+    public void setFirst(List<Bitmap> listImage) {
         int index = viewPager.getCurrentItem();
         if(index == 0) {
             return;
         }
-        Collections.swap(listStringImage, 0, index);
-        drawImages(listStringImage);
+        Collections.swap(listImage, 0, index);
+        drawImages(listImage);
         edited = true;
     }
 
-    public void rotateLeft(List<String> listStringImage) {
-        if(listStringImage.isEmpty()) {
+    public void rotateLeft(List<Bitmap> listImage) {
+        if(listImage.isEmpty()) {
             return;
         }
         int index = viewPager.getCurrentItem();
-        Bitmap bitmap = convertStringToBitmap(listStringImage.get(index));
+        Bitmap bitmap = listImage.get(index);
         Matrix matrix = new Matrix();
         matrix.postRotate(-90);
-        listStringImage.set(index, convertBitmapToStringWithQuality(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true), 100));
-        drawImages(listStringImage);
+        listImage.set(index, Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true));
+        drawImages(listImage);
         viewPager.setCurrentItem(index);
         edited = true;
     }
 
-    public void deleteImage(List<String> listStringImage) {
-        if(listStringImage.size() > 0)
-            listStringImage.remove(viewPager.getCurrentItem());
-        drawImages(listStringImage);
-        updateViewPagerVisibility(listStringImage);
+    public void deleteImage(List<Bitmap> listImage) {
+        if(listImage.size() > 0)
+            listImage.remove(viewPager.getCurrentItem());
+        drawImages(listImage);
+        updateViewPagerVisibility(listImage);
         edited = true;
     }
 
