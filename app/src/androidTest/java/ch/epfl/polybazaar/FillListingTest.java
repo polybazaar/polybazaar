@@ -209,21 +209,6 @@ public class FillListingTest {
         submitListingAndCheckIncorrectToast();
     }
 
-    /**
-     * Category should de optional and default to, say, none
-     */
-    /*
-    @Test
-    public void toastAppearsWhenNoCategoryIsSelected() throws Throwable {
-        Thread.sleep(SLEEP_TIME);
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
-        closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
-        submitListingAndCheckIncorrectToast();
-        Thread.sleep(SLEEP_TIME);
-    }
-     */
-
     @Test
     public void testNoPictureIsDisplayedWhenNoPictureIsTaken() throws Throwable {
         cancelTakingPicture();
@@ -480,6 +465,7 @@ public class FillListingTest {
     private void checkNoImageUploaded(){
         onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
     }
+
     //always select the first category
     private void selectCategory(String cat) throws Throwable {
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.selectCategory).performClick());

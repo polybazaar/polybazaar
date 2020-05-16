@@ -2,7 +2,6 @@ package ch.epfl.polybazaar;
 
 import android.content.Intent;
 
-import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
@@ -57,19 +56,23 @@ public class SalesOverviewTest {
         Intents.release();
     }
 
+
     @Test
     public void selectCategoryFromSalesOverview() throws InterruptedException {
         Intents.init();
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
+        Thread.sleep(1000);
         onView(withId(R.id.categoryOverview)).perform(click());
-        Thread.sleep(500);
+        Thread.sleep(1000);
         onView(withText("Multimedia")).perform(click());
-
+        Thread.sleep(1000);
         pressBack();
-        Thread.sleep(500);
+        Thread.sleep(1000);
         onView(withId(R.id.categoryButton)).perform(click());
+        Thread.sleep(1000);
         LiteListing searchedListing = activityRule.getActivity().getLiteListingList().get(0);
+        Thread.sleep(1000);
         assertEquals("listing1",searchedListing.getTitle());
         assertEquals(1,activityRule.getActivity().getLiteListingList().size());
         Intents.release();
