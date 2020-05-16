@@ -292,6 +292,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                     Account account = AuthenticatorFactory.getDependency().getCurrentUser();
                     User.fetch(account.getEmail()).addOnSuccessListener(user -> {
                         user.removeFavorite(liteListingID);
+                        user.deleteOwnListing(liteListingID);
                         user.save();
                     });
                 } else {

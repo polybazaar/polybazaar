@@ -54,19 +54,19 @@ public class ListingManager {
         }
     }
 
-    private void createAndSendListing(Listing newListing, List<Bitmap> listImage, String thumbnailRef) {
+    private void createAndSendListing(Listing newListing, List<Bitmap> listImage, String thumbnailRef, String listingID) {
         final String newListingID = randomUUID().toString();
         Authenticator fbAuth = AuthenticatorFactory.getDependency();
         if(fbAuth.getCurrentUser() == null) {
             Toast.makeText(activity.getApplicationContext(), R.string.sign_in_required, Toast.LENGTH_SHORT).show();
             return;
         }
-        newListing.setId(newListingID);
-        // Send Listing & LiteListing
-        LiteListing newLiteListing = new LiteListing(newListingID, newListing.getTitle(), newListing.getPrice(),
-                newListing.getCategory());
-
-        newLiteListing.setId(newListingID);
+        // Send Listing:
+        if (listingID != null) {
+            newListing.setId(listingID);
+        } else {
+            newListing.setId(newListingID);
+        }
         newListing.save().addOnSuccessListener(result -> {
             Toast toast = Toast.makeText(activity.getApplicationContext(),"Offer successfully sent!",Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -74,6 +74,14 @@ public class ListingManager {
         });
         //store images
         storeImages(listImage, newListingID);
+        // SendLiteListing
+        LiteListing newLiteListing = new LiteListing(newListingID, newListing.getTitle(), newListing.getPrice(),
+                newListing.getCategory());
+        if (listingID != null) {
+            newLiteListing.setId(listingID);
+        } else {
+            newLiteListing.setId(newListingID);
+        }
         newLiteListing.save()
                 .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
                 .addOnFailureListener(e -> Toast.makeText(activity.getApplicationContext(), "Failed to send listing", Toast.LENGTH_LONG).show());
@@ -140,8 +148,10 @@ public class ListingManager {
         return null;
     }
 
-    //returns false if the listing can't be submitted
-    public boolean submit(Category category, List<Bitmap> listImage, Double lat, Double lng) {
+    /**
+     * Overloads submit with an option to specify the listing id
+     */
+    public boolean submit(Category category, List<Bitmap> listImage, Double lat, Double lng, String listingID) {
         String thumbnailRef = NO_THUMBNAIL;
         if(!listImage.isEmpty()) {
             Bitmap thumbnail = resizeImageThumbnail(listImage.get(0));
@@ -156,7 +166,7 @@ public class ListingManager {
             if(isInternetAvailable(context)){
                 Listing newListing = makeListing(lat, lng, category);
                 if (newListing != null) {
-                    createAndSendListing(newListing, listImage, thumbnailRef);
+                    createAndSendListing(newListing, listImage, thumbnailRef, listingID);
                     Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
                     activity.startActivity(SalesOverviewIntent);
                 } else {
@@ -167,6 +177,18 @@ public class ListingManager {
             }
         }
         return true;
+    }
+
+    /**
+     * Submits a new listing and assigns a random listing_ID
+     * @param category obvious
+     * @param listImage obvious
+     * @param lat obvious
+     * @param lng obvious
+     * @return true if successful
+     */
+    public boolean submit(Category category, List<Bitmap> listImage, Double lat, Double lng) {
+        return submit(category, listImage, lat, lng, null);
     }
 
     public void deleteOldListingAndSubmitNewOne(Category category, List<Bitmap> listImage, Double lat, Double lng) {
@@ -182,7 +204,7 @@ public class ListingManager {
                 user.deleteOwnListing(listingID);
                 user.save();
             });
-            submit(category, listImage, lat, lng);
+            submit(category, listImage, lat, lng, listingID);
             Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
             activity.startActivity(SalesOverviewIntent);
         });
