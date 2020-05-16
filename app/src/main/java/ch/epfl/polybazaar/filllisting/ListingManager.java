@@ -175,9 +175,16 @@ public class ListingManager {
             return;
         }
         String listingID = bundle.getString(FillListing.LISTING_ID);
-        Listing.deleteWithLiteVersion(listingID);
-        submit(category, listImage, lat, lng);
-        Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
-        activity.startActivity(SalesOverviewIntent);
+        Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
+            Authenticator fbAuth = AuthenticatorFactory.getDependency();
+            Account authAccount = fbAuth.getCurrentUser();
+            authAccount.getUserData().addOnSuccessListener(user -> {
+                user.deleteOwnListing(listingID);
+                user.save();
+            });
+            submit(category, listImage, lat, lng);
+            Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
+            activity.startActivity(SalesOverviewIntent);
+        });
     }
 }

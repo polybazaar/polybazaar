@@ -175,7 +175,6 @@ public final class User extends Model {
     }
 
     public static <T> Task<Void> updateField(String field, String id, T updatedValue) {
-
         return ModelTransaction.updateField(COLLECTION, id, field, updatedValue);
     }
 

@@ -51,6 +51,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SaleDetailsTest {
     public static final float DELTA = 0.1f;
+    public static final int SLEEP_TIME = 1000;
 
     @Rule
     public final ActivityTestRule<SaleDetails> activityRule =
@@ -274,7 +275,7 @@ public class SaleDetailsTest {
         activityRule.launchActivity(intent);
 
         onView(withId(R.id.deleteButton)).perform(scrollTo(), click());
-        onView(withText("Yes")).perform(click());
+        onView(withText(R.string.yes)).perform(click());
 
         Listing.fetch(id).addOnSuccessListener(Assert::assertNull);
     }

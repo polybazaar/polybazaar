@@ -37,7 +37,7 @@ public class SalesOverviewTest {
     public void init() {
         useMockDataStore();
 
-        LiteListing liteListing1 = new LiteListing("1", "listing1", "CHF 1", "Video Games");
+        LiteListing liteListing1 = new LiteListing("1", "listing1", "CHF 1", "Video games");
 
         liteListing1.save();
     }
