@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -163,7 +165,14 @@ public class SaleDetails extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetails.this);
         builder.setTitle("Delete this listing")
                 .setMessage("You are about to delete this listing. Are you sure you want to continue?")
-                .setPositiveButton(R.string.yes, (dialog, id) -> listingManager.deleteCurrentListing(listingID))
+                .setPositiveButton(R.string.yes, (dialog, id) -> {
+                    ListingManager.deleteCurrentListing(listingID);
+                    Toast toast = Toast.makeText(this.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                    Intent SalesOverviewIntent = new Intent(this.getApplicationContext(), SalesOverview.class);
+                    this.startActivity(SalesOverviewIntent);
+                })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
         builder.create().show();
     }

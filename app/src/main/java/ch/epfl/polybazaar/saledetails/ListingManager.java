@@ -150,19 +150,14 @@ public class ListingManager {
      * Deletes the listing specified
      * @param listingID the listings Id
      */
-    public void deleteCurrentListing(String listingID) {
+    public static void deleteCurrentListing(String listingID) {
         Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-            Toast toast = Toast.makeText(activity.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.show();
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
             Account authAccount = fbAuth.getCurrentUser();
             authAccount.getUserData().addOnSuccessListener(user -> {
                 user.deleteOwnListing(listingID);
                 user.save();
             });
-            Intent SalesOverviewIntent = new Intent(activity.getApplicationContext(), SalesOverview.class);
-            activity.startActivity(SalesOverviewIntent);
         });
         Listing.fetch(listingID).addOnSuccessListener(listing -> {
             // Delete images:
@@ -179,13 +174,6 @@ public class ListingManager {
                 for (ChatMessage message : chatMessages) {
                     message.delete();
                 }
-            });
-            Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-                Toast toast = Toast.makeText(activity.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
-                Intent SalesOverviewIntent = new Intent(activity.getApplicationContext(), SalesOverview.class);
-                activity.startActivity(SalesOverviewIntent);
             });
         });
 
