@@ -74,9 +74,6 @@
 
             <SeekBar
                 android:id="@+id/minPriceSeekBar"
-                android:min="@integer/priceMin"
-                android:max="@integer/priceMax"
-                android:progress="@integer/priceSteps"
                 android:layout_gravity="center"
                 android:layout_width="@dimen/price_seekbar_width"
                 android:layout_height="wrap_content"
@@ -117,9 +114,6 @@
 
             <SeekBar
                 android:id="@+id/maxPriceSeekBar"
-                android:min="@integer/priceMin"
-                android:max="@integer/priceMax"
-                android:progress="@integer/priceSteps"
                 android:layout_gravity="center"
                 android:layout_width="@dimen/price_seekbar_width"
                 android:layout_height="wrap_content"
@@ -160,11 +154,26 @@
                 android:textSize="@dimen/overview_text_size_small"
                 android:text="@string/days_filter"/>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+            <TextView
+                android:id="@+id/max_days_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/sales_overview_cell_margin"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="@string/max"
+                />
+
             <SeekBar
                 android:id="@+id/ageSeekBar"
-                android:min="@integer/daysMin"
-                android:max="@integer/daysMax"
-                android:progress="@integer/daysSteps"
                 android:layout_gravity="center"
                 android:layout_width="@dimen/price_seekbar_width"
                 android:layout_height="wrap_content"
@@ -187,16 +196,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sales_overview_cell_margin"
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/sales_overview_cell_margin">
-
-
-
-        </LinearLayout>
 
         <Space
             android:layout_width="wrap_content"

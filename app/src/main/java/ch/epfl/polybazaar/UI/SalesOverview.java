@@ -62,7 +62,12 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private static final String bundleKey = "userSavedListings";
     public static final float SENSIBILITY = 2.0f;
     private static final float FILTER_ELEVATION = 10;
-    private static final int FILTER_OFFSET = 100;
+    private static final int PRICEMIN = 0;
+    private static final int PRICEMAX = 1000;
+    private static final int PRICESTEP = 10;
+    private static final int DAYSMIN = 0;
+    private static final int DAYSMAX = 90;
+    private static final int DAYSSTEP = 5;
     private Map<Timestamp, String> listingTimeMap;
     private Map<String, String> listingTitleMap;
     private Map<String, String> searchListingTitleMap;
@@ -214,6 +219,10 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         SeekBar priceMaxSeekBar = popupWindow.getContentView().findViewById(R.id.maxPriceSeekBar);
         SeekBar daysMaxSeekBar = popupWindow.getContentView().findViewById(R.id.ageSeekBar);
 
+        priceMinSeekBar.setMax(PRICEMAX);
+        priceMaxSeekBar.setMax(PRICEMAX);
+        daysMaxSeekBar.setMax(DAYSMAX);
+
         TextView priceMinValue = popupWindow.getContentView().findViewById(R.id.min_price_value);
         TextView priceMaxValue = popupWindow.getContentView().findViewById(R.id.max_price_value);
         TextView daysMaxValue = popupWindow.getContentView().findViewById(R.id.max_days_value);
@@ -221,7 +230,9 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         priceMinSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                priceMinValue.setText(String.valueOf(progress));
+                int value = (progress * (PRICEMAX - PRICEMIN)) / PRICEMAX;
+                int displayValue = ((value + PRICEMIN) / PRICESTEP) * PRICESTEP;
+                priceMinValue.setText(String.valueOf(displayValue));
             }
 
             @Override
@@ -236,7 +247,9 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         priceMaxSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                priceMaxValue.setText(String.valueOf(progress));
+                int value = (progress * (PRICEMAX - PRICEMIN)) / PRICEMAX;
+                int displayValue = ((value + PRICEMIN) / PRICESTEP) * PRICESTEP;
+                priceMaxValue.setText(String.valueOf(displayValue));
             }
 
             @Override
@@ -251,7 +264,9 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         daysMaxSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                daysMaxValue.setText(String.valueOf(progress));
+                int value = (progress * (DAYSMAX - DAYSMIN)) / DAYSMAX;
+                int displayValue = ((value + DAYSMIN) / DAYSSTEP) * DAYSSTEP;
+                daysMaxValue.setText(String.valueOf(displayValue));
             }
 
             @Override
