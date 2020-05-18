@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.SearchView;
@@ -231,14 +232,12 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             if (result == null) {
                 return;
             }
-
+            Calendar calendar = Calendar.getInstance(); // Now
+            calendar.add(Calendar.DAY_OF_YEAR, -7);
+            Date expDate =  calendar.getTime();
             // fill maps <Timestamp, listingID> and <listingID, title>
             for (LiteListing l : result) {
                 if (l != null) {
-                    Calendar.getInstance().getTime();
-                    Calendar calendar = Calendar.getInstance(); // Now
-                    calendar.add(Calendar.MINUTE, -1);
-                    Date expDate =  calendar.getTime();
                     // delete sold listings older than a week
                     if ((l.getPrice().equals(getResources().getString(R.string.sold))) && (l.getTimeSold() != null) && (l.getTimeSold().toDate().before(expDate))) {
                         // TODO : remove the new ArrayList once fileStorage PR is merged

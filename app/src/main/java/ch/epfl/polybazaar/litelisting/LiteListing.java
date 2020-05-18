@@ -41,7 +41,7 @@ public class LiteListing extends Model {
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public LiteListing() {
-        registerFields(listingID, title, price, category, stringThumbnail, timestamp);
+        registerFields(listingID, title, price, category, stringThumbnail, timestamp, timeSold);
     }
 
     public LiteListing(String listingID, String title, String price, String category, String stringThumbnail) {
