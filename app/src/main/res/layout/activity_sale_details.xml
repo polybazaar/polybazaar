@@ -6,8 +6,13 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     tools:context=".UI.SaleDetails">
-
+    <fragment
+        android:id="@+id/fragmentImage"
+        android:name="ch.epfl.polybazaar.UI.images_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <ScrollView
+        android:id="@+id/saleDetailsScrollView"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_marginStart="@dimen/general_margin"

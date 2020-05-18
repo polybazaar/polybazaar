@@ -61,6 +61,8 @@ public class SaleDetails extends AppCompatActivity {
         listStringImage = new ArrayList<>();
         listImageID = new ArrayList<>();
 
+        findViewById(R.id.fragmentImage).setVisibility(View.GONE);
+
         findViewById(R.id.ratingBar).setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 listingManager.favorite(listing);
