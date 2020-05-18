@@ -34,6 +34,10 @@
 
         </LinearLayout>
 
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sales_overview_cell_margin"
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -50,6 +54,15 @@
                 android:text="@string/price_filter"
                 />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
             <TextView
                 android:id="@+id/min_price_popup"
                 android:layout_width="wrap_content"
@@ -57,13 +70,6 @@
                 android:layout_marginLeft="@dimen/sales_overview_cell_margin"
                 android:textSize="@dimen/popup_text_size_small"
                 android:text="@string/min"
-                />
-
-            <TextView
-                android:id="@+id/min_price_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/popup_text_size_small"
                 />
 
             <SeekBar
@@ -78,19 +84,35 @@
                 />
 
             <TextView
-                android:id="@+id/max_price_popup"
+                android:id="@+id/min_price_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/popup_text_size_small"
-                android:text="@string/max"
                 />
 
             <TextView
-                android:id="@+id/max_price_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/popup_text_size_small"
-                android:text="120"
+                android:text="@string/CHF"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+            <TextView
+                android:id="@+id/max_price_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/sales_overview_cell_margin"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="@string/max"
                 />
 
             <SeekBar
@@ -104,8 +126,25 @@
                 android:layout_weight="1"
                 />
 
+            <TextView
+                android:id="@+id/max_price_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="@string/CHF"/>
+
         </LinearLayout>
 
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sales_overview_cell_margin"
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -137,7 +176,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/popup_text_size_small"
-                android:text="120"
                 />
 
             <TextView
@@ -146,6 +184,17 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/popup_text_size_small"
                 android:text="@string/days"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+
 
         </LinearLayout>
 
