@@ -31,7 +31,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 public class ListingManager {
 
-    SaleDetails activity;
+    private SaleDetails activity;
 
     public ListingManager(SaleDetails activity) {
         this.activity = activity;
@@ -149,19 +149,14 @@ public class ListingManager {
      * @param listingID the listings Id
      * @param listImageID the list of images used iin the listing
      */
-    public void deleteCurrentListing(String listingID, List<String> listImageID) {
+    public static void deleteCurrentListing(String listingID, List<String> listImageID) {
         Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-            Toast toast = Toast.makeText(activity.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.show();
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
             Account authAccount = fbAuth.getCurrentUser();
             authAccount.getUserData().addOnSuccessListener(user -> {
                 user.deleteOwnListing(listingID);
                 user.save();
             });
-            Intent SalesOverviewIntent = new Intent(activity.getApplicationContext(), SalesOverview.class);
-            activity.startActivity(SalesOverviewIntent);
         });
         //delete all images
         for(String id: listImageID) {

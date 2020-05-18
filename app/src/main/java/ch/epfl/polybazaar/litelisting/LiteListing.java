@@ -25,6 +25,7 @@ public class LiteListing extends Model {
     public static final String CATEGORY = "category";
     public static final String STRING_THUMBNAIL = "stringThumbnail";
     public static final String TIMESTAMP = "timestamp";
+    public static final String TIME_SOLD = "timeSold";
     public static final String NO_THUMBNAIL = "NoThumbnail";
 
     private final SimpleField<String> listingID = new SimpleField<>(LISTING_ID);
@@ -33,6 +34,7 @@ public class LiteListing extends Model {
     private final SimpleField<String> category = new SimpleField<>(CATEGORY);
     private final SimpleField<String> stringThumbnail = new SimpleField<>(STRING_THUMBNAIL);
     private final SimpleField<Timestamp> timestamp = new SimpleField<>(TIMESTAMP);
+    private final SimpleField<Timestamp> timeSold = new SimpleField<>(TIME_SOLD);
 
     public static final String SOLD = "SOLD";
     public static final String COLLECTION = "liteListings";
@@ -77,6 +79,8 @@ public class LiteListing extends Model {
     }
 
     public Timestamp getTimestamp() { return timestamp.get(); }
+
+    public Timestamp getTimeSold() { return timeSold.get(); }
 
     @Override
     public String collectionName() {

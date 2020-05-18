@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.SearchView;
@@ -28,8 +29,11 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +44,11 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryFragment;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
+import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.saledetails.ListingManager;
 import ch.epfl.polybazaar.search.SearchListings;
 import ch.epfl.polybazaar.user.User;
 import safety.com.br.android_shake_detector.core.ShakeDetector;
@@ -229,8 +235,18 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             // fill maps <Timestamp, listingID> and <listingID, title>
             for (LiteListing l : result) {
                 if (l != null) {
-                    listingTimeMap.put(l.getTimestamp(), l.getId());
-                    listingTitleMap.put(l.getId(), l.getTitle());
+                    Calendar.getInstance().getTime();
+                    Calendar calendar = Calendar.getInstance(); // Now
+                    calendar.add(Calendar.MINUTE, -1);
+                    Date expDate =  calendar.getTime();
+                    // delete sold listings older than a week
+                    if ((l.getPrice().equals(getResources().getString(R.string.sold))) && (l.getTimeSold() != null) && (l.getTimeSold().toDate().before(expDate))) {
+                        // TODO : remove the new ArrayList once fileStorage PR is merged
+                        ListingManager.deleteCurrentListing(l.getId(), new ArrayList<>());
+                    } else {
+                        listingTimeMap.put(l.getTimestamp(), l.getId());
+                        listingTitleMap.put(l.getId(), l.getTitle());
+                    }
                 }
             }
             if (IDList.isEmpty()) {
