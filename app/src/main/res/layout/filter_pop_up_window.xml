@@ -26,7 +26,6 @@
     </LinearLayout>
 
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,10 +37,10 @@
             android:id="@+id/price_popup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sales_overview_cell_margin"
             android:layout_below="@+id/category_popup"
             android:textSize="@dimen/overview_text_size_small"
-            android:text="@string/price"/>
+            android:text="@string/price"
+            />
 
         <SeekBar
             android:id="@+id/priceSeekBar"
@@ -56,7 +55,6 @@
     </LinearLayout>
 
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,7 +66,6 @@
             android:id="@+id/age_popup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sales_overview_cell_margin"
             android:layout_below="@+id/price_popup"
             android:textSize="@dimen/overview_text_size_small"
             android:text="@string/online_since"/>
@@ -84,5 +81,22 @@
             />
 
     </LinearLayout>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/sales_overview_cell_margin"
+        />
+
+    <Button
+        android:id="@+id/filterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/sales_overview_cell_margin"
+        android:background="@drawable/rounded_corner_button_colored"
+        android:text="Filter"
+        android:textColor="@color/white"
+        android:textSize="@dimen/default_button_text_size"
+        />
 
 </LinearLayout>
