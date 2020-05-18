@@ -1,8 +1,10 @@
 package ch.epfl.polybazaar.UI;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,6 +67,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderView
 
         SliderViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemView.setOnClickListener(v -> viewPager2.callOnClick());
             this.imageView = itemView.findViewById(R.id.imageSlide);
         }
 

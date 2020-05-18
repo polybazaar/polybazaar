@@ -1,8 +1,10 @@
 package ch.epfl.polybazaar.saledetails;
 
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -68,6 +70,11 @@ public class ImageManager {
             } else {
                 activity.findViewById(R.id.imageDisplay).setVisibility(View.GONE);
             }
+
+            viewPager.setOnClickListener(v -> {
+                Toast.makeText(activity.getApplicationContext(), "UN BON CLICK SES MORTS", Toast.LENGTH_SHORT).show();
+            });
+
         });
     }
 }
