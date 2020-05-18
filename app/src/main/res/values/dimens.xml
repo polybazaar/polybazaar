@@ -6,6 +6,7 @@
     <dimen name="title_box_length">200dp</dimen>
     <dimen name="price_box_length">120dp</dimen>
     <dimen name="overview_text_size">20sp</dimen>
+    <dimen name="overview_text_size_small">18sp</dimen>
     <dimen name="overview_grid_text_size">16sp</dimen>
     <dimen name="page_margin">20dp</dimen>
     <dimen name="map_margin">20dp</dimen>
@@ -53,4 +54,6 @@
     <dimen name="message_time_text_size">10sp</dimen>
     <dimen name="message_date_text_size">13sp</dimen>
     <dimen name="offer_buttons_margin">5dp</dimen>
+    <dimen name="filter_padding">5dip</dimen>
+    <dimen name="filter_elevation">10</dimen>
 </resources>

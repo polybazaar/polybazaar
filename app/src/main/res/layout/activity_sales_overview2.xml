@@ -18,32 +18,42 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
         app:layout_constraintTop_toTopOf="parent"/>
 
-
     <LinearLayout
-        android:id="@+id/salesOverviewTopMenu"
+        android:id="@+id/salesOverviewFilterMenu"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/sales_overview_top_menu_height"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="right"
         app:layout_constraintTop_toBottomOf="@id/searchbar">
 
-        <TextView
-            android:id="@+id/categoryOverview"
+        <LinearLayout
+            android:id="@+id/UserClickableFilterMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/select_category"
-            android:textSize="@dimen/overview_text_size" />
-
-        <TextView
-            android:id="@+id/favoritesOverview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:orientation="horizontal"
             android:clickable="true"
-            android:gravity="center"
-            android:text="@string/favorites"
-            android:textSize="@dimen/overview_text_size" />
+            android:onClick="onButtonShowPopupWindowClick">
+
+            <TextView
+                android:id="@+id/filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/select_filter"
+                android:textSize="@dimen/overview_text_size_small" />
+
+            <ImageView
+                android:id="@+id/filter_icon"
+                android:layout_height="fill_parent"
+                android:layout_width="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_filter"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/filter_padding" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -56,7 +66,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/salesOverviewTopMenu"
+        app:layout_constraintTop_toBottomOf="@+id/salesOverviewFilterMenu"
         app:layout_constraintVertical_bias="0.0" >
 
 
@@ -82,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/salesOverviewTopMenu"
+        app:layout_constraintTop_toBottomOf="@+id/salesOverviewFilterMenu"
         app:layout_constraintVertical_bias="0.0" />
 
 

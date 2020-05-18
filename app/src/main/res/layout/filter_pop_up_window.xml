@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/gridcell_background"
+    android:paddingBottom="@dimen/sales_overview_cell_margin"
+    android:layout_margin="@dimen/sales_overview_cell_margin">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sales_overview_cell_margin"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+        <TextView
+            android:id="@+id/category_popup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/overview_text_size_small"
+            android:text="@string/category"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sales_overview_cell_margin"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+        <TextView
+            android:id="@+id/price_popup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:layout_below="@+id/category_popup"
+            android:textSize="@dimen/overview_text_size_small"
+            android:text="@string/price"/>
+
+        <SeekBar
+            android:id="@+id/priceSeekBar"
+            android:max="100"
+            android:progress="50"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sales_overview_cell_margin"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+        <TextView
+            android:id="@+id/age_popup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:layout_below="@+id/price_popup"
+            android:textSize="@dimen/overview_text_size_small"
+            android:text="@string/online_since"/>
+
+        <SeekBar
+            android:id="@+id/ageSeekBar"
+            android:max="100"
+            android:progress="50"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

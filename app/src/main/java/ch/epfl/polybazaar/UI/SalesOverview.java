@@ -8,17 +8,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,6 +59,8 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
     public static final float SENSIBILITY = 2.0f;
+    private static final float FILTER_ELEVATION = 10;
+    private static final int FILTER_OFFSET = 100;
     private Map<Timestamp, String> listingTimeMap;
     private Map<String, String> listingTitleMap;
     private Map<String, String> searchListingTitleMap;
@@ -83,7 +87,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         currentCategory = RootCategoryFactory.getDependency();
 
 
-        TextView catButton = findViewById(R.id.categoryOverview);
+        /*TextView catButton = findViewById(R.id.categoryOverview);
         catButton.setOnClickListener(view->{
             FragmentManager fragmentManager = getSupportFragmentManager();
             CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency(),
@@ -92,7 +96,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             fragmentTransaction.addToBackStack(null)
                     .add(R.id.salesOverview_fragment_container,categoryFragment).commit();
 
-        });
+        });*/
         // Lookup the recyclerview in activity layout
         RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
 
@@ -178,6 +182,29 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         searchView.setOnQueryTextListener(this);
 
         return true;
+    }
+
+    /**
+     * Display the pop-up filter window. Dismissed when the user clicks outside of it
+     * @param view the parent view to which the pop-up window is attached
+     */
+    public void onButtonShowPopupWindowClick(View view) {
+
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.filter_pop_up_window, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+        // show the popup window
+        View parent = findViewById(R.id.UserClickableFilterMenu);
+        popupWindow.setElevation(FILTER_ELEVATION);
+        popupWindow.showAtLocation(parent, Gravity.TOP, FILTER_OFFSET, FILTER_OFFSET);
+
     }
 
 
