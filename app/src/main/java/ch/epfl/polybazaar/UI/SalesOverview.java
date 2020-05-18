@@ -192,24 +192,31 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
      */
     public void onButtonShowPopupWindowClick(View view) {
 
+        // setContentView(R.layout.filter_pop_up_window);
+
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.filter_pop_up_window, null);
 
         // create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
 
-        // add OnSeekBarChangeListener on seekbars
-        SeekBar priceMinSeekBar = findViewById(R.id.minPriceSeekBar);
-        SeekBar priceMaxSeekBar = findViewById(R.id.maxPriceSeekBar);
-        SeekBar daysMaxSeekBar = findViewById(R.id.ageSeekBar);
+        // show the popup window
+        View parent = findViewById(R.id.UserClickableFilterMenu);
+        popupWindow.setElevation(FILTER_ELEVATION);
+        popupWindow.showAtLocation(parent, Gravity.TOP | Gravity.RIGHT, 0, 0);
 
-        TextView priceMinValue = findViewById(R.id.min_price_value);
-        TextView priceMaxValue = findViewById(R.id.max_price_value);
-        TextView daysMaxValue = findViewById(R.id.max_days_value);
+        // add OnSeekBarChangeListener on seekbars
+        SeekBar priceMinSeekBar = popupWindow.getContentView().findViewById(R.id.minPriceSeekBar);
+        SeekBar priceMaxSeekBar = popupWindow.getContentView().findViewById(R.id.maxPriceSeekBar);
+        SeekBar daysMaxSeekBar = popupWindow.getContentView().findViewById(R.id.ageSeekBar);
+
+        TextView priceMinValue = popupWindow.getContentView().findViewById(R.id.min_price_value);
+        TextView priceMaxValue = popupWindow.getContentView().findViewById(R.id.max_price_value);
+        TextView daysMaxValue = popupWindow.getContentView().findViewById(R.id.max_days_value);
 
         priceMinSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -226,10 +233,35 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             }
         });
 
-        // show the popup window
-        View parent = findViewById(R.id.UserClickableFilterMenu);
-        popupWindow.setElevation(FILTER_ELEVATION);
-        popupWindow.showAtLocation(parent, Gravity.TOP | Gravity.RIGHT, 0, 0);
+        priceMaxSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                priceMaxValue.setText(String.valueOf(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        daysMaxSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                daysMaxValue.setText(String.valueOf(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
     }
 

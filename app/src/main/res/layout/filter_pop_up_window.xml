@@ -3,14 +3,14 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
     >
 
     <LinearLayout
         android:id="@+id/filter_pop_up_window"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/rounded_corner_white"
@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/overview_text_size_small"
-                android:text="@string/category"
+                android:text="@string/category_filter"
                 android:layout_weight="1"/>
 
         </LinearLayout>
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/overview_text_size_small"
-                android:text="@string/price"
+                android:text="@string/price_filter"
                 />
 
             <TextView
@@ -64,14 +64,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/popup_text_size_small"
-                android:text="0"
                 />
 
             <SeekBar
                 android:id="@+id/minPriceSeekBar"
                 android:min="@integer/priceMin"
                 android:max="@integer/priceMax"
-                android:progress="1"
+                android:progress="@integer/priceSteps"
                 android:layout_gravity="center"
                 android:layout_width="@dimen/price_seekbar_width"
                 android:layout_height="wrap_content"
@@ -98,7 +97,7 @@
                 android:id="@+id/maxPriceSeekBar"
                 android:min="@integer/priceMin"
                 android:max="@integer/priceMax"
-                android:progress="1"
+                android:progress="@integer/priceSteps"
                 android:layout_gravity="center"
                 android:layout_width="@dimen/price_seekbar_width"
                 android:layout_height="wrap_content"
@@ -120,13 +119,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/overview_text_size_small"
-                android:text="@string/online_since"/>
+                android:text="@string/days_filter"/>
 
             <SeekBar
                 android:id="@+id/ageSeekBar"
                 android:min="@integer/daysMin"
                 android:max="@integer/daysMax"
-                android:progress="1"
+                android:progress="@integer/daysSteps"
                 android:layout_gravity="center"
                 android:layout_width="@dimen/price_seekbar_width"
                 android:layout_height="wrap_content"

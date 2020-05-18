@@ -158,4 +158,8 @@
     <string name="days">&#160;days</string>
     <string name="min">min:&#160;</string>
     <string name="max">max:&#160;</string>
+    <string name="price_filter">Price:&#160;</string>
+    <string name="category_filter">Category:&#160;</string>
+    <string name="days_filter">Online since:&#160;</string>
+
 </resources>
