@@ -203,7 +203,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         // show the popup window
         View parent = findViewById(R.id.UserClickableFilterMenu);
         popupWindow.setElevation(FILTER_ELEVATION);
-        popupWindow.showAtLocation(parent, Gravity.TOP, FILTER_OFFSET, FILTER_OFFSET);
+        popupWindow.showAtLocation(parent, Gravity.TOP | Gravity.RIGHT, 0, 0);
 
     }
 
