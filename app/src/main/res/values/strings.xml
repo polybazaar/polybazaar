@@ -155,7 +155,7 @@
     <string name="new_offer">New offer</string>
     <string name="offer_answered">Offer answered</string>
     <string name="online_since">Online since</string>
-    <string name="days">days</string>
-    <string name="min">min:</string>
-    <string name="max">max:</string>
+    <string name="days">&#160;days</string>
+    <string name="min">min:&#160;</string>
+    <string name="max">max:&#160;</string>
 </resources>

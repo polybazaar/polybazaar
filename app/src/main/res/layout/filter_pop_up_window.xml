@@ -9,6 +9,7 @@
     >
 
     <LinearLayout
+        android:id="@+id/filter_pop_up_window"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -53,16 +54,26 @@
                 android:id="@+id/min_price_popup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/sales_overview_cell_margin"
                 android:textSize="@dimen/popup_text_size_small"
                 android:text="@string/min"
                 />
 
+            <TextView
+                android:id="@+id/min_price_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="0"
+                />
+
             <SeekBar
                 android:id="@+id/minPriceSeekBar"
-                android:max="100"
-                android:progress="50"
+                android:min="@integer/priceMin"
+                android:max="@integer/priceMax"
+                android:progress="1"
                 android:layout_gravity="center"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/price_seekbar_width"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 />
@@ -75,12 +86,21 @@
                 android:text="@string/max"
                 />
 
+            <TextView
+                android:id="@+id/max_price_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="120"
+                />
+
             <SeekBar
                 android:id="@+id/maxPriceSeekBar"
-                android:max="100"
-                android:progress="50"
+                android:min="@integer/priceMin"
+                android:max="@integer/priceMax"
+                android:progress="1"
                 android:layout_gravity="center"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/price_seekbar_width"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 />
@@ -104,12 +124,21 @@
 
             <SeekBar
                 android:id="@+id/ageSeekBar"
-                android:max="100"
-                android:progress="50"
+                android:min="@integer/daysMin"
+                android:max="@integer/daysMax"
+                android:progress="1"
                 android:layout_gravity="center"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/price_seekbar_width"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/max_days_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="120"
                 />
 
             <TextView

@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.SearchView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -199,6 +201,30 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+        // add OnSeekBarChangeListener on seekbars
+        SeekBar priceMinSeekBar = findViewById(R.id.minPriceSeekBar);
+        SeekBar priceMaxSeekBar = findViewById(R.id.maxPriceSeekBar);
+        SeekBar daysMaxSeekBar = findViewById(R.id.ageSeekBar);
+
+        TextView priceMinValue = findViewById(R.id.min_price_value);
+        TextView priceMaxValue = findViewById(R.id.max_price_value);
+        TextView daysMaxValue = findViewById(R.id.max_days_value);
+
+        priceMinSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                priceMinValue.setText(String.valueOf(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
         // show the popup window
         View parent = findViewById(R.id.UserClickableFilterMenu);
