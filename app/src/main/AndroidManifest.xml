@@ -55,6 +55,7 @@
 
         <activity
             android:name=".conversationOverview.ConversationOverviewActivity"
+            android:label="Messages"
             android:exported="true"
             />
         <!--
@@ -88,8 +89,7 @@
         <activity
             android:name=".UI.UserProfile"
             android:label="@string/title_activity_user_profile"
-            android:noHistory="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:noHistory="false" />
         <activity
             android:name=".login.EmailVerificationActivity"
             android:label="Verify E-mail" />
