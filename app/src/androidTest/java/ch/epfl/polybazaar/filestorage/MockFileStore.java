@@ -17,6 +17,17 @@ public final class MockFileStore implements FileStore {
     private final static String MOCK_DIR = "cloud-mock" + File.separator;
     private String path;
 
+    @Override
+    public Task<Void> delete(String id) {
+        File file = new File(path + File.separator + id);
+
+        if (file.exists()) {
+            file.delete();
+        }
+
+        return Tasks.forResult(null);
+    }
+
     /**
      * Sets the context for accessing file system
      * @param context app context

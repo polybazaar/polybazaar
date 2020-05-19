@@ -163,11 +163,11 @@ public class ListingManager {
             // Delete images:
             if (listing != null && listing.getImagesRefs() != null) {
                 for (String ref : listing.getImagesRefs()) {
-                    // todo: delete image at ref
+                    ImageTransaction.delete(ref);
                 }
             }
             LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
-                // TODO: delete img at liteListing.getThumbnailRef()
+                ImageTransaction.delete(liteListing.getThumbnailRef());
             });
             // delete all messages
             ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {

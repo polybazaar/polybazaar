@@ -24,6 +24,12 @@ public final class FirebaseFileStore implements FileStore {
     }
 
     @Override
+    public Task<Void> delete(String id) {
+        StorageReference fileReference = FirebaseStorage.getInstance().getReference().child(id);
+        return fileReference.delete();
+    }
+
+    @Override
     public Task<InputStream> fetch(String id) {
         StorageReference fileReference = FirebaseStorage.getInstance().getReference().child(id);
         return fileReference.getBytes(MEGABYTE).onSuccessTask(b -> Tasks.forResult(b == null ? null : new ByteArrayInputStream(b)));

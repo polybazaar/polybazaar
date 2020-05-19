@@ -187,8 +187,8 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
                 }
                 Bitmap bitmap = convertStringToBitmap(this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).
                         getString(STRING_IMAGE, null));
-                ImageTransaction.storePNG(profilePicRef, bitmap, QUALITY, this.getApplicationContext());
-                // TODO: delete old profile pic
+            ImageTransaction.delete(profilePicRef);
+            ImageTransaction.storePNG(profilePicRef, bitmap, QUALITY, this.getApplicationContext());
         } else {
             profilePicRef = NO_PROFILE_PICTURE;
         }
