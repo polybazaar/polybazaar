@@ -2,32 +2,18 @@ package ch.epfl.polybazaar;
 
 import android.content.Intent;
 
-import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.tasks.Tasks;
-
-import junit.framework.TestCase;
-
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static org.junit.Assert.assertEquals;
 
@@ -64,7 +50,7 @@ public class SalesOverviewTest {
         Intents.release();
     }
 
-    @Test
+    /*@Test
     public void selectCategoryFromSalesOverview() throws InterruptedException {
         Intents.init();
         Intent intent = new Intent();
@@ -81,6 +67,6 @@ public class SalesOverviewTest {
         assertEquals("listing1",searchedListing.getTitle());
         assertEquals(1,activityRule.getActivity().getLiteListingList().size());
         Intents.release();
-    }
+    }*/
 
 }
