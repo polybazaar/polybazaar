@@ -162,4 +162,5 @@
     <string name="category_filter">Category:&#160;</string>
     <string name="days_filter">Online since:&#160;</string>
     <string name="CHF">&#160;CHF</string>
+    <string name="Select">Select...</string>
 </resources>

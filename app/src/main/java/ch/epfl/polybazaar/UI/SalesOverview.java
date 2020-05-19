@@ -93,7 +93,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         RootCategoryFactory.useJSONCategory(getApplicationContext());
         currentCategory = RootCategoryFactory.getDependency();
 
-
+        // TODO: delete
         /*TextView catButton = findViewById(R.id.categoryOverview);
         catButton.setOnClickListener(view->{
             FragmentManager fragmentManager = getSupportFragmentManager();
