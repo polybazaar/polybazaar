@@ -106,7 +106,7 @@ public class SalesOverviewTest {
                 , MockAuthenticator.TEST_USER_EMAIL, "none");
         Calendar.getInstance().getTime();
         Calendar calendar = Calendar.getInstance(); // Now
-        calendar.add(Calendar.DAY_OF_YEAR, -8);
+        calendar.add(Calendar.DAY_OF_YEAR, -2);
         Date soldDate = calendar.getTime();
         testListing.saveWithLiteVersion();
         Thread.sleep(SLEEP_TIME);

@@ -233,7 +233,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                 return;
             }
             Calendar calendar = Calendar.getInstance(); // Now
-            calendar.add(Calendar.DAY_OF_YEAR, -7);
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
             Date expDate =  calendar.getTime();
             // fill maps <Timestamp, listingID> and <listingID, title>
             for (LiteListing l : result) {
