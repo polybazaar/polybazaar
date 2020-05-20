@@ -153,4 +153,5 @@
     <string name="new_message">New message</string>
     <string name="new_offer">New offer</string>
     <string name="offer_answered">Offer answered</string>
+    <string name="save">Save</string>
 </resources>

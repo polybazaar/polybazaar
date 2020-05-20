@@ -1,8 +1,8 @@
 package ch.epfl.polybazaar.saledetails;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -20,8 +20,10 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SaleDetails;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.chat.ChatMessage;
+import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.listingImage.ListingImage;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -82,8 +84,8 @@ public class ListingManager {
             ImageView sellerPicture  = activity.findViewById(R.id.sellerProfilePicture);
             TextView sellerNickname  = activity.findViewById(R.id.sellerNickname);
             User.fetch(listing.getUserEmail()).addOnSuccessListener(result -> {
-                if (!result.getProfilePicture().equals(User.NO_PROFILE_PICTURE)) {
-                    sellerPicture.setImageBitmap(convertStringToBitmap(result.getProfilePicture()));
+                if (!result.getProfilePictureRef().equals(User.NO_PROFILE_PICTURE)) {
+                    ImageTransaction.fetch(result.getProfilePictureRef(), activity.getApplicationContext()).addOnSuccessListener(sellerPicture::setImageBitmap);
                 }
                 if (result.getNickName() != null) {
                     sellerNickname.setText(result.getNickName());
@@ -147,9 +149,8 @@ public class ListingManager {
     /**
      * Deletes the listing specified
      * @param listingID the listings Id
-     * @param listImageID the list of images used iin the listing
      */
-    public static void deleteCurrentListing(String listingID, List<String> listImageID) {
+    public static void deleteCurrentListing(String listingID) {
         Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
             Authenticator fbAuth = AuthenticatorFactory.getDependency();
             Account authAccount = fbAuth.getCurrentUser();
@@ -158,16 +159,24 @@ public class ListingManager {
                 user.save();
             });
         });
-        //delete all images
-        for(String id: listImageID) {
-            ListingImage.delete(id);
-        }
-        // delete all messages
-        ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
-            for (ChatMessage message : chatMessages) {
-                message.delete();
+        Listing.fetch(listingID).addOnSuccessListener(listing -> {
+            // Delete images:
+            if (listing != null && listing.getImagesRefs() != null) {
+                for (String ref : listing.getImagesRefs()) {
+                    ImageTransaction.delete(ref);
+                }
             }
+            LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
+                ImageTransaction.delete(liteListing.getThumbnailRef());
+            });
+            // delete all messages
+            ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
+                for (ChatMessage message : chatMessages) {
+                    message.delete();
+                }
+            });
         });
+
     }
 
     /**

@@ -2,7 +2,6 @@ package ch.epfl.polybazaar;
 
 import android.content.Intent;
 
-import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
@@ -14,15 +13,12 @@ import junit.framework.TestCase;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.listing.Listing;
@@ -37,7 +33,6 @@ import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
@@ -59,9 +54,9 @@ public class SalesOverviewTest {
     public void init() {
         useMockDataStore();
 
-        LiteListing litelisting1 = new LiteListing("1", "listing1", "CHF 1", "Video games");
+        LiteListing liteListing1 = new LiteListing("1", "listing1", "CHF 1", "Video games");
 
-        litelisting1.save();
+        liteListing1.save();
     }
 
 
@@ -78,20 +73,23 @@ public class SalesOverviewTest {
         Intents.release();
     }
 
+
     @Test
     public void selectCategoryFromSalesOverview() throws InterruptedException {
         Intents.init();
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
+        Thread.sleep(1000);
         onView(withId(R.id.categoryOverview)).perform(click());
-        Thread.sleep(500);
-        //onView(withId(R.id.categoriesRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
+        Thread.sleep(1000);
         onView(withText("Multimedia")).perform(click());
-
+        Thread.sleep(1000);
         pressBack();
-        Thread.sleep(500);
+        Thread.sleep(1000);
         onView(withId(R.id.categoryButton)).perform(click());
+        Thread.sleep(1000);
         LiteListing searchedListing = activityRule.getActivity().getLiteListingList().get(0);
+        Thread.sleep(1000);
         assertEquals("listing1",searchedListing.getTitle());
         assertEquals(1,activityRule.getActivity().getLiteListingList().size());
         Intents.release();
