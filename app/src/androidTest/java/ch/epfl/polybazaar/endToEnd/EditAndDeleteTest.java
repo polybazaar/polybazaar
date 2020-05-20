@@ -44,42 +44,4 @@ public class EditAndDeleteTest {
                 }
     };
 
-    /*
-    @Test
-    public void testDeleteWorksForPreviouslyUploadedListing() throws InterruptedException {
-        String title = "My delete test";
-        String email = MockAuthenticator.TEST_USER_EMAIL;
-        storeNewListing(title, email);
-        signInWithFromMainActivity(email, MockAuthenticator.TEST_USER_PASSWORD);
-
-        onView(withId(R.id.action_home)).perform(click());
-        onView(withText(title)).perform(click());
-        onView(withId(R.id.deleteButton)).perform(scrollTo(), click());
-        onView(withText("Yes")).perform(click());
-
-        DatabaseChecksUtilities.assertDatabaseHasNoEntryWithField(Listing.COLLECTION, "title", title, Listing.class);
-    }
-    */
-/*
-    @Test
-    public void testEditWorksForPreviouslyUploadedListing() throws Throwable {
-        String oldTitle = "My test";
-        String newTitle = "My edited test";
-        String email = MockAuthenticator.TEST_USER_EMAIL;
-        storeNewListing(oldTitle, email);
-        signInWithFromMainActivity(email, MockAuthenticator.TEST_USER_PASSWORD);
-
-        onView(withId(R.id.action_home)).perform(click());
-
-        onView(withText(oldTitle)).perform(click());
-        onView(withId(R.id.editButton)).perform(scrollTo(), click());
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), clearText(), typeText(newTitle));
-        closeSoftKeyboard();
-        onView(withId(R.id.selectCategory)).perform(scrollTo(), click());
-        // TODO : implement the category selection
-        onView(withId(R.id.submitListing)).perform(scrollTo(),click());
-        DatabaseChecksUtilities.assertDatabaseHasAtLeastOneEntryWithField(Listing.COLLECTION, "title", newTitle, Listing.class);
-        DatabaseChecksUtilities.assertDatabaseHasNoEntryWithField(Listing.COLLECTION, "title", oldTitle, Listing.class);
-    }
-     */
 }

@@ -5,6 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop= "@dimen/sales_overview_cell_margin"
+    android:layout_marginBottom="@dimen/page_margin"
     android:layout_marginLeft="@dimen/sales_overview_cell_margin"
     android:layout_marginRight="@dimen/sales_overview_cell_margin"
     android:clickable="true"

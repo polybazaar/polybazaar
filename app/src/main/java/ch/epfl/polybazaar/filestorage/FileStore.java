@@ -22,4 +22,11 @@ public interface FileStore {
      * @return void task
      */
     Task<Void> store(String id, InputStream data);
+
+    /**
+     * Deletes a resource from the cloud
+     * @param id resource name
+     * @return void task
+     */
+    Task<Void> delete(String id);
 }

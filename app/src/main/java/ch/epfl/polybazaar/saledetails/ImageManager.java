@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar.saledetails;
 
+import android.graphics.Bitmap;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -28,18 +29,18 @@ public class ImageManager {
 
     /**
      * Displays the images on the ViewPager
-     * @param listStringImage list of StringImages to Display
+     * @param listImage list of Images to Display
      */
-    public void drawImages(List<String> listStringImage) {
+    public void drawImages(List<Bitmap> listImage) {
         ViewPager2 viewPager = activity.findViewById(R.id.viewPagerImageSlider);
         activity.runOnUiThread (()-> {
             List<SliderItem> sliderItems = new ArrayList<>();
-            if (!listStringImage.isEmpty()) {
+            if (!listImage.isEmpty()) {
                 viewPager.setVisibility(View.VISIBLE);
                 activity.findViewById(R.id.loadingImage).setVisibility(View.GONE);
                 activity.findViewById(R.id.pageNumber).setVisibility(View.VISIBLE);
-                for (String strImg : listStringImage) {
-                    sliderItems.add(new SliderItem(convertStringToBitmap(strImg)));
+                for (Bitmap bm : listImage) {
+                    sliderItems.add(new SliderItem(bm));
                 }
 
                 viewPager.setAdapter(new SliderAdapter(sliderItems, viewPager));
@@ -61,7 +62,7 @@ public class ImageManager {
                     public void onPageSelected(int position) {
                         super.onPageSelected(position);
                         TextView textPageNumber = activity.findViewById(R.id.pageNumber);
-                        textPageNumber.setText(String.format("%s/%s", Integer.toString(viewPager.getCurrentItem() + 1), Integer.toString(listStringImage.size())));
+                        textPageNumber.setText(String.format("%s/%s", Integer.toString(viewPager.getCurrentItem() + 1), Integer.toString(listImage.size())));
                         textPageNumber.setGravity(Gravity.CENTER);
                     }
                 });
