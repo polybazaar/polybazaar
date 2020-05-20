@@ -23,6 +23,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -93,8 +95,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         RootCategoryFactory.useJSONCategory(getApplicationContext());
         currentCategory = RootCategoryFactory.getDependency();
 
-        // TODO: delete
-        /*TextView catButton = findViewById(R.id.categoryOverview);
+        TextView catButton = findViewById(R.id.categoryOverview);
         catButton.setOnClickListener(view->{
             FragmentManager fragmentManager = getSupportFragmentManager();
             CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency(),
@@ -103,7 +104,8 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             fragmentTransaction.addToBackStack(null)
                     .add(R.id.salesOverview_fragment_container,categoryFragment).commit();
 
-        });*/
+        });
+
         // Lookup the recyclerview in activity layout
         RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
 
