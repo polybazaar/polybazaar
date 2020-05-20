@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="titleDisplayLength">20</integer>
-    <integer name="priceMin">0</integer>
-    <integer name="priceMax">9999</integer>
-    <integer name="daysMin">0</integer>
-    <integer name="daysMax">365</integer>
-    <integer name="priceSteps">50</integer>
-    <integer name="daysSteps">5</integer>
 </resources>
