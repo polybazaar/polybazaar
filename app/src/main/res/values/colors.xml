@@ -16,4 +16,6 @@
     <color name="boxRedInside">#FFD6D6</color>
     <color name="bottomBarBackground">#FFFFFF</color>
     <color name="bottomBarContent">#000000</color>
+    <color name="transparent">#00000000</color>
+
 </resources>

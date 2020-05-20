@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    >
+
+    <LinearLayout
+        android:id="@+id/filter_pop_up_window"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_corner_white"
+        android:paddingBottom="@dimen/sales_overview_cell_margin"
+        android:layout_margin="@dimen/sales_overview_cell_margin">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+            <TextView
+                android:id="@+id/category_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/overview_text_size_small"
+                android:text="@string/category_filter"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/categoryFilterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="22sp"
+                android:layout_marginLeft="@dimen/sales_overview_cell_margin"
+                android:background="@drawable/rounded_corner_button_grey"
+                android:text="@string/Select"
+                android:textColor="@color/white"
+                android:textAllCaps = "false"
+                android:layout_gravity="center"
+                android:textSize="@dimen/popup_text_size_small" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sales_overview_cell_margin"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+            <TextView
+                android:id="@+id/price_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/overview_text_size_small"
+                android:text="@string/price_filter"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+            <TextView
+                android:id="@+id/min_price_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/sales_overview_cell_margin"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="@string/min"
+                />
+
+            <SeekBar
+                android:id="@+id/minPriceSeekBar"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/price_seekbar_width"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/min_price_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="@string/CHF"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+            <TextView
+                android:id="@+id/max_price_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/sales_overview_cell_margin"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="@string/max"
+                />
+
+            <SeekBar
+                android:id="@+id/maxPriceSeekBar"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/price_seekbar_width"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/max_price_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="@string/CHF"/>
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sales_overview_cell_margin"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+            <TextView
+                android:id="@+id/age_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/overview_text_size_small"
+                android:text="@string/days_filter"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/sales_overview_cell_margin">
+
+            <TextView
+                android:id="@+id/max_days_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/sales_overview_cell_margin"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="@string/max"
+                />
+
+            <SeekBar
+                android:id="@+id/ageSeekBar"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/price_seekbar_width"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/max_days_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                />
+
+            <TextView
+                android:id="@+id/days_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/popup_text_size_small"
+                android:text="@string/days"/>
+
+        </LinearLayout>
+
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sales_overview_cell_margin"
+            />
+
+        <Button
+            android:id="@+id/filterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/sales_overview_cell_margin"
+            android:background="@drawable/rounded_corner_button_colored"
+            android:text="@string/filter"
+            android:textColor="@color/white"
+            android:textSize="@dimen/default_button_text_size"
+            />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
