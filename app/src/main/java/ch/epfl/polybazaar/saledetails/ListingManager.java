@@ -159,21 +159,26 @@ public class ListingManager {
                 }
             }
             LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
-                ImageTransaction.delete(liteListing.getThumbnailRef());
-
-                Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-                    Authenticator fbAuth = AuthenticatorFactory.getDependency();
-                    Account authAccount = fbAuth.getCurrentUser();
-                    authAccount.getUserData().addOnSuccessListener(user -> {
-                        user.deleteOwnListing(listingID);
-                        user.save();
+                if (liteListing != null) {
+                    if (liteListing.getThumbnailRef() != null) {
+                        ImageTransaction.delete(liteListing.getThumbnailRef());
+                    }
+                    Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
+                        Authenticator fbAuth = AuthenticatorFactory.getDependency();
+                        Account authAccount = fbAuth.getCurrentUser();
+                        authAccount.getUserData().addOnSuccessListener(user -> {
+                            user.deleteOwnListing(listingID);
+                            user.save();
+                        });
                     });
-                });
+                }
             });
             // delete all messages
             ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
-                for (ChatMessage message : chatMessages) {
-                    message.delete();
+                if (chatMessages != null) {
+                    for (ChatMessage message : chatMessages) {
+                        message.delete();
+                    }
                 }
             });
         });

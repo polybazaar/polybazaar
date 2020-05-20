@@ -73,14 +73,14 @@ public class ListingManager {
             toast.show();
         });
         //store images
-        storeImages(listImage, newListingID);
+        storeImages(listImage, newListing.getId());
         // SendLiteListing
-        LiteListing newLiteListing = new LiteListing(newListingID, newListing.getTitle(), newListing.getPrice(),
+        LiteListing newLiteListing = new LiteListing(newListing.getId(), newListing.getTitle(), newListing.getPrice(),
                 newListing.getCategory());
         if (listingID != null) {
             newLiteListing.setId(listingID);
         } else {
-            newLiteListing.setId(newListingID);
+            newLiteListing.setId(newListing.getId());
         }
         newLiteListing.save()
                 .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored data"))
@@ -193,18 +193,27 @@ public class ListingManager {
 
     public void deleteOldListingAndSubmitNewOne(Category category, List<Bitmap> listImage, Double lat, Double lng) {
         Bundle bundle = activity.getIntent().getExtras();
-        if(bundle == null) {
+        if (bundle == null) {
             return;
         }
         String listingID = bundle.getString(FillListing.LISTING_ID);
-        Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-            Authenticator fbAuth = AuthenticatorFactory.getDependency();
-            Account authAccount = fbAuth.getCurrentUser();
-            authAccount.getUserData().addOnSuccessListener(user -> {
-                user.deleteOwnListing(listingID);
-                user.save();
+        Listing.fetch(listingID).addOnSuccessListener(listing -> {
+            // Delete images:
+            if (listing != null && listing.getImagesRefs() != null) {
+                for (String ref : listing.getImagesRefs()) {
+                    ImageTransaction.delete(ref);
+                }
+            }
+            LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
+                if (liteListing != null) {
+                    if (liteListing.getThumbnailRef() != null) {
+                        ImageTransaction.delete(liteListing.getThumbnailRef());
+                    }
+                    Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
+                        submit(category, listImage, lat, lng, listingID);
+                    });
+                }
             });
-            submit(category, listImage, lat, lng, listingID);
             Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
             activity.startActivity(SalesOverviewIntent);
         });
