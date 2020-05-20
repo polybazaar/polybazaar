@@ -356,13 +356,6 @@ public class SaleDetailsTest {
         activityRule.launchActivity(intent);
 
         onView(withId(R.id.viewPagerImageSlider)).perform(scrollTo(), click());
-        try {
-            onView(withText(activityRule.getActivity().getString(R.string.sign_in_to_contact))).perform(click());
-            assert(false);
-        } catch (NoMatchingViewException e) {
-            //this should throw an exception because the button is hidden
-        }
-
     }
 }
 
