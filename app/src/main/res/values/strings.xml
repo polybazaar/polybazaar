@@ -25,6 +25,7 @@
     <string name="search">Search</string>
     <string name="latest_items"><b>Latest items</b></string>
     <string name="select_category">Select category</string>
+    <string name="select_filter">Filter</string>
     <string name="filter">Filter</string>
     <string name="favorites">Favorites</string>
     <string name="no_favorites">You don\'t have any saved favorites</string>
@@ -153,5 +154,14 @@
     <string name="new_message">New message</string>
     <string name="new_offer">New offer</string>
     <string name="offer_answered">Offer answered</string>
+    <string name="online_since">Online since</string>
+    <string name="days">&#160;days</string>
+    <string name="min">min:&#160;</string>
+    <string name="max">max:&#160;</string>
+    <string name="price_filter">Price:</string>
+    <string name="category_filter">Category:</string>
+    <string name="days_filter">Online since:</string>
+    <string name="CHF">&#160;CHF</string>
+    <string name="Select">Select...</string>
     <string name="save">Save</string>
 </resources>
