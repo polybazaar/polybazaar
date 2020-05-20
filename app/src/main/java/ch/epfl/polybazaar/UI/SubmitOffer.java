@@ -97,6 +97,7 @@ public class SubmitOffer extends AppCompatActivity {
             Listing.updateField(Listing.LISTING_ACTIVE, message.getListingID(), false);
             Listing.updateField(Listing.PRICE, message.getListingID(), Listing.SOLD);
             LiteListing.updateField(LiteListing.PRICE, message.getListingID(), LiteListing.SOLD);
+            LiteListing.updateField(LiteListing.TIME_SOLD, message.getListingID(), new Timestamp(new Date(System.currentTimeMillis())));
         }
         Listing.fetch(listingID).addOnSuccessListener(listing -> sendNotification(buyerEmail, listing, message, context));
     }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PolyBazaar</string>
     <string name="email_not_verified">Your e-mail address has not been verified yet</string>
-    <string name="verify_email">Send Verification E-mail</string>
+    <string name="verify_email">Re-send Verification E-mail</string>
     <string name="verification_not_working">E-mail verified?</string>
     <string name="authentication_successful">Authentication was successful!</string>
     <string name="verify_credentials">Please verify your credentials!</string>

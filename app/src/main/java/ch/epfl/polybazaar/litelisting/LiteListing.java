@@ -30,6 +30,7 @@ public class LiteListing extends Model {
     public static final String CATEGORY = "category";
     public static final String STRING_THUMBNAIL = "stringThumbnail";
     public static final String TIMESTAMP = "timestamp";
+    public static final String TIME_SOLD = "timeSold";
     public static final String NO_THUMBNAIL = "NoThumbnail";
     public static final String THUMBNAIL_REF = "thumbnailRef";
 
@@ -39,6 +40,7 @@ public class LiteListing extends Model {
     private final SimpleField<String> category = new SimpleField<>(CATEGORY);
     private final SimpleField<String> stringThumbnail = new SimpleField<>(STRING_THUMBNAIL);
     private final SimpleField<Timestamp> timestamp = new SimpleField<>(TIMESTAMP);
+    private final SimpleField<Timestamp> timeSold = new SimpleField<>(TIME_SOLD);
     private final SimpleField<String> thumbnailRef = new SimpleField<>(THUMBNAIL_REF);
 
     private Bitmap thumbnail;
@@ -48,7 +50,7 @@ public class LiteListing extends Model {
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public LiteListing() {
-        registerFields(listingID, title, price, category, stringThumbnail, timestamp, thumbnailRef);
+        registerFields(listingID, title, price, category, stringThumbnail, timestamp, timeSold, thumbnailRef);
     }
 
     public LiteListing(String listingID, String title, String price, String category, String stringThumbnail) {
@@ -100,6 +102,8 @@ public class LiteListing extends Model {
 
     public Timestamp getTimestamp() { return timestamp.get(); }
 
+    public Timestamp getTimeSold() { return timeSold.get(); }
+    
     public String getThumbnailRef() { return thumbnailRef.get(); }
 
     @Override

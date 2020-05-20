@@ -182,12 +182,12 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         if (profilePicChanged) {
                 if (!user.getProfilePictureRef().equals(NO_PROFILE_PICTURE)) {
                     profilePicRef = user.getProfilePictureRef();
+                    ImageTransaction.delete(profilePicRef);
                 } else {
                     profilePicRef = randomUUID().toString();
                 }
                 Bitmap bitmap = convertStringToBitmap(this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).
                         getString(STRING_IMAGE, null));
-            ImageTransaction.delete(profilePicRef);
             ImageTransaction.storePNG(profilePicRef, bitmap, QUALITY, this.getApplicationContext());
         } else {
             profilePicRef = NO_PROFILE_PICTURE;

@@ -33,7 +33,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 public class ListingManager {
 
-    SaleDetails activity;
+    private SaleDetails activity;
 
     public ListingManager(SaleDetails activity) {
         this.activity = activity;
@@ -151,14 +151,6 @@ public class ListingManager {
      * @param listingID the listings Id
      */
     public static void deleteCurrentListing(String listingID) {
-        Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-            Authenticator fbAuth = AuthenticatorFactory.getDependency();
-            Account authAccount = fbAuth.getCurrentUser();
-            authAccount.getUserData().addOnSuccessListener(user -> {
-                user.deleteOwnListing(listingID);
-                user.save();
-            });
-        });
         Listing.fetch(listingID).addOnSuccessListener(listing -> {
             // Delete images:
             if (listing != null && listing.getImagesRefs() != null) {
@@ -167,12 +159,26 @@ public class ListingManager {
                 }
             }
             LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
-                ImageTransaction.delete(liteListing.getThumbnailRef());
+                if (liteListing != null) {
+                    if (liteListing.getThumbnailRef() != null) {
+                        ImageTransaction.delete(liteListing.getThumbnailRef());
+                    }
+                    Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
+                        Authenticator fbAuth = AuthenticatorFactory.getDependency();
+                        Account authAccount = fbAuth.getCurrentUser();
+                        authAccount.getUserData().addOnSuccessListener(user -> {
+                            user.deleteOwnListing(listingID);
+                            user.save();
+                        });
+                    });
+                }
             });
             // delete all messages
             ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
-                for (ChatMessage message : chatMessages) {
-                    message.delete();
+                if (chatMessages != null) {
+                    for (ChatMessage message : chatMessages) {
+                        message.delete();
+                    }
                 }
             });
         });
