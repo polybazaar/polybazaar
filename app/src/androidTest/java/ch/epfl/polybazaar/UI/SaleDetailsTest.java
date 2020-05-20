@@ -8,6 +8,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
@@ -355,13 +356,12 @@ public class SaleDetailsTest {
         activityRule.launchActivity(intent);
 
         onView(withId(R.id.viewPagerImageSlider)).perform(scrollTo(), click());
-
-        runOnUiThread(() -> {
-            LayoutInflater inflater = (LayoutInflater) activityRule.getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.popup_window_images, null);
-            ViewPager2 zoomViewPager = popupView.findViewById(R.id.viewPagerZoom);
-            assertEquals(View.VISIBLE, zoomViewPager.getVisibility());
-        });
+        try {
+            onView(withText(activityRule.getActivity().getString(R.string.sign_in_to_contact))).perform(click());
+            assert(false);
+        } catch (NoMatchingViewException e) {
+            //this should throw an exception because the button is hidden
+        }
 
     }
 }
