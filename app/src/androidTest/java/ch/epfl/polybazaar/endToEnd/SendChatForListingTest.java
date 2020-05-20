@@ -39,24 +39,6 @@ public class SendChatForListingTest {
                 }
             };
 
-
-    //TODO delete
-    //@Test
-    public void testUserCanSendMessageViaListing() throws Throwable {
-        String otherUserEmail = "otherother.user@epfl.ch";
-        String title = "Send chat";
-        String message = "Hello how are you?";
-        SignInUtilities.signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
-        DatabaseStoreUtilities.storeNewListing(title, otherUserEmail);
-        onView(withId(R.id.action_home)).perform(click());
-        onView(withText(title)).perform(click());
-        onView(withId(R.id.contactSel)).perform(scrollTo(), click());
-        onView(withId(R.id.messageEditor)).perform(typeText(message));
-        closeSoftKeyboard();
-        onView(withId(R.id.sendMessageButton)).perform(click());
-        DatabaseChecksUtilities.assertDatabaseHasAtLeastOneEntryWithField(ChatMessage.COLLECTION, "message", message, ChatMessage.class);
-    }
-
     //@Test
     public void testMessagesAreDisplayedInChat() throws InterruptedException {
         String otherUserEmail = "otherother.user@epfl.ch";

@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.List;
 import java.util.TreeMap;
 
@@ -118,15 +120,16 @@ public class LiteListingAdapter extends
         priceView.setId(View.generateViewId());
         ImageView thumbnail = viewHolder.thumbnail;
         thumbnail.setScaleType(ImageView.ScaleType.FIT_XY);
-        String stringThumbnail = liteListing.getStringThumbnail();
-        Bitmap bitmapThumbnail = convertStringToBitmap(stringThumbnail);
-        if(bitmapThumbnail == null) {
-            thumbnail.setImageResource(R.drawable.no_image_thumbnail);
-        } else {
-            // Fix aspect ratio of Thumbnail
-            bitmapThumbnail = cropToSize(bitmapThumbnail, 4, 3);
-            thumbnail.setImageBitmap(bitmapThumbnail);
-        }
+        Context ctx = viewHolder.priceView.getContext();
+        liteListing.fetchThumbnail(ctx).addOnSuccessListener(bitmapThumbnail -> {
+            if(bitmapThumbnail == null) {
+                thumbnail.setImageResource(R.drawable.no_image_thumbnail);
+            } else {
+                // Fix aspect ratio of Thumbnail
+                bitmapThumbnail = cropToSize(bitmapThumbnail, 4, 3);
+                thumbnail.setImageBitmap(bitmapThumbnail);
+            }
+        });
         thumbnail.setId(View.generateViewId());
         viewIDtoListingIDMap.put(thumbnail.getId(), liteListing.getListingID()); // update map <view ID, listing ID> (so that we can also click on the thumbnail)
     }

@@ -2,12 +2,12 @@ package ch.epfl.polybazaar.UI;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,11 +48,14 @@ import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
 import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 public class FillListing extends AppCompatActivity implements NoticeDialogListener, CategoryFragment.CategoryFragmentListener {
 
 
     public static final int ADD_MP = 3;
+    public static final String LISTING_ID = "listingID";
+    public static final String LISTING = "listing";
 
     private Button setMainImage;
     private Button rotateImage;
@@ -67,11 +70,11 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
-    private List<String> listStringImage;
+    private List<Bitmap> listImage;
     //only used for edit to delete all images
     private List<String> listImageID;
     private Category selectedCategory;
-    private String stringThumbnail = "";
+    private Bitmap thumbnail;
     private double lat = NOLAT;
     private double lng = NOLNG;
 
@@ -98,7 +101,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         selectedCategory = RootCategoryFactory.getDependency();
 
 
-        listStringImage = new ArrayList<>();
+        listImage = new ArrayList<>();
         listImageID = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
@@ -151,9 +154,9 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     private void getNewImage(Intent data) {
         boolean bitmapOK = data.getBooleanExtra(IMAGE_AVAILABLE, false);
         if (bitmapOK) {
-            String stringImage = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
-            imageManager.addImage(listStringImage, stringImage);
-            imageManager.updateViewPagerVisibility(listStringImage);
+            Bitmap image = convertStringToBitmap(this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null));
+            imageManager.addImage(listImage, image);
+            imageManager.updateViewPagerVisibility(listImage);
         }
     }
 
@@ -163,7 +166,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
             dialog.show(getSupportFragmentManager(), "select image import");
         });
         selectCategory.setOnClickListener(v -> {
-            // TODO : open category selection activity
             RootCategoryFactory.useJSONCategory(getApplicationContext());
             FragmentManager fragmentManager = getSupportFragmentManager();
             CategoryFragment categoryFragment = CategoryFragment.newInstance(RootCategoryFactory.getDependency(),
@@ -186,21 +188,19 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         priceSelector.setOnFocusChangeListener((v, hasFocus) -> {
             if (!priceSelector.getText().toString().equals("")) priceSelector.setBackground(getResources().getDrawable(R.drawable.boxed, getTheme()));
         });
-        setMainImage.setOnClickListener(v -> imageManager.setFirst(listStringImage));
-        rotateImage.setOnClickListener(v -> imageManager.rotateLeft(listStringImage));
-        deleteImage.setOnClickListener(v -> imageManager.deleteImage(listStringImage));
-        if(!edit){
-            submitListing.setOnClickListener(v -> {
-                if (!listingManager.submit(selectedCategory, listStringImage, stringThumbnail, lat, lng)) {
-                    NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
-                    dialog.show(getSupportFragmentManager(), "noConnectionDialog");
-                }
-            });
-        }
-        else{
-            submitListing.setText(R.string.edit);
+        setMainImage.setOnClickListener(v -> imageManager.setFirst(listImage));
+        rotateImage.setOnClickListener(v -> imageManager.rotateLeft(listImage));
+        deleteImage.setOnClickListener(v -> imageManager.deleteImage(listImage));
+        submitListing.setOnClickListener(v -> {
+            if (!listingManager.submit(selectedCategory, listImage, lat, lng)) {
+                NoConnectionForListingDialog dialog = new NoConnectionForListingDialog();
+                dialog.show(getSupportFragmentManager(), "noConnectionDialog");
+            }
+        });
+        if(edit) {
+            submitListing.setText(R.string.save);
             submitListing.setOnClickListener(v ->
-                    listingManager.deleteOldListingAndSubmitNewOne(selectedCategory, listStringImage, lat, lng, listImageID, imageManager.isEdited()));
+                    listingManager.deleteOldListingAndSubmitNewOne(selectedCategory, listImage, lat, lng));
         }
 
         /**
@@ -220,12 +220,9 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         if(dialog instanceof NoConnectionForListingDialog){
-            Listing newListing = listingManager.makeListing(lat, lng, selectedCategory);
-            if (newListing != null) {
-                listingManager.createAndSendListing(newListing, listStringImage, stringThumbnail);
-                Intent SalesOverviewIntent = new Intent(FillListing.this, SalesOverview.class);
-                startActivity(SalesOverviewIntent);
-            }
+            listingManager.submit(selectedCategory, listImage, lat, lng);
+            Intent SalesOverviewIntent = new Intent(FillListing.this, SalesOverview.class);
+            startActivity(SalesOverviewIntent);
         }
         if (dialog instanceof AddImageDialog) {
             startActivityForResult(new Intent(this, ImageTaker.class), TAKE_IMAGE);
@@ -255,15 +252,15 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         if(bundle == null){
             return false;
         }
-        String listingID = bundle.getString("listingID", "-1");
+        String listingID = bundle.getString(LISTING_ID, "-1");
         if (listingID.equals("-1")){
             return false;
         }
-        Listing listing = (Listing)bundle.get("listing");
+        Listing listing = (Listing)bundle.get(LISTING);
         if(listing == null) {
             return false;
         }
-        imageManager.retrieveAllImages(listStringImage, listImageID, listingID);
+        imageManager.retrieveAllImages(listingID, listImage);
         titleSelector.setText(listing.getTitle());
         descriptionSelector.setText(listing.getDescription());
         priceSelector.setText(listing.getPrice());
@@ -271,9 +268,11 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         Category cat = new NodeCategory(listing.getCategory());
         RootCategoryFactory.useJSONCategory(getApplicationContext());
         Category parentCategory = RootCategoryFactory.getDependency().getSubCategoryContaining(cat);
-        for(Category c :parentCategory.subCategories()){
-            if (c.equals(cat)){
-                selectedCategory = c;
+        if (parentCategory != null) {
+            for (Category c : parentCategory.subCategories()) {
+                if (c.equals(cat)) {
+                    selectedCategory = c;
+                }
             }
         }
         lat = listing.getLatitude();
@@ -281,10 +280,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         if (lat != NOLAT && lng != NOLNG) {
             addMP.setText(R.string.change_MP);
         }
-
-
-
-
         return true;
     }
 
@@ -294,9 +289,9 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
      * FOR TESTING PURPOSES ONLY:
      */
     // @return the current StringImage displayed or null if there is no image
-    public String getCurrentStringImage() {
-        if(listStringImage.size() > 0) {
-            return listStringImage.get(((ViewPager2)findViewById(R.id.viewPager)).getCurrentItem());
+    public Bitmap getCurrentImage() {
+        if(listImage.size() > 0) {
+            return listImage.get(((ViewPager2)findViewById(R.id.viewPager)).getCurrentItem());
         } else {
             return null;
         }

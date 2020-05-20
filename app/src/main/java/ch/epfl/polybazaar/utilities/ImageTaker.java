@@ -42,6 +42,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringW
 public class ImageTaker extends AppCompatActivity {
 
     public static final int QUALITY = 25;
+    public static final int BEST_QUALITY = 100;
     public static final String STRING_IMAGE = "bitmap_image";
     public static final String PICTURE_PREFS = "bitmap_prefs";
     public static final String CODE = "request_code";
@@ -94,7 +95,7 @@ public class ImageTaker extends AppCompatActivity {
     private void success() {
         Intent returnIntent = new Intent();
         SharedPreferences myPrefs = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE);
-        myPrefs.edit().putString(STRING_IMAGE, convertBitmapToStringWithQuality(image, QUALITY)).apply();
+        myPrefs.edit().putString(STRING_IMAGE, convertBitmapToStringWithQuality(image, BEST_QUALITY)).apply();
         returnIntent.putExtra(IMAGE_AVAILABLE, true);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();

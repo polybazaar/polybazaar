@@ -41,13 +41,16 @@ public final class ImageTransaction {
                 }
 
                 // store result in cache
-                OutputStream outputStream = LocalCache.add(id, context);
-                IoUtils.copyStream(inputStream, outputStream);
-
+                try (OutputStream outputStream = LocalCache.add(id, context)) {
+                    IoUtils.copyStream(inputStream, outputStream);
+                }
                 // re-read from cache since an InputStream cannot be read twice
                 InputStream cacheInputStream = LocalCache.get(id, context);
 
                 return Tasks.forResult(BitmapFactory.decodeStream(cacheInputStream));
+
+
+
             });
         }
     }
@@ -77,5 +80,34 @@ public final class ImageTransaction {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         FileStore fileStore = FileStoreFactory.getDependency();
         return fileStore.store(id, byteArrayInputStream);
+    }
+
+    public static Task<Void> storePNG(String id, Bitmap bitmap, int quality, Context context) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality, byteArrayOutputStream);
+
+        // write image to local cache
+        try (OutputStream outputStream = LocalCache.add(id, context)) {
+            byteArrayOutputStream.writeTo(outputStream);
+        } catch (IOException e) {
+            throw new Error("Unexpected IO error");
+        }
+
+        // upload image to cloud
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        FileStore fileStore = FileStoreFactory.getDependency();
+        return fileStore.store(id, byteArrayInputStream);
+    }
+
+    /**
+     * Delete a file from cloud storage
+     * @param id filename
+     * @param context context
+     * @return void task
+     */
+    public static Task<Void> delete(String id) {
+        FileStore fileStore = FileStoreFactory.getDependency();
+        return fileStore.delete(id);
     }
 }

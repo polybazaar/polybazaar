@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar.saledetails;
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.Gravity;
@@ -8,7 +9,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -21,9 +21,8 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SaleDetails;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
+import retrofit2.http.HEAD;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.cropToSize;
 
 public class ImageManager {
@@ -43,13 +42,15 @@ public class ImageManager {
         activity.runOnUiThread (()-> {
             List<SliderItem> sliderItems = new ArrayList<>();
             List<SliderItem> sliderItemsZoom = new ArrayList<>();
+
             if (!listImage.isEmpty()) {
                 viewPager.setVisibility(View.VISIBLE);
                 activity.findViewById(R.id.loadingImage).setVisibility(View.GONE);
                 activity.findViewById(R.id.pageNumber).setVisibility(View.VISIBLE);
-                for (Bitmap img : listImage) {
-                    sliderItems.add(new SliderItem(cropToSize(img, viewPager.getWidth(), viewPager.getHeight())));
-                    sliderItemsZoom.add(new SliderItem(img));
+
+                for (Bitmap bm : listImage) {
+                    sliderItems.add(new SliderItem(cropToSize(bm, viewPager.getWidth(), viewPager.getHeight())));
+                    sliderItemsZoom.add(new SliderItem(bm));
                 }
 
                 viewPager.setAdapter(new SliderAdapter(sliderItems, viewPager));

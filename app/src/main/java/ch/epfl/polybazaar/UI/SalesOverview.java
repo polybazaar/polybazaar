@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -37,6 +38,7 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryFragment;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
@@ -249,7 +251,11 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             List<Task<LiteListing>> taskList = new ArrayList<>();
             // add fetch tasks in correct display order
             for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-                taskList.add(LiteListing.fetch(IDList.get(i)));
+                taskList.add(LiteListing.fetch(IDList.get(i)).onSuccessTask(liteListing -> {
+                    return liteListing.fetchThumbnail(SalesOverview.this).onSuccessTask(r ->
+                            Tasks.forResult(liteListing)
+                    );
+                }));
                 positionInIDList++;
             }
             Tasks.<LiteListing>whenAllSuccess(taskList).addOnSuccessListener(list -> {
@@ -286,6 +292,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                     Account account = AuthenticatorFactory.getDependency().getCurrentUser();
                     User.fetch(account.getEmail()).addOnSuccessListener(user -> {
                         user.removeFavorite(liteListingID);
+                        user.deleteOwnListing(liteListingID);
                         user.save();
                     });
                 } else {

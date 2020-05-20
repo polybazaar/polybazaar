@@ -21,7 +21,10 @@ public abstract class Field<T> implements Serializable {
      * @param snap query result
      */
     public final void fillFromSnapshot(DataSnapshot snap) {
-        set(deserialize(snap.get(name)));
+        Object value = snap.get(name);
+        if (value != null) {
+            set(deserialize(snap.get(name)));
+        }
     }
 
     /**

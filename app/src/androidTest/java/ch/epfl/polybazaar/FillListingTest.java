@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
@@ -72,7 +71,7 @@ import static ch.epfl.polybazaar.utilities.ImageUtilities.convertDrawableToBitma
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertFileToString;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeBitmap;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeStringImageThumbnail;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeImageThumbnail;
 import static com.google.android.gms.tasks.Tasks.whenAll;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
@@ -210,21 +209,6 @@ public class FillListingTest {
         submitListingAndCheckIncorrectToast();
     }
 
-    /**
-     * Category should de optional and default to, say, none
-     */
-    /*
-    @Test
-    public void toastAppearsWhenNoCategoryIsSelected() throws Throwable {
-        Thread.sleep(SLEEP_TIME);
-        onView(withId(R.id.titleSelector)).perform(scrollTo(), typeText("My title"));
-        closeSoftKeyboard();
-        onView(withId(R.id.priceSelector)).perform(scrollTo(), clearText());
-        submitListingAndCheckIncorrectToast();
-        Thread.sleep(SLEEP_TIME);
-    }
-     */
-
     @Test
     public void testNoPictureIsDisplayedWhenNoPictureIsTaken() throws Throwable {
         cancelTakingPicture();
@@ -273,19 +257,19 @@ public class FillListingTest {
 
     @Test
     public void testUtilitiesResizeStringImageThumbnailNull() {
-        assertNull(resizeStringImageThumbnail(null));
+        assertNull(resizeImageThumbnail(null));
     }
 
     @Test
     public void testRemoveImage() throws Throwable {
         uploadMultipleImages();
-        String firstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        Bitmap firstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        Bitmap newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         //check that it delete last image
         assertNotEquals(newFirstImage, firstImage);
     }
@@ -293,13 +277,13 @@ public class FillListingTest {
     @Test
     public void testRotateImage() throws Throwable {
         uploadMultipleImages();
-        String beforeRotationImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        Bitmap beforeRotationImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.rotate).performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        String afterRotationImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        Bitmap afterRotationImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         assertNotEquals(afterRotationImage, beforeRotationImage);
     }
 
@@ -314,13 +298,13 @@ public class FillListingTest {
         });
         Thread.sleep(SLEEP_TIME);
         uploadMultipleImages();
-        String firstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        Bitmap firstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         runOnUiThread(() -> {
             assertTrue(fillSaleActivityTestRule.getActivity().findViewById(R.id.deleteImage).isClickable());
             fillSaleActivityTestRule.getActivity().findViewById(R.id.setMain).performClick();
         });
         Thread.sleep(SLEEP_TIME);
-        String newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentStringImage();
+        Bitmap newFirstImage = fillSaleActivityTestRule.getActivity().getCurrentImage();
         //check that it's equal because viewPager show the first image
         assertEquals(newFirstImage, firstImage);
         fillListing();
@@ -481,15 +465,9 @@ public class FillListingTest {
     private void checkNoImageUploaded(){
         onView(withId(R.id.picturePreview)).check(matches(withTagValue(CoreMatchers.<Object>equalTo(-1))));
     }
+
     //always select the first category
     private void selectCategory(String cat) throws Throwable {
-        /**
-         * TODO : complete with new category selection activity
-         */
-        /*
-        onView(withId(R.id.categorySelector)).perform(scrollTo(), click());
-        onData(hasToString(cat)).perform(click());
-         */
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.selectCategory).performClick());
         Thread.sleep(500);
         onView(withId(R.id.categoriesRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
