@@ -242,8 +242,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                 if (l != null) {
                     // delete sold listings older than a week
                     if ((l.getPrice().equals(getResources().getString(R.string.sold))) && (l.getTimeSold() != null) && (l.getTimeSold().toDate().before(expDate))) {
-                        // TODO : remove the new ArrayList once fileStorage PR is merged
-                        ListingManager.deleteCurrentListing(l.getId(), new ArrayList<>());
+                        ListingManager.deleteCurrentListing(l.getId());
                     } else {
                         listingTimeMap.put(l.getTimestamp(), l.getId());
                         listingTitleMap.put(l.getId(), l.getTitle());
