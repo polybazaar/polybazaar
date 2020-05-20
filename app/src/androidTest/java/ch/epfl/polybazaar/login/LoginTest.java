@@ -17,6 +17,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
@@ -94,7 +95,7 @@ public class LoginTest {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(email, NICKNAME, PASSWORD, PASSWORD);
 
-        onView(withText(R.string.signup_email_invalid)).check(matches(isDisplayed()));
+        assertThat(onView(allOf(withId(R.id.emailInputLayout), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
     }
 
     @Test
@@ -102,7 +103,7 @@ public class LoginTest {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, "random");
 
-        onView(withText(R.string.signup_passwords_not_matching)).check(matches(isDisplayed()));
+        assertThat(onView(allOf(withId(R.id.confirmPasswordInputLayout), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
     }
 
     @Test
@@ -118,7 +119,7 @@ public class LoginTest {
         clickButton(withId(R.id.signUpButton));
 
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
-        clickButton(withId(R.id.signOutButton));
+        onView(withId(R.id.signOutButton)).perform(scrollTo(), click());
         fillAndSubmitSignIn(EMAIL, PASSWORD);
 
         onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));

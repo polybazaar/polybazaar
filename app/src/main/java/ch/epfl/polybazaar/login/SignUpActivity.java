@@ -50,8 +50,10 @@ public class SignUpActivity extends AppCompatActivity {
 
         boolean allValid = true;
 
+        //Below, tags are set for testing purpose as there is no easy way to check the error of an Input Layout from android.material
         if (!emailIsValid(email)) {
             emailInputLayout.setError(getString(R.string.signup_email_invalid));
+            emailInputLayout.setTag(InputValidity.ERROR);
             allValid = false;
         }
         else{
@@ -60,6 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (!nicknameValidity(nickname, getApplicationContext()).equals("")) {
             nicknameInputLayout.setError(nicknameValidity(nickname, getApplicationContext()));
+            nicknameInputLayout.setTag(InputValidity.ERROR);
             allValid = false;
         }
         else{
@@ -77,6 +80,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (!password.equals(confirmPassword)) {
             confirmPasswordInputLayout.setError(getString(R.string.signup_passwords_not_matching));
+            confirmPasswordInputLayout.setTag(InputValidity.ERROR);
             allValid = false;
         }
         else{
