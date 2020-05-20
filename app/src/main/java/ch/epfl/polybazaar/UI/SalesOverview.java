@@ -9,11 +9,17 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.SearchView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +72,13 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
     public static final float SENSIBILITY = 2.0f;
+    private static final float FILTER_ELEVATION = 10;
+    private static final int PRICEMIN = 0;
+    private static final int PRICEMAX = 1000;
+    private static final int PRICESTEP = 10;
+    private static final int DAYSMIN = 0;
+    private static final int DAYSMAX = 90;
+    private static final int DAYSSTEP = 5;
     private Map<Timestamp, String> listingTimeMap;
     private Map<String, String> listingTitleMap;
     private Map<String, String> searchListingTitleMap;
@@ -91,7 +104,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         RootCategoryFactory.useJSONCategory(getApplicationContext());
         currentCategory = RootCategoryFactory.getDependency();
 
-
         TextView catButton = findViewById(R.id.categoryOverview);
         catButton.setOnClickListener(view->{
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -102,6 +114,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                     .add(R.id.salesOverview_fragment_container,categoryFragment).commit();
 
         });
+
         // Lookup the recyclerview in activity layout
         RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
 
@@ -187,6 +200,95 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         searchView.setOnQueryTextListener(this);
 
         return true;
+    }
+
+    /**
+     * Display the pop-up filter window. Dismissed when the user clicks outside of it
+     * @param view the parent view to which the pop-up window is attached
+     */
+    public void onButtonShowPopupWindowClick(View view) {
+
+        // setContentView(R.layout.filter_pop_up_window);
+
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.filter_pop_up_window, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+        // show the popup window
+        View parent = findViewById(R.id.UserClickableFilterMenu);
+        popupWindow.setElevation(FILTER_ELEVATION);
+        popupWindow.showAtLocation(parent, Gravity.TOP | Gravity.RIGHT, 0, 0);
+
+        // add OnSeekBarChangeListener on seekbars
+        SeekBar priceMinSeekBar = popupWindow.getContentView().findViewById(R.id.minPriceSeekBar);
+        SeekBar priceMaxSeekBar = popupWindow.getContentView().findViewById(R.id.maxPriceSeekBar);
+        SeekBar daysMaxSeekBar = popupWindow.getContentView().findViewById(R.id.ageSeekBar);
+
+        priceMinSeekBar.setMax(PRICEMAX);
+        priceMaxSeekBar.setMax(PRICEMAX);
+        daysMaxSeekBar.setMax(DAYSMAX);
+
+        TextView priceMinValue = popupWindow.getContentView().findViewById(R.id.min_price_value);
+        TextView priceMaxValue = popupWindow.getContentView().findViewById(R.id.max_price_value);
+        TextView daysMaxValue = popupWindow.getContentView().findViewById(R.id.max_days_value);
+
+        priceMinSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int value = (progress * (PRICEMAX - PRICEMIN)) / PRICEMAX;
+                int displayValue = ((value + PRICEMIN) / PRICESTEP) * PRICESTEP;
+                priceMinValue.setText(String.valueOf(displayValue));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        priceMaxSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int value = (progress * (PRICEMAX - PRICEMIN)) / PRICEMAX;
+                int displayValue = ((value + PRICEMIN) / PRICESTEP) * PRICESTEP;
+                priceMaxValue.setText(String.valueOf(displayValue));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        daysMaxSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int value = (progress * (DAYSMAX - DAYSMIN)) / DAYSMAX;
+                int displayValue = ((value + DAYSMIN) / DAYSSTEP) * DAYSSTEP;
+                daysMaxValue.setText(String.valueOf(displayValue));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
     }
 
 
