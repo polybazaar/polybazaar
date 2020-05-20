@@ -158,9 +158,9 @@
     <string name="days">&#160;days</string>
     <string name="min">min:&#160;</string>
     <string name="max">max:&#160;</string>
-    <string name="price_filter">Price:&#160;</string>
-    <string name="category_filter">Category:&#160;</string>
-    <string name="days_filter">Online since:&#160;</string>
+    <string name="price_filter">Price:</string>
+    <string name="category_filter">Category:</string>
+    <string name="days_filter">Online since:</string>
     <string name="CHF">&#160;CHF</string>
     <string name="Select">Select...</string>
 </resources>
