@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.utilities.InputValidity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -22,17 +23,20 @@ import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.createAccountAndBackToLoginFromLoginActivity;
 import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.fillAndSubmitSignUp;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.IsNull.nullValue;
 
 public class LoginTest {
     public static final String EMAIL = "otheruser.test@epfl.ch";
     public static final String NICKNAME = "otheruser";
-    public static final String PASSWORD = "abcdef";
+    public static final String PASSWORD = "AnotherStrongPassword69";
 
     @Rule
     public final ActivityTestRule<SignInActivity> mActivityRule =
@@ -106,7 +110,7 @@ public class LoginTest {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME,"a", "a");
 
-        onView(withText(R.string.signup_passwords_weak)).check(matches(isDisplayed()));
+        assertThat(onView(allOf(withId(R.id.passwordInputLayout), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
     }
 
     @Test

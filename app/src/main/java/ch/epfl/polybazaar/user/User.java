@@ -9,9 +9,8 @@ import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
 
-import static ch.epfl.polybazaar.Utilities.emailIsValid;
-import static ch.epfl.polybazaar.Utilities.nameIsValid;
-import static ch.epfl.polybazaar.Utilities.nickNameIsValid;
+import static ch.epfl.polybazaar.utilities.InputValidity.emailIsValid;
+import static ch.epfl.polybazaar.utilities.InputValidity.nicknameValidity;
 
 
 /**
@@ -89,7 +88,7 @@ public final class User extends Model {
      */
     public User(String nickName, String email) {
         this();
-        if (nickNameIsValid(nickName)) {
+        if (nicknameValidity(nickName, null).equals("")) {
             this.nickName.set(nickName);
         } else {
             throw new IllegalArgumentException("nickName has invalid format");

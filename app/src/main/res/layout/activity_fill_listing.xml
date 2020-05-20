@@ -121,49 +121,54 @@
 
             </TableRow>
 
-            <TextView
-                android:id="@+id/titleTextView"
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/inter_space_large"
-                android:text="@string/listing_title"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/default_textView_text_size"
-                android:textStyle="bold" />
+                android:layout_marginStart="@dimen/inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="@integer/max_title_length">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/titleSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/inter_space_small"
                 android:background="@drawable/boxed"
                 android:importantForAutofill="no"
+                android:hint="@string/title"
                 android:inputType="textPersonName"
-                android:maxLength="50"
+                android:maxLength="@integer/max_title_length"
                 android:maxLines="1"
                 tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/descriptionTextView"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/inter_space_large"
-                android:text="@string/description"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/default_textView_text_size"
-                android:textStyle="bold" />
+                android:layout_marginStart="@dimen/inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="@integer/max_description_length">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/descriptionSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/inter_space_small"
                 android:background="@drawable/boxed"
                 android:gravity="start|top"
+                android:hint="@string/description"
+                android:maxLength="@integer/max_description_length"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 tools:ignore="LabelFor" />
-
+            </com.google.android.material.textfield.TextInputLayout>
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

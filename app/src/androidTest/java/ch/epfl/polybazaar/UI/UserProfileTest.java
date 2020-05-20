@@ -20,6 +20,7 @@ import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.user.User;
+import ch.epfl.polybazaar.utilities.InputValidity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
@@ -31,14 +32,18 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static com.google.android.gms.tasks.Tasks.whenAll;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.AllOf.allOf;
+import static org.hamcrest.core.IsNot.not;
 
 public class UserProfileTest {
 
@@ -79,21 +84,18 @@ public class UserProfileTest {
 
         onView(withId(R.id.nicknameSelector)).perform(scrollTo(), clearText(), typeText(""), closeSoftKeyboard());
         onView(withId(R.id.saveProfileButton)).perform(scrollTo(), click());
-        onView(withText(R.string.signup_nickname_invalid)).check(matches(isDisplayed()));
-        onView(withText("Back")).perform(click());
+        assertThat(onView(allOf(withId(R.id.nicknameInputLayout), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
 
         onView(withId(R.id.nicknameSelector)).perform(scrollTo(), clearText(), typeText("UserNickname"), closeSoftKeyboard());
         onView(withId(R.id.firstNameSelector)).perform(scrollTo(), typeText(""), closeSoftKeyboard());
         onView(withId(R.id.saveProfileButton)).perform(scrollTo(), click());
-        onView(withText(R.string.invalid_first_name)).check(matches(isDisplayed()));
-        onView(withText("Back")).perform(click());
+        assertThat(onView(allOf(withId(R.id.firstNameSelector), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
 
         onView(withId(R.id.nicknameSelector)).perform(scrollTo(), clearText(), typeText("UserNickname"), closeSoftKeyboard());
         onView(withId(R.id.firstNameSelector)).perform(scrollTo(),clearText(),  typeText("Name"), closeSoftKeyboard());
         onView(withId(R.id.lastNameSelector)).perform(scrollTo(), clearText(), typeText(""), closeSoftKeyboard());
         onView(withId(R.id.saveProfileButton)).perform(scrollTo(), click());
-        onView(withText(R.string.invalid_last_name)).check(matches(isDisplayed()));
-        onView(withText("Back")).perform(click());
+        assertThat(onView(allOf(withId(R.id.lastNameSelector), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
     }
 
     @Test
@@ -106,7 +108,7 @@ public class UserProfileTest {
         onView(withId(R.id.newPassword)).perform(scrollTo(), typeText("1234"), closeSoftKeyboard());
         onView(withId(R.id.confirmNewPassword)).perform(scrollTo(), typeText("12345"), closeSoftKeyboard());
         onView(withId(R.id.savePassword)).perform(scrollTo(), click());
-        onView(withText(R.string.signup_passwords_not_matching)).check(matches(isDisplayed()));
+        assertThat(onView(allOf(withId(R.id.confirmNewPasswordInputLayout), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
     }
 
     @Test
@@ -119,7 +121,7 @@ public class UserProfileTest {
         onView(withId(R.id.newPassword)).perform(scrollTo(), typeText(""), closeSoftKeyboard());
         onView(withId(R.id.confirmNewPassword)).perform(scrollTo(), typeText(""), closeSoftKeyboard());
         onView(withId(R.id.savePassword)).perform(scrollTo(), click());
-        onView(withText(R.string.signup_passwords_weak)).check(matches(isDisplayed()));
+        assertThat(onView(allOf(withId(R.id.confirmNewPasswordInputLayout), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
     }
 
     @Test

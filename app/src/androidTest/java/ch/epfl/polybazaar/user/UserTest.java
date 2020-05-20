@@ -5,7 +5,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static ch.epfl.polybazaar.Utilities.isValidUser;
+
+import static ch.epfl.polybazaar.utilities.InputValidity.isValidUser;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 

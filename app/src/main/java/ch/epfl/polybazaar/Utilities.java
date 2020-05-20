@@ -11,31 +11,6 @@ import ch.epfl.polybazaar.user.User;
 
 public abstract class Utilities {
 
-    public static boolean nameIsValid(String name) {
-        return (name.matches("[a-zA-Z]+"));
-    }
-
-    public static boolean emailIsValid(String email) {
-        return (email.matches("[a-zA-Z]+"+"."+"[a-zA-Z]+"+"@epfl.ch"));
-    }
-
-    public static boolean passwordIsValid(String password) {
-        return password.length() >= 6;
-    }
-
-    public static boolean nickNameIsValid(String nickname) {
-        return nickname.length() >= 6;
-    }
-
-    public static boolean isValidUser(User user) {
-        if (user != null
-        && nameIsValid(user.getNickName())
-        && emailIsValid(user.getEmail())) {
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Helper method to retrieve the logged user (if any)
      * @return the logged user (can be null)

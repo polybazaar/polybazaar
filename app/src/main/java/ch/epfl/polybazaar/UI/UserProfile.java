@@ -15,17 +15,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.Utilities;
 import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.user.User;
 import ch.epfl.polybazaar.utilities.ImageTaker;
+import ch.epfl.polybazaar.utilities.InputValidity;
 import ch.epfl.polybazaar.widgets.AddImageDialog;
 import ch.epfl.polybazaar.widgets.NoticeDialogListener;
 import ch.epfl.polybazaar.widgets.PublishProfileDialog;
@@ -34,16 +35,19 @@ import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.chat.ChatActivity.removeBottomBarWhenKeyboardUp;
 import static ch.epfl.polybazaar.user.User.NO_PROFILE_PICTURE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
+import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
 import static ch.epfl.polybazaar.utilities.ImageTaker.QUALITY;
 import static ch.epfl.polybazaar.utilities.ImageTaker.STRING_IMAGE;
-import static ch.epfl.polybazaar.utilities.ImageTaker.IMAGE_AVAILABLE;
-import static ch.epfl.polybazaar.utilities.ImageTaker.PICTURE_PREFS;
-import static ch.epfl.polybazaar.utilities.ImageTaker.CODE;
-import static ch.epfl.polybazaar.utilities.ImageTaker.LOAD_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageTaker.TAKE_IMAGE;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringPNG;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.getRoundedCroppedBitmap;
+import static ch.epfl.polybazaar.utilities.InputValidity.nameIsValid;
+import static ch.epfl.polybazaar.utilities.InputValidity.nicknameValidity;
+import static ch.epfl.polybazaar.utilities.InputValidity.passwordValidity;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 import static java.util.UUID.randomUUID;
 
@@ -202,17 +206,42 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         String newNickname = nicknameSelector.getText().toString();
         String newFirstName = firstNameSelector.getText().toString();
         String newLastName = lastNameSelector.getText().toString();
+        String phoneNumber = phoneNumberSelector.getText().toString();
 
-        if(!Utilities.nickNameIsValid(newNickname)){
-            makeDialog(UserProfile.this, R.string.signup_nickname_invalid);
-        }
-        else if (!Utilities.nameIsValid(newFirstName)){
-            makeDialog(UserProfile.this, R.string.invalid_first_name);
-        }
-        else if (!Utilities.nameIsValid(newLastName)){
-            makeDialog(UserProfile.this, R.string.invalid_last_name);
+        TextInputLayout nicknameInputLayout = findViewById(R.id.newNicknameInputLayout);
+        TextInputLayout firstNameInputLayout = findViewById(R.id.newFirstNameInputLayout);
+        TextInputLayout lastNameInputLayout = findViewById(R.id.newLastNameInputLayout);
+
+
+        boolean allValid = true;
+        if(!nicknameValidity(newNickname, getApplicationContext()).equals("")){
+            nicknameInputLayout.setError(nicknameValidity(newNickname, getApplicationContext()));
+            nicknameInputLayout.setTag(InputValidity.ERROR);
+            allValid = false;
         }
         else{
+            nicknameInputLayout.setError(null);
+        }
+
+        if (!nameIsValid(newFirstName)){
+            firstNameInputLayout.setError(getString(R.string.invalid_first_name));
+            firstNameInputLayout.setTag(InputValidity.ERROR);
+            allValid = false;
+        }
+        else{
+            firstNameInputLayout.setError(null);
+        }
+        if (!nameIsValid(newLastName)){
+            lastNameInputLayout.setError(getString(R.string.invalid_last_name));
+            lastNameInputLayout.setTag(InputValidity.ERROR);
+            allValid = false;
+        }
+        else{
+            lastNameInputLayout.setError(null);
+        }
+
+
+        if(allValid){
             if (showNewPicDialog) {
                 PublishProfileDialog dialog = new PublishProfileDialog();
                 dialog.show(getSupportFragmentManager(), "select image import");
@@ -226,22 +255,38 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         String currentPassword= ((EditText)findViewById(R.id.currentPassword)).getText().toString();
         String newPassword = ((EditText)findViewById(R.id.newPassword)).getText().toString();
         String confirmNewPassword = ((EditText)findViewById(R.id.confirmNewPassword)).getText().toString();
+        TextInputLayout newPasswordInputLayout = findViewById(R.id.newPasswordInputLayout);
+        TextInputLayout confirmNewPasswordInputLayout = findViewById(R.id.confirmNewPasswordInputLayout);
+        TextInputLayout currentPasswordInputLayout = findViewById(R.id.currentPasswordInputLayout);
+        boolean allValid = true;
 
-        if (!newPassword.equals(confirmNewPassword)) {
-            makeDialog(UserProfile.this, R.string.signup_passwords_not_matching);
-        }
-        else if (!Utilities.passwordIsValid(newPassword)){
-            makeDialog(UserProfile.this, R.string.signup_passwords_weak);
+        if (!passwordValidity(newPassword, getApplicationContext()).equals("")) {
+            newPasswordInputLayout.setError(passwordValidity(newPassword, getApplicationContext()));
+            allValid = false;
         }
         else{
+            newPasswordInputLayout.setError(null);
+        }
+
+        if (!newPassword.equals(confirmNewPassword)) {
+            confirmNewPasswordInputLayout.setError(getString(R.string.signup_passwords_not_matching));
+            confirmNewPasswordInputLayout.setTag(InputValidity.ERROR);
+            allValid = false;
+        }
+        else{
+            confirmNewPasswordInputLayout.setError(null);
+        }
+
+        if(allValid){
             authenticator.signIn(user.getEmail(), currentPassword).addOnSuccessListener(authenticatorResult -> {
                 account.updatePassword(newPassword);
                 ((EditText)findViewById(R.id.currentPassword)).setText("");
                 ((EditText)findViewById(R.id.newPassword)).setText("");
                 ((EditText)findViewById(R.id.confirmNewPassword)).setText("");
                 Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
+                currentPasswordInputLayout.setError(null);
             }).addOnFailureListener(e -> {
-                Toast.makeText(getApplicationContext(), R.string.invalid_current_password, Toast.LENGTH_SHORT).show();
+                currentPasswordInputLayout.setError(getString(R.string.invalid_current_password));
             });
         }
     }
