@@ -24,6 +24,7 @@ import ch.epfl.polybazaar.UI.SliderItem;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.cropToSize;
 
 public class ImageManager {
 
@@ -41,12 +42,14 @@ public class ImageManager {
         ViewPager2 viewPager = activity.findViewById(R.id.viewPagerImageSlider);
         activity.runOnUiThread (()-> {
             List<SliderItem> sliderItems = new ArrayList<>();
+            List<SliderItem> sliderItemsZoom = new ArrayList<>();
             if (!listImage.isEmpty()) {
                 viewPager.setVisibility(View.VISIBLE);
                 activity.findViewById(R.id.loadingImage).setVisibility(View.GONE);
                 activity.findViewById(R.id.pageNumber).setVisibility(View.VISIBLE);
                 for (Bitmap img : listImage) {
-                    sliderItems.add(new SliderItem(img));
+                    sliderItems.add(new SliderItem(cropToSize(img, viewPager.getWidth(), viewPager.getHeight())));
+                    sliderItemsZoom.add(new SliderItem(img));
                 }
 
                 viewPager.setAdapter(new SliderAdapter(sliderItems, viewPager));
@@ -81,7 +84,7 @@ public class ImageManager {
                 LayoutInflater inflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View popupView = inflater.inflate(R.layout.popup_window_images, null);
                 ViewPager2 zoomViewPager = popupView.findViewById(R.id.viewPagerZoom);
-                zoomViewPager.setAdapter(new SliderAdapter(sliderItems, viewPager));
+                zoomViewPager.setAdapter(new SliderAdapter(sliderItemsZoom, viewPager));
 
                 final PopupWindow popupWindow = new PopupWindow(
                         popupView,
