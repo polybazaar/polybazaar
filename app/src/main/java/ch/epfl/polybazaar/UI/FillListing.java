@@ -71,10 +71,7 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     private EditText descriptionSelector;
     private EditText priceSelector;
     private List<Bitmap> listImage;
-    //only used for edit to delete all images
-    private List<String> listImageID;
     private Category selectedCategory;
-    private Bitmap thumbnail;
     private double lat = NOLAT;
     private double lng = NOLNG;
 
@@ -102,7 +99,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
 
 
         listImage = new ArrayList<>();
-        listImageID = new ArrayList<>();
         boolean edit = fillFieldsIfEdit();
         addListeners(edit);
 

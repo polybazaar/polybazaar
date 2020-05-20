@@ -203,6 +203,7 @@ public class Listing extends Model implements Serializable {
     }
 
     /**
+     * DO NOT USE TO FULLY DELETE A LISTING -> use deleteCurrentListing
      * Deletes a listing in its complete and lite form
      * @param id id of the listing
      * @return task that completes when both versions have been deleted. The task
