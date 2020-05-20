@@ -151,14 +151,6 @@ public class ListingManager {
      * @param listingID the listings Id
      */
     public static void deleteCurrentListing(String listingID) {
-        Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-            Authenticator fbAuth = AuthenticatorFactory.getDependency();
-            Account authAccount = fbAuth.getCurrentUser();
-            authAccount.getUserData().addOnSuccessListener(user -> {
-                user.deleteOwnListing(listingID);
-                user.save();
-            });
-        });
         Listing.fetch(listingID).addOnSuccessListener(listing -> {
             // Delete images:
             if (listing != null && listing.getImagesRefs() != null) {
@@ -168,6 +160,15 @@ public class ListingManager {
             }
             LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
                 ImageTransaction.delete(liteListing.getThumbnailRef());
+
+                Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
+                    Authenticator fbAuth = AuthenticatorFactory.getDependency();
+                    Account authAccount = fbAuth.getCurrentUser();
+                    authAccount.getUserData().addOnSuccessListener(user -> {
+                        user.deleteOwnListing(listingID);
+                        user.save();
+                    });
+                });
             });
             // delete all messages
             ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
