@@ -5,9 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".UI.images_viewer">
 
-    <ImageView
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerZoom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_launcher_background"/>
+        android:visibility="visible"
+        tools:ignore="PrivateResource" />
 
 </FrameLayout>
