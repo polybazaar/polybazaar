@@ -1,6 +1,9 @@
 package ch.epfl.polybazaar.UI;
 
+import android.content.Context;
 import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -8,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.Tasks;
 
@@ -336,6 +340,29 @@ public class SaleDetailsTest {
         onView(withId(R.id.viewMP)).perform(scrollTo(), click());
         intended(hasComponent(MapsActivity.class.getName()));
         Intents.release();
+    }
+
+    @Test
+    public void testClickOnViewPager() throws Throwable {
+        String id = "listingID";
+        final Listing listing = new Listing("Title", "Description", "0", "otherUser@epfl.ch",
+                "", "Multimedia", 1.0, 1.0);
+        listing.setId(id);
+        Tasks.await(listing.save());
+
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+        activityRule.launchActivity(intent);
+
+        onView(withId(R.id.viewPagerImageSlider)).perform(scrollTo(), click());
+
+        runOnUiThread(() -> {
+            LayoutInflater inflater = (LayoutInflater) activityRule.getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.popup_window_images, null);
+            ViewPager2 zoomViewPager = popupView.findViewById(R.id.viewPagerZoom);
+            assertEquals(View.VISIBLE, zoomViewPager.getVisibility());
+        });
+
     }
 }
 
