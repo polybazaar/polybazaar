@@ -134,13 +134,11 @@ public final class ImageUtilities {
      * @param input
      * @return
      */
-    public static String resizeStringImageThumbnail(String input) {
-        if(input == null || input.equals("")) {
+    public static Bitmap resizeImageThumbnail(Bitmap input) {
+        if(input == null) {
             return null;
         }
-        Bitmap bitmap = convertStringToBitmap(input);
-        bitmap = scaleBitmap(bitmap, THUMBNAIL_SIZE);
-        return convertBitmapToStringWithQuality(bitmap, 100);
+        return scaleBitmap(input, THUMBNAIL_SIZE);
     }
 
     /**

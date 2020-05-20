@@ -16,13 +16,11 @@ public class NotSignedIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_not_signed_in);
         findViewById(R.id.signInButton).setOnClickListener(v -> {
-            // TODO: launch the correct activity
             Intent target = new Intent(this, SignInActivity.class);
             startActivity(target);
             finish();
         });
         findViewById(R.id.signUpButton).setOnClickListener(v -> {
-            // TODO: launch the correct activity
             Intent target = new Intent(this, SignUpActivity.class);
             startActivity(target);
             finish();

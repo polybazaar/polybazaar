@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 /**
@@ -12,6 +13,7 @@ import java.io.InputStream;
  */
 public final class FirebaseFileStore implements FileStore {
     private static FirebaseFileStore INSTANCE;
+    private final static int MEGABYTE = 1024*1024;
 
     private FirebaseFileStore() {}
 
@@ -22,9 +24,15 @@ public final class FirebaseFileStore implements FileStore {
     }
 
     @Override
+    public Task<Void> delete(String id) {
+        StorageReference fileReference = FirebaseStorage.getInstance().getReference().child(id);
+        return fileReference.delete();
+    }
+
+    @Override
     public Task<InputStream> fetch(String id) {
         StorageReference fileReference = FirebaseStorage.getInstance().getReference().child(id);
-        return fileReference.getStream().onSuccessTask(s -> Tasks.forResult(s == null ? null : s.getStream()));
+        return fileReference.getBytes(MEGABYTE).onSuccessTask(b -> Tasks.forResult(b == null ? null : new ByteArrayInputStream(b)));
     }
 
     @Override

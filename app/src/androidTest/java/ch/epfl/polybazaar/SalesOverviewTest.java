@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.SeekBar;
 
+
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -45,9 +45,9 @@ public class SalesOverviewTest {
     public void init() {
         useMockDataStore();
 
-        LiteListing litelisting1 = new LiteListing("1", "listing1", "CHF 1", "Video games");
+        LiteListing liteListing1 = new LiteListing("1", "listing1", "CHF 1", "Video games");
 
-        litelisting1.save();
+        liteListing1.save();
     }
 
 
@@ -64,20 +64,23 @@ public class SalesOverviewTest {
         Intents.release();
     }
 
+
     @Test
     public void selectCategoryFromSalesOverview() throws InterruptedException {
         Intents.init();
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
+        Thread.sleep(1000);
         onView(withId(R.id.categoryOverview)).perform(click());
-        Thread.sleep(500);
-        //onView(withId(R.id.categoriesRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
+        Thread.sleep(1000);
         onView(withText("Multimedia")).perform(click());
-
+        Thread.sleep(1000);
         pressBack();
-        Thread.sleep(500);
+        Thread.sleep(1000);
         onView(withId(R.id.categoryButton)).perform(click());
+        Thread.sleep(1000);
         LiteListing searchedListing = activityRule.getActivity().getLiteListingList().get(0);
+        Thread.sleep(1000);
         assertEquals("listing1",searchedListing.getTitle());
         assertEquals(1,activityRule.getActivity().getLiteListingList().size());
         Intents.release();

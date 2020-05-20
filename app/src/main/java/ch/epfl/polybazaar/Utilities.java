@@ -11,7 +11,6 @@ import ch.epfl.polybazaar.user.User;
 
 public abstract class Utilities {
 
-    // TODO: can be adjusted
     public static boolean nameIsValid(String name) {
         return (name.matches("[a-zA-Z]+"));
     }
