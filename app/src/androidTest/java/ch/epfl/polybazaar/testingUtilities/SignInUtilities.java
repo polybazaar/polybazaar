@@ -25,7 +25,7 @@ public abstract class SignInUtilities {
     }
 
     public static void createAccountAndBackToLoginFromLoginActivity(String email, String nickname, String password) {
-        onView(withId(R.id.signUpButton)).perform(click());
+        onView(withId(R.id.signUpButton)).perform(scrollTo(), click());
         fillAndSubmitSignUp(email, nickname, password, password);
         closeSoftKeyboard();
         onView(withId(R.id.sendLinkButton)).perform(scrollTo(), click());
@@ -36,14 +36,14 @@ public abstract class SignInUtilities {
     }
 
     public static void fillAndSubmitSignUp(String email, String nickname, String password, String confirm) {
-        onView(withId(R.id.emailInput)).perform(typeText(email));
+        onView(withId(R.id.emailInput)).perform(scrollTo(), typeText(email));
         closeSoftKeyboard();
-        onView(withId(R.id.nicknameInput)).perform(typeText(nickname));
+        onView(withId(R.id.nicknameInput)).perform(scrollTo(), typeText(nickname));
         closeSoftKeyboard();
-        onView(withId(R.id.passwordInput)).perform(typeText(password));
+        onView(withId(R.id.passwordInput)).perform(scrollTo(), typeText(password));
         closeSoftKeyboard();
-        onView(withId(R.id.confirmPasswordInput)).perform(typeText(confirm));
+        onView(withId(R.id.confirmPasswordInput)).perform(scrollTo(), typeText(confirm));
         closeSoftKeyboard();
-        onView(withId(R.id.submitSignUpButton)).perform(click());
+        onView(withId(R.id.submitSignUpButton)).perform(scrollTo(), click());
     }
 }

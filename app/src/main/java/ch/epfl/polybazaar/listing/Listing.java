@@ -17,9 +17,10 @@ import ch.epfl.polybazaar.database.ModelTransaction;
 import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
-import static ch.epfl.polybazaar.Utilities.emailIsValid;
+
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
+import static ch.epfl.polybazaar.utilities.InputValidity.emailIsValid;
 
 /**
  * A listing represents an object that is listed for sale on the app
