@@ -12,6 +12,13 @@ public final class AuthenticationUtils {
     // class is non-instantiable
     private AuthenticationUtils() {}
 
+    /**
+     * Checks that the user is authorized to access a resource restricted to authenticated users.
+     * If the user is not authenticated, redirects to login activity. If the user is authenticated
+     * but has not verified the email yet, redirects to email verification activity.
+     * @param ctx app context
+     * @return true if the user is signed in and has verified the email, false otherwise
+     */
     public static boolean checkAccessAuthorization(Context ctx) {
         Authenticator authenticator = AuthenticatorFactory.getDependency();
         Account user = authenticator.getCurrentUser();
@@ -29,6 +36,10 @@ public final class AuthenticationUtils {
         }
     }
 
+    /**
+     * Sends a verification e-mail to the authenticated user if possible and displays an alert message.
+     * @param ctx app context
+     */
     public static void sendVerificationEmailWithResponse(Context ctx) {
         Authenticator authenticator = AuthenticatorFactory.getDependency();
         Account user = authenticator.getCurrentUser();
