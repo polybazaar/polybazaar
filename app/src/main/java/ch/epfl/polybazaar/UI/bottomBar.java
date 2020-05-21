@@ -5,10 +5,7 @@ import android.content.Intent;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
-import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticationUtils;
-import ch.epfl.polybazaar.login.Authenticator;
-import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
 public abstract class bottomBar {
 
