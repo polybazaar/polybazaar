@@ -21,18 +21,6 @@ public class EmailVerificationActivity extends AppCompatActivity {
         authenticator = AuthenticatorFactory.getDependency();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Account user = authenticator.getCurrentUser();
-        /*
-        if (user != null && !user.isEmailVerified()) {
-            authenticator.signOut();
-            // TODO delete the user
-        }
-         */
-    }
-
     /**
      * Attempts to send a verification email to the user
      * @param view view that triggers the action
