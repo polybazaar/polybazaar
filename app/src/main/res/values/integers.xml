@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="titleDisplayLength">20</integer>
+    <integer name="min_password_length">8</integer>
+    <integer name="min_nickname_length">2</integer>
+    <integer name="max_phone_number_length">15</integer>
+    <integer name="max_name_length">50</integer>
+    <integer name="max_nickname_length">20</integer>
+    <integer name="max_title_length">50</integer>
+    <integer name="max_description_length">500</integer>
+    <integer name="max_price_length">6</integer>
 </resources>

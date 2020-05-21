@@ -98,35 +98,40 @@
                 android:textSize="@dimen/default_textView_text_size"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/nicknameTextView"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newNicknameInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/inter_space_large"
-                android:text="@string/nickname"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/small_textView_text_size"/>
+                android:layout_marginStart="@dimen/inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="@integer/max_nickname_length">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nicknameSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/inter_space_small"
                 android:background="@drawable/boxed"
+                android:maxLength="@integer/max_nickname_length"
                 android:hint="@string/nickname"
                 android:inputType="textPersonName"
                 android:importantForAutofill="no" />
 
-            <TextView
-                android:id="@+id/firstNameTextView"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newFirstNameInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/inter_space_large"
-                android:text="@string/first_name"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/small_textView_text_size"/>
+                android:layout_marginStart="@dimen/inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:errorEnabled="true">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/firstNameSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -134,37 +139,39 @@
                 android:background="@drawable/boxed"
                 android:hint="@string/first_name"
                 android:inputType="textPersonName"
+                android:maxLength="@integer/max_name_length"
                 android:importantForAutofill="no" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/lastNameTextView"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newLastNameInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/inter_space_large"
-                android:text="@string/last_name"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/small_textView_text_size"/>
-
-            <EditText
+                android:layout_marginStart="@dimen/inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/lastNameSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/inter_space_small"
                 android:background="@drawable/boxed"
                 android:hint="@string/last_name"
+                android:maxLength="@integer/max_name_length"
                 android:inputType="textPersonName"
                 android:importantForAutofill="no" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/phoneNumberTextView"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newPhoneNumberInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/inter_space_large"
-                android:text="@string/phone_number"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/small_textView_text_size"/>
-
-            <EditText
+                android:layout_marginStart="@dimen/inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/phoneNumberSelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -174,6 +181,7 @@
                 android:maxLength="17"
                 android:hint="@string/phone_number"
                 android:importantForAutofill="no" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/saveProfileButton"
@@ -204,63 +212,67 @@
                 android:textColor="@android:color/secondary_text_light"
                 android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/currentPasswordTextView"
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/currentPasswordInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/inter_space_large"
-                android:text="@string/current_password"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/small_textView_text_size"/>
+                android:layout_marginStart="@dimen/inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:errorEnabled="true">
 
-            <EditText
-                android:id="@+id/currentPassword"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/currentPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/inter_space_small"
+                    android:background="@drawable/boxed"
+                    android:hint="@string/current_password"
+                    android:importantForAutofill="no"
+                    android:inputType="textPassword"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newPasswordInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/inter_space_small"
-                android:background="@drawable/boxed"
-                android:inputType="textPassword"
-                android:importantForAutofill="no"
-                tools:ignore="LabelFor" />
-
-            <TextView
-                android:id="@+id/newPasswordTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/inter_space_large"
-                android:text="@string/new_password"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/small_textView_text_size" />
-
-            <EditText
+                android:layout_marginStart="@dimen/inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/newPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/inter_space_small"
+                android:hint="@string/new_password"
                 android:background="@drawable/boxed"
                 android:inputType="textPassword"
                 android:importantForAutofill="no"
                 tools:ignore="LabelFor" />
 
-            <TextView
-                android:id="@+id/confirmNewPasswordTextView"
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/confirmNewPasswordInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/inter_space_large"
-                android:text="@string/confirm_password"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/small_textView_text_size" />
-
-            <EditText
+                android:layout_marginStart="@dimen/inter_space_large"
+                android:layout_marginTop="@dimen/inter_space_extra_large"
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/confirmNewPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/inter_space_small"
+                android:hint="@string/confirm_password"
                 android:background="@drawable/boxed"
                 android:inputType="textPassword"
                 android:importantForAutofill="no"
                 tools:ignore="LabelFor" />
-
+            </com.google.android.material.textfield.TextInputLayout>
             <Button
                 android:id="@+id/savePassword"
                 android:layout_width="wrap_content"

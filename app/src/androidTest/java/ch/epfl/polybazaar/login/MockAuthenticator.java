@@ -15,7 +15,7 @@ public class MockAuthenticator implements Authenticator {
 
     public final static String TEST_USER_EMAIL = "test.user@epfl.ch";
     public final static String TEST_USER_NICKNAME = "testuser";
-    public final static String TEST_USER_PASSWORD = "abcdef";
+    public final static String TEST_USER_PASSWORD = "AGoodAndSafePassword1234";
 
     private Account currentUser;
 

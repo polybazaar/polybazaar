@@ -52,7 +52,7 @@ public class FavoritesTest {
 
 
    @Test public void favoritesListIsEmpty() {
-        auth.signIn("test.user@epfl.ch", "abcdef");
+        auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         clickButton(withId(R.id.signInButton));
 
         clickButton(withId(R.id.action_profile));
@@ -63,7 +63,7 @@ public class FavoritesTest {
 
     @Test public void favoriteIsRecorded() throws Throwable {
         Listing listing1 = new Listing();
-        auth.signIn("test.user@epfl.ch", "abcdef");
+        auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
 
         Authenticator auth = AuthenticatorFactory.getDependency();
         Account authAccount = auth.getCurrentUser();

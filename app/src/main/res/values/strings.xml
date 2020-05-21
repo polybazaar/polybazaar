@@ -164,4 +164,14 @@
     <string name="CHF">&#160;CHF</string>
     <string name="Select">Select...</string>
     <string name="save">Save</string>
+    <string name="field_cant_be_empty">Field cannot be empty</string>
+    <string name="password_lowercase">Password should contain at least one lower case letter</string>
+    <string name="password_uppercase">Password should contain at least one upper case letter</string>
+    <string name="password_digit">Password should contain at least one digit</string>
+    <string name="password_too_short">Password should be at least</string>
+    <string name="char_long">characters long</string>
+    <string name="nickname_too_short">Nickname should be at least</string>
+    <string name="nickname_invalid">Nickname should contain at least one letter</string>
+
+
 </resources>

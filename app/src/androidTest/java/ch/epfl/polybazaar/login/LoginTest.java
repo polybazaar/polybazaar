@@ -11,28 +11,33 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.utilities.InputValidity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
 import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.createAccountAndBackToLoginFromLoginActivity;
 import static ch.epfl.polybazaar.testingUtilities.SignInUtilities.fillAndSubmitSignUp;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.IsNull.nullValue;
 
 public class LoginTest {
     public static final String EMAIL = "otheruser.test@epfl.ch";
     public static final String NICKNAME = "otheruser";
-    public static final String PASSWORD = "abcdef";
+    public static final String PASSWORD = "AnotherStrongPassword69";
 
     @Rule
     public final ActivityTestRule<SignInActivity> mActivityRule =
@@ -90,7 +95,7 @@ public class LoginTest {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(email, NICKNAME, PASSWORD, PASSWORD);
 
-        onView(withText(R.string.signup_email_invalid)).check(matches(isDisplayed()));
+        assertThat(onView(allOf(withId(R.id.emailInputLayout), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
     }
 
     @Test
@@ -98,7 +103,7 @@ public class LoginTest {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, "random");
 
-        onView(withText(R.string.signup_passwords_not_matching)).check(matches(isDisplayed()));
+        assertThat(onView(allOf(withId(R.id.confirmPasswordInputLayout), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
     }
 
     @Test
@@ -106,7 +111,7 @@ public class LoginTest {
         clickButton(withId(R.id.signUpButton));
         fillAndSubmitSignUp(EMAIL, NICKNAME,"a", "a");
 
-        onView(withText(R.string.signup_passwords_weak)).check(matches(isDisplayed()));
+        assertThat(onView(allOf(withId(R.id.passwordInputLayout), withTagValue(is(InputValidity.ERROR)))), is(not(nullValue())));
     }
 
     @Test
@@ -114,7 +119,7 @@ public class LoginTest {
         clickButton(withId(R.id.signUpButton));
 
         fillAndSubmitSignUp(EMAIL, NICKNAME, PASSWORD, PASSWORD);
-        clickButton(withId(R.id.signOutButton));
+        onView(withId(R.id.signOutButton)).perform(scrollTo(), click());
         fillAndSubmitSignIn(EMAIL, PASSWORD);
 
         onView(withText(R.string.email_not_verified)).check(matches(isDisplayed()));

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".UI.SaleDetails">
 
     <ScrollView
@@ -18,61 +19,98 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/emailInput"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/inter_space_large"
-                android:layout_marginEnd="@dimen/inter_space_large"
                 android:layout_marginTop="@dimen/inter_space_extra_large"
-                android:background="@drawable/boxed"
-                android:maxLength="50"
-                android:maxLines="1"
-                android:hint="@string/e_mail_address"
-                android:inputType="textEmailAddress"
-                android:importantForAutofill="no" />
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:errorEnabled="true">
 
-            <EditText
-                android:id="@+id/nicknameInput"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/boxed"
+                    android:hint="@string/e_mail_address"
+                    android:importantForAutofill="no"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="50"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nicknameInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/inter_space_large"
-                android:layout_marginEnd="@dimen/inter_space_large"
                 android:layout_marginTop="@dimen/inter_space_large"
-                android:background="@drawable/boxed"
-                android:maxLength="50"
-                android:maxLines="1"
-                android:hint="@string/nickname"
-                android:inputType="textPersonName"
-                android:importantForAutofill="no"/>
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:counterEnabled="true"
+                app:counterMaxLength="@integer/max_nickname_length"
+                app:errorEnabled="true">
 
-            <EditText
-                android:id="@+id/passwordInput"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nicknameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:background="@drawable/boxed"
+                    android:hint="@string/nickname"
+                    android:importantForAutofill="no"
+                    android:inputType="textPersonName"
+                    android:maxLength="@integer/max_nickname_length"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/inter_space_large"
-                android:layout_marginEnd="@dimen/inter_space_large"
                 android:layout_marginTop="@dimen/inter_space_large"
-                android:background="@drawable/boxed"
-                android:maxLength="50"
-                android:maxLines="1"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:importantForAutofill="no"/>
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:endIconMode="password_toggle"
+                app:errorEnabled="true">
 
-            <EditText
-                android:id="@+id/confirmPasswordInput"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:background="@drawable/boxed"
+                    android:hint="@string/password"
+                    android:importantForAutofill="no"
+                    android:inputType="textPassword"
+                    android:maxLength="50"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/confirmPasswordInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/inter_space_large"
-                android:layout_marginEnd="@dimen/inter_space_large"
                 android:layout_marginTop="@dimen/inter_space_large"
-                android:background="@drawable/boxed"
-                android:maxLength="50"
-                android:maxLines="1"
-                android:hint="@string/confirm_password"
-                android:inputType="textPassword"
-                android:importantForAutofill="no"/>
+                android:layout_marginEnd="@dimen/inter_space_large"
+                app:endIconMode="password_toggle"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/confirmPasswordInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/boxed"
+                    android:hint="@string/confirm_password"
+                    android:importantForAutofill="no"
+                    android:inputType="textPassword"
+                    android:maxLength="50"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/submitSignUpButton"
