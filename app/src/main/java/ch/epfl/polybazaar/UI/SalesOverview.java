@@ -1,18 +1,12 @@
 package ch.epfl.polybazaar.UI;
 
-import android.Manifest;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -21,11 +15,9 @@ import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -37,7 +29,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -49,19 +40,16 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryFragment;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
-import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.saledetails.ListingManager;
 import ch.epfl.polybazaar.search.SearchListings;
 import ch.epfl.polybazaar.user.User;
-import safety.com.br.android_shake_detector.core.ShakeDetector;
-import safety.com.br.android_shake_detector.core.ShakeOptions;
+import ch.epfl.polybazaar.utilities.SatCompassShakeDetector;
 
 import static ch.epfl.polybazaar.chat.ChatActivity.removeBottomBarWhenKeyboardUp;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
@@ -71,7 +59,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
-    public static final float SENSIBILITY = 2.0f;
     private static final float FILTER_ELEVATION = 10;
     private static final int PRICEMIN = 0;
     private static final int PRICEMAX = 1000;
@@ -87,7 +74,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
     private int positionInIDList = 0;
-    private ShakeDetector shakeDetector;
     private Category currentCategory;
 
     @Override
@@ -154,31 +140,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         bottomNavigationView.setSelectedItemId(R.id.action_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SalesOverview.this));
 
-        //Detects shake
-        ShakeOptions options = new ShakeOptions()
-                .background(true)
-                .interval(1000)
-                .shakeCount(2)
-                .sensibility(SENSIBILITY);
-        shakeDetector = new ShakeDetector(options).start(this, () -> {
-            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                Toast.makeText(this, R.string.location_not_granted, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-            if (manager != null && manager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
-                startActivity(new Intent(SalesOverview.this, SatCompass.class));
-            } else {
-                Toast.makeText(this, R.string.location_not_enabled, Toast.LENGTH_SHORT).show();
-            }
-        });
+        SatCompassShakeDetector.start(this);
         removeBottomBarWhenKeyboardUp(this);
     }
 
