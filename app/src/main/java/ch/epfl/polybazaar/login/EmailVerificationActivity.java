@@ -20,7 +20,6 @@ public class EmailVerificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_verification);
         authenticator = AuthenticatorFactory.getDependency();
-        verify(getCurrentFocus());
     }
 
     @Override
@@ -40,21 +39,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
      * @param view view that triggers the action
      */
     public void verify(View view) {
-        Account user = authenticator.getCurrentUser();
-        user.sendEmailVerification()
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(
-                                EmailVerificationActivity.this,
-                                R.string.verification_email_sent, Toast.LENGTH_LONG
-                        ).show();
-                    } else {
-                        MinimalAlertDialog.makeDialog(
-                                EmailVerificationActivity.this,
-                                R.string.verification_email_fail
-                        );
-                    }
-                });
+        AuthenticationUtils.sendVerificationEmailWithResponse(this);
     }
 
     /**
