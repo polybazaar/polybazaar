@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     tools:context=".UI.SaleDetails">
-
     <ScrollView
+        android:id="@+id/saleDetailsScrollView"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_marginStart="@dimen/general_margin"
@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
-                android:layout_marginTop="@dimen/inter_space_large"
+                android:layout_marginTop="@dimen/general_margin"
                 android:orientation="vertical">
 
                 <androidx.viewpager2.widget.ViewPager2
