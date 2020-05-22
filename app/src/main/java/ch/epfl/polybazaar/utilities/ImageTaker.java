@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.widgets.MinimalAlertDialog;
 import ch.epfl.polybazaar.widgets.permissions.PermissionRequest;
 
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
@@ -79,11 +80,16 @@ public class ImageTaker extends AppCompatActivity {
                     failure();
                 }
             } else if (requestCode == RESULT_TAKE_PICTURE) {
+
                 ByteArrayOutputStream bin = new ByteArrayOutputStream();
                 image = BitmapFactory.decodeFile(getPhotoFile().getAbsolutePath());
-                image.compress(Bitmap.CompressFormat.JPEG, QUALITY, bin);
-                image = BitmapFactory.decodeStream(new ByteArrayInputStream(bin.toByteArray()));
-                success();
+                if (image == null) {
+                    failure();
+                } else {
+                    image.compress(Bitmap.CompressFormat.JPEG, QUALITY, bin);
+                    image = BitmapFactory.decodeStream(new ByteArrayInputStream(bin.toByteArray()));
+                    success();
+                }
             } else {
                 failure();
             }
@@ -104,7 +110,7 @@ public class ImageTaker extends AppCompatActivity {
     private void failure() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra(IMAGE_AVAILABLE, false);
-        setResult(Activity.RESULT_CANCELED, returnIntent);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
