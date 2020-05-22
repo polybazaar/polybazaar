@@ -74,14 +74,15 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
     private int positionInIDList = 0;
-    private Category currentCategory;
 
+    /*
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent SalesOverviewIntent = new Intent(SalesOverview.this, SalesOverview.class);
         startActivity(SalesOverviewIntent);
     }
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         liteListingList = new ArrayList<>();
 
         RootCategoryFactory.useJSONCategory(getApplicationContext());
-        currentCategory = RootCategoryFactory.getDependency();
 
         TextView catButton = findViewById(R.id.categoryOverview);
         catButton.setOnClickListener(view->{

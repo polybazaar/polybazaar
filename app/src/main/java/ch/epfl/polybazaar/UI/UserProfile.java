@@ -66,12 +66,14 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
     private EditText lastNameSelector;
     private EditText phoneNumberSelector;
 
+    /*
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent SalesOverviewIntent = new Intent(UserProfile.this, SalesOverview.class);
         startActivity(SalesOverviewIntent);
     }
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

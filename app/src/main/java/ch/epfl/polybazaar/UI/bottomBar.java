@@ -17,6 +17,7 @@ public abstract class bottomBar {
      * @param activity activity where the bar is
      * @return
      */
+
     public static boolean updateActivity(Integer i, Activity activity){
 
         switch (i){

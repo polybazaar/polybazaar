@@ -33,12 +33,14 @@ public class ConversationOverviewActivity extends AppCompatActivity {
     private ConversationOverviewRecyclerAdapter conversationOverviewRecyclerAdapter;
     private RecyclerView conversationOverviewRecycler;
 
+    /*
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent SalesOverviewIntent = new Intent(ConversationOverviewActivity.this, SalesOverview.class);
         startActivity(SalesOverviewIntent);
     }
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
