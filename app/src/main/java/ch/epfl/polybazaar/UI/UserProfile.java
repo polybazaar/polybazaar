@@ -213,11 +213,12 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         String newNickname = nicknameSelector.getText().toString();
         String newFirstName = firstNameSelector.getText().toString();
         String newLastName = lastNameSelector.getText().toString();
-        String phoneNumber = phoneNumberSelector.getText().toString();
 
         TextInputLayout nicknameInputLayout = findViewById(R.id.newNicknameInputLayout);
         TextInputLayout firstNameInputLayout = findViewById(R.id.newFirstNameInputLayout);
         TextInputLayout lastNameInputLayout = findViewById(R.id.newLastNameInputLayout);
+
+        nicknameInputLayout.setErrorEnabled(false);
 
         boolean allValid = true;
 
@@ -247,7 +248,6 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         else{
             lastNameInputLayout.setError(null);
         }
-
 
         if(allValid){
             if (showNewPicDialog) {
