@@ -6,13 +6,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -37,7 +34,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -49,11 +45,9 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryFragment;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
-import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -430,101 +424,17 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         });
     }
 
-    private void queryCategories(){
-        List<Category> allCategories = getContainedCategories(currentCategory);
-        List<Task<List<LiteListing>>> queryList = new ArrayList<>();;
-        for(Category cat: allCategories){
-            queryList.add(LiteListing.fetchFieldEquality("category",cat.toString()));
-        }
-        Tasks.<List<LiteListing>>whenAllSuccess(queryList).addOnSuccessListener(result->{
-            List<LiteListing> flatList = new ArrayList<>();
-            for(List<LiteListing> l : result){
-                flatList.addAll(l);
-            }
-            onFetchSuccess(flatList);
-        });
-
-    }
-    private void onFetchSuccess(List<LiteListing> result){
-        if(result == null) {
-            return;
-        }
-        for (LiteListing l : result) {
-            if (l != null) {
-                if(l.getTimestamp() != null) { // TODO: delete before merge
-                    listingTimeMap.put(l.getTimestamp(), l.getId());
-                }
-            }
-        }
-        IDList = new ArrayList<>(listingTimeMap.values());
-        int size = IDList.size();
-        List<Task<LiteListing>> taskList = new ArrayList<>();
-        for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-            taskList.add(LiteListing.fetch(IDList.get(i)));
-            positionInIDList++;
-        }
-        Tasks.<LiteListing>whenAllSuccess(taskList).addOnSuccessListener(list -> {
-            int start = liteListingList.size();
-            liteListingList.addAll(list);
-            int itemCount = liteListingList.size() - start;
-            adapter.notifyItemRangeInserted(start, itemCount);
-        });
-    }
 
     @Override
     public void onCategoryFragmentInteraction(Category category) {
-        positionInIDList = 0;
-        currentCategory = category;
-        listingTimeMap = new TreeMap<>(Collections.reverseOrder());    // store LiteListing IDs in reverse order of creation (most recent first)
-        IDList = new ArrayList<>();
-        liteListingList = new ArrayList<>();
-        RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
 
-        // Create adapter passing in the sample LiteListing data
-        adapter = new LiteListingAdapter(liteListingList);
-
-        adapter.setOnItemClickListener(view -> {
-            int viewID = view.getId();
-            String listingID = adapter.getListingID(viewID);
-            Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-            intent.putExtra(LISTING_ID, listingID);
-            startActivity(intent);
-        });
-
-        rvLiteListings.setAdapter(adapter);
-        LinearLayoutManager mGridLayoutManager = new GridLayoutManager(this, NUMBEROFCOLUMNS);
-        rvLiteListings.setLayoutManager(mGridLayoutManager);
-        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(mGridLayoutManager) {
-
-            @Override
-            public void onLoadMore() {
-                // Triggered only when new data needs to be appended to the list
-                loadLiteListingOverview();
-            }
-        };
-        // Adds the scroll listener to RecyclerView
-        rvLiteListings.addOnScrollListener(scrollListener);
-        loadLiteListingsByCategory();
+        Intent categoryIntent = new Intent(this, SearchListings.class);
+        categoryIntent.putExtra("category", category.toString());
+        startActivity(categoryIntent);
     }
 
-    // get all categories contained in the category (the category is also contained in itself)
-    private List<Category> getContainedCategories(Category category) {
-        List<Category> subcategories = new ArrayList<>();
-        subcategories.add(category);
-        if (category.hasSubCategories()) {
-            for (Category cat : category.subCategories()) {
-                subcategories.addAll(getContainedCategories(cat));
-            }
-        }
-        return subcategories;
-    }
 
-    private void loadLiteListingsByCategory(){
-        if(currentCategory.equals(RootCategoryFactory.getDependency())){
-            loadLiteListingOverview();
-        }else{
-            queryCategories();
-        }
-    }
+
+
 
 }
