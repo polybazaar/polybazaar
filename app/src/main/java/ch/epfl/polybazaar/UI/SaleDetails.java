@@ -2,7 +2,6 @@ package ch.epfl.polybazaar.UI;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Gravity;
@@ -35,7 +34,6 @@ import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 public class SaleDetails extends AppCompatActivity {
 
@@ -44,13 +42,10 @@ public class SaleDetails extends AppCompatActivity {
 
     private Listing listing;
     private String listingID;
-    //private List<Bitmap> listStringImage;
-    private List<String> listImageID;
 
     private double mpLat = NOLAT;
     private double mpLng = NOLNG;
     private int viewIncrement = 0;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -60,8 +55,6 @@ public class SaleDetails extends AppCompatActivity {
 
         imageManager = new ImageManager(this);
         listingManager = new ListingManager(this);
-        //listStringImage = new ArrayList<>();
-        listImageID = new ArrayList<>();
 
         findViewById(R.id.ratingBar).setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -69,9 +62,6 @@ public class SaleDetails extends AppCompatActivity {
             }
             return true;
         });
-
-        //listStringImage = new ArrayList<>();
-        listImageID = new ArrayList<>();
 
         Glide.with(this).load(R.drawable.loading).into((ImageView)findViewById(R.id.loadingImage));
 

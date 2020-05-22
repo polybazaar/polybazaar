@@ -75,6 +75,12 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     private double lat = NOLAT;
     private double lng = NOLNG;
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent SalesOverviewIntent = new Intent(FillListing.this, SalesOverview.class);
+        startActivity(SalesOverviewIntent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
