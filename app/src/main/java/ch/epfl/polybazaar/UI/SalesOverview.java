@@ -473,6 +473,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
 
     @Override
     public void onCategoryFragmentInteraction(Category category) {
+        /*
         positionInIDList = 0;
         currentCategory = category;
         listingTimeMap = new TreeMap<>(Collections.reverseOrder());    // store LiteListing IDs in reverse order of creation (most recent first)
@@ -505,6 +506,15 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         // Adds the scroll listener to RecyclerView
         rvLiteListings.addOnScrollListener(scrollListener);
         loadLiteListingsByCategory();
+
+
+         */
+        Intent categoryIntent = new Intent(this, SearchListings.class);
+        categoryIntent.putExtra("category", category.toString());
+
+        // transmit listing information to SearchListings class via DataHolder singleton class
+        DataHolder.getInstance().setDataMap(searchListingTitleMap);
+        startActivity(categoryIntent);
     }
 
     // get all categories contained in the category (the category is also contained in itself)
