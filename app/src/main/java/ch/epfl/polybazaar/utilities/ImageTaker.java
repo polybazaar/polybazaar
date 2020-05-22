@@ -110,7 +110,7 @@ public class ImageTaker extends AppCompatActivity {
     private void failure() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra(IMAGE_AVAILABLE, false);
-        setResult(Activity.RESULT_CANCELED, returnIntent);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
