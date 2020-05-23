@@ -153,24 +153,23 @@ public class ListingManager {
     public static void deleteCurrentListing(String listingID) {
         Listing.fetch(listingID).addOnSuccessListener(listing -> {
             // Delete images:
-            if (listing != null && listing.getImagesRefs() != null) {
-                for (String ref : listing.getImagesRefs()) {
-                    ImageTransaction.delete(ref);
+            if (listing != null) {
+                if (listing.getImagesRefs() != null) {
+                    for (String ref : listing.getImagesRefs()) {
+                        ImageTransaction.delete(ref);
+                    }
                 }
+                User.fetch(listing.getUserEmail()).addOnSuccessListener(user -> {
+                    user.deleteOwnListing(listingID);
+                    user.save();
+                });
             }
             LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
                 if (liteListing != null) {
                     if (liteListing.getThumbnailRef() != null) {
                         ImageTransaction.delete(liteListing.getThumbnailRef());
                     }
-                    Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-                        Authenticator fbAuth = AuthenticatorFactory.getDependency();
-                        Account authAccount = fbAuth.getCurrentUser();
-                        authAccount.getUserData().addOnSuccessListener(user -> {
-                            user.deleteOwnListing(listingID);
-                            user.save();
-                        });
-                    });
+                    Listing.deleteWithLiteVersion(listingID);
                 }
             });
             // delete all messages

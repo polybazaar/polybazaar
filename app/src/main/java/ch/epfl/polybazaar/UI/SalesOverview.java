@@ -75,15 +75,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private LiteListingAdapter adapter;
     private int positionInIDList = 0;
 
-    /*
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent SalesOverviewIntent = new Intent(SalesOverview.this, SalesOverview.class);
-        startActivity(SalesOverviewIntent);
-    }
-     */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
