@@ -80,19 +80,20 @@ public class ImageManager {
                 }
             });
 
+            // inflate the layout of the popup window
+            LayoutInflater inflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.popup_window_images, null);
+            ViewPager2 zoomViewPager = popupView.findViewById(R.id.viewPagerZoom);
+            zoomViewPager.setAdapter(new SliderAdapter(sliderItemsZoom, viewPager));
+            zoomViewPager.setCurrentItem(viewPager.getCurrentItem(), false);
+
+            final PopupWindow popupWindow = new PopupWindow(
+                    popupView,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    true);
+
             viewPager.setOnClickListener(v -> {
-                // inflate the layout of the popup window
-                LayoutInflater inflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View popupView = inflater.inflate(R.layout.popup_window_images, null);
-                ViewPager2 zoomViewPager = popupView.findViewById(R.id.viewPagerZoom);
-                zoomViewPager.setAdapter(new SliderAdapter(sliderItemsZoom, viewPager));
-
-                final PopupWindow popupWindow = new PopupWindow(
-                        popupView,
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        false);
-
                 popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, 0, 0);
             });
 
