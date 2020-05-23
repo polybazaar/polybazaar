@@ -14,7 +14,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SaleDetails;
@@ -91,6 +94,19 @@ public class ListingManager {
                     sellerNickname.setText(result.getNickName());
                 }
             });
+
+            //Set the date
+            TextView datePut = activity.findViewById(R.id.datePut);
+            LiteListing.fetch(listing.getId()).addOnSuccessListener(liteListing -> {
+                if (liteListing != null) {
+                    Date date = liteListing.getTimestamp().toDate();
+                    Locale locale = new Locale("en", "CH");
+                    DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+                    datePut.setText(dateFormat.format(date));
+                }
+            });
+            LinearLayout dateLayout = activity.findViewById(R.id.dateLayout);
+            dateLayout.setVisibility(View.VISIBLE);
 
             // Enable logged in features
             Button contactSelButton = activity.findViewById(R.id.contactSel);

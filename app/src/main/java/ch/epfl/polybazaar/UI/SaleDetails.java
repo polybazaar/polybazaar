@@ -97,7 +97,7 @@ public class SaleDetails extends AppCompatActivity {
     }
 
     private void retrieveImages() {
-        if (listing.getImagesRefs() != null && listing.getImagesRefs().size() > 0) {
+        if (listing != null && listing.getImagesRefs() != null && listing.getImagesRefs().size() > 0) {
             listing.fetchImages(SaleDetails.this).addOnSuccessListener(bitmaps -> {
                 imageManager.drawImages(bitmaps);
             });

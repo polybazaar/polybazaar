@@ -251,7 +251,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
 
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
