@@ -326,9 +326,8 @@ public class SaleDetailsTest {
 
     @Test
     public void testSetupViewMP() throws ExecutionException, InterruptedException {
-        MockAuthenticator auth = MockAuthenticator.getInstance();
         String id = "listingID";
-        final Listing listing = new Listing("Title", "Description", "0", "otherUser@epfl.ch",
+        Listing listing = new Listing("Title", "Description", "0", "otherUser@epfl.ch",
                 "", "Multimedia", 1.0, 1.0);
         listing.setId(id);
         Tasks.await(listing.save());
