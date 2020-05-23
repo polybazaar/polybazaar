@@ -7,6 +7,7 @@ import org.junit.Test;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.cropToSize;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.cropToSquare;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.getRoundedCroppedBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.limitImageSize;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.scaleBitmap;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -60,5 +61,15 @@ public class ImageUtilitiesTest {
         Bitmap output = getRoundedCroppedBitmap(source);
         assertThat(output.getHeight(), is(300));
         assertThat(output.getWidth(), is(300));
+    }
+
+    @Test
+    public void limitSizeTest() {
+        assertNull(limitImageSize(null, 12));
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+        Bitmap source = Bitmap.createBitmap(4000, 400, conf);
+        Bitmap output = limitImageSize(source, 3000);
+        assertThat(output.getHeight(), is(300));
+        assertThat(output.getWidth(), is(3000));
     }
 }

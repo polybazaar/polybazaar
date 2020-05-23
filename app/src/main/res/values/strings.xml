@@ -173,6 +173,9 @@
     <string name="nickname_too_short">Nickname should be at least</string>
     <string name="nickname_invalid">Nickname should contain at least one letter</string>
     <string name="image_capture_failure">The image could not be imported, please try again.</string>
+    <string name="online_since_date">Online since </string>
+    <string name="date_missing">date missing</string>
+    <string name="n_a">N/A</string>
 
 
 </resources>

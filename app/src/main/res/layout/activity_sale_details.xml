@@ -302,7 +302,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/inter_space_large"
-                android:layout_marginBottom="@dimen/inter_space_extra_large"
                 android:orientation="horizontal">
 
                 <Space
@@ -330,6 +329,47 @@
                     android:text="@string/zero"
                     android:textSize="@dimen/large_textView_text_size"
                     android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/inter_space_large"
+                android:layout_marginBottom="@dimen/inter_space_extra_large"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5" />
+
+                <TextView
+                    android:id="@+id/dateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/online_since_date"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="@dimen/large_textView_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/datePut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="3dp"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:text="@string/n_a"
+                    android:textSize="@dimen/large_textView_text_size"
+                    android:textStyle="bold"/>
 
                 <Space
                     android:layout_width="0dp"
