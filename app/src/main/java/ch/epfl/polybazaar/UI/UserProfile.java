@@ -211,8 +211,6 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         TextInputLayout firstNameInputLayout = findViewById(R.id.newFirstNameInputLayout);
         TextInputLayout lastNameInputLayout = findViewById(R.id.newLastNameInputLayout);
 
-        nicknameInputLayout.setErrorEnabled(false);
-
         boolean allValid = true;
 
         //Below, tags are set for testing purpose as there is no easy way to check the error of an Input Layout from android.material

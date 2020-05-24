@@ -71,5 +71,9 @@ public class ImageUtilitiesTest {
         Bitmap output = limitImageSize(source, 3000);
         assertThat(output.getHeight(), is(300));
         assertThat(output.getWidth(), is(3000));
+        Bitmap source2 = Bitmap.createBitmap(3000, 400, conf);
+        Bitmap output2 = limitImageSize(source2, 3000);
+        assertThat(output2.getHeight(), is(400));
+        assertThat(output2.getWidth(), is(3000));
     }
 }
