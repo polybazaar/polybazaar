@@ -30,7 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".search.SearchListings">
+        <activity
+            android:name=".search.SearchListings"
+            android:theme="@style/Theme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
