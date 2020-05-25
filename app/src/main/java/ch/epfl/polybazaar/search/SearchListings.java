@@ -3,14 +3,11 @@ package ch.epfl.polybazaar.search;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-
-import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.List;
