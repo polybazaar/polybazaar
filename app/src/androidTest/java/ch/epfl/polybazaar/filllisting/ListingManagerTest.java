@@ -83,9 +83,9 @@ public class ListingManagerTest {
         pressBack();
         Thread.sleep(500);
         runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.categoryButton).performClick());
-        runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.submitListing).performClick());
+        onView(withText(activityRule.getActivity().getString(R.string.save))).perform(scrollTo(), click());
         //wait that the listing has been updated
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         Tasks.await(Listing.fetch(id).addOnSuccessListener(result -> assertEquals(newTitle, result.getTitle())));
         Intents.release();
     }
