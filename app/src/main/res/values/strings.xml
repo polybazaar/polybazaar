@@ -12,7 +12,7 @@
     <string name="signup_email_invalid">Please enter a valid EPFL e-mail address</string>
     <string name="signup_nickname_invalid">Please enter a valid nickname</string>
     <string name="verification_email_sent">Verification e-mail sent</string>
-    <string name="verification_email_fail">Unable to send verification e-mail</string>
+    <string name="verification_email_fail">Unable to send verification e-mail. A verification e-mail has probably been sent already. Check your inbox and try again in a few minutes</string>
     <string name="reload_fail">Unable to reload</string>
     <string name="contact_the_seller">Contact Seller</string>
     <string name="title">Listing Title</string>
