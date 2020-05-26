@@ -2,7 +2,6 @@ package ch.epfl.polybazaar.UI;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Gravity;
@@ -23,7 +22,7 @@ import java.util.List;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.chat.ChatActivity;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.login.AuthenticationUtils;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.saledetails.ImageManager;
 import ch.epfl.polybazaar.saledetails.ListingManager;
@@ -35,7 +34,6 @@ import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 public class SaleDetails extends AppCompatActivity {
 
@@ -123,10 +121,7 @@ public class SaleDetails extends AppCompatActivity {
      */
 
     public void contactSeller(View v) {
-        if (AuthenticatorFactory.getDependency().getCurrentUser() == null) {
-            Intent notSignedIn = new Intent(getApplicationContext(), NotSignedIn.class);
-            startActivity(notSignedIn);
-        } else {
+        if (AuthenticationUtils.checkAccessAuthorization(this)) {
             Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
             intent.putExtra(ChatActivity.BUNDLE_LISTING_ID, listingID);
             intent.putExtra(ChatActivity.BUNDLE_RECEIVER_EMAIL, listing.getUserEmail());

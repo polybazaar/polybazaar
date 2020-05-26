@@ -96,6 +96,7 @@ public class SignUpActivity extends AppCompatActivity {
         authenticator.createUser(email, nickname, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
+                        AuthenticationUtils.sendVerificationEmailWithResponse(this);
                         Intent intent = new Intent(getApplicationContext(), EmailVerificationActivity.class);
                         startActivity(intent);
                     } else {

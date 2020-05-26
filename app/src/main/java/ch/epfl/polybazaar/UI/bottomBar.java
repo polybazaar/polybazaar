@@ -5,9 +5,7 @@ import android.content.Intent;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
-import ch.epfl.polybazaar.login.Account;
-import ch.epfl.polybazaar.login.Authenticator;
-import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.login.AuthenticationUtils;
 
 public abstract class bottomBar {
 
@@ -47,15 +45,11 @@ public abstract class bottomBar {
      * @param c the class to go to
      */
     private static void toActivity(Activity currentActivity, Class c){
-        Authenticator authenticator = AuthenticatorFactory.getDependency();
-        Account user = authenticator.getCurrentUser();
-        Intent intent;
-        if(user == null){
-            intent = new Intent(currentActivity, NotSignedIn.class);
-        }else{
-            intent = new Intent(currentActivity,c);
+        if (AuthenticationUtils.checkAccessAuthorization(currentActivity)) {
+            Intent intent = new Intent(currentActivity,c);
+            currentActivity.startActivity(intent);
+            currentActivity.overridePendingTransition(0, 0);
         }
-        currentActivity.startActivity(intent);
-        currentActivity.overridePendingTransition(0, 0);
+
     }
 }
