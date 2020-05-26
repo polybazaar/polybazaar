@@ -152,17 +152,18 @@ public class ChatActivity extends AppCompatActivity {
         final String newMessageID = randomUUID().toString();
         message.setId(newMessageID);
 
-        message.save().addOnSuccessListener(aVoid -> {
-            conversation.add(message);
-            messageEditor.setText("");
-            chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
-            messageRecycler.setAdapter(chatMessageRecyclerAdapter);
-            messageRecycler.scrollToPosition(conversation.size() - 1);
+        message.save();
+        conversation.add(message);
+        messageEditor.setText("");
+        chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
+        messageRecycler.setAdapter(chatMessageRecyclerAdapter);
+        messageRecycler.scrollToPosition(conversation.size() - 1);
 
-            User.fetch(receiverEmail).addOnSuccessListener(user -> {if(user != null) {
+        User.fetch(receiverEmail).addOnSuccessListener(user -> {
+            if(user != null) {
                 receiverToken = user.getToken();
                 NotificationUtilities.sendNewChatNotification(getApplicationContext(), fcmServiceAPI, senderEmail, receiverEmail, listingID, AuthenticatorFactory.getDependency().getCurrentUser().getNickname(), message, receiverToken);
-            }});
+            }
         });
     }
 

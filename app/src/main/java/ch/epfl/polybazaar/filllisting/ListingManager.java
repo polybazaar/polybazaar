@@ -217,8 +217,8 @@ public class ListingManager {
                     });
                 }
             });
-            Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
-            activity.startActivity(SalesOverviewIntent);
         });
+        Intent SalesOverviewIntent = new Intent(activity, SalesOverview.class);
+        activity.startActivity(SalesOverviewIntent);
     }
 }

@@ -59,6 +59,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
+    private static final String referenceSearchList = "referenceSearchList";
     private static final float FILTER_ELEVATION = 10;
     private static final int PRICEMIN = 0;
     private static final int PRICEMAX = 1000;
@@ -263,6 +264,9 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             if (bundle.getBoolean(bundleKey)) {
                 IDList = DataHolder.getInstance().getData();
             }
+            if(bundle.getBoolean(referenceSearchList)) {
+                searchListingTitleMap = DataHolder.getInstance().getDataMap();
+            }
         }
 
         // Initial load
@@ -318,9 +322,11 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             int size = IDList.size();
 
             // Prepare a  map <listingID, title> sorted by most recent first, for search purposes
-            for (int i = 0; i < size; i++) {
-                String key = IDList.get(i);
-                searchListingTitleMap.put(key, listingTitleMap.get(key).toLowerCase());
+            if(searchListingTitleMap.isEmpty()) {
+                for (int i = 0; i < size; i++) {
+                    String key = IDList.get(i);
+                    searchListingTitleMap.put(key, listingTitleMap.get(key).toLowerCase());
+                }
             }
 
             List<Task<LiteListing>> taskList = new ArrayList<>();
@@ -381,6 +387,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                 Intent intent = new Intent(context, SalesOverview.class);
                 Bundle extras = new Bundle();
                 extras.putBoolean(bundleKey, true);
+                extras.putBoolean(referenceSearchList, true);
                 intent.putExtras(extras);
                 context.startActivity(intent);
             } else {
