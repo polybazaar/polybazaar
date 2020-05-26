@@ -35,7 +35,6 @@ public class Listing extends Model implements Serializable {
     public static final String DESCRIPTION = "description";
     public static final String PRICE = "price";
     public static final String USER_EMAIL = "userEmail";
-    public static final String STRING_IMAGE = "stringImage";
     public static final String CATEGORY = "category";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
@@ -49,7 +48,6 @@ public class Listing extends Model implements Serializable {
     private final SimpleField<String> description = new SimpleField<>(DESCRIPTION);
     private final SimpleField<String> price = new SimpleField<>(PRICE);
     private final SimpleField<String> userEmail = new SimpleField<>(USER_EMAIL);
-    private final SimpleField<String> stringImage = new SimpleField<>(STRING_IMAGE);
     private final SimpleField<String> category = new SimpleField<>(CATEGORY);
     private final SimpleField<Double> latitude = new SimpleField<>(LATITUDE, NOLAT);
     private final SimpleField<Double> longitude = new SimpleField<>(LONGITUDE, NOLNG);
@@ -63,7 +61,7 @@ public class Listing extends Model implements Serializable {
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public Listing() {
-        registerFields(id, title, description, price, userEmail, stringImage, category, latitude, longitude, views, haveSeenUsers, listingActive, imagesRefs);
+        registerFields(id, title, description, price, userEmail, category, latitude, longitude, views, haveSeenUsers, listingActive, imagesRefs);
     }
 
     /**
@@ -72,10 +70,9 @@ public class Listing extends Model implements Serializable {
      * @param description
      * @param price
      * @param userEmail
-     * @param stringImage String format : you can use convertFileToString or convertStringToBitmap to convert into String
      */
     public Listing(String title, String description, String price, String userEmail,
-                   String stringImage, String category, double latitude, double longitude) throws  IllegalArgumentException {
+                   String category, double latitude, double longitude) throws  IllegalArgumentException {
         this();
         this.title.set(title);
         this.description.set(description);
@@ -85,7 +82,6 @@ public class Listing extends Model implements Serializable {
         } else {
             throw new IllegalArgumentException("userEmail has invalid format");
         }
-        this.stringImage.set(stringImage);
         this.category.set(category);
         this.latitude.set(latitude);
         this.longitude.set(longitude);
@@ -94,12 +90,8 @@ public class Listing extends Model implements Serializable {
         this.listingActive.set(true);
     }
 
-    public Listing(String title, String description, String price, String userEmail, String stringImage, String category) {
-        this(title, description, price, userEmail, stringImage, category, NOLAT, NOLNG);
-    }
-
     public Listing(String title, String description, String price, String userEmail, String category) {
-        this(title, description, price, userEmail, null, category, NOLAT, NOLNG);
+        this(title, description, price, userEmail, category, NOLAT, NOLNG);
     }
 
     public String getTitle() {
@@ -116,10 +108,6 @@ public class Listing extends Model implements Serializable {
 
     public String getUserEmail() {
         return userEmail.get();
-    }
-
-    public String getStringImage() {
-        return stringImage.get();
     }
 
     public String getCategory(){
@@ -184,7 +172,7 @@ public class Listing extends Model implements Serializable {
      */
     public Task<Void> saveWithLiteVersion() {
         return this.save().onSuccessTask(v -> {
-            LiteListing liteVersion = new LiteListing(id.get(), title.get(), price.get(), category.get(), "");
+            LiteListing liteVersion = new LiteListing(id.get(), title.get(), price.get(), category.get());
             return liteVersion.save();
         });
     }

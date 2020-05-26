@@ -62,7 +62,7 @@ public class ListingManagerTest {
         Intents.init();
         String id = "listingID";
         final Listing listing = new Listing("Title", "Description", "0", MockAuthenticator.TEST_USER_EMAIL,
-                "", "Video games", 1.0, 1.0);
+                 "Video games", 1.0, 1.0);
         listing.setId(id);
         Tasks.await(listing.saveWithLiteVersion());
 

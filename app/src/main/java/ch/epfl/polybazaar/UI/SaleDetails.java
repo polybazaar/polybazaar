@@ -65,7 +65,6 @@ public class SaleDetails extends AppCompatActivity {
 
         Glide.with(this).load(R.drawable.loading).into((ImageView)findViewById(R.id.loadingImage));
 
-
         retrieveListingFromListingID();
     }
 

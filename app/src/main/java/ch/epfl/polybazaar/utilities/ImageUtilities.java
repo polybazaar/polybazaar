@@ -255,7 +255,7 @@ public final class ImageUtilities {
      * Scales the resolution of a bitmap
      * @param bitmap the source bitmap
      * @param targetWidth the desired width, in pixels
-     * @return the scaled bitmap
+     * @return the scaled bitmapre
      */
     public static Bitmap scaleBitmap(Bitmap bitmap, int targetWidth) {
         if (bitmap != null) {

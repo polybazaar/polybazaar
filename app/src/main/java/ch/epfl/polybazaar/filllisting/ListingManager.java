@@ -146,7 +146,7 @@ public class ListingManager {
         if (fbAuth.getCurrentUser() != null) {
             String userEmail = fbAuth.getCurrentUser().getEmail();
             return new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(),
-                    priceSelector.getText().toString(), userEmail, "", category, lat, lng);
+                    priceSelector.getText().toString(), userEmail, category, lat, lng);
         }
         return null;
     }
