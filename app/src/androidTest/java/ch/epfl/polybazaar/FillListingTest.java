@@ -35,6 +35,7 @@ import java.util.ArrayList;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.FillListing;
+import ch.epfl.polybazaar.filllisting.ImageManager;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
@@ -61,6 +62,7 @@ import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.r
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.polybazaar.category.RootCategoryFactory.useMockCategory;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
+import static ch.epfl.polybazaar.filllisting.ImageManager.MAXIMUM_IMAGES_NUMBER;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.useMockNetworkState;
@@ -411,6 +413,26 @@ public class FillListingTest {
                 assertNotEquals(null, ownListings.get(0));
             }
         });
+    }
+
+    @Test
+    public void testUploadMoreThanMaxNumberImages() {
+        Resources resources = getInstrumentation().getTargetContext().getResources();
+        imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                resources.getResourcePackageName(R.drawable.bicycle) + '/' +
+                resources.getResourceTypeName(R.drawable.bicycle) + '/' +
+                resources.getResourceEntryName(R.drawable.bicycle));
+        galleryIntent = new Intent();
+        galleryIntent.setData(imageUri);
+        galleryResult = new Instrumentation.ActivityResult( Activity.RESULT_OK, galleryIntent);
+        for(int i = 0; i <= MAXIMUM_IMAGES_NUMBER; i++) {
+            uploadImage();
+        }
+        onView(withText(fillSaleActivityTestRule.getActivity().getString(R.string.max_num_images)))
+                .check(matches(isDisplayed()));
+        onView(withText(fillSaleActivityTestRule.getActivity().getString(R.string.back)))
+                .perform(click());
+
     }
 
     private void uploadImage(){

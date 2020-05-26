@@ -172,6 +172,7 @@
     <string name="char_long">characters long</string>
     <string name="nickname_too_short">Nickname should be at least</string>
     <string name="nickname_invalid">Nickname should contain at least one letter</string>
+    <string name="max_num_images">Maximum 10 images</string>
 
 
 </resources>
