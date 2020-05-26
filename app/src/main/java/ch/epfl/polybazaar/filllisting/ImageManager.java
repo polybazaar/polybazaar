@@ -4,12 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.view.View;
 import android.widget.TableRow;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
-
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,15 +18,13 @@ import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.UI.SliderAdapter;
 import ch.epfl.polybazaar.UI.SliderItem;
-import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listingImage.ListingImage;
 
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToStringWithQuality;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
+import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
 
 public class ImageManager extends AppCompatActivity {
-
+    //if you change this  variable, change R.string.max_num_images too
+    public static final int MAXIMUM_IMAGES_NUMBER = 10;
     private ViewPager2 viewPager;
     private TableRow editButtons;
     private FillListing activity;
@@ -45,9 +42,13 @@ public class ImageManager extends AppCompatActivity {
     }
 
     public void addImage(List<Bitmap> listImage, Bitmap image) {
-        listImage.add(image);
-        drawImages(listImage);
-        viewPager.setCurrentItem(listImage.size() - 1, false);
+        if(listImage.size() < MAXIMUM_IMAGES_NUMBER) {
+            listImage.add(image);
+            drawImages(listImage);
+            viewPager.setCurrentItem(listImage.size() - 1, false);
+        } else {
+            makeDialog(activity, R.string.max_num_images);
+        }
     }
 
     /**
@@ -120,7 +121,7 @@ public class ImageManager extends AppCompatActivity {
         matrix.postRotate(-90);
         listImage.set(index, Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true));
         drawImages(listImage);
-        viewPager.setCurrentItem(index);
+        viewPager.setCurrentItem(index, false);
     }
 
     public void deleteImage(List<Bitmap> listImage) {

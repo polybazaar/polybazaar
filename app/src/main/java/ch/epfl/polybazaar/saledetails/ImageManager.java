@@ -24,6 +24,8 @@ import ch.epfl.polybazaar.UI.SliderItem;
 
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertDrawableToBitmap;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.cropToSize;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeBitmap;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.scaleBitmap;
 
 public class ImageManager {
 
@@ -52,8 +54,8 @@ public class ImageManager {
             activity.findViewById(R.id.loadingImage).setVisibility(View.GONE);
 
             for (Bitmap bm : listImage) {
-                sliderItems.add(new SliderItem(cropToSize(bm, viewPager.getWidth(), viewPager.getHeight())));
-                sliderItemsZoom.add(new SliderItem(bm));
+                sliderItems.add(new SliderItem(scaleBitmap(cropToSize(bm, viewPager.getWidth(), viewPager.getHeight()), viewPager.getWidth())));
+                sliderItemsZoom.add(new SliderItem(scaleBitmap(bm, viewPager.getWidth())));
             }
 
             viewPager.setAdapter(new SliderAdapter(sliderItems, viewPager));
@@ -80,19 +82,20 @@ public class ImageManager {
                 }
             });
 
+            // inflate the layout of the popup window
+            LayoutInflater inflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.popup_window_images, null);
+            ViewPager2 zoomViewPager = popupView.findViewById(R.id.viewPagerZoom);
+            zoomViewPager.setAdapter(new SliderAdapter(sliderItemsZoom, zoomViewPager));
+
+            final PopupWindow popupWindow = new PopupWindow(
+                    popupView,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    true);
+
             viewPager.setOnClickListener(v -> {
-                // inflate the layout of the popup window
-                LayoutInflater inflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View popupView = inflater.inflate(R.layout.popup_window_images, null);
-                ViewPager2 zoomViewPager = popupView.findViewById(R.id.viewPagerZoom);
-                zoomViewPager.setAdapter(new SliderAdapter(sliderItemsZoom, viewPager));
-
-                final PopupWindow popupWindow = new PopupWindow(
-                        popupView,
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        false);
-
+                zoomViewPager.setCurrentItem(((ViewPager2)v).getCurrentItem(), false);
                 popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, 0, 0);
             });
 
