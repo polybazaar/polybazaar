@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.login.Account;
+import ch.epfl.polybazaar.login.AuthenticationUtils;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.user.User;
@@ -71,10 +72,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         authenticator = AuthenticatorFactory.getDependency();
-        if (authenticator.getCurrentUser() == null) {
-            Intent notSignedIn = new Intent(this, NotSignedIn.class);
-            startActivity(notSignedIn);
-        } else {
+        if (AuthenticationUtils.checkAccessAuthorization(this)) {
             nicknameSelector = findViewById(R.id.nicknameSelector);
             firstNameSelector = findViewById(R.id.firstNameSelector);
             lastNameSelector = findViewById(R.id.lastNameSelector);
