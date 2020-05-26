@@ -61,7 +61,7 @@
     <string name="edit">Edit</string>
     <string name="incorrect_fields">One or more fields are missing</string>
     <string name="default_spinner_text">Select category…</string>
-    <string name="object_not_found">Object not found</string>
+    <string name="object_not_found">This listing was deleted</string>
     <string name="search_title">Search listings</string>
     <string name="search_hint">Search listings</string>
     <string name="no_search_results">No matching results for:</string>

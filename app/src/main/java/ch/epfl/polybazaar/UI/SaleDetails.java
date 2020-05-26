@@ -15,6 +15,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,12 +159,7 @@ public class SaleDetails extends AppCompatActivity {
         builder.setTitle("Delete this listing")
                 .setMessage("You are about to delete this listing. Are you sure you want to continue?")
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    ListingManager.deleteCurrentListing(listingID);
-                    Toast toast = Toast.makeText(this.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                    toast.show();
-                    Intent SalesOverviewIntent = new Intent(this.getApplicationContext(), SalesOverview.class);
-                    this.startActivity(SalesOverviewIntent);
+                    ListingManager.deleteCurrentListing(listingID, true, this);
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
         builder.create().show();

@@ -1,13 +1,19 @@
 package ch.epfl.polybazaar.saledetails;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Tasks;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -157,12 +163,14 @@ public class ListingManager {
     /**
      * Deletes the listing specified
      * @param listingID the listings Id
+     * @param returnToSalesOverview obvious
+     * @param caller the calling activity
      */
-    public static void deleteCurrentListing(String listingID) {
+    public static void deleteCurrentListing(String listingID, boolean returnToSalesOverview, Activity caller) {
         Listing.fetch(listingID).addOnSuccessListener(listing -> {
             // Delete images:
             if (listing != null) {
-                if (listing.getImagesRefs() != null) {
+                if (listing.getImagesRefs() != null && !listing.getImagesRefs().isEmpty()) {
                     for (String ref : listing.getImagesRefs()) {
                         ImageTransaction.delete(ref);
                     }
@@ -172,14 +180,6 @@ public class ListingManager {
                     user.save();
                 });
             }
-            LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
-                if (liteListing != null) {
-                    if (liteListing.getThumbnailRef() != null) {
-                        ImageTransaction.delete(liteListing.getThumbnailRef());
-                    }
-                    Listing.deleteWithLiteVersion(listingID);
-                }
-            });
             // delete all messages
             ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
                 if (chatMessages != null) {
@@ -188,8 +188,25 @@ public class ListingManager {
                     }
                 }
             });
+            LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
+                if (liteListing != null) {
+                    if (liteListing.getThumbnailRef() != null
+                            && !liteListing.getThumbnailRef().isEmpty()
+                            && !liteListing.getThumbnailRef().equals(LiteListing.NO_THUMBNAIL)) {
+                        ImageTransaction.delete(liteListing.getThumbnailRef());
+                    }
+                    Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(aVoid -> {
+                        if (returnToSalesOverview) {
+                            Intent SalesOverviewIntent = new Intent(caller, SalesOverview.class);
+                            caller.startActivity(SalesOverviewIntent);
+                            Toast toast = Toast.makeText(caller.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                            toast.show();
+                        }
+                    });
+                }
+            });
         });
-
     }
 
     /**

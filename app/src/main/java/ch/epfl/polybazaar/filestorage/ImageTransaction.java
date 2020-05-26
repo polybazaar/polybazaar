@@ -103,7 +103,6 @@ public final class ImageTransaction {
     /**
      * Delete a file from cloud storage
      * @param id filename
-     * @param context context
      * @return void task
      */
     public static Task<Void> delete(String id) {

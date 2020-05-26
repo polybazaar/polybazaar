@@ -307,7 +307,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                 if (l != null) {
                     // delete sold listings older than a week
                     if ((l.getPrice().equals(getResources().getString(R.string.sold))) && (l.getTimeSold() != null) && (l.getTimeSold().toDate().before(expDate))) {
-                        ListingManager.deleteCurrentListing(l.getId());
+                        ListingManager.deleteCurrentListing(l.getId(), false, this);
                     } else {
                         listingTimeMap.put(l.getTimestamp(), l.getId());
                         listingTitleMap.put(l.getId(), l.getTitle());
