@@ -28,7 +28,6 @@ public class LiteListing extends Model {
     public static final String TITLE = "title";
     public static final String PRICE = "price";
     public static final String CATEGORY = "category";
-    public static final String STRING_THUMBNAIL = "stringThumbnail";
     public static final String TIMESTAMP = "timestamp";
     public static final String TIME_SOLD = "timeSold";
     public static final String NO_THUMBNAIL = "NoThumbnail";
@@ -38,7 +37,6 @@ public class LiteListing extends Model {
     private final SimpleField<String> title = new SimpleField<>(TITLE);
     private final SimpleField<String> price = new SimpleField<>(PRICE);
     private final SimpleField<String> category = new SimpleField<>(CATEGORY);
-    private final SimpleField<String> stringThumbnail = new SimpleField<>(STRING_THUMBNAIL);
     private final SimpleField<Timestamp> timestamp = new SimpleField<>(TIMESTAMP);
     private final SimpleField<Timestamp> timeSold = new SimpleField<>(TIME_SOLD);
     private final SimpleField<String> thumbnailRef = new SimpleField<>(THUMBNAIL_REF);
@@ -50,22 +48,17 @@ public class LiteListing extends Model {
 
     // no-argument constructor so that instances can be created by ModelTransaction
     public LiteListing() {
-        registerFields(listingID, title, price, category, stringThumbnail, timestamp, timeSold, thumbnailRef);
+        registerFields(listingID, title, price, category, timestamp, timeSold, thumbnailRef);
     }
 
-    public LiteListing(String listingID, String title, String price, String category, String stringThumbnail) {
+    public LiteListing(String listingID, String title, String price, String category) {
         this();
         this.listingID.set(listingID);
         this.title.set(title);
         this.price.set(price);
         this.category.set(category);
-        this.stringThumbnail.set(stringThumbnail);
         this.timestamp.set(Timestamp.now());
         this.thumbnailRef.set(NO_THUMBNAIL);
-    }
-
-    public LiteListing(String listingID, String title, String price, String category) {
-        this(listingID, title, price, category, NO_THUMBNAIL);
     }
 
     public String getTitle() {
@@ -82,10 +75,6 @@ public class LiteListing extends Model {
 
     public String getCategory(){
         return category.get();
-    }
-
-    public String getStringThumbnail() {
-        return stringThumbnail.get();
     }
 
     public Task<Bitmap> fetchThumbnail(Context ctx) {

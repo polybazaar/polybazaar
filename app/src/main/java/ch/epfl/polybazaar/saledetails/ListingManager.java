@@ -1,8 +1,8 @@
 package ch.epfl.polybazaar.saledetails;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -13,8 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Tasks;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SaleDetails;
@@ -22,14 +26,11 @@ import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.chat.ChatMessage;
 import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
-import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.user.User;
 
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 public class ListingManager {
 
@@ -92,6 +93,19 @@ public class ListingManager {
                 }
             });
 
+            //Set the date
+            TextView datePut = activity.findViewById(R.id.datePut);
+            LiteListing.fetch(listing.getId()).addOnSuccessListener(liteListing -> {
+                if (liteListing != null) {
+                    Date date = liteListing.getTimestamp().toDate();
+                    Locale locale = new Locale("en", "CH");
+                    DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+                    datePut.setText(dateFormat.format(date));
+                }
+            });
+            LinearLayout dateLayout = activity.findViewById(R.id.dateLayout);
+            dateLayout.setVisibility(View.VISIBLE);
+
             // Enable logged in features
             Button contactSelButton = activity.findViewById(R.id.contactSel);
             Button makeOfferButton = activity.findViewById(R.id.makeOffer);
@@ -149,30 +163,23 @@ public class ListingManager {
     /**
      * Deletes the listing specified
      * @param listingID the listings Id
+     * @param returnToSalesOverview obvious
+     * @param caller the calling activity
      */
-    public static void deleteCurrentListing(String listingID) {
+    public static void deleteCurrentListing(String listingID, boolean returnToSalesOverview, Activity caller) {
         Listing.fetch(listingID).addOnSuccessListener(listing -> {
             // Delete images:
-            if (listing != null && listing.getImagesRefs() != null) {
-                for (String ref : listing.getImagesRefs()) {
-                    ImageTransaction.delete(ref);
-                }
-            }
-            LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
-                if (liteListing != null) {
-                    if (liteListing.getThumbnailRef() != null) {
-                        ImageTransaction.delete(liteListing.getThumbnailRef());
+            if (listing != null) {
+                if (listing.getImagesRefs() != null && !listing.getImagesRefs().isEmpty()) {
+                    for (String ref : listing.getImagesRefs()) {
+                        ImageTransaction.delete(ref);
                     }
-                    Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(result -> {
-                        Authenticator fbAuth = AuthenticatorFactory.getDependency();
-                        Account authAccount = fbAuth.getCurrentUser();
-                        authAccount.getUserData().addOnSuccessListener(user -> {
-                            user.deleteOwnListing(listingID);
-                            user.save();
-                        });
-                    });
                 }
-            });
+                User.fetch(listing.getUserEmail()).addOnSuccessListener(user -> {
+                    user.deleteOwnListing(listingID);
+                    user.save();
+                });
+            }
             // delete all messages
             ChatMessage.fetchConversation(listingID).addOnSuccessListener(chatMessages -> {
                 if (chatMessages != null) {
@@ -181,8 +188,25 @@ public class ListingManager {
                     }
                 }
             });
+            LiteListing.fetch(listingID).addOnSuccessListener(liteListing -> {
+                if (liteListing != null) {
+                    if (liteListing.getThumbnailRef() != null
+                            && !liteListing.getThumbnailRef().isEmpty()
+                            && !liteListing.getThumbnailRef().equals(LiteListing.NO_THUMBNAIL)) {
+                        ImageTransaction.delete(liteListing.getThumbnailRef());
+                    }
+                    Listing.deleteWithLiteVersion(listingID).addOnSuccessListener(aVoid -> {
+                        if (returnToSalesOverview) {
+                            Intent SalesOverviewIntent = new Intent(caller, SalesOverview.class);
+                            caller.startActivity(SalesOverviewIntent);
+                            Toast toast = Toast.makeText(caller.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                            toast.show();
+                        }
+                    });
+                }
+            });
         });
-
     }
 
     /**

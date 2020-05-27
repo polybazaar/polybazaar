@@ -33,7 +33,8 @@
         android:clickable="false"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="@dimen/overview_grid_text_size" />
+        android:textSize="@dimen/overview_grid_text_size"
+        android:textColor="@android:color/secondary_text_light" />
 
     <TextView
         android:id="@+id/liteListingGridPrice"
@@ -43,6 +44,7 @@
         android:clickable="false"
         android:ellipsize="end"
         android:textSize="@dimen/overview_grid_text_size"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textColor="@android:color/secondary_text_light"/>
 
 </LinearLayout>

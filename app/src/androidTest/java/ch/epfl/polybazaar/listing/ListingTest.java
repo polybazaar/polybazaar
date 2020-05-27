@@ -6,6 +6,9 @@ import org.junit.runners.MethodSorters;
 
 import ch.epfl.polybazaar.listing.Listing;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 public class ListingTest {
@@ -34,7 +37,7 @@ public class ListingTest {
 
     @Test
     public void checkStringImage() {
-        assertNull(listing1.getStringImage());
+        assertThat(listing1.getImagesRefs(), is(empty()));
     }
 
     @Test (expected = IllegalArgumentException.class)

@@ -33,6 +33,7 @@ import static ch.epfl.polybazaar.litelisting.LiteListing.NO_THUMBNAIL;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 
 import static ch.epfl.polybazaar.utilities.ImageTaker.QUALITY;
+import static ch.epfl.polybazaar.utilities.ImageUtilities.limitImageSize;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.resizeImageThumbnail;
 import static java.util.UUID.randomUUID;
 
@@ -40,6 +41,7 @@ public class ListingManager {
 
     // Desired thumbnail width:
     public static final int THUMBNAIL_SIZE = 500;
+    public static final int IMAGE_MAX_SIZE = 3000;
     private TextView titleSelector;
     private EditText descriptionSelector;
     private EditText priceSelector;
@@ -105,7 +107,8 @@ public class ListingManager {
             for(int i = 0; i <= (listImage.size() - 1); i++) {
                 nextId = randomUUID().toString();
                 idList.add(nextId);
-                ImageTransaction.store(nextId, listImage.get(i), QUALITY, activity.getApplicationContext())
+                Bitmap image = limitImageSize(listImage.get(i), IMAGE_MAX_SIZE);
+                ImageTransaction.store(nextId, image, QUALITY, activity.getApplicationContext())
                         .addOnSuccessListener(result -> Log.d("FirebaseDataStore", "successfully stored image"))
                         .addOnFailureListener(e -> Toast.makeText(activity.getApplicationContext(), "Failed to send image", Toast.LENGTH_LONG).show());
             }
@@ -143,7 +146,7 @@ public class ListingManager {
         if (fbAuth.getCurrentUser() != null) {
             String userEmail = fbAuth.getCurrentUser().getEmail();
             return new Listing(titleSelector.getText().toString(), descriptionSelector.getText().toString(),
-                    priceSelector.getText().toString(), userEmail, "", category, lat, lng);
+                    priceSelector.getText().toString(), userEmail, category, lat, lng);
         }
         return null;
     }
