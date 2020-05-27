@@ -99,7 +99,7 @@ public class UserProfileTest {
 
     @Test
     public void testPasswordChangeWorks() throws InterruptedException {
-        String newPassword = "mynewpassword";
+        String newPassword = "MyNewAndSafePassword6969";
         signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         onView(withId(R.id.action_profile)).perform(click());
 
@@ -123,7 +123,7 @@ public class UserProfileTest {
         signInWithFromMainActivity(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         onView(withId(R.id.action_profile)).perform(click());
         closeSoftKeyboard();
-        onView(withId(R.id.viewOwnListingsButton)).perform(click());
+        onView(withId(R.id.viewOwnListingsButton)).perform(scrollTo(), click());
 
         onView(withText(R.string.no_created_listings))
                 .inRoot(withDecorView(not(is(activityRule.getActivity().getWindow().getDecorView()))))

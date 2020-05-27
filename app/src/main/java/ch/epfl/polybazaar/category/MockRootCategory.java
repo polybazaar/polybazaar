@@ -31,13 +31,6 @@ public class MockRootCategory implements Category {
         onlyCategory= subcat;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @NonNull
-    @Override
-    public String treeRepresentation(int depth) {
-        return onlyCategory.treeRepresentation(depth);
-    }
-
     @Override
     public void addSubCategory(Category subCategory) {
         //throw new IllegalStateException("Cannot add a category to the mock");
@@ -76,16 +69,6 @@ public class MockRootCategory implements Category {
     @Override
     public boolean contains(Category contained) {
         return onlyCategory.contains(contained);
-    }
-
-    @Override
-    public int indexOf(Category searched) {
-        if(searched.equals(onlyCategory)){
-            return 0;
-        }
-        else{
-            return -1;
-        }
     }
 
     @Override

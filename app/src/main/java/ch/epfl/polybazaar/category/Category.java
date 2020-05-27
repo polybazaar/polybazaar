@@ -8,12 +8,6 @@ public interface Category {
 
     @NonNull
     /**
-     * @return the tree representation of a category
-     */
-    String treeRepresentation(int depth);
-
-    @NonNull
-    /**
      * @return the String representation of a category
      */
     String toString();
@@ -68,11 +62,6 @@ public interface Category {
      */
     boolean contains(Category contained);
 
-    /**
-     * @param searched the category we want the index of
-     * @return the index of the position of the searched category in the repository. If not found returns -1
-     */
-    int indexOf(Category searched);
 
     /**
      *

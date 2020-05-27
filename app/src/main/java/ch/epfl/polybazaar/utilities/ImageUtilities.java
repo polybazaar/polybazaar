@@ -105,9 +105,8 @@ public final class ImageUtilities {
         if(bitmap == null) {
             return null;
         }
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte [] b=baos.toByteArray();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, new ByteArrayOutputStream());
+        byte [] b= (new ByteArrayOutputStream()).toByteArray();
         String temp = Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
     }

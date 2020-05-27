@@ -211,6 +211,45 @@ public class SaleDetailsTest {
     }
 
     @Test
+    public void testBuyNow() throws ExecutionException, InterruptedException {
+        MockAuthenticator auth = MockAuthenticator.getInstance();
+        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+
+        String id = "myid";
+        DatabaseStoreUtilities.storeNewListing("My listing",  "other.user@epfl.ch", id);
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+        activityRule.launchActivity(intent);
+
+        onView(withId(R.id.buyNow)).perform(scrollTo(), click());
+        onView(withText("NO")).check(matches(isDisplayed()));
+
+        auth.signOut();
+    }
+
+
+    @Test
+    public void makeOffer() throws ExecutionException, InterruptedException {
+        MockAuthenticator auth = MockAuthenticator.getInstance();
+        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+
+        String id = "myid";
+        DatabaseStoreUtilities.storeNewListing("My listing",  "other.user@epfl.ch", id);
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+        activityRule.launchActivity(intent);
+
+
+        Intents.init();
+        onView(withId(R.id.makeOffer)).perform(scrollTo(), click());
+        intended(hasComponent(SubmitOffer.class.getName()));
+        Intents.release();
+
+        auth.signOut();
+    }
+
+
+    @Test
     public void viewLabelNotDisplayedWhenNotLoggedIn() throws Throwable {
         String id = "myid";
         DatabaseStoreUtilities.storeNewListing("My listing",  MockAuthenticator.TEST_USER_EMAIL, id);

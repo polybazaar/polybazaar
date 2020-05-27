@@ -173,4 +173,13 @@ public class UserProfileTest {
         onView(withId(R.id.viewFavoritesButton)).perform(scrollTo(), click());
         onView(withText(R.string.no_favorites)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void testCanChangeProfilePicture() throws ExecutionException, InterruptedException {
+        Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+        activityRule.launchActivity(new Intent());
+        activityRule.getActivity().changeProfilePicture();
+        Thread.sleep(SLEEP_TIME);
+        onView(withText("Library")).check(matches(isDisplayed()));
+    }
 }

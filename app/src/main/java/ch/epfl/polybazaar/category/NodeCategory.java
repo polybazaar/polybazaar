@@ -69,11 +69,6 @@ public class NodeCategory implements Category {
     }
 
     @Override
-    public int indexOf(Category searched) {
-        return subCategories.indexOf(searched);
-    }
-
-    @Override
     public Category getSubCategoryContaining(Category contained) {
         for(Category subCategory : subCategories){
             if(subCategory.contains(contained)){
@@ -93,19 +88,6 @@ public class NodeCategory implements Category {
         subCategories.remove(subCategory);
     }
 
-
-    @Override
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public String treeRepresentation(int depth){
-        StringBuilder repr = new StringBuilder(name+"\n");
-        String offset = "";
-        for (int i = 0; i < depth; i++) {
-            offset += "---/";
-        }
-        String finalOffset = offset;
-        subCategories.forEach(category -> repr.append(finalOffset + category.treeRepresentation(depth+1)+"\n"));
-        return repr.toString();
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
