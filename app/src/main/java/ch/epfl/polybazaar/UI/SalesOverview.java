@@ -75,7 +75,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
     private int positionInIDList = 0;
-    private Category currentCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +88,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         liteListingList = new ArrayList<>();
 
         RootCategoryFactory.useJSONCategory(getApplicationContext());
-        currentCategory = RootCategoryFactory.getDependency();
 
         TextView catButton = findViewById(R.id.categoryOverview);
         catButton.setOnClickListener(view->{
@@ -254,7 +252,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
 
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -310,7 +307,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                 if (l != null) {
                     // delete sold listings older than a week
                     if ((l.getPrice().equals(getResources().getString(R.string.sold))) && (l.getTimeSold() != null) && (l.getTimeSold().toDate().before(expDate))) {
-                        ListingManager.deleteCurrentListing(l.getId());
+                        ListingManager.deleteCurrentListing(l.getId(), false, this);
                     } else {
                         listingTimeMap.put(l.getTimestamp(), l.getId());
                         listingTitleMap.put(l.getId(), l.getTitle());

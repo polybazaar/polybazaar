@@ -15,6 +15,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +44,10 @@ public class SaleDetails extends AppCompatActivity {
 
     private Listing listing;
     private String listingID;
-    //private List<Bitmap> listStringImage;
-    private List<String> listImageID;
 
     private double mpLat = NOLAT;
     private double mpLng = NOLNG;
     private int viewIncrement = 0;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -58,8 +57,6 @@ public class SaleDetails extends AppCompatActivity {
 
         imageManager = new ImageManager(this);
         listingManager = new ListingManager(this);
-        //listStringImage = new ArrayList<>();
-        listImageID = new ArrayList<>();
 
         findViewById(R.id.ratingBar).setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -68,11 +65,7 @@ public class SaleDetails extends AppCompatActivity {
             return true;
         });
 
-        //listStringImage = new ArrayList<>();
-        listImageID = new ArrayList<>();
-
         Glide.with(this).load(R.drawable.loading).into((ImageView)findViewById(R.id.loadingImage));
-
 
         retrieveListingFromListingID();
     }
@@ -105,7 +98,7 @@ public class SaleDetails extends AppCompatActivity {
     }
 
     private void retrieveImages() {
-        if (listing.getImagesRefs() != null && listing.getImagesRefs().size() > 0) {
+        if (listing != null && listing.getImagesRefs() != null && listing.getImagesRefs().size() > 0) {
             listing.fetchImages(SaleDetails.this).addOnSuccessListener(bitmaps -> {
                 imageManager.drawImages(bitmaps);
             });
@@ -163,12 +156,7 @@ public class SaleDetails extends AppCompatActivity {
         builder.setTitle("Delete this listing")
                 .setMessage("You are about to delete this listing. Are you sure you want to continue?")
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    ListingManager.deleteCurrentListing(listingID);
-                    Toast toast = Toast.makeText(this.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                    toast.show();
-                    Intent SalesOverviewIntent = new Intent(this.getApplicationContext(), SalesOverview.class);
-                    this.startActivity(SalesOverviewIntent);
+                    ListingManager.deleteCurrentListing(listingID, true, this);
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
         builder.create().show();

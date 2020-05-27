@@ -11,7 +11,7 @@
         android:id="@+id/categoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/general_margin"
+        android:layout_marginTop="@dimen/inter_space_large"
         android:textSize="@dimen/large_button_text_size"
         android:padding="8dp"
         android:background="@drawable/rounded_corner_button_colored"
@@ -32,9 +32,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categoriesRecycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/general_margin"
-            android:layout_marginEnd="@dimen/general_margin" />
+            android:layout_height="wrap_content" />
 
 
     </ScrollView>

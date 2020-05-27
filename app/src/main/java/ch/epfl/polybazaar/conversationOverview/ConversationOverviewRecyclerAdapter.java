@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar.conversationOverview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -62,7 +67,15 @@ public class ConversationOverviewRecyclerAdapter extends RecyclerView.Adapter<Co
         LiteListing.fetch(conversationOverview.getListingID()).addOnSuccessListener(result -> {
             if(result != null) {
                 holder.title.setText(result.getTitle());
-                holder.thumbnail.setImageBitmap(cropToSquare(convertStringToBitmap(result.getStringThumbnail())));
+                ImageTransaction.fetch(result.getThumbnailRef(), this.context).addOnSuccessListener(bitmap -> {
+                    if (bitmap != null) {
+                        holder.thumbnail.setImageBitmap(cropToSquare(bitmap));
+                    } else {
+                        holder.thumbnail.setImageResource(R.drawable.no_image_thumbnail_square);
+                    }
+                }).addOnFailureListener(e -> {
+                    holder.thumbnail.setImageResource(R.drawable.no_image_thumbnail_square);
+                });
             }
         });
 

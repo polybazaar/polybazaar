@@ -75,7 +75,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
     private double lat = NOLAT;
     private double lng = NOLNG;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

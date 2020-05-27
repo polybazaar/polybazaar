@@ -54,7 +54,7 @@ public final class ImageUtilities {
      * @param stringImage
      * @return a Bitmap
      */
-    public  static Bitmap convertStringToBitmap (String stringImage) {
+    public static Bitmap convertStringToBitmap (String stringImage) {
         if(stringImage == null || stringImage.equals("")) {
             return null;
         }
@@ -97,7 +97,7 @@ public final class ImageUtilities {
 
     /**
      * Convert a PNG Bitmap to String
-     * @param bitmap
+     * @param bitmap a bitmap
      * @return a String
      * taken from Stackoverflow
      */
@@ -129,9 +129,26 @@ public final class ImageUtilities {
     }
 
     /**
+     * Scales the input to the give maxSize, if necessary
+     * @param input a bitmap
+     * @param maxSize max target size
+     * @return the resized bitmap
+     */
+    public static Bitmap limitImageSize(Bitmap input, int maxSize) {
+        if(input == null) {
+            return null;
+        }
+        if (input.getWidth() > maxSize || input.getHeight() > maxSize) {
+            return scaleBitmap(input, maxSize);
+        } else {
+            return input;
+        }
+    }
+
+    /**
      * Resize String image, return null if input is null or equals to ""
-     * @param input
-     * @return
+     * @param input a bitmap
+     * @return the scaled bitmap
      */
     public static Bitmap resizeImageThumbnail(Bitmap input) {
         if(input == null) {
@@ -145,7 +162,7 @@ public final class ImageUtilities {
      * @param bitmap original image
      * @param scaleWidth scale factor for width, should be between 0 and 1
      * @param scaleHeight scale factor for height, should be between 0 and 1
-     * @return
+     * @return the resized bitmap
      */
     public static Bitmap resizeBitmap(Bitmap bitmap, float scaleWidth, float scaleHeight) throws IllegalArgumentException{
         if(bitmap == null) {
@@ -237,7 +254,7 @@ public final class ImageUtilities {
      * Scales the resolution of a bitmap
      * @param bitmap the source bitmap
      * @param targetWidth the desired width, in pixels
-     * @return the scaled bitmap
+     * @return the scaled bitmapre
      */
     public static Bitmap scaleBitmap(Bitmap bitmap, int targetWidth) {
         if (bitmap != null) {
