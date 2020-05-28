@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,6 +19,11 @@ public class MockCategoryTest {
     public static void setMockRoot(){
         RootCategoryFactory.useMockCategory();
         mockRoot = RootCategoryFactory.getDependency();
+    }
+
+    @AfterClass
+    public static void clearRoot(){
+        RootCategoryFactory.clear();
     }
 
     @Test

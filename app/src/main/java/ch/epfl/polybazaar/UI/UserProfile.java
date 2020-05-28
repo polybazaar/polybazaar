@@ -78,6 +78,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
             lastNameSelector = findViewById(R.id.lastNameSelector);
             phoneNumberSelector = findViewById(R.id.phoneNumberSelector);
             profilePicView = findViewById(R.id.profilePicture);
+            profilePicView.setOnClickListener(v -> changeProfilePicture());
             profilePicChanged = false;
             showNewPicDialog = false;
             account = authenticator.getCurrentUser();
@@ -137,11 +138,9 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         if (bitmapOK) {
             String stringImage = this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).getString(STRING_IMAGE, null);
             if (stringImage != null) {
-                Bitmap bitmap = getRoundedCroppedBitmap(convertStringToBitmap(stringImage));
-                bitmap = Bitmap.createScaledBitmap(bitmap, PROFILE_PIC_SIZE, PROFILE_PIC_SIZE, true);
+                Bitmap bitmap = Bitmap.createScaledBitmap(getRoundedCroppedBitmap(convertStringToBitmap(stringImage)), PROFILE_PIC_SIZE, PROFILE_PIC_SIZE, true);
                 profilePicView.setImageBitmap(bitmap);
-                String profilePic = convertBitmapToStringPNG(bitmap);
-                this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).edit().putString(STRING_IMAGE, profilePic).apply();
+                this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).edit().putString(STRING_IMAGE, convertBitmapToStringPNG(bitmap)).apply();
                 profilePicChanged = true;
                 showNewPicDialog = true;
             } else {
@@ -169,7 +168,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         }
     }
 
-    public void changeProfilePicture(View view) {
+    public void changeProfilePicture() {
         AddImageDialog dialog = new AddImageDialog();
         dialog.show(getSupportFragmentManager(), "select image import");
     }

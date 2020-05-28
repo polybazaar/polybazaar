@@ -36,10 +36,10 @@ public class NotificationService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         broadcastManager.sendBroadcast(new Intent(ChatActivity.BROADCAST_UPDATE_MESSAGE));
-        SharedPreferences preferences = getSharedPreferences("PREFS", MODE_PRIVATE);
-        String currentChatID = preferences.getString(ChatActivity.CURRENT_CHAT_ID, ChatActivity.NO_CURRENT_ID);
         AuthenticatorFactory.getDependency().getCurrentUser().getUserData().addOnSuccessListener(user -> {
-            if(user != null && remoteMessage.getData().get(Data.TO).equals(user.getId()) && !currentChatID.equals(remoteMessage.getData().get(Data.SENDER) + remoteMessage.getData().get(Data.LISTINGID))){
+            if(user != null
+               && remoteMessage.getData().get(Data.TO).equals(user.getId())
+               && !getSharedPreferences("PREFS", MODE_PRIVATE).getString(ChatActivity.CURRENT_CHAT_ID, ChatActivity.NO_CURRENT_ID).equals(remoteMessage.getData().get(Data.SENDER) + remoteMessage.getData().get(Data.LISTINGID))){
                 showNotification(remoteMessage);
             }
         });
@@ -56,8 +56,7 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     private void showNotification(RemoteMessage remoteMessage) {
-        Intent notificationIntent = toChatActivityIntent(remoteMessage);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, toChatActivityIntent(remoteMessage), PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
                 .setContentTitle(remoteMessage.getData().get(Data.TITLE))

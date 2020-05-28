@@ -30,7 +30,7 @@
                 android:layout_marginTop="@dimen/inter_space_large"
                 android:contentDescription="@string/profile_picture"
                 android:src="@drawable/no_user_add"
-                android:onClick="changeProfilePicture"/>
+                />
 
             <TableRow
                 android:id="@+id/listingAccessButtons"

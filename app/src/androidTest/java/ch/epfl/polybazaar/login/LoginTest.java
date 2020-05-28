@@ -148,6 +148,11 @@ public class LoginTest {
         clickButton(withText(R.string.alert_close));
     }
 
+    @Test
+    public void testNicknameValidityForNoContext(){
+        assertThat(InputValidity.nicknameValidity("a", null), is(InputValidity.ERROR));
+    }
+
     private void fillAndSubmitSignIn(String email, String password) {
         typeInput(withId(R.id.emailInput), email);
         typeInput(withId(R.id.passwordInput), password);
@@ -166,4 +171,6 @@ public class LoginTest {
     private void clickButton(Matcher<View> object) {
         onView(object).perform(click());
     }
+
+
 }

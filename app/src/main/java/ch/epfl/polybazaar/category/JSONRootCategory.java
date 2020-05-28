@@ -34,7 +34,6 @@ public class JSONRootCategory implements Category {
                 root = new JSONRootCategory(context);
             }
             catch (Exception e){
-                System.out.println("BUUUUUUUUUUUUUUUUUG");
                 root = null;
             }
         }
@@ -145,18 +144,6 @@ public class JSONRootCategory implements Category {
             }
         }
         return null;
-    }
-
-    @Override
-    public int indexOf(Category searched){
-        return nodes.indexOf(searched);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public String treeRepresentation(int depth){
-        StringBuilder repr = new StringBuilder();
-        nodes.forEach(category -> repr.append(category.treeRepresentation(depth+1) + "\n"));
-        return repr.toString();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

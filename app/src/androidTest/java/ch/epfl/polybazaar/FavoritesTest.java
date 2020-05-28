@@ -21,6 +21,7 @@ import ch.epfl.polybazaar.login.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -51,12 +52,13 @@ public class FavoritesTest {
     }
 
 
-   @Test public void favoritesListIsEmpty() {
+   @Test public void favoritesListIsEmpty() throws InterruptedException {
         auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
         clickButton(withId(R.id.signInButton));
 
         clickButton(withId(R.id.action_profile));
-        clickButton(withId(R.id.viewFavoritesButton));
+        Thread.sleep(100);
+        onView(withId(R.id.viewFavoritesButton)).perform(scrollTo(), click());
         
         onView(withText(R.string.no_favorites)).check(matches(isDisplayed()));
     }
