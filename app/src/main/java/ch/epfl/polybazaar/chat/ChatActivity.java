@@ -46,6 +46,7 @@ import static java.util.UUID.randomUUID;
 
 public class ChatActivity extends AppCompatActivity {
 
+    public static final int MAXIMUM_MESSAGE_SIZE = 10000;
     private Button sendMessageButton;
     private EditText messageEditor;
 
@@ -148,23 +149,25 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendMessage() {
         String messageText = messageEditor.getText().toString();
-        ChatMessage message = new ChatMessage(senderEmail, receiverEmail, listingID, messageText, new Timestamp(new Date(System.currentTimeMillis())));
-        final String newMessageID = randomUUID().toString();
-        message.setId(newMessageID);
+        if(0 < messageText.length() && messageText.length() < MAXIMUM_MESSAGE_SIZE) {
+            ChatMessage message = new ChatMessage(senderEmail, receiverEmail, listingID, messageText, new Timestamp(new Date(System.currentTimeMillis())));
+            final String newMessageID = randomUUID().toString();
+            message.setId(newMessageID);
 
-        message.save();
-        conversation.add(message);
-        messageEditor.setText("");
-        chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
-        messageRecycler.setAdapter(chatMessageRecyclerAdapter);
-        messageRecycler.scrollToPosition(conversation.size() - 1);
+            message.save();
+            conversation.add(message);
+            messageEditor.setText("");
+            chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(getApplicationContext(), conversation);
+            messageRecycler.setAdapter(chatMessageRecyclerAdapter);
+            messageRecycler.scrollToPosition(conversation.size() - 1);
 
-        User.fetch(receiverEmail).addOnSuccessListener(user -> {
-            if(user != null) {
-                receiverToken = user.getToken();
-                NotificationUtilities.sendNewChatNotification(getApplicationContext(), fcmServiceAPI, senderEmail, receiverEmail, listingID, AuthenticatorFactory.getDependency().getCurrentUser().getNickname(), message, receiverToken);
-            }
-        });
+            User.fetch(receiverEmail).addOnSuccessListener(user -> {
+                if(user != null) {
+                    receiverToken = user.getToken();
+                    NotificationUtilities.sendNewChatNotification(getApplicationContext(), fcmServiceAPI, senderEmail, receiverEmail, listingID, AuthenticatorFactory.getDependency().getCurrentUser().getNickname(), message, receiverToken);
+                }
+            });
+        }
     }
 
 
