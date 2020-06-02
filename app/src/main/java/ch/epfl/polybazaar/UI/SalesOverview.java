@@ -417,7 +417,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         ArrayList<String> displayListings = new ArrayList<>();
         List<Task<LiteListing>> taskList = new ArrayList<>();
         for (String liteListingID : savedListings) {
-            // taskList.add(LiteListing.fetch(liteListingID)); TODO: delete line
             taskList.add(
             LiteListing.fetch(liteListingID).addOnSuccessListener(liteListing -> {
                 if (liteListing == null) {
