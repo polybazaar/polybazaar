@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.SearchView;
@@ -67,12 +68,16 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private static final int DAYSMIN = 0;
     private static final int DAYSMAX = 90;
     private static final int DAYSSTEP = 5;
+    private static final int MAXDAYSFILTER = 1000;
     private Map<Timestamp, String> listingTimeMap;
     private Map<String, String> listingTitleMap;
     private Map<String, String> searchListingTitleMap;
+    private Map<String, Double> listingPriceMap;
+    private Map<String, Date> listingDateMap;
     public static final String LISTING_ID = "listingID";
     private List<String> IDList;
     private List<LiteListing> liteListingList;
+    private ArrayList<String> liteListingFilterList;
     private LiteListingAdapter adapter;
     private int positionInIDList = 0;
 
@@ -83,9 +88,12 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
 
         listingTimeMap = new TreeMap<>(Collections.reverseOrder());    // store LiteListing IDs in reverse order of creation (most recent first)
         listingTitleMap = new TreeMap<>();
+        listingPriceMap = new TreeMap<>();
+        listingDateMap = new TreeMap<>();
         searchListingTitleMap = new LinkedHashMap<>();
         IDList = new ArrayList<>();
         liteListingList = new ArrayList<>();
+        liteListingFilterList = new ArrayList<>();
 
         RootCategoryFactory.useJSONCategory(getApplicationContext());
 
@@ -250,6 +258,46 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             }
         });
 
+        Button filter =  popupWindow.getContentView().findViewById(R.id.filterButton);
+        filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double minPrice;
+                double maxPrice;
+                int maxDays;
+
+                TextView minPriceView = popupWindow.getContentView().findViewById(R.id.min_price_value);
+                String minPriceText = minPriceView.getText().toString();
+                if(minPriceText.isEmpty()) {
+                    minPrice = Double.MIN_VALUE;
+                } else {
+                    minPrice = Double.parseDouble(minPriceText);
+                }
+
+                TextView maxPriceView = popupWindow.getContentView().findViewById(R.id.max_price_value);
+                String maxPriceText = maxPriceView.getText().toString();
+                if(maxPriceText.isEmpty()) {
+                    maxPrice = Double.MAX_VALUE;
+                } else {
+                    maxPrice = Double.parseDouble(maxPriceText);
+                }
+
+                TextView maxDaysView = popupWindow.getContentView().findViewById(R.id.max_days_value);
+                String maxDaysText = maxDaysView.getText().toString();
+                if(maxDaysText.isEmpty()) {
+                    maxDays = MAXDAYSFILTER;
+                } else {
+                    maxDays = Integer.parseInt(maxDaysText);
+                }
+
+                if(minPrice > maxPrice) {
+                    makeDialog(SalesOverview.this, R.string.price_filter_seekbar);
+                } else {
+                    filterListings(minPrice, maxPrice, maxDays);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -311,6 +359,8 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                     } else {
                         listingTimeMap.put(l.getTimestamp(), l.getId());
                         listingTitleMap.put(l.getId(), l.getTitle());
+                        listingPriceMap.put(l.getId(), Double.parseDouble(l.getPrice()));
+                        listingDateMap.put(l.getId(), l.getTimestamp().toDate());
                     }
                 }
             }
@@ -367,7 +417,8 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         ArrayList<String> displayListings = new ArrayList<>();
         List<Task<LiteListing>> taskList = new ArrayList<>();
         for (String liteListingID : savedListings) {
-            taskList.add(LiteListing.fetch(liteListingID));
+            // taskList.add(LiteListing.fetch(liteListingID)); TODO: delete line
+            taskList.add(
             LiteListing.fetch(liteListingID).addOnSuccessListener(liteListing -> {
                 if (liteListing == null) {
                     Account account = AuthenticatorFactory.getDependency().getCurrentUser();
@@ -379,7 +430,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                 } else {
                     displayListings.add(liteListingID);
                 }
-            });
+            }));
         }
         Tasks.whenAllComplete(taskList).addOnCompleteListener(aVoid -> {
             if (!displayListings.isEmpty()) {
@@ -405,8 +456,28 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         startActivity(categoryIntent);
     }
 
+    /**
+     * Filter listings according to user selection in filter popupwindow
+     * @param minPrice the minimum price of the listing
+     * @param maxPrice the maximum price of the listing
+     * @param maxDays the maximum age of the listing
+     */
+    public void filterListings(double minPrice, double maxPrice, int maxDays) {
+        liteListingFilterList.clear();
+        Calendar calendar = Calendar.getInstance(); // Now
+        calendar.add(Calendar.DAY_OF_YEAR, -maxDays);
+        Date expDate =  calendar.getTime();
 
+        for(Map.Entry<String, Double> entry : listingPriceMap.entrySet()) {
+            String listingID = entry.getKey();
+            double listingPrice = entry.getValue();
+            Date listingDate = listingDateMap.get(listingID);
 
-
+            if (listingPrice >= minPrice && listingPrice <= maxPrice && listingDate.after(expDate)) {
+                liteListingFilterList.add(listingID);
+            }
+        }
+        displaySavedListings(this, liteListingFilterList, R.string.no_match_found);
+    }
 
 }
