@@ -21,10 +21,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.listing.Listing;
@@ -44,7 +42,6 @@ import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockData
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 public class SalesOverviewTest {
@@ -72,29 +69,6 @@ public class SalesOverviewTest {
         Tasks.await(litelisting3.save());
         Tasks.await(litelisting4.save());
         Tasks.await(litelisting5.save());
-    }
-
-
-    @Test
-    public void testLiteListingList() {
-        Intents.init();
-        Intent intent = new Intent();
-        activityRule.launchActivity(intent);
-
-        List<LiteListing> liteListingList =  activityRule.getActivity().getLiteListingList();
-        List<String> listingIDs = new ArrayList<>();
-        List<String> listingTitle = new ArrayList<>();
-        List<String> listingPrice = new ArrayList<>();
-
-        for(int i = 0; i < liteListingList.size(); i++) {
-            listingIDs.add(liteListingList.get(i).getListingID());
-            listingTitle.add(liteListingList.get(i).getTitle());
-            listingPrice.add(liteListingList.get(i).getPrice());
-        }
-        assertTrue("", listingIDs.contains("1"));
-        assertTrue("", listingTitle.contains("listing1"));
-        assertTrue("", listingPrice.contains("1"));
-        Intents.release();
     }
 
 
