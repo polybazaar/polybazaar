@@ -91,9 +91,9 @@ public class SalesOverviewTest {
             listingTitle.add(liteListingList.get(i).getTitle());
             listingPrice.add(liteListingList.get(i).getPrice());
         }
-        assertTrue(listingIDs.contains("1"));
-        assertTrue(listingTitle.contains("listing1"));
-        assertTrue(listingPrice.contains("1"));
+        assertTrue("", listingIDs.contains("1"));
+        assertTrue("", listingTitle.contains("listing1"));
+        assertTrue("", listingPrice.contains("1"));
         Intents.release();
     }
 
