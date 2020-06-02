@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -43,6 +44,7 @@ import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockData
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_EMAIL;
 import static ch.epfl.polybazaar.login.MockAuthenticator.TEST_USER_PASSWORD;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class SalesOverviewTest {
@@ -80,9 +82,18 @@ public class SalesOverviewTest {
         activityRule.launchActivity(intent);
 
         List<LiteListing> liteListingList =  activityRule.getActivity().getLiteListingList();
-        assertEquals(liteListingList.get(0).getListingID(), "5");
-        assertEquals(liteListingList.get(0).getTitle(), "listing5");
-        assertEquals(liteListingList.get(0).getPrice(), "500");
+        List<String> listingIDs = new ArrayList<>();
+        List<String> listingTitle = new ArrayList<>();
+        List<String> listingPrice = new ArrayList<>();
+
+        for(int i = 0; i < liteListingList.size(); i++) {
+            listingIDs.add(liteListingList.get(i).getListingID());
+            listingTitle.add(liteListingList.get(i).getTitle());
+            listingPrice.add(liteListingList.get(i).getPrice());
+        }
+        assertTrue(listingIDs.contains("1"));
+        assertTrue(listingTitle.contains("listing1"));
+        assertTrue(listingPrice.contains("1"));
         Intents.release();
     }
 
