@@ -3,6 +3,7 @@ package ch.epfl.polybazaar.UI;
 import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Task;
@@ -16,7 +17,12 @@ import org.junit.Test;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.database.ModelTransaction;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.listing.Listing;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.user.User;
@@ -48,6 +54,8 @@ import static org.hamcrest.core.IsNot.not;
 public class UserProfileTest {
 
     public static final int SLEEP_TIME = 2000;
+    private MockFileStore mock;
+
     @Rule
     public final ActivityTestRule<UserProfile> activityRule =
             new ActivityTestRule<>(
@@ -59,11 +67,17 @@ public class UserProfileTest {
     public void init() {
         useMockDataStore();
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
+        mock = new MockFileStore();
+        mock.setContext(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        FileStoreFactory.setDependency(mock);
+        LocalCache.setRoot("test-cache");
     }
 
     @After
     public void cleanup() {
         MockAuthenticator.getInstance().reset();
+        mock.cleanUp();
+        LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getTargetContext());
     }
 
     @Test
@@ -172,5 +186,17 @@ public class UserProfileTest {
         activityRule.launchActivity(new Intent());
         onView(withId(R.id.viewFavoritesButton)).perform(scrollTo(), click());
         onView(withText(R.string.no_favorites)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void accountCanBeDeleted() throws ExecutionException, InterruptedException {
+        Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+        Listing listing = new Listing("Title", "description", "0.0", "test.user@epfl.ch", "Multimedia");
+        Tasks.await(listing.saveWithLiteVersion());
+        activityRule.launchActivity(new Intent());
+        onView(withId(R.id.deleteButton)).perform(scrollTo(), click());
+        onView(withText(R.string.yes)).perform(click());
+
+        assertThat(AuthenticatorFactory.getDependency().getCurrentUser(), is(nullValue()));
     }
 }

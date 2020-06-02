@@ -17,6 +17,7 @@ public class MockAccount implements Account {
     private String nickname;
     private String password;
     private User dbUser;
+    private boolean deleted = false;
 
     public MockAccount(String email, String nickname, String password) {
         this.email = email;
@@ -31,7 +32,7 @@ public class MockAccount implements Account {
      * @return true iff the password matches
      */
     public boolean checkPassword(String password) {
-        return password.equals(this.password);
+        return !deleted && password.equals(this.password);
     }
 
     @Override
@@ -77,6 +78,12 @@ public class MockAccount implements Account {
     @Override
     public String getNickname() {
         return nickname;
+    }
+
+    @Override
+    public Task<Void> delete() {
+        deleted = true;
+        return Tasks.forResult(null);
     }
 
     @Override

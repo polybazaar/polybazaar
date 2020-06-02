@@ -57,5 +57,8 @@ public class FirebaseAccount implements Account {
         return fbUser.updatePassword(newPassword);
     }
 
-
+    @Override
+    public Task<Void> delete() {
+        return fbUser.delete();
+    }
 }

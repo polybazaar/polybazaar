@@ -157,4 +157,9 @@ public class LiteListing extends Model {
     public static  Task<List<LiteListing>> fetchFieldEquality(String field, String compareValue) {
        return  ModelTransaction.fetchFieldEquality(COLLECTION, field, compareValue, LiteListing.class);
     }
+
+    public Task<Void> deleteWithDependencies() {
+        return ImageTransaction.delete(getThumbnailRef())
+                .onSuccessTask(aVoid -> delete());
+    }
 }

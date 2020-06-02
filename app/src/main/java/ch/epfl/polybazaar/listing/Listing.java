@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import ch.epfl.polybazaar.chat.ChatMessage;
 import ch.epfl.polybazaar.database.SimpleField;
 import ch.epfl.polybazaar.database.Model;
 import ch.epfl.polybazaar.database.ModelTransaction;
@@ -215,6 +216,31 @@ public class Listing extends Model implements Serializable {
         Task<Void> deleteLiteListing = ModelTransaction.delete(LiteListing.COLLECTION, id);
 
         return Tasks.whenAll(deleteListing, deleteLiteListing);
+    }
+
+    public Task<Void> deleteWithDependencies() {
+        Task<Void> deleteLite =  LiteListing.fetch(getId())
+                .onSuccessTask(LiteListing::deleteWithDependencies);
+
+        List<Task<Void>> deleteEachImage = new ArrayList<>();
+        for (String imgRef: getImagesRefs()) {
+            deleteEachImage.add(ImageTransaction.delete(imgRef));
+        }
+
+        Task<Void> deleteImages = Tasks.whenAll(deleteEachImage);
+        Task<Void> deleteListing = delete();
+
+        Task<Void> deleteMessages = ChatMessage.fetchConversation(getId()).onSuccessTask(chatMessages -> {
+            List<Task<Void>> deleteEachMessage = new ArrayList<>();
+            if (chatMessages != null) {
+                for (ChatMessage message : chatMessages) {
+                    deleteEachMessage.add(message.delete());
+                }
+            }
+            return Tasks.whenAll(deleteEachMessage);
+        });
+
+        return Tasks.whenAll(deleteLite, deleteImages, deleteListing, deleteMessages);
     }
 
     public static Task<Void> updateMultipleFields(String id, Map<String, Object> updated){

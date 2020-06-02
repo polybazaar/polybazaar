@@ -172,6 +172,7 @@
     <string name="char_long">characters long</string>
     <string name="nickname_too_short">Nickname should be at least</string>
     <string name="nickname_invalid">Nickname should contain at least one letter</string>
-
+    <string name="delete_account">Delete account</string>
+    <string name="deleted_account">Your account has been deleted</string>
 
 </resources>

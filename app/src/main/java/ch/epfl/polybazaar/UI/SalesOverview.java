@@ -56,6 +56,7 @@ import ch.epfl.polybazaar.category.RootCategoryFactory;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
+import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.saledetails.ListingManager;
 import ch.epfl.polybazaar.search.SearchListings;
