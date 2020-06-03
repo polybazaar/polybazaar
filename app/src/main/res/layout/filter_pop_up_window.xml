@@ -22,29 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/sales_overview_cell_margin"
             android:orientation="horizontal"
-            android:layout_marginStart="@dimen/sales_overview_cell_margin">
-
-            <TextView
-                android:id="@+id/category_popup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/overview_text_size_small"
-                android:text="@string/category_filter"
-                android:layout_weight="1"/>
-
-            <Button
-                android:id="@+id/categoryFilterButton"
-                android:layout_width="wrap_content"
-                android:layout_height="22sp"
-                android:layout_marginLeft="@dimen/sales_overview_cell_margin"
-                android:background="@drawable/rounded_corner_button_grey"
-                android:text="@string/Select"
-                android:textColor="@color/white"
-                android:textAllCaps = "false"
-                android:layout_gravity="center"
-                android:textSize="@dimen/popup_text_size_small" />
-
-        </LinearLayout>
+            android:layout_marginStart="@dimen/sales_overview_cell_margin"/>
 
         <Space
             android:layout_width="wrap_content"
