@@ -224,6 +224,7 @@
             android:text="@string/filter"
             android:textColor="@color/white"
             android:textSize="@dimen/default_button_text_size"
+            android:clickable="true"
             />
 
     </LinearLayout>
