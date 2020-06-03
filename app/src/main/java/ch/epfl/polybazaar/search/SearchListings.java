@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar.search;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -42,7 +43,7 @@ public class SearchListings extends AppCompatActivity {
         else {
             Bundle extras = getIntent().getExtras();
             if(extras != null){
-                Category searchCategory = findCategory(extras.getString("category"));
+                Category searchCategory = findCategory(extras.getString("category"),getApplicationContext());
                 performCategorySearch(searchCategory);
             }else{
                 startActivity(new Intent(SearchListings.this, SalesOverview.class));
@@ -92,7 +93,7 @@ public class SearchListings extends AppCompatActivity {
 
     }
     // get all categories contained in the category (the category is also contained in itself)
-    private List<Category> getContainedCategories(Category category) {
+    public static  List<Category> getContainedCategories(Category category) {
         List<Category> subcategories = new ArrayList<>();
         subcategories.add(category);
         if (category.hasSubCategories()) {
@@ -102,8 +103,8 @@ public class SearchListings extends AppCompatActivity {
         }
         return subcategories;
     }
-    private Category findCategory(String categoryName){
-        RootCategoryFactory.useJSONCategory(getApplicationContext());
+    public static Category findCategory(String categoryName, Context context){
+        RootCategoryFactory.useJSONCategory(context);
         Category cat = new NodeCategory(categoryName);
         Category foundCategory = RootCategoryFactory.getDependency();
         List<Category> catList = getContainedCategories(RootCategoryFactory.getDependency());

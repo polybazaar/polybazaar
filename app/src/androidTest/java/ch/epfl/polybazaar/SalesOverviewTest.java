@@ -99,7 +99,6 @@ public class SalesOverviewTest {
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
         onView(withId(R.id.UserClickableFilterMenu)).perform(click());
-        onView(withId(R.id.category_popup)).check(matches(withText("Category:")));
         onView(withId(R.id.price_popup)).check(matches(withText("Price:")));
         onView(withId(R.id.age_popup)).check(matches(withText("Online since:")));
         Intents.release();
