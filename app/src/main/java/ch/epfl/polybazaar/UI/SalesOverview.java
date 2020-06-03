@@ -95,6 +95,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         IDList = new ArrayList<>();
         liteListingList = new ArrayList<>();
         liteListingFilterList = new ArrayList<>();
+        RootCategoryFactory.useJSONCategory(getApplicationContext());
 
         RootCategoryFactory.useJSONCategory(getApplicationContext());
 
@@ -207,6 +208,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         TextView priceMinValue = popupWindow.getContentView().findViewById(R.id.min_price_value);
         TextView priceMaxValue = popupWindow.getContentView().findViewById(R.id.max_price_value);
         TextView daysMaxValue = popupWindow.getContentView().findViewById(R.id.max_days_value);
+
 
         priceMinSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
