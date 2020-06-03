@@ -66,22 +66,14 @@ public abstract class InputValidity {
      * @return the error message. If the nickname is value, return the empty string
      */
     public static String nicknameValidity(String nickname, Context context) {
-        Pattern letters = Pattern.compile("[a-zA-Z] [a-z[A-Z]]");
-
         String errorString = "";
         if(context != null){
             if(nickname.length() < context.getResources().getInteger(R.integer.min_nickname_length)){
                 errorString += context.getString(R.string.nickname_too_short) + " "+context.getResources().getInteger(R.integer.min_nickname_length)+" "+context.getString(R.string.char_long)+"\n";
             }
-            if(letters.matcher(nickname).find()){
-                errorString += context.getString(R.string.nickname_invalid);
-            }
         }
         else{
             if(nickname.length() < 2){
-                errorString += ERROR;
-            }
-            if(letters.matcher(nickname).find()){
                 errorString += ERROR;
             }
         }

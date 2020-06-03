@@ -87,4 +87,9 @@ public class NodeCategoryTest {
         assertTrue(multimedia.contains(multimedia));
         assertFalse(multimedia.contains(books));
     }
+
+    @Test
+    public void testDoesntContainsTheSubCategory(){
+        assertNull(multimedia.getSubCategoryContaining(new NodeCategory("blablabla")));
+    }
 }

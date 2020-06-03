@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.bottomBar;
 import ch.epfl.polybazaar.chat.ChatActivity;
 import ch.epfl.polybazaar.chat.ChatMessage;
@@ -31,6 +32,7 @@ public class ConversationOverviewActivity extends AppCompatActivity {
     private Set<ConversationOverview> conversationOverviews;
     private ConversationOverviewRecyclerAdapter conversationOverviewRecyclerAdapter;
     private RecyclerView conversationOverviewRecycler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

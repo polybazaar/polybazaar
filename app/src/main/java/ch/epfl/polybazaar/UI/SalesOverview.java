@@ -1,18 +1,12 @@
 package ch.epfl.polybazaar.UI;
 
-import android.Manifest;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -21,11 +15,9 @@ import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -37,7 +29,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -49,11 +40,9 @@ import java.util.TreeMap;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
-import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.category.Category;
 import ch.epfl.polybazaar.category.CategoryFragment;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
-import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
@@ -61,8 +50,7 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.saledetails.ListingManager;
 import ch.epfl.polybazaar.search.SearchListings;
 import ch.epfl.polybazaar.user.User;
-import safety.com.br.android_shake_detector.core.ShakeDetector;
-import safety.com.br.android_shake_detector.core.ShakeOptions;
+import ch.epfl.polybazaar.utilities.SatCompassShakeDetector;
 
 import static ch.epfl.polybazaar.chat.ChatActivity.removeBottomBarWhenKeyboardUp;
 import static ch.epfl.polybazaar.widgets.MinimalAlertDialog.makeDialog;
@@ -72,7 +60,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private static final int EXTRALOAD = 20;
     private static final int NUMBEROFCOLUMNS = 2;
     private static final String bundleKey = "userSavedListings";
-    public static final float SENSIBILITY = 2.0f;
+    private static final String referenceSearchList = "referenceSearchList";
     private static final float FILTER_ELEVATION = 10;
     private static final int PRICEMIN = 0;
     private static final int PRICEMAX = 1000;
@@ -88,8 +76,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
     private List<LiteListing> liteListingList;
     private LiteListingAdapter adapter;
     private int positionInIDList = 0;
-    private ShakeDetector shakeDetector;
-    private Category currentCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +89,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         liteListingList = new ArrayList<>();
 
         RootCategoryFactory.useJSONCategory(getApplicationContext());
-        currentCategory = RootCategoryFactory.getDependency();
 
         TextView catButton = findViewById(R.id.categoryOverview);
         catButton.setOnClickListener(view->{
@@ -155,31 +140,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         bottomNavigationView.setSelectedItemId(R.id.action_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> bottomBar.updateActivity(item.getItemId(), SalesOverview.this));
 
-        //Detects shake
-        ShakeOptions options = new ShakeOptions()
-                .background(true)
-                .interval(1000)
-                .shakeCount(2)
-                .sensibility(SENSIBILITY);
-        shakeDetector = new ShakeDetector(options).start(this, () -> {
-            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                Toast.makeText(this, R.string.location_not_granted, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-            if (manager != null && manager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
-                startActivity(new Intent(SalesOverview.this, SatCompass.class));
-            } else {
-                Toast.makeText(this, R.string.location_not_enabled, Toast.LENGTH_SHORT).show();
-            }
-        });
+        SatCompassShakeDetector.start(this);
         removeBottomBarWhenKeyboardUp(this);
     }
 
@@ -292,7 +253,6 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
 
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -304,6 +264,9 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         if (bundle != null) {
             if (bundle.getBoolean(bundleKey)) {
                 IDList = DataHolder.getInstance().getData();
+            }
+            if(bundle.getBoolean(referenceSearchList)) {
+                searchListingTitleMap = DataHolder.getInstance().getDataMap();
             }
         }
 
@@ -345,7 +308,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                 if (l != null) {
                     // delete sold listings older than a week
                     if ((l.getPrice().equals(getResources().getString(R.string.sold))) && (l.getTimeSold() != null) && (l.getTimeSold().toDate().before(expDate))) {
-                        ListingManager.deleteCurrentListing(l.getId());
+                        ListingManager.deleteCurrentListing(l.getId(), false, this);
                     } else {
                         listingTimeMap.put(l.getTimestamp(), l.getId());
                         listingTitleMap.put(l.getId(), l.getTitle());
@@ -360,9 +323,11 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
             int size = IDList.size();
 
             // Prepare a  map <listingID, title> sorted by most recent first, for search purposes
-            for (int i = 0; i < size; i++) {
-                String key = IDList.get(i);
-                searchListingTitleMap.put(key, listingTitleMap.get(key).toLowerCase());
+            if(searchListingTitleMap.isEmpty()) {
+                for (int i = 0; i < size; i++) {
+                    String key = IDList.get(i);
+                    searchListingTitleMap.put(key, listingTitleMap.get(key).toLowerCase());
+                }
             }
 
             List<Task<LiteListing>> taskList = new ArrayList<>();
@@ -423,6 +388,7 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                 Intent intent = new Intent(context, SalesOverview.class);
                 Bundle extras = new Bundle();
                 extras.putBoolean(bundleKey, true);
+                extras.putBoolean(referenceSearchList, true);
                 intent.putExtras(extras);
                 context.startActivity(intent);
             } else {
@@ -431,101 +397,17 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
         });
     }
 
-    private void queryCategories(){
-        List<Category> allCategories = getContainedCategories(currentCategory);
-        List<Task<List<LiteListing>>> queryList = new ArrayList<>();;
-        for(Category cat: allCategories){
-            queryList.add(LiteListing.fetchFieldEquality("category",cat.toString()));
-        }
-        Tasks.<List<LiteListing>>whenAllSuccess(queryList).addOnSuccessListener(result->{
-            List<LiteListing> flatList = new ArrayList<>();
-            for(List<LiteListing> l : result){
-                flatList.addAll(l);
-            }
-            onFetchSuccess(flatList);
-        });
-
-    }
-    private void onFetchSuccess(List<LiteListing> result){
-        if(result == null) {
-            return;
-        }
-        for (LiteListing l : result) {
-            if (l != null) {
-                if(l.getTimestamp() != null) { // TODO: delete before merge
-                    listingTimeMap.put(l.getTimestamp(), l.getId());
-                }
-            }
-        }
-        IDList = new ArrayList<>(listingTimeMap.values());
-        int size = IDList.size();
-        List<Task<LiteListing>> taskList = new ArrayList<>();
-        for (int i = positionInIDList; i < (positionInIDList + EXTRALOAD) && i < size; i++) {
-            taskList.add(LiteListing.fetch(IDList.get(i)));
-            positionInIDList++;
-        }
-        Tasks.<LiteListing>whenAllSuccess(taskList).addOnSuccessListener(list -> {
-            int start = liteListingList.size();
-            liteListingList.addAll(list);
-            int itemCount = liteListingList.size() - start;
-            adapter.notifyItemRangeInserted(start, itemCount);
-        });
-    }
 
     @Override
     public void onCategoryFragmentInteraction(Category category) {
-        positionInIDList = 0;
-        currentCategory = category;
-        listingTimeMap = new TreeMap<>(Collections.reverseOrder());    // store LiteListing IDs in reverse order of creation (most recent first)
-        IDList = new ArrayList<>();
-        liteListingList = new ArrayList<>();
-        RecyclerView rvLiteListings = findViewById(R.id.rvLiteListings);
 
-        // Create adapter passing in the sample LiteListing data
-        adapter = new LiteListingAdapter(liteListingList);
-
-        adapter.setOnItemClickListener(view -> {
-            int viewID = view.getId();
-            String listingID = adapter.getListingID(viewID);
-            Intent intent = new Intent(SalesOverview.this, SaleDetails.class);
-            intent.putExtra(LISTING_ID, listingID);
-            startActivity(intent);
-        });
-
-        rvLiteListings.setAdapter(adapter);
-        LinearLayoutManager mGridLayoutManager = new GridLayoutManager(this, NUMBEROFCOLUMNS);
-        rvLiteListings.setLayoutManager(mGridLayoutManager);
-        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(mGridLayoutManager) {
-
-            @Override
-            public void onLoadMore() {
-                // Triggered only when new data needs to be appended to the list
-                loadLiteListingOverview();
-            }
-        };
-        // Adds the scroll listener to RecyclerView
-        rvLiteListings.addOnScrollListener(scrollListener);
-        loadLiteListingsByCategory();
+        Intent categoryIntent = new Intent(this, SearchListings.class);
+        categoryIntent.putExtra("category", category.toString());
+        startActivity(categoryIntent);
     }
 
-    // get all categories contained in the category (the category is also contained in itself)
-    private List<Category> getContainedCategories(Category category) {
-        List<Category> subcategories = new ArrayList<>();
-        subcategories.add(category);
-        if (category.hasSubCategories()) {
-            for (Category cat : category.subCategories()) {
-                subcategories.addAll(getContainedCategories(cat));
-            }
-        }
-        return subcategories;
-    }
 
-    private void loadLiteListingsByCategory(){
-        if(currentCategory.equals(RootCategoryFactory.getDependency())){
-            loadLiteListingOverview();
-        }else{
-            queryCategories();
-        }
-    }
+
+
 
 }

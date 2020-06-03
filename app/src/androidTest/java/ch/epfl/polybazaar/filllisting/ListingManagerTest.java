@@ -62,7 +62,7 @@ public class ListingManagerTest {
         Intents.init();
         String id = "listingID";
         final Listing listing = new Listing("Title", "Description", "0", MockAuthenticator.TEST_USER_EMAIL,
-                "", "Video games", 1.0, 1.0);
+                 "Video games", 1.0, 1.0);
         listing.setId(id);
         Tasks.await(listing.saveWithLiteVersion());
 
@@ -83,7 +83,7 @@ public class ListingManagerTest {
         pressBack();
         Thread.sleep(500);
         runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.categoryButton).performClick());
-        runOnUiThread(() -> activityRule.getActivity().findViewById(R.id.submitListing).performClick());
+        onView(withText(activityRule.getActivity().getString(R.string.save))).perform(scrollTo(), click());
         //wait that the listing has been updated
         Thread.sleep(1000);
         Tasks.await(Listing.fetch(id).addOnSuccessListener(result -> assertEquals(newTitle, result.getTitle())));

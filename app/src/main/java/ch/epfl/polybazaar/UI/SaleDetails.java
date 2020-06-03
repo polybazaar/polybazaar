@@ -2,7 +2,6 @@ package ch.epfl.polybazaar.UI;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Gravity;
@@ -16,6 +15,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.chat.ChatActivity;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.login.AuthenticationUtils;
 import ch.epfl.polybazaar.map.MapsActivity;
 import ch.epfl.polybazaar.saledetails.ImageManager;
 import ch.epfl.polybazaar.saledetails.ListingManager;
@@ -35,7 +36,6 @@ import static ch.epfl.polybazaar.map.MapsActivity.LAT;
 import static ch.epfl.polybazaar.map.MapsActivity.LNG;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLAT;
 import static ch.epfl.polybazaar.map.MapsActivity.NOLNG;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertStringToBitmap;
 
 public class SaleDetails extends AppCompatActivity {
 
@@ -44,13 +44,10 @@ public class SaleDetails extends AppCompatActivity {
 
     private Listing listing;
     private String listingID;
-    //private List<Bitmap> listStringImage;
-    private List<String> listImageID;
 
     private double mpLat = NOLAT;
     private double mpLng = NOLNG;
     private int viewIncrement = 0;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -60,8 +57,6 @@ public class SaleDetails extends AppCompatActivity {
 
         imageManager = new ImageManager(this);
         listingManager = new ListingManager(this);
-        //listStringImage = new ArrayList<>();
-        listImageID = new ArrayList<>();
 
         findViewById(R.id.ratingBar).setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -70,11 +65,7 @@ public class SaleDetails extends AppCompatActivity {
             return true;
         });
 
-        //listStringImage = new ArrayList<>();
-        listImageID = new ArrayList<>();
-
         Glide.with(this).load(R.drawable.loading).into((ImageView)findViewById(R.id.loadingImage));
-
 
         retrieveListingFromListingID();
     }
@@ -107,7 +98,7 @@ public class SaleDetails extends AppCompatActivity {
     }
 
     private void retrieveImages() {
-        if (listing.getImagesRefs() != null && listing.getImagesRefs().size() > 0) {
+        if (listing != null && listing.getImagesRefs() != null && listing.getImagesRefs().size() > 0) {
             listing.fetchImages(SaleDetails.this).addOnSuccessListener(bitmaps -> {
                 imageManager.drawImages(bitmaps);
             });
@@ -123,10 +114,7 @@ public class SaleDetails extends AppCompatActivity {
      */
 
     public void contactSeller(View v) {
-        if (AuthenticatorFactory.getDependency().getCurrentUser() == null) {
-            Intent notSignedIn = new Intent(getApplicationContext(), NotSignedIn.class);
-            startActivity(notSignedIn);
-        } else {
+        if (AuthenticationUtils.checkAccessAuthorization(this)) {
             Intent intent = new Intent(SaleDetails.this, ChatActivity.class);
             intent.putExtra(ChatActivity.BUNDLE_LISTING_ID, listingID);
             intent.putExtra(ChatActivity.BUNDLE_RECEIVER_EMAIL, listing.getUserEmail());
@@ -168,12 +156,7 @@ public class SaleDetails extends AppCompatActivity {
         builder.setTitle("Delete this listing")
                 .setMessage("You are about to delete this listing. Are you sure you want to continue?")
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    ListingManager.deleteCurrentListing(listingID);
-                    Toast toast = Toast.makeText(this.getApplicationContext(),R.string.deleted_listing, Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
-                    toast.show();
-                    Intent SalesOverviewIntent = new Intent(this.getApplicationContext(), SalesOverview.class);
-                    this.startActivity(SalesOverviewIntent);
+                    ListingManager.deleteCurrentListing(listingID, true, this);
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
         builder.create().show();

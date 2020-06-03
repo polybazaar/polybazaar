@@ -6,12 +6,20 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.category.Category;
+import ch.epfl.polybazaar.category.NodeCategory;
+import ch.epfl.polybazaar.category.RootCategoryFactory;
+import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static ch.epfl.polybazaar.UI.SalesOverview.displaySavedListings;
 
@@ -20,6 +28,7 @@ public class SearchListings extends AppCompatActivity {
     public final String SEARCH_QUERY = "searchQuery";
     Map<String, String> searchListingTitleMap;
     ArrayList<String> sortedIDs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +40,14 @@ public class SearchListings extends AppCompatActivity {
             performSearch(query);
         }
         else {
-            startActivity(new Intent(SearchListings.this, SalesOverview.class));
+            Bundle extras = getIntent().getExtras();
+            if(extras != null){
+                Category searchCategory = findCategory(extras.getString("category"));
+                performCategorySearch(searchCategory);
+            }else{
+                startActivity(new Intent(SearchListings.this, SalesOverview.class));
+            }
+
         }
     }
 
@@ -54,6 +70,47 @@ public class SearchListings extends AppCompatActivity {
         else {
             displaySavedListings(this, sortedIDs, R.string.no_match_found);
         }
+    }
+    public void performCategorySearch(Category category){
+
+        List<Category> allCategories = getContainedCategories(category);
+        List<Task<List<LiteListing>>> queryList = new ArrayList<>();;
+        for(Category cat: allCategories){
+            queryList.add(LiteListing.fetchFieldEquality("category",cat.toString()));
+        }
+        Tasks.<List<LiteListing>>whenAllSuccess(queryList).addOnSuccessListener(result->{
+            ArrayList<String> flatList = new ArrayList<>();
+            for(List<LiteListing> l : result){
+                for(LiteListing listing : l){
+                    flatList.add(listing.getId());
+                }
+            }
+            //onFetchSuccess(flatList);
+
+            displaySavedListings(this, flatList, R.string.no_match_found);
+        });
+
+    }
+    // get all categories contained in the category (the category is also contained in itself)
+    private List<Category> getContainedCategories(Category category) {
+        List<Category> subcategories = new ArrayList<>();
+        subcategories.add(category);
+        if (category.hasSubCategories()) {
+            for (Category cat : category.subCategories()) {
+                subcategories.addAll(getContainedCategories(cat));
+            }
+        }
+        return subcategories;
+    }
+    private Category findCategory(String categoryName){
+        RootCategoryFactory.useJSONCategory(getApplicationContext());
+        Category cat = new NodeCategory(categoryName);
+        Category foundCategory = RootCategoryFactory.getDependency();
+        List<Category> catList = getContainedCategories(RootCategoryFactory.getDependency());
+        for(Category c:catList){
+            if (cat.equals(c)){foundCategory = c;}
+        }
+        return foundCategory;
     }
 
 }

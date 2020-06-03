@@ -1,18 +1,14 @@
 package ch.epfl.polybazaar.UI;
 
-import android.content.Context;
 import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.graphics.Bitmap;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
-import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.Tasks;
 
@@ -22,11 +18,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.filestorage.ImageTransaction;
 import ch.epfl.polybazaar.listing.Listing;
-import ch.epfl.polybazaar.listingImage.ListingImage;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.LoginTest;
@@ -46,7 +44,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.polybazaar.database.datastore.DataStoreFactory.useMockDataStore;
-import static ch.epfl.polybazaar.utilities.ImageUtilities.convertBitmapToString;
 import static ch.epfl.polybazaar.utilities.ImageUtilities.convertDrawableToBitmap;
 import static java.util.UUID.randomUUID;
 import static org.junit.Assert.assertEquals;
@@ -56,7 +53,6 @@ import static org.junit.Assert.assertTrue;
 
 public class SaleDetailsTest {
     public static final float DELTA = 0.1f;
-    public static final int SLEEP_TIME = 1000;
 
     @Rule
     public final ActivityTestRule<SaleDetails> activityRule =
@@ -107,15 +103,18 @@ public class SaleDetailsTest {
         activityRule.launchActivity(intent);
 
         String nextId = randomUUID().toString();
-        String strImg = convertBitmapToString(convertDrawableToBitmap(ContextCompat.getDrawable(activityRule.getActivity(), R.drawable.bicycle)));
-        ListingImage newImage1 = new ListingImage(strImg, nextId);
-        newImage1.setId(newListing.getId());
-        ListingImage newImage2 = new ListingImage(strImg, "");
-        newImage2.setId(nextId);
-        Tasks.whenAll(newImage1.save(), newImage2.save());
+        String nextId2 = randomUUID().toString();
+        List<String> list = new ArrayList<>();
+        list.add(nextId);
+        list.add(nextId2);
+        Bitmap img = convertDrawableToBitmap(ContextCompat.getDrawable(activityRule.getActivity(), R.drawable.bicycle));
+        Tasks.whenAll(ImageTransaction.store(nextId, img, 100, activityRule.getActivity().getApplicationContext()),
+                ImageTransaction.store(nextId2, img, 100, activityRule.getActivity().getApplicationContext()));
+        Tasks.whenAll(Listing.updateField(Listing.IMAGES_REFS, newListing.getId(), list));
 
-        //recreate to load images
-        runOnUiThread(() -> activityRule.getActivity().recreate());
+        activityRule.finishActivity();
+        intent.putExtra("listingID", newListing.getId());
+        activityRule.launchActivity(intent);
 
         TextView textTitle = activityRule.getActivity().findViewById(R.id.title);
         assertEquals("Title", textTitle.getText().toString());
@@ -209,6 +208,45 @@ public class SaleDetailsTest {
 
         auth.signOut();
     }
+
+    @Test
+    public void testBuyNow() throws ExecutionException, InterruptedException {
+        MockAuthenticator auth = MockAuthenticator.getInstance();
+        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+
+        String id = "myid";
+        DatabaseStoreUtilities.storeNewListing("My listing",  "other.user@epfl.ch", id);
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+        activityRule.launchActivity(intent);
+
+        onView(withId(R.id.buyNow)).perform(scrollTo(), click());
+        onView(withText("NO")).check(matches(isDisplayed()));
+
+        auth.signOut();
+    }
+
+
+    @Test
+    public void makeOffer() throws ExecutionException, InterruptedException {
+        MockAuthenticator auth = MockAuthenticator.getInstance();
+        Tasks.await(auth.signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+
+        String id = "myid";
+        DatabaseStoreUtilities.storeNewListing("My listing",  "other.user@epfl.ch", id);
+        Intent intent = new Intent();
+        intent.putExtra("listingID", id);
+        activityRule.launchActivity(intent);
+
+
+        Intents.init();
+        onView(withId(R.id.makeOffer)).perform(scrollTo(), click());
+        intended(hasComponent(SubmitOffer.class.getName()));
+        Intents.release();
+
+        auth.signOut();
+    }
+
 
     @Test
     public void viewLabelNotDisplayedWhenNotLoggedIn() throws Throwable {
@@ -326,10 +364,9 @@ public class SaleDetailsTest {
 
     @Test
     public void testSetupViewMP() throws ExecutionException, InterruptedException {
-        MockAuthenticator auth = MockAuthenticator.getInstance();
         String id = "listingID";
-        final Listing listing = new Listing("Title", "Description", "0", "otherUser@epfl.ch",
-                "", "Multimedia", 1.0, 1.0);
+        Listing listing = new Listing("Title", "Description", "0", "otherUser@epfl.ch",
+                 "Multimedia", 1.0, 1.0);
         listing.setId(id);
         Tasks.await(listing.save());
 
@@ -347,7 +384,7 @@ public class SaleDetailsTest {
     public void testClickOnViewPager() throws Throwable {
         String id = "listingID";
         final Listing listing = new Listing("Title", "Description", "0", "otherUser@epfl.ch",
-                "", "Multimedia", 1.0, 1.0);
+                 "Multimedia", 1.0, 1.0);
         listing.setId(id);
         Tasks.await(listing.save());
 

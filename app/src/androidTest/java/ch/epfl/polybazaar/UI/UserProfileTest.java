@@ -199,4 +199,13 @@ public class UserProfileTest {
 
         assertThat(AuthenticatorFactory.getDependency().getCurrentUser(), is(nullValue()));
     }
+    
+    @Test
+    public void testCanChangeProfilePicture() throws ExecutionException, InterruptedException {
+        Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
+        activityRule.launchActivity(new Intent());
+        activityRule.getActivity().changeProfilePicture();
+        Thread.sleep(SLEEP_TIME);
+        onView(withText("Library")).check(matches(isDisplayed()));
+    }
 }

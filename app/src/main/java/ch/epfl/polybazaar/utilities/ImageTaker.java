@@ -79,11 +79,16 @@ public class ImageTaker extends AppCompatActivity {
                     failure();
                 }
             } else if (requestCode == RESULT_TAKE_PICTURE) {
+
                 ByteArrayOutputStream bin = new ByteArrayOutputStream();
                 image = BitmapFactory.decodeFile(getPhotoFile().getAbsolutePath());
-                image.compress(Bitmap.CompressFormat.JPEG, QUALITY, bin);
-                image = BitmapFactory.decodeStream(new ByteArrayInputStream(bin.toByteArray()));
-                success();
+                if (image == null) {
+                    failure();
+                } else {
+                    image.compress(Bitmap.CompressFormat.JPEG, QUALITY, bin);
+                    image = BitmapFactory.decodeStream(new ByteArrayInputStream(bin.toByteArray()));
+                    success();
+                }
             } else {
                 failure();
             }
