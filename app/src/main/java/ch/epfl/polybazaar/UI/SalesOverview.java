@@ -359,7 +359,12 @@ public class SalesOverview extends AppCompatActivity implements CategoryFragment
                     } else {
                         listingTimeMap.put(l.getTimestamp(), l.getId());
                         listingTitleMap.put(l.getId(), l.getTitle());
-                        listingPriceMap.put(l.getId(), Double.parseDouble(l.getPrice()));
+                        try{
+                            listingPriceMap.put(l.getId(), Double.parseDouble(l.getPrice()));
+                        }
+                        catch (NumberFormatException nfe){
+                            listingPriceMap.put(l.getId(), -1.0);
+                        }
                         listingDateMap.put(l.getId(), l.getTimestamp().toDate());
                     }
                 }
