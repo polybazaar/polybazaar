@@ -65,6 +65,7 @@
     <string name="search_title">Search listings</string>
     <string name="search_hint">Search listings</string>
     <string name="no_search_results">No matching results for:</string>
+    <string name="no_filter_results">No matching results</string>
 
     //bottom navigation bar
     <string name="bottom_navigation_home">Home</string>
@@ -177,6 +178,7 @@
     <string name="date_missing">date missing</string>
     <string name="n_a">N/A</string>
     <string name="max_num_images">Maximum 10 images</string>
+    <string name="price_filter_seekbar">Minimum price cannot be above maximum price</string>
 
 
 </resources>
