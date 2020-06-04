@@ -66,6 +66,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
     private EditText firstNameSelector;
     private EditText lastNameSelector;
     private EditText phoneNumberSelector;
+    private Bitmap picBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +141,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
             if (stringImage != null) {
                 Bitmap bitmap = Bitmap.createScaledBitmap(getRoundedCroppedBitmap(convertStringToBitmap(stringImage)), PROFILE_PIC_SIZE, PROFILE_PIC_SIZE, true);
                 profilePicView.setImageBitmap(bitmap);
-                this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).edit().putString(STRING_IMAGE, convertBitmapToStringPNG(bitmap)).apply();
+                picBitmap = bitmap;
                 profilePicChanged = true;
                 showNewPicDialog = true;
             } else {
@@ -181,15 +182,17 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         User editedUser;
         String profilePicRef;
         if (profilePicChanged) {
-                if (!user.getProfilePictureRef().equals(NO_PROFILE_PICTURE)) {
-                    profilePicRef = user.getProfilePictureRef();
-                    ImageTransaction.delete(profilePicRef);
-                } else {
-                    profilePicRef = randomUUID().toString();
-                }
-                Bitmap bitmap = convertStringToBitmap(this.getSharedPreferences(PICTURE_PREFS, MODE_PRIVATE).
-                        getString(STRING_IMAGE, null));
-            ImageTransaction.storePNG(profilePicRef, bitmap, QUALITY, this.getApplicationContext());
+            if (user.getProfilePictureRef() != null && !user.getProfilePictureRef().equals(NO_PROFILE_PICTURE)) {
+                profilePicRef = user.getProfilePictureRef();
+                ImageTransaction.delete(profilePicRef);
+            } else {
+                profilePicRef = randomUUID().toString();
+            }
+            if (picBitmap == null) {
+                profilePicRef = NO_PROFILE_PICTURE;
+            } else {
+                ImageTransaction.storePNG(profilePicRef, picBitmap, QUALITY, this.getApplicationContext());
+            }
         } else {
             profilePicRef = NO_PROFILE_PICTURE;
         }
