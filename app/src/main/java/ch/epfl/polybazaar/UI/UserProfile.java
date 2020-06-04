@@ -182,7 +182,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         User editedUser;
         String profilePicRef;
         if (profilePicChanged) {
-            if (!user.getProfilePictureRef().equals(NO_PROFILE_PICTURE)) {
+            if (user.getProfilePictureRef() != null && !user.getProfilePictureRef().equals(NO_PROFILE_PICTURE)) {
                 profilePicRef = user.getProfilePictureRef();
                 ImageTransaction.delete(profilePicRef);
             } else {
