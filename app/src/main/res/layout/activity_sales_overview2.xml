@@ -19,27 +19,18 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
-        android:id="@+id/salesOverviewTopMenu"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/sales_overview_top_menu_height"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/searchbar">
-
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/salesOverviewFilterMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="right"
-        app:layout_constraintTop_toBottomOf="@+id/salesOverviewTopMenu">
+        app:layout_constraintTop_toBottomOf="@+id/searchbar">
 
         <TextView
             android:id="@+id/categoryOverview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:text="@string/select_category"
             android:textAlignment="viewStart"
