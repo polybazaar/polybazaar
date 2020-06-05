@@ -43,6 +43,7 @@ public class ConversationOverviewTest {
                     MockAuthenticator.getInstance().reset();
                     MockFileStore.getInstance().cleanUp();
                     LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
+                    
                 }
             };
 
