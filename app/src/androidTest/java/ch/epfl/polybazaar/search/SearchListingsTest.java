@@ -18,6 +18,9 @@ import java.util.Map;
 import ch.epfl.polybazaar.DataHolder;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -48,6 +51,8 @@ public class SearchListingsTest {
     @BeforeClass
     public static void init() throws Throwable {
         useMockDataStore();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
         LiteListing litelisting1 = new LiteListing("1", "listing1", "1", "Furniture");
         Tasks.await(litelisting1.save());
     }

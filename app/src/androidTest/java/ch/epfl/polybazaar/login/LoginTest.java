@@ -3,6 +3,7 @@ package ch.epfl.polybazaar.login;
 import android.view.View;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
@@ -11,6 +12,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.utilities.InputValidity;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -45,6 +49,8 @@ public class LoginTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     useMockDataStore();
+                    FileStoreFactory.setDependency(MockFileStore.getInstance());
+                    LocalCache.setRoot("test-cache");
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                     MockAuthenticator.getInstance().reset();
                 }
@@ -52,6 +58,8 @@ public class LoginTest {
                 @Override
                 protected void afterActivityFinished() {
                     MockAuthenticator.getInstance().reset();
+                    MockFileStore.getInstance().cleanUp();
+                    LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
                     MockPhoneSettings.getInstance().setAirPlaneMode(false);
                 }
             };

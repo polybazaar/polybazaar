@@ -54,7 +54,6 @@ import static org.hamcrest.core.IsNot.not;
 public class UserProfileTest {
 
     public static final int SLEEP_TIME = 2000;
-    private MockFileStore mock;
 
     @Rule
     public final ActivityTestRule<UserProfile> activityRule =
@@ -67,16 +66,14 @@ public class UserProfileTest {
     public void init() {
         useMockDataStore();
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
-        mock = new MockFileStore();
-        mock.setContext(InstrumentationRegistry.getInstrumentation().getTargetContext());
-        FileStoreFactory.setDependency(mock);
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
         LocalCache.setRoot("test-cache");
     }
 
     @After
     public void cleanup() {
         MockAuthenticator.getInstance().reset();
-        mock.cleanUp();
+        MockFileStore.getInstance().cleanUp();
         LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getTargetContext());
     }
 

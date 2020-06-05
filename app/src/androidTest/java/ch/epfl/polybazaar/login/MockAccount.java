@@ -82,7 +82,7 @@ public class MockAccount implements Account {
 
     @Override
     public Task<Void> delete() {
-        deleted = true;
+        //deleted = true;
         return Tasks.forResult(null);
     }
 

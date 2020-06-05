@@ -25,6 +25,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -57,6 +60,8 @@ public class SalesOverviewTest {
     @Before
     public void init() throws Throwable {
         useMockDataStore();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
 
         LiteListing litelisting1 = new LiteListing("1", "listing1", "1", "Video games");
         LiteListing litelisting2 = new LiteListing("2", "listing2", "10", "Furniture");

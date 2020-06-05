@@ -17,6 +17,9 @@ import java.util.concurrent.ExecutionException;
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.category.RootCategoryFactory;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.Authenticator;
@@ -48,6 +51,8 @@ public class ListingManagerTest {
     @Before
     public void init() {
         useMockDataStore();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
         RootCategoryFactory.useMockCategory();
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
         Authenticator authenticator = AuthenticatorFactory.getDependency();

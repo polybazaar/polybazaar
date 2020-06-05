@@ -1,11 +1,15 @@
 package ch.epfl.polybazaar.endToEnd;
 
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
@@ -30,11 +34,15 @@ public class ConversationOverviewTest {
                 protected void beforeActivityLaunched() {
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                     useMockDataStore();
+                    FileStoreFactory.setDependency(MockFileStore.getInstance());
+                    LocalCache.setRoot("test-cache");
                     useMockCategory();
                 }
                 @Override
                 protected void afterActivityFinished() {
                     MockAuthenticator.getInstance().reset();
+                    MockFileStore.getInstance().cleanUp();
+                    LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
                 }
             };
 

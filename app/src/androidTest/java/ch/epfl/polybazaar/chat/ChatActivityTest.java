@@ -3,6 +3,7 @@ package ch.epfl.polybazaar.chat;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Tasks;
@@ -16,6 +17,9 @@ import org.junit.Test;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.notifications.NotificationService;
@@ -52,6 +56,8 @@ public class ChatActivityTest {
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
         useMockDataStore();
         useMockCategory();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
 
         Tasks.await(AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD));
 
@@ -66,6 +72,8 @@ public class ChatActivityTest {
     @After
     public void cleanup() {
         MockAuthenticator.getInstance().reset();
+        MockFileStore.getInstance().cleanUp();
+        LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
     }
 
     @Test

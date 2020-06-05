@@ -1,5 +1,6 @@
 package ch.epfl.polybazaar;
 
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.Timestamp;
@@ -9,6 +10,9 @@ import org.junit.Test;
 
 import ch.epfl.polybazaar.UI.SubmitOffer;
 import ch.epfl.polybazaar.chat.ChatMessage;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -45,6 +49,8 @@ public class OfferTests {
                 @Override
                 protected void beforeActivityLaunched() {
                     useMockDataStore();
+                    FileStoreFactory.setDependency(MockFileStore.getInstance());
+                    LocalCache.setRoot("test-cache");
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                     User testUser1 = new User("nickname", MockAuthenticator.TEST_USER_EMAIL);
                     testUser1.save();
@@ -69,6 +75,8 @@ public class OfferTests {
                 protected void afterActivityFinished() {
                     MockAuthenticator.getInstance().signOut();
                     MockAuthenticator.getInstance().reset();
+                    MockFileStore.getInstance().cleanUp();
+                    LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
                 }
             };
 
