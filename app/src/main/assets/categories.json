@@ -21,5 +21,8 @@
     "Cooking",
     "Litterature",
     "Engineering"],
-  "Others" : []
+  "Others" : [],
+
+  "Bikes" : [
+   "VTT", "City bikes"]
 }
