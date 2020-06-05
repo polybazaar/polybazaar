@@ -11,9 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.UI.FillListing;
@@ -28,7 +26,6 @@ import ch.epfl.polybazaar.login.AuthenticatorFactory;
 
 import static ch.epfl.polybazaar.Utilities.getUser;
 import static ch.epfl.polybazaar.listing.Listing.*;
-import static ch.epfl.polybazaar.litelisting.LiteListing.LISTING_ID;
 import static ch.epfl.polybazaar.litelisting.LiteListing.NO_THUMBNAIL;
 import static ch.epfl.polybazaar.network.InternetCheckerFactory.isInternetAvailable;
 
