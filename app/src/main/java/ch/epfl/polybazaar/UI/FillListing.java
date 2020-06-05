@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -274,6 +275,9 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         lng = listing.getLongitude();
         if (lat != NOLAT && lng != NOLNG) {
             addMP.setText(R.string.change_MP);
+        }
+        if (listing.getPrice().equals(Listing.SOLD)) {
+            submitListing.setVisibility(View.GONE);
         }
         return true;
     }
