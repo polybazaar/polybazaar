@@ -188,9 +188,7 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
             } else {
                 profilePicRef = randomUUID().toString();
             }
-            if (picBitmap == null) {
-                profilePicRef = NO_PROFILE_PICTURE;
-            } else {
+            if (picBitmap != null) {
                 ImageTransaction.storePNG(profilePicRef, picBitmap, QUALITY, this.getApplicationContext());
             }
         } else {
