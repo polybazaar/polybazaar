@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -25,6 +28,7 @@ import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticationUtils;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
+import ch.epfl.polybazaar.saledetails.ListingManager;
 import ch.epfl.polybazaar.user.User;
 import ch.epfl.polybazaar.utilities.ImageTaker;
 import ch.epfl.polybazaar.utilities.InputValidity;
@@ -325,5 +329,21 @@ public class UserProfile extends AppCompatActivity implements NoticeDialogListen
         authenticator.signOut();
         Intent notSignedIn = new Intent(getApplicationContext(), SalesOverview.class);
         startActivity(notSignedIn);
+    }
+
+    public void deleteAccount(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(UserProfile.this);
+        builder.setTitle("Delete this account")
+                .setMessage("You are about to delete your account. Are you sure you want to continue?")
+                .setPositiveButton(R.string.yes, (dialog, id) -> {
+                    AuthenticatorFactory.getDependency().getCurrentUser().deleteWithDependencies();
+                    Toast toast = Toast.makeText(this.getApplicationContext(),R.string.deleted_account, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                    Intent SalesOverviewIntent = new Intent(this.getApplicationContext(), SalesOverview.class);
+                    this.startActivity(SalesOverviewIntent);
+                })
+                .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
+        builder.create().show();
     }
 }

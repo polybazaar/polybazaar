@@ -1,7 +1,12 @@
 package ch.epfl.polybazaar.login;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.user.User;
 
 /**
@@ -55,4 +60,22 @@ public interface Account {
      * @return task
      */
     Task<Void> updatePassword(String newPassword);
+
+    Task<Void> delete();
+
+    /**
+     * Deletes the user account along with everything that is attached to the account (listings, messages, etc)
+     * @return void task
+     */
+    default Task<Void> deleteWithDependencies() {
+        AuthenticatorFactory.getDependency().signOut();
+        List<Task<Void>> deletes = new ArrayList<>();
+        getUserData().addOnSuccessListener(user -> {
+           for (String s: user.getOwnListings()) {
+               deletes.add(Listing.fetch(s).onSuccessTask(Listing::deleteWithDependencies));
+           }
+           deletes.add(user.delete());
+        });
+        return Tasks.whenAll(deletes).onSuccessTask(aVoid -> delete());
+    }
 }

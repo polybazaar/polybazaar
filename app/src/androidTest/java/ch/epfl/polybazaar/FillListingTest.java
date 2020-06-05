@@ -19,6 +19,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -35,6 +36,9 @@ import java.util.ArrayList;
 
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.FillListing;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.filllisting.ImageManager;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
@@ -112,6 +116,8 @@ public class FillListingTest {
     protected void beforeActivityLaunched() {
         useMockCategory();
         useMockDataStore();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
     }
 };
 
@@ -135,6 +141,8 @@ public class FillListingTest {
     public void unSigned() {
         AuthenticatorFactory.getDependency().signOut();
         MockAuthenticator.getInstance().reset();
+        MockFileStore.getInstance().cleanUp();
+        LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
     }
 
 
@@ -222,6 +230,8 @@ public class FillListingTest {
     @Test
     public void submittingNewListingRedirectsToSalesOverview() throws Throwable {
         useMockDataStore();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
         fillListing();
         Intents.init();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
@@ -346,6 +356,8 @@ public class FillListingTest {
         Intents.init();
         useMockNetworkState(false);
         useMockDataStore();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(SLEEP_TIME);
@@ -361,6 +373,8 @@ public class FillListingTest {
         Intents.init();
         useMockNetworkState(false);
         useMockDataStore();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(SLEEP_TIME);
@@ -381,6 +395,8 @@ public class FillListingTest {
         Intents.init();
         useMockNetworkState(false);
         useMockDataStore();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
         fillListing();
         runOnUiThread(() -> fillSaleActivityTestRule.getActivity().findViewById(R.id.submitListing).performClick());
         Thread.sleep(SLEEP_TIME);

@@ -2,6 +2,8 @@ package ch.epfl.polybazaar.filestorage;
 
 import android.content.Context;
 
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
@@ -14,8 +16,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public final class MockFileStore implements FileStore {
+    private final Context ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
     private final static String MOCK_DIR = "cloud-mock" + File.separator;
-    private String path;
+    private String path = ctx.getCacheDir() + File.separator + MOCK_DIR;
+
+    private static MockFileStore INSTANCE;
+
+    private MockFileStore() {}
+
+    public static MockFileStore getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new MockFileStore();
+        }
+        return INSTANCE;
+    }
 
     @Override
     public Task<Void> delete(String id) {
@@ -26,22 +40,6 @@ public final class MockFileStore implements FileStore {
         }
 
         return Tasks.forResult(null);
-    }
-
-    /**
-     * Sets the context for accessing file system
-     * @param context app context
-     */
-    public void setContext(Context context) {
-        File mockDirectory = new File(context.getCacheDir() + File.separator + MOCK_DIR);
-
-        if (!mockDirectory.exists()) {
-            mockDirectory.mkdir();
-        }
-
-        path = mockDirectory.getAbsolutePath();
-
-        checkMockDirExists();
     }
 
     /**
@@ -68,6 +66,7 @@ public final class MockFileStore implements FileStore {
 
     @Override
     public Task<Void> store(String id, InputStream data) {
+        checkMockDirExists();
         try (OutputStream out = new FileOutputStream(new File(path + File.separator + id))) {
             IoUtils.copyStream(data, out);
             return Tasks.forResult(null);

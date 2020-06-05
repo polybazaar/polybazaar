@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
@@ -8,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.polybazaar.UI.FillListing;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.login.SignInActivity;
@@ -41,6 +44,8 @@ public class MainActivityTest{
                 @Override
                 protected void afterActivityFinished() {
                     MockAuthenticator.getInstance().reset();
+                    MockFileStore.getInstance().cleanUp();
+                    LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
                 }
             };
 

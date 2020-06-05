@@ -12,6 +12,7 @@ import android.view.View;
 
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 
@@ -25,6 +26,9 @@ import java.util.Collection;
 
 import ch.epfl.polybazaar.MainActivity;
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
@@ -68,6 +72,8 @@ public class UserProfileTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     useMockDataStore();
+                    FileStoreFactory.setDependency(MockFileStore.getInstance());
+                    LocalCache.setRoot("test-cache");
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                     authenticator = AuthenticatorFactory.getDependency();
                     User testUser = new User("nickname", MockAuthenticator.TEST_USER_EMAIL);
@@ -76,6 +82,8 @@ public class UserProfileTest {
                 @Override
                 protected void afterActivityFinished() {
                     MockAuthenticator.getInstance().reset();
+                    MockFileStore.getInstance().cleanUp();
+                    LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
                 }
     };
 

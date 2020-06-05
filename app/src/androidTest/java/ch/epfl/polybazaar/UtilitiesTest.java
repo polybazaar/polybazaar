@@ -1,12 +1,16 @@
 package ch.epfl.polybazaar;
 import android.content.Context;
 
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
@@ -27,6 +31,8 @@ public class UtilitiesTest {
     @After
     public void reset(){
         MockAuthenticator.getInstance().reset();
+        MockFileStore.getInstance().cleanUp();
+        LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
     }
 
     @Test

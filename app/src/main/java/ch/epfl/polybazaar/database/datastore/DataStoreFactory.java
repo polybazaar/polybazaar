@@ -3,6 +3,8 @@ package ch.epfl.polybazaar.database.datastore;
 
 import ch.epfl.polybazaar.database.datastore.firebase.FirebaseDataStore;
 import ch.epfl.polybazaar.database.datastore.mock.MockDataStore;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
 
 public abstract class DataStoreFactory {
 
