@@ -1,5 +1,7 @@
 package ch.epfl.polybazaar.database.datastore.mock;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 

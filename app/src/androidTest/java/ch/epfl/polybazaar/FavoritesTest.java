@@ -2,6 +2,7 @@ package ch.epfl.polybazaar;
 
 import android.view.View;
 
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matcher;
@@ -13,6 +14,9 @@ import org.junit.Test;
 import java.util.List;
 
 import ch.epfl.polybazaar.UI.NotSignedIn;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.login.Account;
 import ch.epfl.polybazaar.login.Authenticator;
@@ -42,6 +46,8 @@ public class FavoritesTest {
     @Before
     public void init() {
         useMockDataStore();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
         auth = MockAuthenticator.getInstance();
         AuthenticatorFactory.setDependency(auth);
     }
@@ -49,6 +55,8 @@ public class FavoritesTest {
     @After
     public void reset(){
         MockAuthenticator.getInstance().reset();
+        MockFileStore.getInstance().cleanUp();
+        LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
     }
 
 

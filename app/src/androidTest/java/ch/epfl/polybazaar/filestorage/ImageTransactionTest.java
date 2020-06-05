@@ -26,22 +26,19 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ImageTransactionTest {
-    private MockFileStore mock;
     private final Context ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
     private final Bitmap bm = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.algebre_lin);
     private final static String NAME = "test-image.jpg";
 
     @Before
     public void setup() {
-        mock = new MockFileStore();
-        mock.setContext(ctx);
-        FileStoreFactory.setDependency(mock);
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
         LocalCache.setRoot("test-cache");
     }
 
     @After
     public void cleanUp() {
-        mock.cleanUp();
+        MockFileStore.getInstance().cleanUp();
         LocalCache.cleanUp(ctx);
     }
 
@@ -85,7 +82,7 @@ public class ImageTransactionTest {
     public void fileCanBeRetrievedAndCached() throws ExecutionException, InterruptedException {
         // we store the file directly "remotely" to check if retrieving works when cache does not have a copy
         InputStream input = ctx.getResources().openRawResource(R.drawable.algebre_lin);
-        Tasks.await(mock.store(NAME, input));
+        Tasks.await(MockFileStore.getInstance().store(NAME, input));
 
         Tasks.await(ImageTransaction.fetch(NAME, ctx)
                 .addOnFailureListener(e -> { throw new AssertionError(); })

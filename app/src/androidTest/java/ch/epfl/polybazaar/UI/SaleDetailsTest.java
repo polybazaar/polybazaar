@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Tasks;
@@ -23,7 +24,10 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.polybazaar.R;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
 import ch.epfl.polybazaar.filestorage.ImageTransaction;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.login.Authenticator;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -64,12 +68,16 @@ public class SaleDetailsTest {
     @Before
     public void init() {
         useMockDataStore();
+        FileStoreFactory.setDependency(MockFileStore.getInstance());
+        LocalCache.setRoot("test-cache");
         AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
     }
 
     @After
     public void cleanup() {
         MockAuthenticator.getInstance().reset();
+        MockFileStore.getInstance().cleanUp();
+        LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
     }
 
     @Test

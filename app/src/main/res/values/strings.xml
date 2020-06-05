@@ -173,12 +173,13 @@
     <string name="char_long">characters long</string>
     <string name="nickname_too_short">Nickname should be at least</string>
     <string name="nickname_invalid">Nickname should contain at least one letter</string>
+    <string name="delete_account">Delete account</string>
+    <string name="deleted_account">Your account has been deleted</string>
     <string name="image_capture_failure">The image could not be imported, please try again.</string>
     <string name="online_since_date">Published on : </string>
     <string name="date_missing">date missing</string>
     <string name="n_a">N/A</string>
     <string name="max_num_images">Maximum 10 images</string>
     <string name="price_filter_seekbar">Minimum price cannot be above maximum price</string>
-
 
 </resources>

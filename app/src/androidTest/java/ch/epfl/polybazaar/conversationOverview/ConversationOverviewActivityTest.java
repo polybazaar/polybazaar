@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 
 import androidx.core.content.ContextCompat;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Task;
@@ -19,7 +20,10 @@ import java.util.List;
 
 import ch.epfl.polybazaar.R;
 import ch.epfl.polybazaar.chat.ChatMessage;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
 import ch.epfl.polybazaar.filestorage.ImageTransaction;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.listing.Listing;
 import ch.epfl.polybazaar.litelisting.LiteListing;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
@@ -49,6 +53,8 @@ public class ConversationOverviewActivityTest {
                     AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
                     useMockDataStore();
                     useMockCategory();
+                    FileStoreFactory.setDependency(MockFileStore.getInstance());
+                    LocalCache.setRoot("test-cache");
 
                     Task<AuthenticatorResult> loginTask = AuthenticatorFactory.getDependency()
                             .signIn(MockAuthenticator.TEST_USER_EMAIL, MockAuthenticator.TEST_USER_PASSWORD);
@@ -67,6 +73,8 @@ public class ConversationOverviewActivityTest {
                 @Override
                 protected void afterActivityFinished() {
                     MockAuthenticator.getInstance().reset();
+                    MockFileStore.getInstance().cleanUp();
+                    LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
                 }
             };
 

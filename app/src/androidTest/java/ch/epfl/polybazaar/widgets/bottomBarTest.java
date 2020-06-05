@@ -1,6 +1,7 @@
 package ch.epfl.polybazaar.widgets;
 
 import androidx.test.espresso.intent.Intents;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
@@ -11,6 +12,9 @@ import ch.epfl.polybazaar.UI.FillListing;
 import ch.epfl.polybazaar.UI.SalesOverview;
 import ch.epfl.polybazaar.UI.UserProfile;
 import ch.epfl.polybazaar.conversationOverview.ConversationOverviewActivity;
+import ch.epfl.polybazaar.filestorage.FileStoreFactory;
+import ch.epfl.polybazaar.filestorage.LocalCache;
+import ch.epfl.polybazaar.filestorage.MockFileStore;
 import ch.epfl.polybazaar.login.AuthenticatorFactory;
 import ch.epfl.polybazaar.login.MockAuthenticator;
 import ch.epfl.polybazaar.testingUtilities.DatabaseStoreUtilities;
@@ -31,6 +35,8 @@ public class bottomBarTest {
         protected void beforeActivityLaunched() {
             useMockCategory();
             useMockDataStore();
+            FileStoreFactory.setDependency(MockFileStore.getInstance());
+            LocalCache.setRoot("test-cache");
             AuthenticatorFactory.setDependency(MockAuthenticator.getInstance());
             AuthenticatorFactory.getDependency().signIn(MockAuthenticator.TEST_USER_EMAIL,MockAuthenticator.TEST_USER_PASSWORD);
             DatabaseStoreUtilities.storeNewUser(MockAuthenticator.TEST_USER_NICKNAME, MockAuthenticator.TEST_USER_EMAIL);
@@ -39,6 +45,8 @@ public class bottomBarTest {
         @Override
         protected void afterActivityFinished() {
             MockAuthenticator.getInstance().reset();
+            MockFileStore.getInstance().cleanUp();
+            LocalCache.cleanUp(InstrumentationRegistry.getInstrumentation().getContext());
         }
     };
 
