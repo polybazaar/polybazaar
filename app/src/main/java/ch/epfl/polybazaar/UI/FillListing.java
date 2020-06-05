@@ -276,9 +276,6 @@ public class FillListing extends AppCompatActivity implements NoticeDialogListen
         if (lat != NOLAT && lng != NOLNG) {
             addMP.setText(R.string.change_MP);
         }
-        if (listing.getPrice().equals(Listing.SOLD)) {
-            submitListing.setVisibility(View.GONE);
-        }
         return true;
     }
 

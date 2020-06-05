@@ -127,7 +127,9 @@ public class ListingManager {
                 });
                 if(authUser.getEmail().equals(sellerEmail)){
                     // logged in and own listing:
-                    activity.findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
+                    if (!listing.getPrice().equals(Listing.SOLD)) {
+                        activity.findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
+                    }
                     contactSelButton.setVisibility(View.GONE);
                     buyNowButton.setVisibility(View.GONE);
                     makeOfferButton.setVisibility(View.GONE);
